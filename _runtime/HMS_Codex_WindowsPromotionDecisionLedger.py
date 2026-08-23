@@ -47,7 +47,8 @@ def build_decision(records,*,decision,reviewer_ref,evidence_sha256,manifest_sha2
     if decision not in DECISIONS or lane not in LANES: raise ValueError("decision/lane invalid")
     if not re.fullmatch(r"rvw_[0-9a-f]{32}",reviewer_ref): raise ValueError("pseudonymous reviewer_ref required")
     if not _hex(evidence_sha256) or not _hex(manifest_sha256): raise ValueError("sha256 required")
-    if cockpit_baseline!=COCKPIT_BASELINE: raise ValueError("baseline drift")
+    if decision!="INVALIDATE" and cockpit_baseline!=COCKPIT_BASELINE: raise ValueError("baseline drift")
+    if decision=="INVALIDATE" and not str(cockpit_baseline).strip(): raise ValueError("observed baseline required for invalidation")
     valid=validate_ledger(records)
     if not valid["valid"]: raise ValueError("existing ledger invalid")
     current=valid["current_epoch"] or 1
@@ -106,13 +107,13 @@ def synthetic_proof():
             manifest_sha256=man,package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane=lane))
     state=evaluate(rs,evidence_sha256=ev,manifest_sha256=man,package_version=VERSION)
     inv=build_decision(rs,decision="INVALIDATE",reviewer_ref=a,evidence_sha256=ev,manifest_sha256=man,
-        package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY",reason_codes=["BASELINE_DRIFT"]); rs.append(inv)
+        package_version=VERSION,cockpit_baseline="1.3.29",lane="TERMINAL_PTY",reason_codes=["BASELINE_DRIFT"]); rs.append(inv)
     frozen=evaluate(rs,evidence_sha256=ev,manifest_sha256=man,package_version=VERSION)
     nxt=build_decision(rs,decision="APPROVE",reviewer_ref=a,evidence_sha256=ev,manifest_sha256=man,
         package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY")
     checks={"hash_chain_valid":validate_ledger(rs)["valid"],"dual_review_two_lanes_complete":state["promotion_eligible"],
             "two_distinct_reviewers":state["distinct_reviewer_count"]==2,"invalidate_freezes_epoch":not frozen["promotion_eligible"],
-            "new_epoch_after_invalidate":nxt["epoch"]==2,"no_automatic_authority":not state["production_score_mutation_authorized"]}
+            "drift_invalidation_records_observed_baseline":inv["cockpit_baseline"]=="1.3.29","new_epoch_after_invalidate":nxt["epoch"]==2,"no_automatic_authority":not state["production_score_mutation_authorized"]}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"WINDOWS_PROMOTION_DECISION_LEDGER_PROOF",
             "verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},
