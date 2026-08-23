@@ -8,6 +8,8 @@ on:
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
+      - '_runtime/HMS_GUI_ENTRY.pyw'
+      - 'HMS_AI_ROUTER.vbs'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
   workflow_dispatch:
 
@@ -25,14 +27,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile promotion modules
+      - name: Compile promotion modules and GUI entry
         shell: pwsh
         run: |
           python -m py_compile `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
-            _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+            _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
+            _runtime/HMS_GUI_ENTRY.pyw
       - name: Decision ledger proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
@@ -42,3 +45,6 @@ jobs:
       - name: Controller live-baseline proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+      - name: Guarded GUI entry proof
+        shell: pwsh
+        run: python _runtime/HMS_GUI_ENTRY.pyw --proof
