@@ -21,14 +21,20 @@ def _launcher_chain_checks():
     review_pos = vbs.find('HMS_GUI_REVIEW_ENTRY.pyw')
     guarded_pos = vbs.find('HMS_GUI_ENTRY.pyw')
     legacy_pos = vbs.find('HMS_GUI.pyw')
+    review_assign = 'gui = base & "\\_runtime\\HMS_GUI_REVIEW_ENTRY.pyw"'
+    guarded_assign = 'guardedGui = base & "\\_runtime\\HMS_GUI_ENTRY.pyw"'
+    legacy_assign = 'legacyGui = base & "\\_runtime\\HMS_GUI.pyw"'
+    first_fallback = 'If Not fso.FileExists(gui) Then gui = guardedGui'
+    second_fallback = 'If Not fso.FileExists(gui) Then gui = legacyGui'
     return {
-        "principal_launcher_names_reviewer_wrapper": review_pos >= 0,
+        "principal_launcher_names_reviewer_wrapper": review_pos >= 0 and review_assign in vbs,
         "fallback_order_review_guarded_legacy": 0 <= review_pos < guarded_pos < legacy_pos,
+        "fallback_is_two_stage_and_fail_closed": first_fallback in vbs and second_fallback in vbs and vbs.find(first_fallback) < vbs.find(second_fallback),
         "review_wrapper_loads_guarded_entry": 'BASE_ENTRY = RUNTIME_DIR / "HMS_GUI_ENTRY.pyw"' in review,
         "review_wrapper_installs_confirmation": "askyesno" in review and "_confirmed_submit_promotion_review" in review,
         "review_wrapper_uses_contract": "evaluate_gui_action_contract" in review,
         "guarded_entry_click_uses_controller_recheck": "record_review_action" in guarded and "get_live_baseline" in guarded,
-        "launcher_never_prefers_legacy_while_review_exists": 'If Not fso.FileExists(gui) Then' in vbs and 'reviewGui' in vbs,
+        "legacy_only_named_as_final_fallback": guarded_assign in vbs and legacy_assign in vbs and vbs.count('gui = legacyGui') == 1,
     }
 
 
