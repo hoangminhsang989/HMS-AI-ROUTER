@@ -25,3 +25,11 @@ SHA-256:
 `28a3ca7bb0b66e1945db91f2368159b114a20c0b5a57d6ddc44b3f30972eb60d`
 
 After a valid archive is uploaded to the repository root, GitHub Actions extracts the runtime/source files, removes the transfer archive, and commits the extracted files back to `main`.
+
+## Active development checkpoint
+
+Current development revision: **v25.75**.
+
+Primary gate: real Windows/current-Codex certification. The carried-forward v25.74 claim boundary remains feature evidence **93.0%**, production evidence **55.2%**, with Windows runtime certification still **false** until new target evidence is executed and reviewed.
+
+See `docs/PROJECT_STATE_V25_75.md` for the active certification and branding policy.
