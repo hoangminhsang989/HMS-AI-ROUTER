@@ -1,0 +1,53 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.67",
+  "suite": "ATTESTATION_EXCHANGE_VALIDATION",
+  "generated_utc": "2026-08-23T00:56:11.866054+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "total": 6
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 6,
+        "fail": 0,
+        "total": 6
+      }
+    },
+    {
+      "name": "proof_6",
+      "status": "PASS",
+      "detail": {
+        "pass": 6,
+        "fail": 0,
+        "total": 6
+      }
+    },
+    {
+      "name": "privacy_forbidden_keys",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bundle_integrity",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "vietnamese_explanation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_not_auto",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

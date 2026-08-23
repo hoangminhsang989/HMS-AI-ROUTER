@@ -1,0 +1,13 @@
+HMS AI Cockpit v25.29 — CODEX PROJECT AFFINITY ENGINE
+
+- New native GUI page: Dự án Codex.
+- Persistent project affinity store: project -> isolated instance -> primary account -> fallback accounts.
+- Auto-register v25.28 managed instances into affinity store.
+- Launch Project resolves mapped instance and focuses/runs it with health gate.
+- Primary account is derived from isolated instance; GUI cannot silently cross-bind identity.
+- Fallback accounts are validated and remembered, but v25.29 deliberately does NOT mutate/rebind credentials.
+- Project state: RUNNING / READY / FALLBACK_RECOMMENDED / BLOCKED / UNMAPPED.
+- Shows primary health + direct quota 5h/7d when available.
+- Affinity mapping + history contain metadata only; no OAuth token/local API key/cookie.
+- binding-v2529 migration from v2528 without destructive cleanup.
+- Real Windows affinity launch verification: DEFERRED_BY_OPERATOR.

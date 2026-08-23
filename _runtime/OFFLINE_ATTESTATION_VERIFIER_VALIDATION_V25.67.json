@@ -1,0 +1,58 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.67",
+  "suite": "OFFLINE_ATTESTATION_VERIFIER_VALIDATION",
+  "generated_utc": "2026-08-23T01:05:50.128795+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 7,
+        "fail": 0,
+        "total": 7
+      }
+    },
+    {
+      "name": "proof_7",
+      "status": "PASS",
+      "detail": {
+        "pass": 7,
+        "fail": 0,
+        "total": 7
+      }
+    },
+    {
+      "name": "trust_snapshot_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "revocation_checked",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dpapi_local_context_fail_closed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "offline_privacy",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_not_auto",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

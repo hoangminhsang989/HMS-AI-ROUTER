@@ -1,0 +1,69 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.60",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_RECOVERY_JOURNAL",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "total": 11
+  },
+  "bundle_file": "HMS_DIAGNOSTICS_20260822T083916Z.zip",
+  "checks": [
+    {
+      "name": "bundle_created",
+      "ok": true,
+      "detail": "HMS_DIAGNOSTICS_20260822T083916Z.zip"
+    },
+    {
+      "name": "bundle_includes_recovery_journal",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_access_token",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_api_key",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_bearer",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_prompt",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_request_body",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_raw_response_body",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_contains_redaction_marker",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_auth_json",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_no_credential_named_payload",
+      "ok": true,
+      "detail": null
+    }
+  ]
+}

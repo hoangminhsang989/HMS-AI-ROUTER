@@ -1,0 +1,125 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "blocked_conflicting_actions": 23,
+        "degraded_safe": 1,
+        "journals_discovered": 1,
+        "operator_required": 0,
+        "unresolved_transactions": 1
+      },
+      "name": "unresolved_detected",
+      "ok": true
+    },
+    {
+      "detail": [
+        {
+          "block_conflicting_mutation": true,
+          "effects": [
+            {
+              "decision": "OBSERVED_ALREADY_APPLIED_NO_REPEAT",
+              "effect_fingerprint": "eff-proof-auth",
+              "effect_kind": "OFFICIAL_AUTH_REWRITE",
+              "effect_ref": "ref-bdf49c3c3882102fc017",
+              "evidence_class": "LAB_FIXTURE",
+              "failure_reason": "",
+              "freshness_state": "FRESH",
+              "journal_phase": "EFFECT_PREPARE",
+              "observer": "LAB_TARGET_OBSERVER_FIXTURE",
+              "status": "DEGRADED_SAFE"
+            }
+          ],
+          "reason": "UNRESOLVED_CROSS_SUBSYSTEM_TRANSACTION",
+          "source": "v25.62",
+          "status": "DEGRADED_SAFE",
+          "transaction_ref": "ref-5ebb4d86ef7f15866d9d"
+        }
+      ],
+      "name": "desired_observed_no_repeat",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "conflicting_mutation_blocked",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "read_only_action_allowed",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "transaction_identity_hashed",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "privacy_metadata_only",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "gate_written",
+      "ok": true
+    },
+    {
+      "detail": [
+        {
+          "block_conflicting_mutation": true,
+          "effects": [
+            {
+              "decision": "CONCURRENT_EXTERNAL_CHANGE_OWNERSHIP_UNPROVEN",
+              "effect_fingerprint": "eff-proof-auth",
+              "effect_kind": "OFFICIAL_AUTH_REWRITE",
+              "effect_ref": "ref-bdf49c3c3882102fc017",
+              "evidence_class": "LAB_FIXTURE",
+              "failure_reason": "",
+              "freshness_state": "FRESH",
+              "journal_phase": "EFFECT_PREPARE",
+              "observer": "LAB_TARGET_OBSERVER_FIXTURE",
+              "status": "OPERATOR_REQUIRED"
+            }
+          ],
+          "reason": "UNRESOLVED_CROSS_SUBSYSTEM_TRANSACTION",
+          "source": "v25.62",
+          "status": "OPERATOR_REQUIRED",
+          "transaction_ref": "ref-5ebb4d86ef7f15866d9d"
+        }
+      ],
+      "name": "concurrent_change_operator_required",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "operator_required_blocks_conflict",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "invalid_chain_operator_required",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "all_effect_observers_defined",
+      "ok": true
+    },
+    {
+      "detail": null,
+      "name": "production_claim_blocked",
+      "ok": true
+    }
+  ],
+  "generated_utc": "2026-08-22T20:08:39.345915+00:00",
+  "product": "HMS AI Cockpit",
+  "production_certification": "NOT_CLAIMED_STARTUP_RECONCILER_REAL_WINDOWS_CODEX_EFFECT_EVIDENCE_REQUIRED",
+  "suite": "STARTUP_RECOVERY_RECONCILER_PROOF",
+  "summary": {
+    "fail": 0,
+    "pass": 12,
+    "total": 12
+  },
+  "verdict": "PASS",
+  "version": "25.65"
+}

@@ -1,0 +1,89 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.57",
+  "suite": "RECOVERY_PLANNER_SELF_HEALING_DECISION_PROOF_VALIDATOR",
+  "generated_utc": "2026-08-22T06:16:41.431383+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "checks": [
+    {
+      "name": "proof_process_exit",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "proof_verdict_pass",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "proof_assertions_at_least_17",
+      "ok": true,
+      "detail": {
+        "pass": 17,
+        "fail": 0,
+        "total": 17,
+        "model_states": 9216
+      }
+    },
+    {
+      "name": "model_checker_at_least_6000_states",
+      "ok": true,
+      "detail": 9216
+    },
+    {
+      "name": "critical_decision_contract",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "zero_model_safety_violations",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "minimal_bad_policy_trace",
+      "ok": true,
+      "detail": {
+        "original_length": 7,
+        "minimized_length": 1,
+        "events": [
+          {
+            "incident": "HTTP_429"
+          }
+        ],
+        "trace_hash": "5bcf3c55cfd4fe599010a07003141ede95fc089c3b0af2978736f9494e318071"
+      }
+    },
+    {
+      "name": "production_never_claimed",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "runtime_contract_present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "native_gui_surface",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "powershell_surface",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "main_version_at_least_25_57",
+      "ok": true,
+      "detail": "25.57"
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_RECOVERY_DECISION_PROOF_SYNTHETIC_ONLY"
+}

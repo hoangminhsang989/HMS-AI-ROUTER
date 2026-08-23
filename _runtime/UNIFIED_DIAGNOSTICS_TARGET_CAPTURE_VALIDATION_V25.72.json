@@ -1,0 +1,48 @@
+{
+  "version": "25.72",
+  "suite": "UNIFIED_DIAGNOSTICS_TARGET_CAPTURE_VALIDATION",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "checks": [
+    {
+      "name": "capture_event_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_event_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "aggregate_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_identity_fields",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_baseline_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "real_effect_execution_visible_false",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

@@ -1,0 +1,15 @@
+HMS AI Cockpit v25.51 — SEAMLESS ROTATION TORTURE TEST
+
+- Fix Adaptive Router current-account identity when active account becomes ineligible for NEW sessions.
+- Fix Closed-loop Router current/preferred account identity across live quota/circuit exclusion.
+- Current-critical override now rotates NEW sessions without being suppressed by hold/cooldown/min-sample gates.
+- Fix Smart Gateway sticky affinity ordering: affinity is checked across all eligible targets before priority ranking.
+- Recovered higher-priority account no longer pulls an existing failed-over session back, preventing session ping-pong.
+- Add 1000-cycle Seamless Rotation Torture release validator.
+- Test quota depletion, reserve hysteresis, stale/recovery, 429 burst, auth isolation, two managed instances and LAN lease rejoin.
+- Auth-isolation fixture proves routing priority/weight changes do not swap or mutate immutable auth payloads.
+- LAN lease takeover uses epoch after expiry; rejoined stale owner cannot steal an active lease.
+- Add ROTATION TEST surface to LAN Pool GUI; synthetic-only and quota-free.
+- Add metadata-only Unified Diagnostics / Diagnostics Bundle support for v25.51 rotation evidence.
+
+Production boundary remains unchanged: target Windows/Codex/live quota/multi-PC/6h+24h evidence is still required.

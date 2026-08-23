@@ -1,0 +1,10 @@
+HMS AI Cockpit v25.58 — Compound-Fault Recovery Convergence Lab
+
+1. Added deterministic compound-fault Recovery DAG planner.
+2. Added global recovery cost budget to prevent cross-fault restart/retry/repair storms.
+3. Hard operator faults dominate and block automatic mutation.
+4. Added bounded convergence simulator with terminal states HEALTHY / DEGRADED_SAFE / OPERATOR_REQUIRED.
+5. Added pair/triple compound-fault model checker: 72,960 states, zero safety violations in release proof.
+6. Native LAN Pool and PowerShell surfaces expose CONVERGENCE / MODEL 72K without extending public BackendAction contract.
+7. Unified Diagnostics and Diagnostics Bundle receive metadata-only v25.58 evidence.
+8. Synthetic evidence does not increase production parity or mint production certification.

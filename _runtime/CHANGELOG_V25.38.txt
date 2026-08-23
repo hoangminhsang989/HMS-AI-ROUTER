@@ -1,0 +1,14 @@
+HMS AI Cockpit v25.38 — FULL CODEX API COMPATIBILITY
+
+- Smart Gateway version authority -> 25.38.
+- Added /hms/compatibility contract endpoint.
+- Added semantic capability classifier for metadata-only tracing.
+- Added request chunked-transfer decoding with bounded request size.
+- Added PATCH forwarding.
+- Added X-HMS-Compatibility-Version response header.
+- Added OpenAI-shaped HMS gateway errors while preserving upstream error bodies untouched.
+- Body-preserving transparent compatibility for responses/chat, SSE, tools, MCP, web search, images/files, structured output and reasoning.
+- Added HMS_Codex_ApiCompatibility.py synthetic validator.
+- Added native GUI API Compat tab + one-click local AUDIT API.
+- Stable endpoint/session affinity/project affinity/identity isolation remain hard invariants.
+- Windows Codex runtime verification remains DEFERRED_BY_OPERATOR.

@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "data": {
+    "verdict": "PASS",
+    "version": "25.41",
+    "version_ok": true,
+    "manifest_ok": true,
+    "glue": {
+      "total": 0,
+      "by_code": {
+        "NOT_GLUE": 0,
+        "VAR_OPERATOR_GLUE": 0,
+        "PAREN_OPERATOR_GLUE": 0,
+        "BOOLFUNC_OPERATOR_GLUE": 0,
+        "CONVERT_JSON_DEPTH": 0,
+        "CMD_PAREN_SWITCH": 0,
+        "SWITCH_GLUE": 0,
+        "WORD_SWITCH": 0
+      },
+      "findings": []
+    },
+    "script_variables": {
+      "referenced": 214,
+      "assigned": 214,
+      "missing": []
+    },
+    "settings": {
+      "referenced": 338,
+      "declared": 425,
+      "missing": [],
+      "duplicates": []
+    },
+    "note": "Static lexical gate only. A real Windows PowerShell 5.1 parse/runtime remains authoritative."
+  }
+}

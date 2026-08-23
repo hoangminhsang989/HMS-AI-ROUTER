@@ -1,0 +1,40 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.66",
+  "suite": "GUI_STARTUP_SMOKE",
+  "generated_utc": "2026-08-23T00:46:19.835684+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "tests": [
+    {
+      "name": "process_alive_until_timeout",
+      "status": "PASS",
+      "detail": "rc=124"
+    },
+    {
+      "name": "stderr_empty",
+      "status": "PASS",
+      "detail": "0 bytes"
+    },
+    {
+      "name": "gui_version_25_66",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "signed_target_cert_surface",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_real_effect_arm_button",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "stderr_tail": ""
+}

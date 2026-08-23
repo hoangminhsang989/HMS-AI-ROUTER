@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "version": "25.46",
+  "generated_utc": "2026-08-21T16:43:24.899020+00:00",
+  "command": "timeout 7s xvfb-run -a python HMS_GUI.pyw",
+  "expected_timeout_exit_code": 124,
+  "observed_exit_code": 124,
+  "alive_until_timeout": true,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "scope": "Linux/Xvfb native GUI construction smoke; not Windows runtime certification"
+}

@@ -1,0 +1,51 @@
+HMS AI Cockpit v25.70 — BUILD VALIDATION
+=========================================
+Revision: Cockpit Tools v1.3.27 Codex Parity Reset
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+
+Frozen validation evidence
+--------------------------
+- Cockpit v1.3.27 Parity Reset: 22/22 PASS
+- Cockpit v1.3.27 Source Integration: 29/29 PASS
+- Cockpit parity GUI safety: 9/9 PASS
+- Official Auth Compatibility: 67/67 PASS
+- Runtime Kit: 440/440 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 72/72 suites, 1856/1856 numeric assertions PASS
+- GUI startup smoke: 6/6 PASS; event loop remained alive for 8 seconds; stdout=0; stderr=0
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+- Python compileall: PASS
+- Parity Claim Boundary: 20/20 PASS
+- Public BackendAction contract: 90 actions
+
+Cockpit v1.3.27 parity changes integrated
+----------------------------------------
+- Foreign-port conflict auto-rebinds without killing unrelated processes.
+- Launch-time account occupancy guard blocks duplicate active account ownership.
+- Codex client auth state is distinct from local API-service availability.
+- Usage continuity uses a SHA-256 pseudonymous official-account reference; raw official account ID is not persisted.
+- Smart Gateway uses composite hashed conversation/thread/request/session identity to reduce stream-affinity bleed.
+- WebSocket preference survives credential refresh/switch.
+- Credential/reconciliation backups are bounded by retention policy.
+- Manual auth.json export is disabled by default, exact-confirmation gated, destination allowlisted and excluded from diagnostics.
+- Model context/compaction metadata is accepted only when live upstream metadata exists; HMS does not invent model policy.
+
+Safety / claim boundary
+-----------------------
+- Competitive baseline is Cockpit Tools v1.3.27 (Codex-only scope).
+- HMS keeps stronger transactional/fail-closed recovery guarantees where already present instead of copying weaker behavior.
+- Feature evidence score remains 93.0%.
+- Production evidence score remains 55.2%.
+- windows_runtime_certified=false.
+- external_windows_target_evidence_imported=false.
+- real_codex_effects_executed=false.
+- windows_signing_executed=false.
+- automatic_production_certification=false.
+- production_score_promotion_eligible=false.
+
+Production certification note
+-----------------------------
+This release validates the Cockpit v1.3.27 parity reset and HMS source/control-plane integration on the build host.
+Real Windows + Codex runtime evidence is still required for port-rebind, account-occupancy, client/API split-state,
+official-account continuity, WebSocket credential refresh and bounded-backup behavior before production score changes.

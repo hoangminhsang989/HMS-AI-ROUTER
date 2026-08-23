@@ -1,0 +1,52 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.54",
+  "suite": "CLEAN_EXTRACT_RELEASE_VALIDATION",
+  "generated_utc": "2026-08-22T04:35:34.467453+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "tests": [
+    {
+      "name": "zip_file_count_492",
+      "status": "PASS"
+    },
+    {
+      "name": "unsafe_path_zero",
+      "status": "PASS"
+    },
+    {
+      "name": "symlink_zero",
+      "status": "PASS"
+    },
+    {
+      "name": "manifest_491_of_491",
+      "status": "PASS"
+    },
+    {
+      "name": "simulation_validator_40_of_40",
+      "status": "PASS"
+    },
+    {
+      "name": "compatibility_133_of_133",
+      "status": "PASS"
+    },
+    {
+      "name": "runtime_266_of_266",
+      "status": "PASS"
+    },
+    {
+      "name": "regression_22_of_22_910_of_910",
+      "status": "PASS"
+    }
+  ],
+  "parity": {
+    "feature_evidence_pct": 93.0,
+    "production_evidence_pct": 55.2,
+    "verdict": "FEATURE_PARITY_CANDIDATE"
+  },
+  "note": "Evidence generated from the first release-candidate ZIP before final metadata-only repack. Final ZIP is reverified after repack."
+}

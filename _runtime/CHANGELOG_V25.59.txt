@@ -1,0 +1,15 @@
+HMS AI Cockpit v25.59 — Official Auth Compatibility Layer (P0)
+
+- New parity baseline: Cockpit Tools v1.3.24.
+- Added CODEX_HOME-aware file/keyring/auto auth abstraction.
+- Snapshot latest live auth before switch and sync it back only on unique managed-account identity match.
+- Serialized account switching.
+- Atomic field-preserving auth rewrite; stale credential/account identity cleanup.
+- OAuth identity profile: originator=codex_vscode; User-Agent derives from installed Codex version (0.146.0 is fixture fallback only).
+- Readback fingerprint verification + rollback.
+- Controlled Codex restart only after verified commit.
+- Metadata-only diagnostics boundary.
+- Real Windows/Codex production certification remains deferred.
+
+- Encrypted `secret_auth_storage` / Secrets backend is detected and fails closed for mutation until an official Codex helper is available.
+- Native Account Center exposes confirmed `CHUYỂN AUTH` without extending the frozen public BackendAction contract.

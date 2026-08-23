@@ -1,0 +1,12 @@
+﻿v25.23.1 STARTUP CRASH HOTFIX
+
+ROOT CAUSE
+Tkinter TclError in Settings General -> Công cụ nhanh.
+ACCOUNT CENTER HoverButton was created with an orphan row_frame parent, then
+SettingGroup.add_row attempted to pack it into a different descendant frame.
+
+FIX
+- Parent ACCOUNT CENTER directly to tools.card.
+- Adds startup exception guard and GUI error dialog.
+- Adds full traceback logging to gui-v2523_1-startup.log.
+- No routing, account, quota, settings, service-center or failover feature removed.

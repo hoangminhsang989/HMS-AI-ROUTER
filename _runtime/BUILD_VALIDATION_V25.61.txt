@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.61 — BUILD VALIDATION
+Generated UTC: 2026-08-22T11:32:25.230352+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+
+CORE GATES
+- Usage & Token Center: 36/36 PASS
+- Unified Diagnostics Usage/Token: 12/12 PASS
+- Diagnostics Bundle Privacy: 14/14 PASS
+- Runtime Kit: 322/322 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 31/31 suites; 1261/1261 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS (xvfb-run 8s, expected timeout 124, stderr empty)
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+- Public BackendAction contract: EXACT 90
+
+SAFETY / PRIVACY
+- NOW vs AFTER RESET preview is SCENARIO ONLY and non-mutating.
+- Package expiry / OAuth-token lifecycle / quota reset remain non-conflated.
+- Usage history is metadata-only and fsync-backed.
+- Generic bare Bearer token redaction hardened and regression-tested.
+
+PARITY / CLAIM BOUNDARY
+- Feature evidence score: 93.0% (carried forward; no synthetic score inflation)
+- Production evidence score: 55.2% (unchanged)
+- Verdict: FEATURE_PARITY_CANDIDATE
+- Real Windows PowerShell 5.1 parser/runtime, live Codex Desktop/CLI auth, encrypted Secrets backend, live quota fidelity, multi-PC LAN/NAS and 6h/24h soak remain target-machine gates.
+- PRODUCTION CERTIFICATION IS NOT CLAIMED.

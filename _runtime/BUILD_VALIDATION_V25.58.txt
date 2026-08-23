@@ -1,0 +1,20 @@
+HMS AI Cockpit v25.58 — RELEASE FREEZE
+Verdict: PASS_V25_58_COMPOUND_FAULT_RECOVERY_CONVERGENCE_LAB
+Scope: CODEX-ONLY / SYNTHETIC-MODEL-CHECK / NO REAL MACHINE REQUIRED
+
+Compound recovery proof: 23/23 PASS
+Compound release validator: 15/15 PASS
+Compound model states: 72,960 / safety violations 0
+Compatibility Freeze: 133/133 PASS
+Runtime Kit: 297/297 PASS
+Regression: 26/26 suites / 1,089/1,089 numeric assertions PASS
+Regression method: canonical isolated-suite aggregation; per-suite timeout 120s; no threshold relaxed; no suite skipped
+Unified Diagnostics privacy/integration: 10/10 PASS
+Diagnostics Bundle privacy: 10/10 PASS
+GUI startup: 5/5 PASS / stderr 0
+PowerShell static lint: PASS
+PowerShell coherence: PASS
+Python compileall: PASS
+Parity: feature 93.0% / production 55.2% / FEATURE_PARITY_CANDIDATE
+Production certification: NOT_CLAIMED_COMPOUND_FAULT_CONVERGENCE_SYNTHETIC_ONLY
+Next stage: v25.59 Recovery Transaction Journal & Crash-Consistent Resume

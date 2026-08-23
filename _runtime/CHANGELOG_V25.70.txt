@@ -1,0 +1,59 @@
+HMS AI Cockpit v25.70 — CHANGELOG
+=================================
+
+Parity baseline reset
+---------------------
+1. Competitive Codex-only baseline moved from Cockpit Tools v1.3.24 to v1.3.27.
+2. v1.3.25-v1.3.27 Codex changes were audited from upstream release/source differences.
+3. Existing HMS transactional auth/recovery/process ownership protections were retained where stronger than Cockpit behavior.
+
+Added / hardened
+----------------
+1. Runtime foreign-port auto-rebind.
+   - Never kills an unrelated process merely to reclaim a configured port.
+   - Persists the selected replacement port into instance/config binding before launch.
+   - Rebind is blocked when an owned Codex client for that instance is already active.
+
+2. Launch-time account occupancy guard.
+   - Re-checks actual active instance/account occupancy immediately before startup.
+   - Protects against stale or manually edited instance stores.
+
+3. Client-auth vs API-service split state.
+   - Logged-in/credential readiness no longer implies API service availability.
+   - Diagnostics/operator surfaces preserve the two independent states.
+
+4. Official-account usage continuity.
+   - Raw official account ID is not persisted.
+   - A SHA-256 pseudonymous `oaid-*` reference preserves usage history across delete/re-add or label/email change.
+
+5. Stream/session identity isolation hardening.
+   - Composite request/conversation/thread/session identity is built when multiple identifiers exist.
+   - Identity is hashed before affinity use to reduce cross-conversation stream bleed.
+
+6. Credential/runtime compatibility hardening.
+   - WebSocket preference is preserved across refresh/switch.
+   - Credential/reconciliation backups use bounded retention.
+   - Manual `auth.json` export is disabled by default, exact-confirmation gated and allowlisted.
+   - Router-only metadata is stripped from credential export and diagnostics must not include exported credentials.
+   - Model context/compaction metadata remains live-upstream-only and read-only.
+
+Compatibility and freeze
+------------------------
+- Public BackendAction remains exactly 90.
+- Cockpit v1.3.27 parity reset: 22/22 PASS.
+- Source integration: 29/29 PASS.
+- GUI parity safety: 9/9 PASS.
+- Official Auth Compatibility: 67/67 PASS.
+- Runtime Kit: 440/440 PASS.
+- Compatibility: 133/133 PASS.
+- Full Regression Freeze: 72 suites, 1856/1856 assertions PASS.
+- GUI startup smoke: 6/6 PASS, stdout/stderr=0.
+- Feature/production evidence remains 93.0% / 55.2%.
+
+Not claimed
+-----------
+- No real Windows/Codex target parity campaign was executed on this build host.
+- No real Codex effects were executed.
+- No Windows signing was executed.
+- No production score was increased.
+- No automatic production certification exists.

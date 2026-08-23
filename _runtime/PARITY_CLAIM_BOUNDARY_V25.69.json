@@ -1,0 +1,136 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.69",
+  "suite": "PARITY_CLAIM_BOUNDARY",
+  "generated_utc": "2026-08-23T02:23:19.758411+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "total": 16
+  },
+  "tests": [
+    {
+      "name": "version_25_69",
+      "status": "PASS",
+      "detail": "25.69"
+    },
+    {
+      "name": "feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "feature_score_frozen",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_frozen",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "evidence_ingest_nonbenchmark",
+      "status": "PASS",
+      "detail": {
+        "id": "target_certification_evidence_ingest",
+        "label": "Read-only Windows target certification evidence ingest",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.69 verifies cryptographic binding/replay/trust/package/campaign state and quarantines invalid imported reports without executing target effects or auto-repair.",
+        "benchmark": false
+      }
+    },
+    {
+      "name": "promotion_ledger_nonbenchmark",
+      "status": "PASS",
+      "detail": {
+        "id": "promotion_decision_ledger",
+        "label": "Append-only dual-review promotion decision ledger",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.69 hash-chained reviewer decisions require two distinct pseudonymous reviewers and superseding invalidation entries; promotion eligibility remains separate from production score mutation.",
+        "benchmark": false
+      }
+    },
+    {
+      "name": "ingest_no_auto_promotion",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "ledger_eligibility_separate_from_score",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "regression_freeze_69",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 69,
+        "suite_fail": 0,
+        "suite_total": 69,
+        "numeric_assertions_pass": 1786,
+        "numeric_assertions_total": 1786
+      }
+    },
+    {
+      "name": "runtime_430",
+      "status": "PASS",
+      "detail": {
+        "pass": 430,
+        "fail": 0,
+        "total": 430
+      }
+    },
+    {
+      "name": "compatibility_133",
+      "status": "PASS",
+      "detail": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      }
+    },
+    {
+      "name": "public_backend_actions_90",
+      "status": "PASS",
+      "detail": 90
+    },
+    {
+      "name": "gui_smoke_6",
+      "status": "PASS",
+      "detail": {
+        "pass": 6,
+        "fail": 0,
+        "total": 6
+      }
+    },
+    {
+      "name": "no_automatic_production_certification",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "release_synthetic_ingest_only",
+      "status": "PASS",
+      "detail": {
+        "external_windows_target_evidence_imported": false
+      }
+    }
+  ],
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "external_windows_target_evidence_imported": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false
+}

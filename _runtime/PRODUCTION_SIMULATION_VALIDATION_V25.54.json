@@ -1,0 +1,569 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.54",
+  "schema_version": 1,
+  "suite": "PRODUCTION_SIMULATION_FAULT_INJECTION_LAB",
+  "generated_utc": "2026-08-22T04:30:26.347129+00:00",
+  "verdict": "PASS_PRODUCTION_SIMULATION_LAB_V25_54",
+  "summary": {
+    "seeds": 8,
+    "cycles_per_seed": 300,
+    "total_cycles": 2400,
+    "seed_pass": 8,
+    "seed_fail": 0,
+    "invariant_failures": 0,
+    "events_exercised": 15,
+    "events_required": 15,
+    "quota_matrix_pass": 132,
+    "quota_matrix_total": 132,
+    "replay_pass": 2,
+    "replay_total": 2
+  },
+  "event_catalog": [
+    "NEW_SESSION",
+    "CONTINUE_SESSION",
+    "QUOTA_DRAIN",
+    "QUOTA_STALE",
+    "QUOTA_REFRESH",
+    "HTTP_429",
+    "ACCOUNT_RECOVER",
+    "PROCESS_CRASH",
+    "PROCESS_RESTART",
+    "AUTH_REFRESH",
+    "QUEUE_BURST",
+    "SMB_TRANSIENT",
+    "LAN_PARTITION",
+    "LAN_REJOIN",
+    "CLOCK_SKEW"
+  ],
+  "events_exercised": [
+    "ACCOUNT_RECOVER",
+    "AUTH_REFRESH",
+    "CLOCK_SKEW",
+    "CONTINUE_SESSION",
+    "HTTP_429",
+    "LAN_PARTITION",
+    "LAN_REJOIN",
+    "NEW_SESSION",
+    "PROCESS_CRASH",
+    "PROCESS_RESTART",
+    "QUEUE_BURST",
+    "QUOTA_DRAIN",
+    "QUOTA_REFRESH",
+    "QUOTA_STALE",
+    "SMB_TRANSIENT"
+  ],
+  "seeds": [
+    {
+      "seed": 11,
+      "cycles": 300,
+      "trace_hash": "c17f4c29e835e43a5040941b8ba3bc8194a3a003c154e278e161d24efa0cef2f",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 14,
+        "AUTH_REFRESH": 13,
+        "CLOCK_SKEW": 20,
+        "CONTINUE_SESSION": 24,
+        "HTTP_429": 14,
+        "LAN_PARTITION": 20,
+        "LAN_REJOIN": 18,
+        "NEW_SESSION": 51,
+        "PROCESS_CRASH": 11,
+        "PROCESS_RESTART": 26,
+        "QUEUE_BURST": 14,
+        "QUOTA_DRAIN": 33,
+        "QUOTA_REFRESH": 20,
+        "QUOTA_STALE": 12,
+        "SMB_TRANSIENT": 10
+      },
+      "sessions": 48,
+      "rotations": 18,
+      "failed_over_sessions": 170,
+      "rejected_sessions": 3,
+      "queue": {
+        "accepted": 51,
+        "rejected": 99,
+        "completed": 51,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 3,
+        "44ef76bcf302": 2,
+        "b85d90aa37ad": 3,
+        "8b86e7af0638": 2
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 23,
+      "cycles": 300,
+      "trace_hash": "6489fb897d1bbbfe24ecbcf1a44da892d1388eacd05c374774882755cbbef703",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 16,
+        "AUTH_REFRESH": 17,
+        "CLOCK_SKEW": 23,
+        "CONTINUE_SESSION": 31,
+        "HTTP_429": 14,
+        "LAN_PARTITION": 14,
+        "LAN_REJOIN": 19,
+        "NEW_SESSION": 55,
+        "PROCESS_CRASH": 12,
+        "PROCESS_RESTART": 11,
+        "QUEUE_BURST": 12,
+        "QUOTA_DRAIN": 27,
+        "QUOTA_REFRESH": 15,
+        "QUOTA_STALE": 19,
+        "SMB_TRANSIENT": 15
+      },
+      "sessions": 41,
+      "rotations": 12,
+      "failed_over_sessions": 55,
+      "rejected_sessions": 14,
+      "queue": {
+        "accepted": 49,
+        "rejected": 72,
+        "completed": 49,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 3,
+        "44ef76bcf302": 1,
+        "b85d90aa37ad": 2,
+        "8b86e7af0638": 3
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 37,
+      "cycles": 300,
+      "trace_hash": "99d9d1907f4b767d32fab1ab99286652c0fd24a80f6f60f16f6f71f8e5480169",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 15,
+        "AUTH_REFRESH": 12,
+        "CLOCK_SKEW": 20,
+        "CONTINUE_SESSION": 22,
+        "HTTP_429": 18,
+        "LAN_PARTITION": 19,
+        "LAN_REJOIN": 11,
+        "NEW_SESSION": 50,
+        "PROCESS_CRASH": 20,
+        "PROCESS_RESTART": 14,
+        "QUEUE_BURST": 15,
+        "QUOTA_DRAIN": 34,
+        "QUOTA_REFRESH": 14,
+        "QUOTA_STALE": 18,
+        "SMB_TRANSIENT": 18
+      },
+      "sessions": 34,
+      "rotations": 6,
+      "failed_over_sessions": 77,
+      "rejected_sessions": 16,
+      "queue": {
+        "accepted": 48,
+        "rejected": 111,
+        "completed": 48,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 5,
+        "44ef76bcf302": 2,
+        "b85d90aa37ad": 5,
+        "8b86e7af0638": 3
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 41,
+      "cycles": 300,
+      "trace_hash": "41e27f5032598ff65ee9347daecb590788a52eca18ccdad9add4219880788ea5",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 14,
+        "AUTH_REFRESH": 13,
+        "CLOCK_SKEW": 13,
+        "CONTINUE_SESSION": 28,
+        "HTTP_429": 17,
+        "LAN_PARTITION": 11,
+        "LAN_REJOIN": 16,
+        "NEW_SESSION": 63,
+        "PROCESS_CRASH": 16,
+        "PROCESS_RESTART": 14,
+        "QUEUE_BURST": 16,
+        "QUOTA_DRAIN": 34,
+        "QUOTA_REFRESH": 16,
+        "QUOTA_STALE": 15,
+        "SMB_TRANSIENT": 14
+      },
+      "sessions": 27,
+      "rotations": 5,
+      "failed_over_sessions": 35,
+      "rejected_sessions": 36,
+      "queue": {
+        "accepted": 49,
+        "rejected": 170,
+        "completed": 49,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 2,
+        "44ef76bcf302": 3,
+        "b85d90aa37ad": 2,
+        "8b86e7af0638": 4
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 59,
+      "cycles": 300,
+      "trace_hash": "4ecd57100fe6e858e55cb8ddeded0df11562a424f4efdb71ae61d0b58b1b803d",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 16,
+        "AUTH_REFRESH": 16,
+        "CLOCK_SKEW": 14,
+        "CONTINUE_SESSION": 27,
+        "HTTP_429": 21,
+        "LAN_PARTITION": 19,
+        "LAN_REJOIN": 14,
+        "NEW_SESSION": 49,
+        "PROCESS_CRASH": 15,
+        "PROCESS_RESTART": 13,
+        "QUEUE_BURST": 11,
+        "QUOTA_DRAIN": 31,
+        "QUOTA_REFRESH": 12,
+        "QUOTA_STALE": 23,
+        "SMB_TRANSIENT": 19
+      },
+      "sessions": 25,
+      "rotations": 8,
+      "failed_over_sessions": 16,
+      "rejected_sessions": 24,
+      "queue": {
+        "accepted": 47,
+        "rejected": 57,
+        "completed": 47,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 3,
+        "44ef76bcf302": 4,
+        "b85d90aa37ad": 1,
+        "8b86e7af0638": 3
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 73,
+      "cycles": 300,
+      "trace_hash": "277e033623d3009303418d1179f9767311a04747df1dd11a2a88f60e1aa5a83a",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 15,
+        "AUTH_REFRESH": 14,
+        "CLOCK_SKEW": 15,
+        "CONTINUE_SESSION": 29,
+        "HTTP_429": 13,
+        "LAN_PARTITION": 20,
+        "LAN_REJOIN": 13,
+        "NEW_SESSION": 52,
+        "PROCESS_CRASH": 22,
+        "PROCESS_RESTART": 14,
+        "QUEUE_BURST": 14,
+        "QUOTA_DRAIN": 30,
+        "QUOTA_REFRESH": 14,
+        "QUOTA_STALE": 17,
+        "SMB_TRANSIENT": 18
+      },
+      "sessions": 44,
+      "rotations": 10,
+      "failed_over_sessions": 97,
+      "rejected_sessions": 8,
+      "queue": {
+        "accepted": 59,
+        "rejected": 83,
+        "completed": 59,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 3,
+        "44ef76bcf302": 2,
+        "b85d90aa37ad": 3,
+        "8b86e7af0638": 4
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 89,
+      "cycles": 300,
+      "trace_hash": "cc6d48e2fa36b717e00a7aaf3d3f7acb99916f485a50c54232226775b4a00eeb",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 17,
+        "AUTH_REFRESH": 11,
+        "CLOCK_SKEW": 15,
+        "CONTINUE_SESSION": 37,
+        "HTTP_429": 15,
+        "LAN_PARTITION": 16,
+        "LAN_REJOIN": 13,
+        "NEW_SESSION": 53,
+        "PROCESS_CRASH": 13,
+        "PROCESS_RESTART": 10,
+        "QUEUE_BURST": 25,
+        "QUOTA_DRAIN": 31,
+        "QUOTA_REFRESH": 21,
+        "QUOTA_STALE": 14,
+        "SMB_TRANSIENT": 9
+      },
+      "sessions": 51,
+      "rotations": 11,
+      "failed_over_sessions": 149,
+      "rejected_sessions": 2,
+      "queue": {
+        "accepted": 102,
+        "rejected": 150,
+        "completed": 102,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 2,
+        "44ef76bcf302": 2,
+        "b85d90aa37ad": 2,
+        "8b86e7af0638": 3
+      },
+      "invariant_failures": [],
+      "pass": true
+    },
+    {
+      "seed": 101,
+      "cycles": 300,
+      "trace_hash": "1671ffb8c298cc3d0fc7f667d6d4c1b1bac40bda44cd1bb6cd72eceb667ae7b7",
+      "events_exercised": [
+        "ACCOUNT_RECOVER",
+        "AUTH_REFRESH",
+        "CLOCK_SKEW",
+        "CONTINUE_SESSION",
+        "HTTP_429",
+        "LAN_PARTITION",
+        "LAN_REJOIN",
+        "NEW_SESSION",
+        "PROCESS_CRASH",
+        "PROCESS_RESTART",
+        "QUEUE_BURST",
+        "QUOTA_DRAIN",
+        "QUOTA_REFRESH",
+        "QUOTA_STALE",
+        "SMB_TRANSIENT"
+      ],
+      "event_counts": {
+        "ACCOUNT_RECOVER": 16,
+        "AUTH_REFRESH": 11,
+        "CLOCK_SKEW": 13,
+        "CONTINUE_SESSION": 42,
+        "HTTP_429": 16,
+        "LAN_PARTITION": 13,
+        "LAN_REJOIN": 22,
+        "NEW_SESSION": 42,
+        "PROCESS_CRASH": 13,
+        "PROCESS_RESTART": 13,
+        "QUEUE_BURST": 13,
+        "QUOTA_DRAIN": 44,
+        "QUOTA_REFRESH": 17,
+        "QUOTA_STALE": 19,
+        "SMB_TRANSIENT": 6
+      },
+      "sessions": 29,
+      "rotations": 5,
+      "failed_over_sessions": 45,
+      "rejected_sessions": 13,
+      "queue": {
+        "accepted": 49,
+        "rejected": 65,
+        "completed": 49,
+        "depth": 0
+      },
+      "process_generations": {
+        "3258638147d9": 4,
+        "44ef76bcf302": 1,
+        "b85d90aa37ad": 2,
+        "8b86e7af0638": 2
+      },
+      "invariant_failures": [],
+      "pass": true
+    }
+  ],
+  "deterministic_replay": [
+    {
+      "seed": 11,
+      "trace_hash": "c17f4c29e835e43a5040941b8ba3bc8194a3a003c154e278e161d24efa0cef2f",
+      "replay_hash": "c17f4c29e835e43a5040941b8ba3bc8194a3a003c154e278e161d24efa0cef2f",
+      "match": true
+    },
+    {
+      "seed": 101,
+      "trace_hash": "1671ffb8c298cc3d0fc7f667d6d4c1b1bac40bda44cd1bb6cd72eceb667ae7b7",
+      "replay_hash": "1671ffb8c298cc3d0fc7f667d6d4c1b1bac40bda44cd1bb6cd72eceb667ae7b7",
+      "match": true
+    }
+  ],
+  "quota_state_space": {
+    "total": 132,
+    "pass": 132,
+    "fail": 0,
+    "failures": []
+  },
+  "mutation_sensitivity": {
+    "stale_normal_eligible": false,
+    "unsafe_mutant_would_allow": true,
+    "detector_fires": true
+  },
+  "focused_runtime_faults": {
+    "rotation": {
+      "pass": true,
+      "summary": {
+        "pass": 34,
+        "fail": 0,
+        "total": 34,
+        "cycles": 240
+      }
+    },
+    "lan_failure_matrix": {
+      "pass": true,
+      "summary": {
+        "pass": 20,
+        "fail": 0,
+        "total": 20
+      }
+    }
+  },
+  "safety": {
+    "synthetic_only": true,
+    "real_quota_consumed": false,
+    "real_codex_request_sent": false,
+    "oauth_tokens_mutated": false,
+    "real_account_files_mutated": false,
+    "real_smb_share_required": false,
+    "raw_secret_evidence": false,
+    "production_certification": "NOT_CLAIMED_SIMULATION_ONLY"
+  },
+  "claim_boundary": "Simulation validates deterministic control-plane invariants and fault response only. It never substitutes for target Windows/Codex/LAN/soak production certification."
+}

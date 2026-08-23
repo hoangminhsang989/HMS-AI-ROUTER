@@ -1,0 +1,27 @@
+HMS AI Cockpit v25.35 — BUILD VALIDATION
+
+Scope: ACCOUNT_ANALYTICS / CODEX_ONLY
+Baseline: v25.34
+
+PASS
+- Python compileall: 47 Python/PYW files.
+- HMS_GUI.pyw compile: PASS.
+- GUI startup smoke under Xvfb: alive for 7 seconds, stderr 0.
+- PowerShell StaticLint: PASS; script variables 192/192; settings missing 0; duplicates 0.
+- PowerShell CoherenceAudit: PASS.
+- Runtime Kit Validator: PASS 137/137.
+- Synthetic Usage Ledger -> Account Analytics: PASS.
+- Account quality/confidence/grade/trend generation: PASS.
+- Account × Model matrix: PASS.
+- Account × Workload matrix: PASS.
+- Model recommendation minimum-sample gate: PASS.
+- Circuit OPEN account remains excluded in Closed-loop: PASS.
+- Account Analytics Closed-loop influence bounded to ±8 points: PASS.
+- Stable endpoint/session affinity safety flags preserved: PASS.
+- Privacy contract: no prompt/body/OAuth/API key/cookie storage: PASS.
+
+DEFERRED
+- Real Windows PowerShell 5.1 parser/runtime authority.
+- Real Codex multi-account traffic certification.
+- Real no-restart failover/session-continuity proof.
+- 24h/72h soak.

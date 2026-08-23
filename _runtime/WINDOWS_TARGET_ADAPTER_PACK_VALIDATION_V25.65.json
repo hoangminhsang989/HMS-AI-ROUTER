@@ -1,0 +1,88 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.65",
+  "suite": "WINDOWS_TARGET_ADAPTER_PACK_VALIDATION",
+  "generated_utc": "2026-08-22T20:08:33.764426+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "total": 13
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 11,
+        "fail": 0,
+        "total": 11
+      }
+    },
+    {
+      "name": "proof_11",
+      "status": "PASS",
+      "detail": {
+        "pass": 11,
+        "fail": 0,
+        "total": 11
+      }
+    },
+    {
+      "name": "four_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "auth_file_raw_hash_no_export",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "keyring_digest_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "process_generation_safe",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "router_generation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lease_owner_digest",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "manifest_disarmed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "manifest_four",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "exact_readback_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_shell_mode",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_boundary",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

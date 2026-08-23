@@ -1,0 +1,685 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.49",
+  "suite": "REGRESSION_COMPATIBILITY_FREEZE",
+  "generated_utc": "2026-08-22T01:51:04.629107+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 133,
+    "fail": 0,
+    "total": 133
+  },
+  "contract": {
+    "path": "CODEX_PUBLIC_CONTRACT_V25_46.json",
+    "baseline": "25.45",
+    "backend_actions": 90
+  },
+  "tests": [
+    {
+      "name": "backend_action_set_exact",
+      "ok": true,
+      "detail": "expected=90 actual=90"
+    },
+    {
+      "name": "backend_actions_unique",
+      "ok": true,
+      "detail": "unique=90"
+    },
+    {
+      "name": "dispatch.status",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.enable",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.disable",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.open_codex",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_settings",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.save_settings",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_accounts",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.refresh_quota",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.set_account_disabled",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.set_account_meta",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.add_codex",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_logs",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_service",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.create_client_key",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.set_request_log",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.restart_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.test_api",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.run_failover",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.maintenance_tick",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_usage",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.sync_usage",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.diagnostics_bundle",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_release",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.release_install",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.release_rollback",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_adaptive_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.evaluate_adaptive_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.apply_adaptive_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.rollback_adaptive_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_closed_loop_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.evaluate_closed_loop_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.apply_closed_loop_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.rollback_closed_loop_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_circuit_breaker",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.evaluate_circuit_breaker",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.apply_circuit_breaker",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.reset_circuit_breaker",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_predictive_quota",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.evaluate_predictive_quota",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_quota_center",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.sync_quota_center",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_account_analytics",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.sync_account_analytics",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.update_status",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.update_check",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.update_stage",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.update_activate",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_instances",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.create_instance",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.start_instance",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.stop_instance",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.restart_instance",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.focus_instance",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.audit_identity",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_project_affinity",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.save_project_affinity",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.launch_project_affinity",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.sync_project_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_model_manager",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.discover_models",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.save_model_policy",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.apply_model_policy",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_api_compatibility",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.run_api_compatibility",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_self_healing",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.audit_self_healing",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.repair_self_healing",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_security",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.audit_security",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.harden_security",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.seal_security",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_unified_diagnostics",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.refresh_unified_diagnostics",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_project_orchestrator",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.preflight_project_orchestrator",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.launch_project_orchestrator",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_multi_codex_team",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.save_multi_codex_team",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.preflight_multi_codex_team",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.launch_multi_codex_team",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_smart_model_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.evaluate_smart_model_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.apply_smart_model_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.rollback_smart_model_router",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.get_lan_pool",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.pair_lan_pool",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.heartbeat_lan_pool",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.acquire_lan_project",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "dispatch.release_lan_project",
+      "ok": true,
+      "detail": "public action referenced by dispatcher/runtime"
+    },
+    {
+      "name": "gui_literal_actions_subset_contract",
+      "ok": true,
+      "detail": "unknown="
+    },
+    {
+      "name": "codex_only_no_antigravity_public_action",
+      "ok": true,
+      "detail": "bad="
+    },
+    {
+      "name": "powershell_version_sync",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_version_sync",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "readme_version_sync",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stable_token.ProxyPort_8317",
+      "ok": true,
+      "detail": "ProxyPort = 8317"
+    },
+    {
+      "name": "stable_token.Set_RootTomlKey_t_model_provider_hms_api_router_",
+      "ok": true,
+      "detail": "Set-RootTomlKey $t \"model_provider\" '\"hms_api_router\"'"
+    },
+    {
+      "name": "stable_token._model_providers_hms_api_router_",
+      "ok": true,
+      "detail": "[model_providers.hms_api_router]"
+    },
+    {
+      "name": "stable_token._model_providers_hms_instance_router_",
+      "ok": true,
+      "detail": "[model_providers.hms_instance_router]"
+    },
+    {
+      "name": "stable_token.wire_api_responses_",
+      "ok": true,
+      "detail": "wire_api = \"responses\""
+    },
+    {
+      "name": "stable_token.settings_v2523_1_json",
+      "ok": true,
+      "detail": "settings-v2523_1.json"
+    },
+    {
+      "name": "stable_token.state_v2523_1_json",
+      "ok": true,
+      "detail": "state-v2523_1.json"
+    },
+    {
+      "name": "stable_token.local_node_v2545_json",
+      "ok": true,
+      "detail": "local-node-v2545.json"
+    },
+    {
+      "name": "stable_token.lan_pool_latest_v2545_json",
+      "ok": true,
+      "detail": "lan-pool-latest-v2545.json"
+    },
+    {
+      "name": "stable_token.lan_pool_history_v2545_jsonl",
+      "ok": true,
+      "detail": "lan-pool-history-v2545.jsonl"
+    },
+    {
+      "name": "stable_token.HMS_AI_Cockpit_LanPoolPairingKey_v25_45",
+      "ok": true,
+      "detail": "HMS_AI_Cockpit:LanPoolPairingKey:v25.45"
+    },
+    {
+      "name": "stable_token.HMS_AI_Cockpit_RouterKey_global_v25_40",
+      "ok": true,
+      "detail": "HMS_AI_Cockpit:RouterKey:global:v25.40"
+    },
+    {
+      "name": "stable_token.HMS_AI_Cockpit_IntegritySealKey_v25_40",
+      "ok": true,
+      "detail": "HMS_AI_Cockpit:IntegritySealKey:v25.40"
+    },
+    {
+      "name": "lan_pairing_kdf_salt_stable",
+      "ok": true,
+      "detail": "HMS-AI-Cockpit-LAN-Pool-v25.45"
+    },
+    {
+      "name": "codex_only_default.CodexOnlyEdition_true",
+      "ok": true,
+      "detail": "CodexOnlyEdition = $true"
+    },
+    {
+      "name": "codex_only_default.CodexShowAntigravityPanel_false",
+      "ok": true,
+      "detail": "CodexShowAntigravityPanel = $false"
+    },
+    {
+      "name": "codex_only_default.OpenAntigravityOnEnable_false",
+      "ok": true,
+      "detail": "OpenAntigravityOnEnable = $false"
+    },
+    {
+      "name": "antigravity_gui_hidden_default",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stable_endpoint_not_changed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "milestone_25.28_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.29_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.30_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.31_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.32_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.33_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.34_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.35_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.36_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.37_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.38_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.39_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.40_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.41_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.42_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.43_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.44_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    },
+    {
+      "name": "milestone_25.45_surface_preserved",
+      "ok": true,
+      "detail": "files=True actions=True tokens=True"
+    }
+  ],
+  "windows_powershell_5_1_runtime": "DEFERRED_BY_OPERATOR"
+}

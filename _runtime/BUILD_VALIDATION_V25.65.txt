@@ -1,0 +1,36 @@
+HMS AI Cockpit v25.65 — BUILD VALIDATION
+Generated UTC: 2026-08-22T20:14:51.844956+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+
+CORE GATES
+- Windows Target Adapter Pack: 13/13 PASS
+- Attested Evidence Promotion Gate: 10/10 PASS
+- Recovery Operator Timeline: 7/7 PASS
+- Real-Effect Crash Certification contract: 15/15 PASS; production_score_eligible=false
+- Target Recovery Evidence Bundle: 8/8 PASS; production_score_eligible=false
+- Startup Recovery Reconciler proof: 12/12 PASS
+- Unified Diagnostics Attested Recovery: 11/11 PASS
+- Diagnostics Bundle Privacy v25.65: 15/15 PASS
+- Runtime Kit: 382/382 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 48/48 suites; 1568/1568 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS; headless timeout alive-state expected; stderr 0 bytes
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+- Python compileall / py_compile: PASS
+- Parity claim boundary: 9/9 PASS
+
+PUBLIC CONTRACT
+- Public BackendAction surface remains exactly 90 actions.
+- Real-effect mode remains DISARMED by default.
+- Adapter manifest uses structured argv; shell mode is forbidden.
+- Real Effect and Target Evidence Bundle cannot directly promote production score.
+- Only AttestedEvidencePromotionGate can return production_score_promotion_eligible=true after target attestation validation.
+
+CLAIM BOUNDARY
+- Feature evidence: 93.0%.
+- Production evidence: 55.2%.
+- Verdict: FEATURE_PARITY_CANDIDATE.
+- windows_runtime_certified=false.
+- No real Windows + REAL_CODEX_EFFECT certification run was executed in this build environment.
+- Real Windows PowerShell 5.1 parse/runtime, live Codex App effects, target LAN/NAS and long soak remain target-machine evidence gates.

@@ -1,0 +1,31 @@
+HMS AI Cockpit v25.73 — CHANGELOG
+Generated UTC: 2026-08-23T06:17:44.934804+00:00
+
+WINDOWS TARGET EVIDENCE IMPORT REVIEW
+- Added a dedicated seven-case import reviewer for the v25.72 Windows runtime parity Capture Kit.
+- Preserved the separate legacy 4x3 crash-matrix schema rather than forcing seven runtime reports into a twelve-report API.
+- Reuses existing cryptographic signature, trust-store, replay, privacy and append-only dual-review ledger primitives.
+- Verifies exact target package/manifest/Cockpit baseline binding, evidence classes, freshness and durable idempotency witness.
+- Rejects synthetic signature provenance on the production-review path.
+- Quarantine is read-only; no target effect execution and no automatic repair.
+
+BASELINE DELTA WATCH AUTOMATION
+- Added mandatory BEFORE_IMPORT and BEFORE_PROMOTION_REVIEW checkpoints.
+- Newer public Cockpit baseline => PROMOTION_FROZEN_BASELINE_STALE.
+- Creates Codex-only PENDING_DELTA_AUDIT queue; never auto-merges upstream and never expands back into Antigravity scope.
+
+DIAGNOSTICS / PRIVACY
+- Added aggregate import-review and baseline-delta diagnostics.
+- No raw reviewer identity, account identity, hostname, prompt/response, command/environment or certificate private material in diagnostics.
+- Diagnostics Bundle privacy v25.73: 13/13 PASS.
+
+GUI
+- Added proof-only WINDOWS EVIDENCE IMPORT REVIEW card: IMPORT / DELTA WATCH / DIAGNOSTICS.
+- No backend mutation, arm token/operator phrase, Target Campaign Executor or credential-export binding.
+
+FREEZE RESULTS
+- Runtime Kit 458/458 PASS.
+- Compatibility 133/133 PASS; BackendAction remains 90.
+- Full regression 86/86 suites, 2006/2006 numeric assertions PASS.
+- Claim Boundary 37/37 PASS.
+- Feature/production scores remain 93.0% / 55.2%.

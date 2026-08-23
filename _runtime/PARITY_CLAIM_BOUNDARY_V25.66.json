@@ -1,0 +1,68 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.66",
+  "suite": "PARITY_CLAIM_BOUNDARY",
+  "generated_utc": "2026-08-23T00:47:22.439877+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "tests": [
+    {
+      "name": "version_25_66",
+      "status": "PASS",
+      "detail": "25.66"
+    },
+    {
+      "name": "feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "feature_score_frozen",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_frozen",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "signer_no_production_promotion",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "runbook_no_production_promotion",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "promotion_outer_not_eligible",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "no_real_target_claim",
+      "status": "PASS",
+      "detail": {
+        "real_codex_effects_executed": false,
+        "windows_signing_executed": false
+      }
+    }
+  ],
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false
+}

@@ -1,0 +1,73 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.65",
+  "suite": "UNIFIED_DIAGNOSTICS_ATTESTED_RECOVERY_VALIDATION",
+  "generated_utc": "2026-08-22T20:08:37.165089+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "total": 11
+  },
+  "tests": [
+    {
+      "name": "report_version",
+      "status": "PASS",
+      "detail": "25.65"
+    },
+    {
+      "name": "three_sources",
+      "status": "PASS",
+      "detail": {
+        "attested-evidence-promotion": 1,
+        "recovery-operator-timeline": 2,
+        "windows-target-adapter": 1
+      }
+    },
+    {
+      "name": "adapter_layer",
+      "status": "PASS",
+      "detail": "WARNING"
+    },
+    {
+      "name": "promotion_layer",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "timeline_layer",
+      "status": "PASS",
+      "detail": "WARNING"
+    },
+    {
+      "name": "identity_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "metadata_identity_blank",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "vi_timeline_exported",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "safe_prefix_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "privacy_contract",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

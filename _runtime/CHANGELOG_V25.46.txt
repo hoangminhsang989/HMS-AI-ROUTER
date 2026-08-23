@@ -1,0 +1,45 @@
+HMS AI Cockpit v25.46 — REGRESSION & COMPATIBILITY FREEZE
+
+NEW / HARDENED
+- Frozen Codex-only public GUI/backend action contract (90 BackendAction values) and stable Router/API/path/credential contracts.
+- Added Codex CLI/Desktop/ChatGPT Desktop compatibility matrix and config migration validator.
+- Hardened LAN Pool signed payload semantics: schema validation, bounded future clock skew, TTL bounds and malformed signed-payload fail-closed behavior.
+- Added duplicate node-ID rejection and failover exclusion for invalid payloads.
+- Added bounded retry for transient SMB/filesystem atomic publish failures without weakening lease ownership rules.
+- Added LAN failure matrix covering share unavailable, SMB reconnect, stale/live locks, clock skew, duplicate node state, invalid/malformed signed state and expired lease takeover.
+- Unified Diagnostics now treats invalid LAN payload semantics as ERROR even when HMAC is valid.
+- Added aggregate regression-freeze validator covering the v25.28-v25.45 preserved subsystems.
+- Parity auditor synchronized to v25.46 evidence; no production-superset claim is permitted while real Windows/runtime gates remain uncertified.
+
+COMPATIBILITY / MIGRATION
+- Existing settings/state filenames remain unchanged for in-place upgrade compatibility.
+- Existing protected credential target names remain unchanged.
+- LAN pairing KDF salt remains v25.45-compatible so paired nodes are not silently orphaned by this release.
+- Client discovery remains runtime-based; no brittle hard-coded Codex client version allowlist was introduced.
+- Existing settings fallback/migration and corrupt-config backup behavior are preserved.
+
+VALIDATION
+- Compatibility Freeze: PASS 133/133.
+- Codex Client Compatibility/Migration: PASS 27/27.
+- LAN Pool regression: PASS 15/15.
+- LAN Failure Matrix: PASS 20/20.
+- Runtime Kit: PASS 199/199.
+- Smart Model Router: PASS 16/16.
+- API Compatibility: PASS 12/12.
+- API Superset: PASS 13/13.
+- Protocol: PASS 10/10.
+- Self-Healing: PASS 6/6.
+- Security Hardening: PASS 9/9.
+- Project Orchestrator: PASS 9/9.
+- PowerShell StaticLint / Coherence: PASS.
+- Aggregate Regression Freeze: PASS 14/14 suites; 445/445 counted assertions.
+- Diagnostics bundle privacy/redaction: PASS; no raw OAuth/request body/API key/cookie evidence hits.
+- Native GUI startup smoke under xvfb-run: PASS (alive until 7s timeout; stderr 0 bytes).
+- Parity Auditor: FEATURE_PARITY_CANDIDATE; feature evidence 93.0%; production evidence 55.2%; Windows runtime certified false.
+
+DEFERRED / NOT CLAIMED
+- Windows PowerShell 5.1 parser/runtime certification on the target operator PC.
+- Real Codex CLI/Desktop account/profile/quota lifecycle certification.
+- Real multi-PC SMB/NAS reconnect/lease contention certification.
+- 6h/24h soak.
+- Production superset / production-ready status.

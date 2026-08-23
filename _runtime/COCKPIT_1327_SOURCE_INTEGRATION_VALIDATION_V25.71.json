@@ -1,0 +1,244 @@
+{
+  "version": "25.71",
+  "cockpit_baseline": "1.3.27",
+  "verdict": "PASS_COCKPIT_1327_SOURCE_INTEGRATION_V25_71",
+  "summary": {
+    "pass": 29,
+    "fail": 0,
+    "total": 29
+  },
+  "checks": [
+    {
+      "name": "powershell_version_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "cockpit_baseline_setting_1327",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "port_auto_rebind_integrated",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "port_rebind_never_kills_foreign_listener",
+      "status": "PASS",
+      "detail": "function Repair-HmsCodexInstancePortConflict {\n    param([object]$Instance)\n    if(-not [bool]$script:S.CodexInstancePortAutoRecover){throw 'INSTANCE_PORT_AUTO_RECOVERY_DISABLED'}\n    if(Test-CodexInstanceClientOwned $Instance){throw 'INSTANCE_PORT_REBIND_BLOCKED_CLIENT_RUNNING'}\n    $old=[int]$Instance.port\n    $listener=ListenerPid $old\n    if($listener -le 0){return $old}\n    $expected=Join-Path ([string]$Instance.routerDir) 'cli-proxy-api.exe';$path=ProcPath $listener\n    if($path -and (Norm"
+    },
+    {
+      "name": "launch_time_account_occupancy_guard",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "client_auth_api_service_split_fields",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "official_account_ref_hashed_in_account_view",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "websocket_preference_preserved_on_refresh",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bounded_credential_backup_retention",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "parity_settings_backend_roundtrip_surface",
+      "status": "PASS",
+      "detail": [
+        "CodexCockpitParityBaseline",
+        "CodexInstancePortAutoRecover",
+        "CodexInstancePortAutoRecoverMaxScan",
+        "CodexBehaviorBackupKeepPerSourceInstance",
+        "CodexUsagePreferOfficialAccountId",
+        "CodexPreserveWebSocketPreference",
+        "CodexOfficialAuthExportEnabled",
+        "CodexModelContextMetadataEnabled"
+      ]
+    },
+    {
+      "name": "parity_settings_type_bounds",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "stable_windows_lifecycle_no_internal_daemon_stop",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "usage_ledger_schema_3",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "usage_ledger_legacy_migration_adds_official_ref",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "usage_continuity_survives_readd",
+      "status": "PASS",
+      "detail": [
+        {
+          "name": "oaid-fb9021e925677d0a7627",
+          "display_account": "after@example.invalid",
+          "identity_basis": "OFFICIAL_ACCOUNT_REF",
+          "requests": 2,
+          "success": 2,
+          "failed": 0,
+          "success_rate_pct": 100.0,
+          "retry_requests": 0,
+          "retry_rate_pct": 0.0,
+          "http_429": 0,
+          "http_401_403": 0,
+          "server_errors": 0,
+          "total_tokens": 300,
+          "token_coverage_pct": 100.0,
+          "estimated_usd": 0.0,
+          "cost_coverage_pct": 0.0,
+          "latency_p50_ms": 0.0,
+          "latency_p95_ms": 0.0,
+          "latency_p99_ms": 0.0
+        }
+      ]
+    },
+    {
+      "name": "raw_official_account_id_not_persisted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "usage_privacy_claim_raw_id_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "stream_identity_distinguishes_conversations",
+      "status": "PASS",
+      "detail": [
+        "sid-67d74befc3072aefd99a9c83",
+        "sid-8d9fc7bd84b28e19469e2450"
+      ]
+    },
+    {
+      "name": "stream_identity_is_pseudonymous_when_composite",
+      "status": "PASS",
+      "detail": "sid-67d74befc3072aefd99a9c83"
+    },
+    {
+      "name": "gateway_contract_declares_composite_identity",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "official_auth_export_disabled_by_default",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "official_auth_export_manual_gate_works",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "official_auth_export_strips_router_fields",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "official_auth_export_marked_sensitive_not_diagnostics",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "model_live_context_metadata_exposed",
+      "status": "PASS",
+      "detail": [
+        {
+          "id": "gpt-test",
+          "sources": [
+            "LIVE_ROUTER"
+          ],
+          "owned_by": "",
+          "context_window_tokens": 200000,
+          "auto_compact_token_limit": 160000,
+          "coding_likely": false,
+          "reasoning_configurable": false,
+          "reasoning_efforts": [
+            "auto",
+            "low",
+            "medium",
+            "high"
+          ],
+          "capability_source": "CONSERVATIVE_NAME_MATRIX",
+          "runtime_metadata_state": "LIVE_METADATA_PRESENT",
+          "recommended_account": "",
+          "analytics_quality_score": null,
+          "analytics_samples": null,
+          "analytics_confidence": "NONE"
+        }
+      ]
+    },
+    {
+      "name": "model_invalid_compaction_threshold_fail_soft",
+      "status": "PASS",
+      "detail": [
+        {
+          "id": "gpt-bad",
+          "sources": [
+            "LIVE_ROUTER"
+          ],
+          "owned_by": "",
+          "context_window_tokens": 1000,
+          "auto_compact_token_limit": null,
+          "coding_likely": false,
+          "reasoning_configurable": false,
+          "reasoning_efforts": [
+            "auto",
+            "low",
+            "medium",
+            "high"
+          ],
+          "capability_source": "CONSERVATIVE_NAME_MATRIX",
+          "runtime_metadata_state": "INVALID_COMPACTION_THRESHOLD_IGNORED",
+          "recommended_account": "",
+          "analytics_quality_score": null,
+          "analytics_samples": null,
+          "analytics_confidence": "NONE"
+        }
+      ]
+    },
+    {
+      "name": "official_auth_compat_rebased_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "parity_reset_baseline_1_3_27",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "parity_reset_non_benchmark",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "claim_boundary": {
+    "windows_runtime_certified": false,
+    "real_codex_effects_executed": false,
+    "production_score_changed_by_this_validator": false
+  }
+}

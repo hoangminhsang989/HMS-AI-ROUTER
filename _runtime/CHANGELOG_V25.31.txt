@@ -1,0 +1,16 @@
+HMS AI Cockpit v25.31 — Closed-loop Codex Routing
+
+- Added HMS_Codex_ClosedLoopRouter.py.
+- Added per-instance feedback ranking using Usage Ledger 1h/24h/7d signals + quota/health/pool score.
+- Added retry/429/auth/server-error penalties and latency/reliability scoring.
+- Added per-instance hysteresis, minimum samples, hold time and apply cooldown.
+- Added current-critical/emergency-quota override path.
+- Added OBSERVE and GUARDED_AUTO modes; OBSERVE remains default.
+- Added per-instance transactional priority/weight apply with manifest SHA-256 readback/update.
+- Added Closed-loop rollback without deleting credentials.
+- Preserved stable endpoint, project binding and existing session affinity.
+- Usage Ledger schema v2 adds 1h/24h account windows, retry rate and HTTP error counters.
+- Seamless pool credential refresh now preserves instance-local priority/weight routing metadata.
+- Added Closed-loop GUI controls and settings; legacy Adaptive background automation is skipped when Closed-loop is enabled.
+- Diagnostics bundle now includes redacted Closed-loop plan/state evidence.
+- Real Windows Codex closed-loop/failover runtime remains DEFERRED_BY_OPERATOR.

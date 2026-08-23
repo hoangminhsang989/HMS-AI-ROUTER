@@ -1,0 +1,21 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.57",
+  "suite": "GUI_STARTUP_SMOKE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": {
+    "process_survived_7s": true,
+    "stderr_empty": true,
+    "app_version_25_57": true,
+    "recovery_planner_surface": true,
+    "proof_model_check_actions": true
+  },
+  "exit_code": 124,
+  "stderr_tail": "",
+  "generated_utc": "2026-08-22T06:15:16.113728+00:00"
+}

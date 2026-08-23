@@ -1,0 +1,53 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.57",
+  "suite": "UNIFIED_DIAGNOSTICS_RECOVERY_PRIVACY",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "checks": [
+    {
+      "name": "version_25_57",
+      "ok": true
+    },
+    {
+      "name": "recovery_layer_present",
+      "ok": true
+    },
+    {
+      "name": "recovery_source_present",
+      "ok": true
+    },
+    {
+      "name": "metadata_only",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_4",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_5",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_6",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_7",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_8",
+      "ok": true
+    },
+    {
+      "name": "redaction_probe_9",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+HMS AI Cockpit v25.69 — BUILD VALIDATION
+=========================================
+Revision: Windows Target Certification Evidence Ingest & Promotion Decision Ledger
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+
+Frozen validation evidence
+--------------------------
+- Target Certification Evidence Ingest: 10/10 PASS
+- Promotion Decision Ledger: 11/11 PASS
+- Unified Diagnostics Evidence/Ledger: 7/7 PASS
+- Diagnostics Bundle Privacy v25.69: 9/9 PASS
+- Evidence Inbox GUI structural gate: 7/7 PASS
+- Runtime Kit: 430/430 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 69/69 suites, 1786/1786 numeric assertions PASS
+- GUI startup smoke: 6/6 PASS; event loop remained alive for 8 seconds; stderr=0
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+- Python compileall: PASS
+- Parity Claim Boundary: 16/16 PASS
+- Public BackendAction contract: 90 actions
+
+Safety / claim boundary
+-----------------------
+- Evidence ingest is READ-ONLY and never executes target effects.
+- Invalid/replayed/mixed/stale/untrusted evidence is quarantined; there is no automatic repair.
+- Promotion Decision Ledger is append-only/hash-chained with optimistic tail concurrency protection.
+- Two distinct pseudonymous reviewers are required before promotion eligibility review.
+- Promotion eligibility is explicitly separate from production score mutation.
+- Feature evidence score remains 93.0%.
+- Production evidence score remains 55.2%.
+- windows_runtime_certified=false.
+- external_windows_target_evidence_imported=false for this release proof.
+- real_codex_effects_executed=false.
+- windows_signing_executed=false.
+- automatic_production_certification=false.
+- production_score_promotion_eligible=false.
+
+Production certification note
+-----------------------------
+This release validates control-plane contracts and synthetic cryptographic/replay fixtures only.
+A real Windows/Codex target campaign, signed evidence import, dual human review and separate
+promotion-score audit remain required before any production certification or score change.

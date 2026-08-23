@@ -1,0 +1,26 @@
+HMS AI Cockpit v25.42 — PROJECT ORCHESTRATOR
+
+ADDED
+- Dedicated native GUI page: Điều phối Project.
+- HMS_Codex_ProjectOrchestrator.py deterministic status/preflight engine.
+- Backend actions: get_project_orchestrator, preflight_project_orchestrator, launch_project_orchestrator.
+- One-click Project → Instance → Account → Model/Reasoning → Router → Workspace flow.
+- Hard gates for Project existence, Project Affinity, Identity Isolation, Security Hardening, foreign port ownership and binding drift.
+- plan_hash for deterministic preflight evidence.
+- Project Orchestrator latest/history metadata files under LocalAppData HMS data root.
+- Diagnostics Bundle inclusion for v25.42 orchestrator evidence.
+
+PRESERVED
+- Stable HMS endpoint and session affinity.
+- Project Affinity and dedicated account/instance isolation.
+- Model & Reasoning Manager prelaunch behavior.
+- Security Hardening and Self-Healing ownership guard.
+- Seamless Router, Closed-loop Router, Circuit Breaker, Predictive Quota, Quota Center and Account Analytics.
+- Codex-only scope; Antigravity is not reintroduced.
+
+SAFETY
+- No unowned process kill.
+- No automatic project/account/instance deletion.
+- No prompt/request body/secret logging.
+- Identity and Security remain hard gates.
+- Runtime Windows Codex verification remains DEFERRED_BY_OPERATOR.

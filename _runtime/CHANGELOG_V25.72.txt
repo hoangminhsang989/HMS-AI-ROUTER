@@ -1,0 +1,32 @@
+HMS AI Cockpit v25.72 — CHANGELOG
+Generated UTC: 2026-08-23T05:48:47.149440+00:00
+
+WINDOWS TARGET EVIDENCE CAPTURE KIT
+- Added portable seven-case evidence capture contract for Cockpit Tools v1.3.27 runtime parity deltas.
+- Exact package ZIP SHA-256, release manifest SHA-256, Cockpit baseline and Codex version binding.
+- Pseudonymous IDs/digests only; raw auth/account/prompt/response/command-line/environment export prohibited.
+- Reuses the existing one-case Target Campaign Executor; no second mutation path.
+- DISARMED by default, no auto-next and no auto-rearm.
+- Signed per-case report contract requires WINDOWS_TARGET_OBSERVER + REAL_CODEX_EFFECT + durable idempotency witness.
+
+COCKPIT BASELINE WATCH GATE
+- Added semver-aware watch for jlcodes99/cockpit-tools baseline 1.3.27.
+- Newer Cockpit version freezes promotion and requires a Codex-only delta audit.
+- Older/invalid observed version fails closed.
+- Antigravity scope remains excluded.
+
+DIAGNOSTICS / PRIVACY
+- Added aggregate Capture Kit and Baseline Watch diagnostics.
+- Hardened diagnostics redaction for exact response keys.
+- Legacy privacy validators updated for current manifest version without weakening redaction assertions.
+
+GUI
+- Added proof-only WINDOWS TARGET EVIDENCE CAPTURE KIT card: CAPTURE KIT / BASELINE / PRIVACY.
+- No backend mutation binding, target arm binding, credential-export control or automatic effect execution.
+
+FREEZE RESULTS
+- Runtime Kit 453/453 PASS.
+- Compatibility 133/133 PASS; BackendAction remains 90.
+- Full regression 81/81 suites, 1951/1951 numeric assertions PASS.
+- GUI/static/coherence/compileall PASS.
+- Feature/production scores remain 93.0% / 55.2%.

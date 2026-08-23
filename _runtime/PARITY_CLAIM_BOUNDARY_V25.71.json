@@ -1,0 +1,143 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.71",
+  "generated_utc": "2026-08-23T04:54:48.421151+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 24,
+    "fail": 0,
+    "total": 24
+  },
+  "checks": [
+    {
+      "name": "cockpit_baseline_1327",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "parity_verdict_candidate",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "feature_score_unchanged",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_score_unchanged",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "runtime_cert_contract_pass",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "promotion_auditor_contract_pass",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unified_diagnostics_metadata_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_runtime_proof_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "runtime_kit_447",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "compatibility_133",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "regression_76_suites",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "regression_1899_assertions",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_live_smoke",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_static_lint",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_coherence",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "compileall",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "external_windows_evidence_not_imported",
+      "status": "PASS",
+      "detail": "No external REAL_WINDOWS_TARGET bundle used in release proof"
+    },
+    {
+      "name": "real_codex_effects_not_executed",
+      "status": "PASS",
+      "detail": "Control-plane/synthetic freeze only"
+    },
+    {
+      "name": "windows_signing_not_executed",
+      "status": "PASS",
+      "detail": "Windows signer target mode not executed on this host"
+    },
+    {
+      "name": "automatic_certification_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_score_promotion_eligible_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "human_review_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_backend_actions_frozen_90",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "cockpit_baseline": "1.3.27",
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "external_windows_target_evidence_imported": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false,
+  "production_score_mutation_authorized": false
+}

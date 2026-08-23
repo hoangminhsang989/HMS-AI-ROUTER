@@ -1,0 +1,24 @@
+{
+  "version": "25.53",
+  "generated_utc": "2026-08-22T04:03:56.055060+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "checks": {
+    "unified_ok": true,
+    "unified_target_event_present": true,
+    "unified_secrets_absent": true,
+    "bundle_ok": true,
+    "bundle_target_evidence_included": true,
+    "access_token_redacted": true,
+    "api_key_redacted": true,
+    "authorization_redacted": true,
+    "prompt_redacted": true,
+    "request_redacted": true,
+    "response_redacted": true,
+    "v2553_build_notes_included": true
+  }
+}

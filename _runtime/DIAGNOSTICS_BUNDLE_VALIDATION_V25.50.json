@@ -1,0 +1,17 @@
+{
+  "version": "25.50",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "privacy": {
+    "raw_oauth": false,
+    "request_body": false,
+    "api_keys": false,
+    "cookies": false,
+    "prompt": false
+  },
+  "note": "Defensive injection test used synthetic token/prompt/request-body markers; none were present in the generated ZIP. Temporary bundle path intentionally omitted from release evidence."
+}

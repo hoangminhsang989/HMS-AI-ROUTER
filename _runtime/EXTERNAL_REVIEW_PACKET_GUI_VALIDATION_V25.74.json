@@ -1,0 +1,58 @@
+{
+  "version": "25.74",
+  "suite": "EXTERNAL_REVIEW_PACKET_GUI_VALIDATION",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "name": "app_version_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "card_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "three_controls",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "proof_only_subprocess",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_backend_mutation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_arm_or_executor_call",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_credential_export_control",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "immutable_boundary_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_score",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

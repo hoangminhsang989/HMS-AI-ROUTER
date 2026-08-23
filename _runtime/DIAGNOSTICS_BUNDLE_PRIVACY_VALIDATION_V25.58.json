@@ -1,0 +1,54 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.58",
+  "suite": "DIAGNOSTICS_BUNDLE_COMPOUND_RECOVERY_PRIVACY",
+  "generated_utc": "2026-08-22T06:52:59.319207+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "checks": [
+    {
+      "name": "bundle_created",
+      "ok": true
+    },
+    {
+      "name": "compound_evidence_included",
+      "ok": true
+    },
+    {
+      "name": "access_token_redacted",
+      "ok": true
+    },
+    {
+      "name": "api_key_redacted",
+      "ok": true
+    },
+    {
+      "name": "bearer_redacted",
+      "ok": true
+    },
+    {
+      "name": "prompt_redacted",
+      "ok": true
+    },
+    {
+      "name": "request_body_redacted",
+      "ok": true
+    },
+    {
+      "name": "response_body_redacted",
+      "ok": true
+    },
+    {
+      "name": "manifest_present",
+      "ok": true
+    },
+    {
+      "name": "bounded_file_count",
+      "ok": true
+    }
+  ]
+}

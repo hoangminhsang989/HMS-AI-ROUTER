@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.43 — BUILD VALIDATION
+
+STATUS
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED (real Windows Codex): DEFERRED_BY_OPERATOR
+- SOAK: NOT_YET
+
+GATES
+- Python compile: PASS 56/56 .py/.pyw
+- Native GUI startup smoke 7s under isolated display: PASS, stderr 0
+- Native GUI Multi-Codex Team synthetic render: PASS, stderr 0
+- Multi-Codex Team synthetic validator: PASS 12/12
+- PowerShell StaticLint: PASS 221/221 variables, 0 missing; 350 referenced settings / 437 declared, 0 missing/duplicate
+- PowerShell Coherence: PASS
+- Runtime Kit Validator: PASS 176/176
+- Project Orchestrator regression: PASS 9/9
+- API Compatibility regression: PASS 12/12
+- API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- Self-Healing synthetic regression: PASS 6/6
+- Security Hardening synthetic regression: PASS 9/9
+
+MULTI-CODEX TEAM SAFETY ASSERTIONS
+- Coder / Reviewer / Tester map to distinct managed instance IDs.
+- Distinct account is a hard gate by default.
+- Shared or nested workspace is a hard gate; parallel roles cannot write the same working tree.
+- When Git metadata is available, repository mismatch is blocked.
+- Identity Isolation and Security Hardening remain hard gates.
+- Role rebinding while affected instances are running is blocked.
+- Topology changes increment explicit epoch; no silent takeover.
+- Team launch keeps already-running members alive and does not restart their session.
+- Launch rollback touches only instances started by the current action and only through existing ownership-checked Stop-CodexInstance.
+- No unowned process kill.
+- No automatic project/worktree/instance/account/credential deletion.
+- No prompt/request body/OAuth/API key/cookie logging.

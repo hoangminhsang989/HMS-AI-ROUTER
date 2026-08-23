@@ -1,0 +1,57 @@
+HMS AI Cockpit v25.48 — PERFORMANCE / SCALE
+
+Scope: Codex-only. Baseline: v25.47 Reliability / Soak Harness.
+
+ADDED
+- Dedicated Performance / Scale Harness with deterministic JSON evidence.
+- Router and managed Codex instance roles are explicit: --router-target + repeated --instance-target.
+- Control-plane latency/TTFB benchmark via GET /hms/health, with P50/P95/P99 and throughput RPS.
+- Strict metric boundary: control-plane TTFB is NOT model token TTFT; model_ttft is explicitly NOT_MEASURED_NO_QUOTA_CONSUMPTION.
+- Concurrency profiles default to 1/4/8/16.
+- Bounded admission queue with overload rejection, max-depth proof and accepted-work no-silent-drop check.
+- Reconnect-storm exercise with concurrent application-health reconnects.
+- Multi-instance per-target throughput/distribution evidence.
+- Shared SMB/NAS contention exercise under isolated .hms_perf/<run-id> namespace with atomic write/read/delete integrity checks.
+- Target host:port and raw shared path are not persisted; evidence keeps target hashes/indexes and shared-path hash only.
+- GUI LAN Pool adds PERFORMANCE / SCALE v25.48 + BENCHMARK, running in a background thread.
+- Unified Diagnostics adds PERFORMANCE_SCALE_RUN metadata source/layer.
+- Diagnostics Bundle includes redacted v25.48 performance evidence.
+- Cockpit comparison baseline refreshed to public v1.3.24 (2026-08-22).
+
+COMPATIBILITY / SAFETY
+- Frozen v25.46 public backend contract remains exact: 90 BackendAction values.
+- v25.48 adds no public BackendAction and does not mutate stable provider names, port 8317, wire_api=responses, settings/state names, protected credential targets or LAN KDF salt.
+- Benchmark default request path is GET /hms/health; no prompt/model request and no quota consumption.
+- Evidence does not persist Authorization/API key/OAuth/cookie/prompt/request/response body.
+- Invalid application-health response, unreachable target, reconnect-storm failure or shared-contention integrity error => fail-closed.
+- Synthetic/local benchmark may not auto-claim production certification.
+
+VALIDATION
+- Performance / Scale validator: 30/30 PASS.
+- Runtime Kit: 218/218 PASS.
+- Regression Freeze: 16/16 suites, 536/536 numeric assertions PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Codex Client Compatibility/Migration: 27/27 PASS.
+- LAN Pool: 15/15 PASS.
+- LAN Failure Matrix: 20/20 PASS.
+- Reliability Soak Harness: 42/42 PASS.
+- Smart Model Router: 16/16 PASS.
+- API Compatibility: 12/12 PASS.
+- API Superset: 13/13 PASS.
+- Protocol: 10/10 PASS.
+- Self-Healing synthetic: 6/6 PASS.
+- Security Hardening synthetic: 9/9 PASS.
+- Project Orchestrator: 9/9 PASS.
+- Unified Diagnostics Performance: 6/6 PASS.
+- Diagnostics Bundle v25.48: 5/5 PASS.
+- GUI headless startup smoke: PASS, 7 seconds alive, stderr 0 bytes.
+- Python compileall: PASS.
+- Production-shaped local performance smoke: PASS with 1 Router HTTP + 2 instance HTTP + shared filesystem; 80/80 concurrency-profile requests + 48/48 reconnect storm.
+
+NOT YET CERTIFIED
+- Real Windows PowerShell 5.1 + real Codex CLI/Desktop runtime: DEFERRED_BY_OPERATOR.
+- Real model token TTFT / quota-backed request path: DEFERRED_TO_V25.49.
+- Real multi-PC SMB/NAS contention: DEFERRED_BY_OPERATOR.
+- Standard real 6-hour soak: NOT EXECUTED.
+- Standard real 24-hour soak: NOT EXECUTED.
+- Production/superset claim: NOT ALLOWED YET.

@@ -1,0 +1,85 @@
+{
+  "version": "25.73",
+  "suite": "WINDOWS_TARGET_EVIDENCE_IMPORT_REVIEW_VALIDATION",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "seven_runtime_cases_exact",
+      "status": "PASS",
+      "detail": [
+        "FOREIGN_PORT_AUTO_REBIND",
+        "ACCOUNT_OCCUPANCY_GUARD",
+        "CLIENT_AUTH_API_SERVICE_SPLIT",
+        "OFFICIAL_ACCOUNT_USAGE_CONTINUITY",
+        "WEBSOCKET_PREFERENCE_PERSISTENCE",
+        "BOUNDED_BACKUP_ROLLBACK_NTFS",
+        "STREAM_IDENTITY_ISOLATION"
+      ]
+    },
+    {
+      "name": "target_package_is_v2572",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "cockpit_baseline_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "cryptographic_verification_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "two_baseline_checkpoints_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "replay_guards_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dual_review_ledger_reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "runtime_certifier_reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "read_only_import_no_effect",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_score_or_cert",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_only_scope",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_promotion_eligible": false,
+  "verdict": "PASS"
+}

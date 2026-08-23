@@ -1,0 +1,68 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.59",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_V25.59",
+  "generated_utc": "2026-08-22T07:30:56.468981+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "privacy_injection": {
+    "synthetic_secrets": 6,
+    "raw_values_persisted": false
+  },
+  "checks": [
+    {
+      "name": "unified_generated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "bundle_generated",
+      "pass": true,
+      "detail": "/mnt/data/v2559_privacy_bundle/HMS_DIAGNOSTICS_20260822T073055Z.zip"
+    },
+    {
+      "name": "unified_no_raw_secret",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "bundle_no_raw_secret",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "bundle_entries_no_raw_secret",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "bundle_contains_auth_evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unified_auth_layer_ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unified_message_current",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "claim_boundary_present",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "metadata_only",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

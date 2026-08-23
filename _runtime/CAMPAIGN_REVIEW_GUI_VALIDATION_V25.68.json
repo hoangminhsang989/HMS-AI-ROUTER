@@ -1,0 +1,50 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.68",
+  "suite": "CAMPAIGN_REVIEW_GUI_VALIDATION",
+  "generated_utc": "2026-08-23T01:27:22.836908+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "tests": [
+    {
+      "name": "gui_version",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "campaign_review_card",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "proof_handlers",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_arm_button",
+      "status": "PASS",
+      "detail": "exec_review=tk.Frame(page,bg=C[\"surface\"],highlightbackground=C[\"border_soft\"],highlightthickness=1,height=64);exec_review.pack(fill=\"x\",pady=(0,8));exec_review.pack_propagate(False)\n        tk.Label(exec_review,text=\"TARGET CAMPAIGN EXECUTOR + PROMOTION REVIEW v25.68 · ONE CASE / HUMAN REVIEW\",bg=C[\"surface\"],fg=C[\"muted\"],font=(\"Segoe UI Semibold\",7)).place(x=10,y=7)\n        self.v2568_campaign_review_status=tk.Label(exec_review,text=\"Windows-only one-case executor · frozen manifest/trust · idempotency witness · AUTO-DISARM · review đủ 12 signed reports · auto-cert=FALSE.\",bg=C[\"surface\"],fg=C[\"text2\"],font=(\"Segoe UI\",7),anchor=\"w\");self.v2568_campaign_review_status.place(x=10,y=31,width=500)\n        HoverButton(exec_review,\"EXECUTOR\",self.start_v2568_executor_proof_async,width=96,height=29,bg=C[\"surface3\"],hover=C[\"hover\"],outline=C[\"border_soft\"],font=(\"Segoe UI Semibold\",7)).place(x=520,y=18)\n        HoverButton(exec_review,\"REVIEW\",self.start_v2568_review_proof_async,width=96,height=29,bg=C[\"primary\"],hover=C[\"primary_hover\"],font=(\"Segoe UI Semibold\",7)).place(x=625,y=18)\n        HoverButton(exec_review,\"OFFLINE\",self.start_v2568_offline_bundle_proof_async,width=96,height=29,bg=C[\"surface3\"],hover=C[\"hover\"],outline=C[\"border_soft\"],font=(\"Segoe UI Semibold\",7)).place(x=730,y=18)\n        "
+    },
+    {
+      "name": "no_backend_mutation_binding",
+      "status": "PASS",
+      "detail": "exec_review=tk.Frame(page,bg=C[\"surface\"],highlightbackground=C[\"border_soft\"],highlightthickness=1,height=64);exec_review.pack(fill=\"x\",pady=(0,8));exec_review.pack_propagate(False)\n        tk.Label(exec_review,text=\"TARGET CAMPAIGN EXECUTOR + PROMOTION REVIEW v25.68 · ONE CASE / HUMAN REVIEW\",bg=C[\"surface\"],fg=C[\"muted\"],font=(\"Segoe UI Semibold\",7)).place(x=10,y=7)\n        self.v2568_campaign_review_status=tk.Label(exec_review,text=\"Windows-only one-case executor · frozen manifest/trust · idempotency witness · AUTO-DISARM · review đủ 12 signed reports · auto-cert=FALSE.\",bg=C[\"surface\"],fg=C[\"text2\"],font=(\"Segoe UI\",7),anchor=\"w\");self.v2568_campaign_review_status.place(x=10,y=31,width=500)\n        HoverButton(exec_review,\"EXECUTOR\",self.start_v2568_executor_proof_async,width=96,height=29,bg=C[\"surface3\"],hover=C[\"hover\"],outline=C[\"border_soft\"],font=(\"Segoe UI Semibold\",7)).place(x=520,y=18)\n        HoverButton(exec_review,\"REVIEW\",self.start_v2568_review_proof_async,width=96,height=29,bg=C[\"primary\"],hover=C[\"primary_hover\"],font=(\"Segoe UI Semibold\",7)).place(x=625,y=18)\n        HoverButton(exec_review,\"OFFLINE\",self.start_v2568_offline_bundle_proof_async,width=96,height=29,bg=C[\"surface3\"],hover=C[\"hover\"],outline=C[\"border_soft\"],font=(\"Segoe UI Semibold\",7)).place(x=730,y=18)\n        "
+    },
+    {
+      "name": "subprocess_only_validators",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_backend_actions_90",
+      "status": "PASS",
+      "detail": 90
+    }
+  ],
+  "real_effect_arm_control_present": false
+}

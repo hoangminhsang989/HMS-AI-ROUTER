@@ -1,0 +1,103 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.54",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_V25_54",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 18,
+    "fail": 0,
+    "total": 18
+  },
+  "tests": [
+    {
+      "name": "unified_version_25_54",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_privacy_metadata_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "simulation_layer_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "simulation_source_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_access_token",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_api_key",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_bearer",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_prompt",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_request",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_redacts_response",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_created",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_contains_simulation_evidence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_access_token",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_api_key",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_bearer",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_prompt",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_request",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redacts_response",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.55",
+  "suite": "GUI_STARTUP_SMOKE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": {
+    "process_survived_7s": true,
+    "stderr_empty": true,
+    "app_version_25_55": true,
+    "router_twin_surface": true,
+    "model_check_action": true
+  },
+  "generated_utc": "2026-08-22T05:26:00.579014+00:00"
+}

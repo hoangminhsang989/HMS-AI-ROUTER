@@ -1,0 +1,114 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.46",
+  "suite": "LAN_POOL_FAILURE_MATRIX",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "total": 20
+  },
+  "checks": [
+    {
+      "name": "share_unavailable_fails_closed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "smb_transient_publish_retry",
+      "ok": true,
+      "detail": "replace_calls=2"
+    },
+    {
+      "name": "stale_lock_recovered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "active_lock_not_silently_stolen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "future_clock_skew_heartbeat_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clock_skew_node_not_failover_candidate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "signed_malformed_heartbeat_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "duplicate_node_id_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "corrupt_registry_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "active_lease_blocks_foreign_node",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "future_clock_skew_lease_blocks_takeover",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "signed_malformed_lease_blocks_takeover",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "expired_lease_takeover_newer_epoch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "expired_takeover_fresh_nonce",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "heartbeat_ttl_clamped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "lease_ttl_clamped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "git_origin_identity_survives_path_change",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shared_status_contains_no_secret_fields",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "raw_credentials_never_shared_contract",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid_registry_entries_reported",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "real_windows_smb_reconnect": "DEFERRED_BY_OPERATOR"
+}

@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.67 — CHANGELOG
+Generated UTC: 2026-08-23T01:04:35.177040+00:00
+
+1. Windows Attestation Trust Store
+- Added deterministic trust snapshot digest.
+- Added certificate pinning, explicit rotation, retirement and revocation states.
+- Added certificate expiry/revocation warnings without private material.
+- Added DPAPI signing-key lifecycle metadata: generation/state/pseudonymous ref/sealed-blob digest only.
+
+2. Offline Attestation Verifier
+- Verifies package version, release-manifest SHA-256, signature, signer trust state and trust-snapshot digest without network/account credential access.
+- Revoked/unpinned/expired signer fails closed.
+- DPAPI evidence requires local-machine verification context; cross-machine offline verifier will not fake validation.
+
+3. Resumable 4×3 Certification Campaign
+- Exact 4 effects × 3 crash windows = 12 cases.
+- Explicit one-case arming; no automatic re-arm.
+- PENDING → REARM_REQUIRED.
+- RUNNING/ambiguous → OPERATOR_REQUIRED.
+- DURABLE_UNVERIFIED → VERIFY_ONLY.
+- RECOVERED → ATTEST_ONLY.
+- ATTESTED → SKIP_COMPLETE.
+- No resume path silently repeats a durable effect.
+- Campaign journal uses a deterministic hash chain and binds exact package manifest + trust snapshot.
+
+4. UI / Diagnostics / Privacy
+- Added TRUST / OFFLINE / CAMPAIGN proof surface in native GUI.
+- Added aggregate Trust Store / Offline Verifier / Campaign layers to Unified Diagnostics.
+- Hardened diagnostics redaction for certificate/private-material key classes.
+- No new public BackendAction; exact set remains 90.
+
+5. Validation
+- Runtime Kit 408/408.
+- Compatibility 133/133.
+- Regression 59/59 suites, 1,679/1,679 assertions.
+- GUI 6/6; static lint/coherence/compileall PASS.
+- Parity remains 93.0% feature / 55.2% production; Windows runtime certification remains false.

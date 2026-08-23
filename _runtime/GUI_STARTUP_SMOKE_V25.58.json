@@ -1,0 +1,35 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.58",
+  "suite": "GUI_STARTUP_SMOKE",
+  "generated_utc": "2026-08-22T06:53:59.085038+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "name": "app_version_25_58",
+      "ok": true
+    },
+    {
+      "name": "compound_surface_present",
+      "ok": true
+    },
+    {
+      "name": "compound_async_handler_present",
+      "ok": true
+    },
+    {
+      "name": "headless_lived_full_window",
+      "ok": true
+    },
+    {
+      "name": "stderr_empty",
+      "ok": true
+    }
+  ],
+  "runtime_note": "Process remained alive until intentional 7-second headless timeout; stderr was empty."
+}

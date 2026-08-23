@@ -1,0 +1,53 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.69",
+  "suite": "UNIFIED_DIAGNOSTICS_EVIDENCE_LEDGER_VALIDATION",
+  "generated_utc": "2026-08-23T02:22:40.375004+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "tests": [
+    {
+      "name": "unified_exit",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "report_version",
+      "status": "PASS",
+      "detail": "25.69"
+    },
+    {
+      "name": "ingest_layer",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "ledger_layer",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "aggregate_sources",
+      "status": "PASS",
+      "detail": {
+        "promotion-decision-ledger": 1,
+        "target-cert-evidence-ingest": 1
+      }
+    },
+    {
+      "name": "no_raw_reviewer_or_secret",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "metadata_only",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

@@ -1,0 +1,56 @@
+{
+  "version": "25.72",
+  "suite": "COCKPIT_BASELINE_WATCH_GATE_VALIDATION",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 8,
+        "fail": 0,
+        "total": 8
+      }
+    },
+    {
+      "name": "baseline_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "repo_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "current_allows_campaign",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "newer_freezes_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "older_fails_closed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_only_scope",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_promotion",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -1,0 +1,62 @@
+{
+  "version": "25.71",
+  "suite": "UNIFIED_DIAGNOSTICS_PARITY_RUNTIME_VALIDATION",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "checks": [
+    {
+      "name": "runtime_cert_proof_pass",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "promotion_auditor_proof_pass",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "diagnostics_windows_cert_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "diagnostics_score_eligible_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_raw_account_identity",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_private_material",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "aggregate_metadata_only",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "diagnostics": {
+    "version": "25.71",
+    "cockpit_baseline": "1.3.27",
+    "runtime_certification": {
+      "case_count": 7,
+      "windows_runtime_certified": false,
+      "external_target_evidence_imported": false
+    },
+    "promotion_auditor": {
+      "proposal_eligible": false,
+      "automatic_production_certification": false,
+      "production_score_mutation_authorized": false
+    },
+    "sensitive_identity_exported": false
+  },
+  "verdict": "PASS"
+}

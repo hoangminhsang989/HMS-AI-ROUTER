@@ -1,0 +1,79 @@
+{
+  "ok": true,
+  "data": {
+    "version": "24.0",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 13,
+      "fail": 0,
+      "total": 13
+    },
+    "tests": [
+      {
+        "name": "key_pool.single",
+        "status": "PASS",
+        "detail": "target=B reason=SINGLE"
+      },
+      {
+        "name": "routing.quota_first",
+        "status": "PASS",
+        "detail": "target=A"
+      },
+      {
+        "name": "routing.plan_first",
+        "status": "PASS",
+        "detail": "target=B"
+      },
+      {
+        "name": "routing.expiry_soon",
+        "status": "PASS",
+        "detail": "target=B"
+      },
+      {
+        "name": "quota.reserve_fail_closed",
+        "status": "PASS",
+        "detail": "stale C excluded; A below reserve"
+      },
+      {
+        "name": "affinity.client_key_scope",
+        "status": "PASS",
+        "detail": "a1=A a2=B affinity=3"
+      },
+      {
+        "name": "model.prefix_catalog",
+        "status": "PASS",
+        "detail": "['corp-gpt-5.6']"
+      },
+      {
+        "name": "model.prefix_rewrite",
+        "status": "PASS",
+        "detail": "{\"id\": \"resp_test\", \"model\": \"gpt-5.6\", \"usage\": {\"input_tokens\": 100, \"output_tokens\": 25, \"input_tokens_details\": {\"cached_tokens\": 20}, \"total_tokens\": 125}, \"ok\": true}"
+      },
+      {
+        "name": "cors.loopback_preflight",
+        "status": "PASS",
+        "detail": "status=204 origin=http://localhost:3000"
+      },
+      {
+        "name": "usage.cost_capture",
+        "status": "PASS",
+        "detail": "{\"input_tokens\": 100, \"output_tokens\": 25, \"cached_input_tokens\": 20, \"estimated_usd\": 0.00134, \"usage_source\": \"JSON_CAPTURE\"}"
+      },
+      {
+        "name": "analytics.account_model_key",
+        "status": "PASS",
+        "detail": "{\"total\": {\"requests\": 1, \"success\": 1, \"failed\": 0, \"canceled\": 0, \"stream_incomplete\": 0, \"success_rate_pct\": 100.0, \"input_tokens\": 100, \"output_tokens\": 25, \"cached_input_tokens\": 20, \"total_tokens\": 125, \"token_coverage_pct\": 100.0, \"estimated_usd\": 0.00134, \"cost_coverage_pct\": 100.0, \"latency_ms\": {\"p50\": 1.14, \"p95\": 1.14, \"p99\": 1.14}, \"ttft_ms\": {\"p50\": 0.79, \"p95\": 0.79, \"p99\": 0.79}}, \"keys\": [\"dev\"]}"
+      },
+      {
+        "name": "trace.privacy",
+        "status": "PASS",
+        "detail": "request body/client key absent"
+      },
+      {
+        "name": "session.visibility_repair",
+        "status": "PASS",
+        "detail": "{\"changed_session_files\": 1, \"updated_sqlite_rows\": 1, \"backup\": true}"
+      }
+    ]
+  }
+}

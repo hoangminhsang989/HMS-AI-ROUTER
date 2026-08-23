@@ -1,0 +1,11 @@
+HMS AI Cockpit v25.71 — CHANGELOG
+
+1. Added Cockpit v1.3.27 Windows Runtime Parity Certification case pack with seven direct Codex parity cases.
+2. Certification requires REAL_WINDOWS_TARGET provenance, Windows host verification, current Codex runtime, exact package/manifest binding, WINDOWS_TARGET_OBSERVER + REAL_CODEX_EFFECT evidence, signed attestation and idempotency witness.
+3. Added Production Evidence Promotion Auditor. It re-checks Windows certificate + dual-review + Cockpit baseline and produces Vietnamese human-review proposals only; it never mutates the score.
+4. Added metadata-only Unified Diagnostics projection for runtime certification/promotion state.
+5. Added GUI card CERTIFY / AUDIT / EVIDENCE; structural gate proves no backend mutation, target arm, campaign executor or credential export binding.
+6. Rebased current PowerShell/GUI/runtime version to 25.71 while preserving public BackendAction exactly 90.
+7. Full post-fix regression: 76/76 suites, 1899/1899 assertions PASS.
+8. Competitive baseline watch reconfirmed Cockpit Tools main package version 1.3.27 before release freeze.
+9. Feature/production evidence scores intentionally remain 93.0% / 55.2%; no synthetic score promotion.

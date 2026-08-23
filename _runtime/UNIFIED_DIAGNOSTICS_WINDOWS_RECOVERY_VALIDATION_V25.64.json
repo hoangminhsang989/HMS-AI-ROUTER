@@ -1,0 +1,78 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.64",
+  "suite": "UNIFIED_DIAGNOSTICS_WINDOWS_RECOVERY_VALIDATION",
+  "generated_utc": "2026-08-22T14:53:16.447186+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "tests": [
+    {
+      "name": "report_version_current",
+      "status": "PASS",
+      "detail": "25.64"
+    },
+    {
+      "name": "observer_layer_ok",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "real_effect_layer_warning",
+      "status": "PASS",
+      "detail": "WARNING"
+    },
+    {
+      "name": "evidence_layer_ok",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "observer_identity_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "real_case_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "host_fingerprint_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "three_sources_present",
+      "status": "PASS",
+      "detail": {
+        "real-effect-crash-cert": 1,
+        "target-recovery-evidence": 1,
+        "windows-recovery-observer": 1
+      }
+    },
+    {
+      "name": "three_aggregate_events",
+      "status": "PASS",
+      "detail": 3
+    },
+    {
+      "name": "identity_fields_blank",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "report_privacy",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_not_promoted",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

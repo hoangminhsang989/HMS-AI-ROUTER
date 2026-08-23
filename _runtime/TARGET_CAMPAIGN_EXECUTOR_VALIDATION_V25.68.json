@@ -1,0 +1,68 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.68",
+  "suite": "TARGET_CAMPAIGN_EXECUTOR_VALIDATION",
+  "generated_utc": "2026-08-23T01:27:17.586669+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "proof_12",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "one_case_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "frozen_manifest_trust_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "windows_ps51_codex_preflight",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "idempotency_and_auto_disarm",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lease_separate_gate",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "structured_argv",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "synthetic_no_production",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

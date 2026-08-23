@@ -1,0 +1,53 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.68",
+  "suite": "UNIFIED_DIAGNOSTICS_CAMPAIGN_REVIEW_VALIDATION",
+  "generated_utc": "2026-08-23T01:27:20.709228+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "tests": [
+    {
+      "name": "unified_exit",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "report_version",
+      "status": "PASS",
+      "detail": "25.68"
+    },
+    {
+      "name": "executor_layer",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "review_layer",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "aggregate_sources",
+      "status": "PASS",
+      "detail": {
+        "attested-promotion-review": 1,
+        "target-campaign-executor": 1
+      }
+    },
+    {
+      "name": "no_identity_or_secret",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "metadata_only",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

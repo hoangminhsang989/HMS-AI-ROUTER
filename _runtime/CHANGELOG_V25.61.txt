@@ -1,0 +1,52 @@
+HMS AI Cockpit v25.61 — NATIVE USAGE & TOKEN CENTER PARITY+
+Date: 2026-08-22
+Scope: Codex-only
+
+1. NATIVE USAGE & TOKEN CENTER
+- Added HMS_Codex_UsageTokenCenter.py as a read-only/native account-quota presentation model.
+- Normalizes 5-hour, Weekly and model-specific quota windows.
+- Plan-aware display classes: Free, Plus, Pro, Team/Business, Enterprise, Unknown.
+- Every exposed reset row carries countdown, absolute UTC timestamp, source and freshness metadata.
+- Missing/malformed metadata remains missing/unknown; v25.61 does not invent upstream quota or package fields.
+
+2. LIFECYCLE SEPARATION
+- Subscription/package expiry, OAuth/token lifecycle and quota reset are explicit independent lifecycles.
+- OAuth lifecycle metadata uses a credential-safe schema name (oauth_token_lifecycle); raw credentials are never stored.
+- Package expiry is shown only when trustworthy explicit upstream metadata exposes it.
+
+3. RESET-AWARE ROUTER PREVIEW
+- Adds NOW vs AFTER NEXT RESET operator comparison.
+- AFTER RESET is explicitly HYPOTHETICAL_POST_RESET_SCENARIO / SCENARIO ONLY.
+- Preview never writes quota, never mutates the live router and never overrides live quota eligibility.
+
+4. HISTORY / REPLAY
+- Adds metadata-only Usage & Token history snapshots.
+- Replays RESET_TIMESTAMP_CHANGED, RESET_REPLENISHMENT_OBSERVED and PACKAGE_EXPIRY_METADATA_CHANGED.
+- History writes are fsync-backed JSONL and exclude raw auth/prompt/request/response payloads.
+
+5. POWERSHELL + NATIVE GUI INTEGRATION
+- Account Center embeds Usage & Token Center v25.61 through internal helper wiring.
+- refresh_quota appends metadata-only history; get_accounts remains read-only.
+- Public BackendAction contract remains exactly 90 actions; no new public mutation action was added.
+- UI distinguishes HẾT HẠN GÓI from OAuth/token hết hạn and shows model-specific reset countdown + absolute time.
+
+6. DIAGNOSTICS / PRIVACY HARDENING
+- Unified Diagnostics projects aggregate Usage/Token metadata only; account identity/raw credentials are not projected.
+- Diagnostics Bundle includes v25.61 Usage/Token metadata through the redaction pipeline.
+- Reconstruction review found and fixed a generic Bearer-token redaction gap: bare `Bearer <token>` is now redacted even outside an Authorization literal.
+- Dedicated diagnostics bundle privacy validation: 14/14 PASS.
+
+7. REGRESSION / FORWARD COMPATIBILITY
+- Runtime Kit: 322/322 PASS.
+- Compatibility Freeze: 133/133 PASS; public BackendAction count = 90.
+- Full regression freeze: 31/31 suites; 1261/1261 numeric assertions PASS.
+- Usage & Token Center: 36/36 PASS.
+- Unified Diagnostics Usage/Token: 12/12 PASS.
+- GUI startup smoke: 5/5 PASS under xvfb-run; 8s timeout indicates the GUI remained alive; stderr empty.
+- PowerShell static lint/coherence and Python compileall PASS.
+
+8. CLAIM BOUNDARY
+- v25.61 is synthetic/control-plane parity evidence.
+- It does NOT certify real upstream Free/Plus/Pro/Business/Enterprise quota fidelity.
+- It does NOT certify real Windows Codex Desktop/CLI auth, encrypted Secrets backend, LAN/NAS failover, or 6h/24h soak.
+- Production certification remains gated by real target-machine evidence.

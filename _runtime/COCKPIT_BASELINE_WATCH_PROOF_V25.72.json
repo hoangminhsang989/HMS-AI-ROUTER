@@ -1,0 +1,55 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.72",
+  "suite": "COCKPIT_BASELINE_WATCH_PROOF",
+  "generated_utc": "2026-08-23T05:28:18.343733+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "tests": [
+    {
+      "name": "current_baseline_passes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "newer_upstream_freezes_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "older_source_rejected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "invalid_version_fails_closed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_only_scope_preserved",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "source_locator_pseudonymous",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_automatic_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "semver_not_lexical",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "promotion_score_eligible": false
+}

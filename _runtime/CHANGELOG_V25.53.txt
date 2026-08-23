@@ -1,0 +1,12 @@
+HMS AI Cockpit v25.53 — TARGET-MACHINE CERTIFICATION RUNNER
+
+- Add a seven-stage Codex-only target-machine certification runner: Host, Real Codex, Live Quota, bounded Failover+Restore, signed LAN/SMB, 6h soak and 24h soak.
+- Production verdict is impossible unless every stage is backed by real target-machine evidence; synthetic/mock/stale/shortened evidence is fail-closed.
+- Add native GUI TARGET-MACHINE CERTIFICATION v25.53 panel with PREFLIGHT and ĐÁNH GIÁ actions. PREFLIGHT never sends a model request.
+- Preserve explicit LIVE 1 confirmation from v25.49; the aggregator itself never mutates auth, disables accounts or spends quota.
+- Quota stage requires at least two real-source accounts with fresh/aging evidence and both 5h + weekly windows.
+- Failover stage requires bounded PASS, different target, HTTP 200, account restoration and fresh evidence.
+- LAN stage requires >=2 signed online nodes plus a real atomic shared-path roundtrip; raw credentials remain local.
+- Soak stages require non-synthetic exact 6h/24h active runtime with Router, >=2 instances, shared roundtrip and downtime-excluding resume semantics.
+- Target evidence records only hashes/metadata; no raw token, prompt, request body or response body.
+- Public BackendAction contract remains exactly 90 actions.

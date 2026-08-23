@@ -1,0 +1,44 @@
+HMS AI Cockpit v25.29 — BUILD VALIDATION
+
+PRODUCT SCOPE
+- CODEX ONLY.
+- v25.28 remains rollback baseline.
+- GUI is the user-facing workflow; BAT/PowerShell remain diagnostic/recovery internals.
+
+IMPLEMENTED
+- Native GUI page: Dự án Codex / Project Affinity.
+- Backend actions: get_project_affinity / save_project_affinity / launch_project_affinity.
+- Persistent metadata store: Project -> isolated instance -> primary account -> fallback accounts.
+- Auto-register existing managed v25.28 instances into Project Affinity.
+- Primary account is derived from isolated instance; GUI cannot silently cross-bind identity.
+- Fallback accounts are validated, deduplicated, capped, and remembered.
+- One-click MỞ PROJECT focuses running mapped instance or starts it when primary account is READY.
+- Primary health gate blocks unsafe launch when primary account is unhealthy.
+- Project card exposes health + 5h/7d quota when available.
+- Missing/offline project path becomes PROJECT_MISSING instead of crashing the whole affinity page.
+- binding-v2528 is migrated to binding-v2529 on demand; legacy binding is not automatically deleted.
+- Project affinity data/history contain metadata only; no OAuth token/local API key/cookie.
+- No delete-project-affinity action in this tranche.
+- v25.29 deliberately does NOT live-rebind credentials. Seamless preferred/fallback rotation is deferred to v25.30.
+
+STATIC / BUILD VERIFICATION
+- Python compileall: PASS.
+- HMS_GUI.pyw compile: PASS.
+- HMS_Codex_ProjectAffinityValidator synthetic valid mapping: PASS.
+- Validator negative mismatch case: PASS (rejected as expected, exit 2).
+- GUI startup smoke under Xvfb: PASS (remained alive 6s; stderr 0 bytes).
+- PowerShell StaticLint: PASS; variables 175/175; settings missing 0; glue findings 0.
+- PowerShell CoherenceAudit: PASS; missing variables/settings 0.
+- Codex-only / project-affinity structural assertions: PASS 16/16.
+
+RUNTIME EVIDENCE
+- Real Windows Project Affinity launch/focus: DEFERRED_BY_OPERATOR.
+- Real Codex multi-instance/account isolation: DEFERRED_BY_OPERATOR.
+- Real quota/health transition behavior: DEFERRED_BY_OPERATOR.
+- Multi-hour soak: NOT YET.
+
+SAFETY
+- No automatic release deletion.
+- No destructive affinity-delete action.
+- Foreign PID ownership guards from v25.28 remain in place.
+- v25.29 fallback metadata is advisory only; no live credential rebind.

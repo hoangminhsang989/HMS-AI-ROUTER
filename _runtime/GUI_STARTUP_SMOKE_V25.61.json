@@ -1,0 +1,44 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.61",
+  "suite": "GUI_STARTUP_SMOKE",
+  "generated_utc": "2026-08-22T11:31:25.602279+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "headless_runtime": "xvfb-run 8s; timeout 124 is expected alive-state evidence, not target Windows proof",
+  "tests": [
+    {
+      "name": "py_compile",
+      "status": "PASS",
+      "detail": "py_compile PASS"
+    },
+    {
+      "name": "version_sync",
+      "status": "PASS",
+      "detail": "GUI v25.61"
+    },
+    {
+      "name": "usage_token_surface",
+      "status": "PASS",
+      "detail": "native account surface tokens"
+    },
+    {
+      "name": "headless_starts_without_traceback",
+      "status": "PASS",
+      "detail": {
+        "timeout_expected": true,
+        "stderr_tail": ""
+      }
+    },
+    {
+      "name": "headless_alive_until_timeout",
+      "status": "PASS",
+      "detail": "timeout(8s) returned 124 => GUI stayed alive"
+    }
+  ],
+  "production_certification": "NOT_CLAIMED"
+}

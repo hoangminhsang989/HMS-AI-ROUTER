@@ -1,0 +1,730 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.37",
+    "generated_utc": "2026-08-21T03:32:05.433823+00:00",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 143,
+      "fail": 0,
+      "total": 143
+    },
+    "tests": [
+      {
+        "name": "entrypoint.native_gui_host",
+        "status": "PASS",
+        "detail": "normal entrypoint launches HMS_GUI.pyw directly; PowerShell is not the primary UI host"
+      },
+      {
+        "name": "orchestrator.required_stages",
+        "status": "PASS",
+        "detail": "required stages present"
+      },
+      {
+        "name": "all_ready.non_mutating_router",
+        "status": "PASS",
+        "detail": "ALL_READY does not call router/safe runtime stages"
+      },
+      {
+        "name": "snapshot.private_inputs",
+        "status": "PASS",
+        "detail": "snapshot covers configs and best-effort ACL"
+      },
+      {
+        "name": "snapshot.no_oauth_copy",
+        "status": "PASS",
+        "detail": "OAuth auth is inventoried as metadata"
+      },
+      {
+        "name": "port_profile.safe_defaults",
+        "status": "PASS",
+        "detail": "first runtime profile keeps automation off"
+      },
+      {
+        "name": "guarded_launcher.runtime_ready",
+        "status": "PASS",
+        "detail": "guarded launcher blocks incomplete checkpoint"
+      },
+      {
+        "name": "wizard.sequence",
+        "status": "PASS",
+        "detail": "operator sequence visible"
+      },
+      {
+        "name": "main.runtime_cert_tab",
+        "status": "PASS",
+        "detail": "main Mission Control links Runtime Certification"
+      },
+      {
+        "name": "gate.v25_23_1_authority",
+        "status": "PASS",
+        "detail": "runtime gate authority migrated to v25.23.1"
+      },
+      {
+        "name": "manifest.v25_23_1",
+        "status": "PASS",
+        "detail": "manifest files=68"
+      },
+      {
+        "name": "powershell.no_reserved_auto_alias",
+        "status": "PASS",
+        "detail": "no manual PID/HOST/HOME automatic-variable aliases"
+      },
+      {
+        "name": "wizard.fatal_evidence",
+        "status": "PASS",
+        "detail": "wizard captures child stdout/stderr and publishes emergency evidence"
+      },
+      {
+        "name": "powershell.ps51_generic_list_compat",
+        "status": "PASS",
+        "detail": "all Generic List[T] use direct .NET constructors"
+      },
+      {
+        "name": "runtime_gate.toarray_publication",
+        "status": "PASS",
+        "detail": "critical runtime evidence publication avoids @() around Generic List"
+      },
+      {
+        "name": "runtime_gate.fatal_evidence",
+        "status": "PASS",
+        "detail": "Windows Runtime Gate publishes FATAL JSON/text evidence on unhandled error"
+      },
+      {
+        "name": "powershell.no_bare_log_calls",
+        "status": "PASS",
+        "detail": "all Log calls use quoted/expression arguments"
+      },
+      {
+        "name": "wizard.shown_guarded",
+        "status": "PASS",
+        "detail": "Form.Shown initialization is guarded by try/catch"
+      },
+      {
+        "name": "inventory.current_release_authority",
+        "status": "PASS",
+        "detail": "Inventory checks the current v25.23.1 main script and current release manifest"
+      },
+      {
+        "name": "inventory.operator_spacing",
+        "status": "PASS",
+        "detail": "Inventory PowerShell comparison operator is tokenized safely"
+      },
+      {
+        "name": "inventory.detailed_missing",
+        "status": "PASS",
+        "detail": "Inventory publishes exact missing prerequisite names instead of a generic failure"
+      },
+      {
+        "name": "runtime.evidence_initialized_before_use",
+        "status": "PASS",
+        "detail": "RunEvidenceDir is initialized and created before Invoke-WindowsGate can use it"
+      },
+      {
+        "name": "runtime.no_orphan_evidenceDir",
+        "status": "PASS",
+        "detail": "Orchestrator contains no orphan/uninitialized $evidenceDir reference"
+      },
+      {
+        "name": "runtime.current_namespace_authority",
+        "status": "PASS",
+        "detail": "no stale runtime authority names"
+      },
+      {
+        "name": "powershell.real_parser_regression_patterns",
+        "status": "PASS",
+        "detail": "no known PS5.1 parser regression patterns"
+      },
+      {
+        "name": "powershell.wakeup_parenthesis",
+        "status": "PASS",
+        "detail": "Wake-up router guard has balanced closing parentheses"
+      },
+      {
+        "name": "launcher_setup.scalar_count_safe",
+        "status": "PASS",
+        "detail": "launcher.setup wraps pipeline output before Count under StrictMode"
+      },
+      {
+        "name": "websmoke.server_consumes_post_body",
+        "status": "PASS",
+        "detail": "read-only POST consumes request body before returning 405"
+      },
+      {
+        "name": "websmoke.server_content_length",
+        "status": "PASS",
+        "detail": "Unified UX emits explicit Content-Length and Connection: close"
+      },
+      {
+        "name": "websmoke.httpclient_windows_safe",
+        "status": "PASS",
+        "detail": "Windows HttpWebRequest disables keep-alive and Expect: 100-continue"
+      },
+      {
+        "name": "websmoke.diagnostic_evidence",
+        "status": "PASS",
+        "detail": "WEB_SMOKE captures child logs and per-request HTTP trace"
+      },
+      {
+        "name": "saferuntime.output_file_no_stdout_tail",
+        "status": "PASS",
+        "detail": "RuntimeValidator does not print full Unicode JSON after publishing --output"
+      },
+      {
+        "name": "saferuntime.deferred_first_run_state",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME separates deferred first-run state from true blockers"
+      },
+      {
+        "name": "saferuntime.process_exit_authority",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME captures child ExitCode/stdout/stderr explicitly"
+      },
+      {
+        "name": "saferuntime.pass_semantics",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME PASS depends on structured fail/verdict, not deferred state"
+      },
+      {
+        "name": "liveapi.explicit_config_path",
+        "status": "PASS",
+        "detail": "CLIProxyAPI is started with an explicit --config path"
+      },
+      {
+        "name": "liveapi.key_fingerprint_audit",
+        "status": "PASS",
+        "detail": "live handoff verifies local key membership without exposing the secret"
+      },
+      {
+        "name": "liveapi.http_error_body",
+        "status": "PASS",
+        "detail": "401/403 diagnostics include HTTP status and redacted response body"
+      },
+      {
+        "name": "liveapi.transactional_handoff",
+        "status": "PASS",
+        "detail": "failed live handoff restores CLIProxy config and Codex mutation occurs only after local API success"
+      },
+      {
+        "name": "json.empty_array_safe",
+        "status": "PASS",
+        "detail": "Save-Json preserves empty arrays as valid [] JSON"
+      },
+      {
+        "name": "listener.get_nettcp_repaired",
+        "status": "PASS",
+        "detail": "valid Get-NetTCPConnection cmdlet restored after parser normalization"
+      },
+      {
+        "name": "ui.footer_current_release",
+        "status": "PASS",
+        "detail": "legacy hidden footer authority identifies the current one-click release"
+      },
+      {
+        "name": "cliproxy.safemode_template_cleanup",
+        "status": "PASS",
+        "detail": "HMS removes only official CLIProxy template keys before live startup"
+      },
+      {
+        "name": "cliproxy.safemode_audit",
+        "status": "PASS",
+        "detail": "live handoff refuses to start if template keys survive cleanup"
+      },
+      {
+        "name": "cliproxy.safemode_header",
+        "status": "PASS",
+        "detail": "403 diagnostics capture CLIProxy X-CPA-SAFE-MODE header"
+      },
+      {
+        "name": "cliproxy.custom_keys_preserved",
+        "status": "PASS",
+        "detail": "cleanup targets exact unsafe placeholders rather than all custom keys"
+      },
+      {
+        "name": "codexenv.restart_barrier",
+        "status": "PASS",
+        "detail": "HMS blocks provider/.env mutation while an old Codex/ChatGPT process survives"
+      },
+      {
+        "name": "codexenv.disk_verification",
+        "status": "PASS",
+        "detail": "HMS verifies ~/.codex/.env after writing the local router key"
+      },
+      {
+        "name": "codexenv.fresh_process_confirmation",
+        "status": "PASS",
+        "detail": "HMS only confirms API-mode launch after a fresh desktop process starts"
+      },
+      {
+        "name": "codexenv.open_button_stale_guard",
+        "status": "PASS",
+        "detail": "MỞ CODEX refuses to silently focus a stale process in HMS API mode"
+      },
+      {
+        "name": "codexenv.failed_enable_rollback",
+        "status": "PASS",
+        "detail": "failed env reload rolls Codex config/.env back to the pre-HMS snapshot"
+      },
+      {
+        "name": "codexenv.disable_restart_barrier",
+        "status": "PASS",
+        "detail": "disable flow does not remove the router while a stale HMS provider process survives"
+      },
+      {
+        "name": "ucc.stat_card_token_boundaries",
+        "status": "PASS",
+        "detail": "Native UCC StatCard command names cannot absorb quoted arguments"
+      },
+      {
+        "name": "ucc.current_version_title",
+        "status": "PASS",
+        "detail": "Native UCC title tracks the package revision"
+      },
+      {
+        "name": "native_gui.primary_host",
+        "status": "PASS",
+        "detail": "Tk GUI is created and shown before backend status polling begins"
+      },
+      {
+        "name": "native_gui.daily_actions",
+        "status": "PASS",
+        "detail": "daily overview exposes Router toggle plus a dedicated MỞ CODEX action"
+      },
+      {
+        "name": "native_gui.backend_hidden",
+        "status": "PASS",
+        "detail": "PowerShell backend calls are hidden and cannot create a console"
+      },
+      {
+        "name": "native_gui.failure_survives",
+        "status": "PASS",
+        "detail": "backend failure is surfaced inside the persistent HMS GUI"
+      },
+      {
+        "name": "native_gui.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell exposes bounded GUI backend actions including v25.37 model/reasoning controls"
+      },
+      {
+        "name": "predictive_quota.engine_present",
+        "status": "PASS",
+        "detail": "v25.33 Predictive Quota engine is reset-aware and explicitly keeps forecast distinct from live quota"
+      },
+      {
+        "name": "predictive_quota.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell snapshots quota history, evaluates forecast, and feeds the plan into Closed-loop Router"
+      },
+      {
+        "name": "predictive_quota.closed_loop_consumption",
+        "status": "PASS",
+        "detail": "Closed-loop lowers new-session score/weight from predictive pressure without changing existing session affinity"
+      },
+      {
+        "name": "predictive_quota.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes forecast status and on-demand evaluation without a destructive apply action"
+      },
+      {
+        "name": "identity_isolation.engine_present",
+        "status": "PASS",
+        "detail": "v25.36 identity auditor fingerprints boundaries and detects cross-instance collisions/secret-field regressions"
+      },
+      {
+        "name": "identity_isolation.powershell_prelaunch",
+        "status": "PASS",
+        "detail": "Codex launch is fail-closed behind v25.36 fingerprint audit and binding generation"
+      },
+      {
+        "name": "identity_isolation.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes one-click identity audit and strict isolation settings"
+      },
+      {
+        "name": "model_manager.engine_present",
+        "status": "PASS",
+        "detail": "v25.37 model manager validates live model policy and preserves isolated provider/endpoint contract"
+      },
+      {
+        "name": "model_manager.powershell_integration",
+        "status": "PASS",
+        "detail": "project model policy is available through native backend and optionally applied before instance launch"
+      },
+      {
+        "name": "model_manager.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes project-scoped model/reasoning policy without changing account binding"
+      },
+      {
+        "name": "quota_center.engine_present",
+        "status": "PASS",
+        "detail": "v25.34 Quota Center persists quota metadata and resolves forecast accuracy in SQLite"
+      },
+      {
+        "name": "quota_center.safety",
+        "status": "PASS",
+        "detail": "Quota Center never promotes forecast to live quota and excludes prompt/secrets"
+      },
+      {
+        "name": "quota_center.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell performs bounded background quota-center sync without touching credentials"
+      },
+      {
+        "name": "quota_center.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes durable 5h/7d history, freshness, reset timeline and forecast accuracy"
+      },
+      {
+        "name": "account_analytics.engine_present",
+        "status": "PASS",
+        "detail": "v25.35 Account Analytics builds confidence-aware long-term account/model/workload profiles"
+      },
+      {
+        "name": "account_analytics.safety",
+        "status": "PASS",
+        "detail": "Account Analytics consumes normalized metadata only and explicitly excludes prompt/body/secrets"
+      },
+      {
+        "name": "account_analytics.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell updates Account Analytics before Closed-loop and passes a bounded report signal"
+      },
+      {
+        "name": "account_analytics.closed_loop_bounded",
+        "status": "PASS",
+        "detail": "Closed-loop consumes Account Analytics through a bounded ±8 score adjustment without touching sticky sessions"
+      },
+      {
+        "name": "account_analytics.native_gui",
+        "status": "PASS",
+        "detail": "native GUI provides account quality, model and workload drill-down"
+      },
+      {
+        "name": "native_gui.cockpit_palette",
+        "status": "PASS",
+        "detail": "native GUI uses the Cockpit dark design-system palette"
+      },
+      {
+        "name": "native_gui.cockpit_sidebar",
+        "status": "PASS",
+        "detail": "Cockpit-like fixed sidebar and active navigation are implemented"
+      },
+      {
+        "name": "native_gui.cockpit_cards_pills",
+        "status": "PASS",
+        "detail": "rounded floating cards, status pills and hover borders are implemented"
+      },
+      {
+        "name": "native_gui.cockpit_motion",
+        "status": "PASS",
+        "detail": "button color interpolation, window fade-in and page slide transitions are implemented"
+      },
+      {
+        "name": "native_gui.open_codex_action",
+        "status": "PASS",
+        "detail": "dedicated MỞ CODEX action is wired to the hidden backend"
+      },
+      {
+        "name": "native_gui.settings_tabs",
+        "status": "PASS",
+        "detail": "Settings uses Cockpit-like pill tabs, scrolling groups and card rows"
+      },
+      {
+        "name": "native_gui.settings_controls",
+        "status": "PASS",
+        "detail": "Settings exposes switches, selectors, inputs and explicit save/reload actions"
+      },
+      {
+        "name": "native_gui.settings_real_backend",
+        "status": "PASS",
+        "detail": "Settings reads/writes a bounded backend allowlist instead of being decorative"
+      },
+      {
+        "name": "native_gui.settings_core_fields",
+        "status": "PASS",
+        "detail": "core Codex/Router/Proxy/Policy settings are present in the native GUI"
+      },
+      {
+        "name": "native_gui.settings_safety",
+        "status": "PASS",
+        "detail": "settings preserve GUI-only safety invariants and validate keys/ranges"
+      },
+      {
+        "name": "native_gui.settings_migration",
+        "status": "PASS",
+        "detail": "v25.23.1 imports the immediately previous v25.22 settings before publishing the new settings file"
+      },
+      {
+        "name": "native_gui.settings_feedback",
+        "status": "PASS",
+        "detail": "settings provides dirty-state, restart-required feedback and animated toast"
+      },
+      {
+        "name": "native_gui.pixel_polish_windows",
+        "status": "PASS",
+        "detail": "Windows host applies best-effort dark title bar, rounded corners and stable taskbar app id"
+      },
+      {
+        "name": "native_gui.pixel_polish_tooltips",
+        "status": "PASS",
+        "detail": "primary actions expose delayed dark tooltips without adding visible clutter"
+      },
+      {
+        "name": "native_gui.pixel_polish_loading",
+        "status": "PASS",
+        "detail": "first backend poll uses a compact skeleton/loading state instead of a blank card"
+      },
+      {
+        "name": "native_gui.pixel_polish_quota_motion",
+        "status": "PASS",
+        "detail": "account quota bars animate into their live percentage"
+      },
+      {
+        "name": "native_gui.pixel_polish_status_pulse",
+        "status": "PASS",
+        "detail": "sidebar runtime indicator gets a restrained running pulse"
+      },
+      {
+        "name": "native_gui.pixel_polish_toggle_motion",
+        "status": "PASS",
+        "detail": "settings switches animate the knob instead of snapping"
+      },
+      {
+        "name": "native_gui.pixel_polish_compact_service",
+        "status": "PASS",
+        "detail": "Codex service hero, actions, stats and gateway are compacted to desktop-product density"
+      },
+      {
+        "name": "native_gui.visual_v2_vector_icons",
+        "status": "PASS",
+        "detail": "sidebar/service iconography uses a small HMS vector system instead of platform-dependent glyphs"
+      },
+      {
+        "name": "native_gui.visual_v2_app_icon",
+        "status": "PASS",
+        "detail": "native GUI ships and applies a dedicated HMS Windows application icon"
+      },
+      {
+        "name": "native_gui.visual_v2_button_ripple",
+        "status": "PASS",
+        "detail": "primary canvas buttons get restrained click-ripple feedback"
+      },
+      {
+        "name": "native_gui.visual_v2_account_summary",
+        "status": "PASS",
+        "detail": "Accounts page includes a live four-cell pool summary"
+      },
+      {
+        "name": "native_gui.visual_v2_last_sync",
+        "status": "PASS",
+        "detail": "topbar communicates last successful/failed backend synchronization"
+      },
+      {
+        "name": "native_gui.visual_v2_settings_dirty_badge",
+        "status": "PASS",
+        "detail": "Settings navigation shows a small dirty-state badge until backend config is reloaded/saved"
+      },
+      {
+        "name": "native_gui.visual_v2_stat_motion",
+        "status": "PASS",
+        "detail": "numeric overview stats animate to refreshed values"
+      },
+      {
+        "name": "native_gui.visual_v2_shortcuts",
+        "status": "PASS",
+        "detail": "native desktop shortcuts are available for refresh, settings and Open Codex"
+      },
+      {
+        "name": "native_account_center.no_management_web",
+        "status": "PASS",
+        "detail": "daily account/quota/log workflow no longer opens the CLIProxy management webpage"
+      },
+      {
+        "name": "native_account_center.backend_actions",
+        "status": "PASS",
+        "detail": "native backend exposes account center, quota refresh, OAuth, enable/disable and safe logs"
+      },
+      {
+        "name": "native_account_center.direct_quota",
+        "status": "PASS",
+        "detail": "5h and weekly remaining quota are carried from direct quota cache into native GUI data"
+      },
+      {
+        "name": "native_account_center.extended_quota",
+        "status": "PASS",
+        "detail": "native quota model includes code-review, monthly/credits, reset-credit count and additional model windows"
+      },
+      {
+        "name": "native_account_center.quota_ui",
+        "status": "PASS",
+        "detail": "Account Center renders animated 5h/weekly quota bars with reset countdowns"
+      },
+      {
+        "name": "native_account_center.account_actions",
+        "status": "PASS",
+        "detail": "OAuth add and non-destructive credential enable/disable are native"
+      },
+      {
+        "name": "native_account_center.safe_logs",
+        "status": "PASS",
+        "detail": "logs are viewable in HMS while raw request bodies/tokens remain excluded"
+      },
+      {
+        "name": "native_service_center.tabs",
+        "status": "PASS",
+        "detail": "Codex API Service uses compact native tabs instead of new top-level windows"
+      },
+      {
+        "name": "native_service_center.models",
+        "status": "PASS",
+        "detail": "model discovery and /v1/models testing are native"
+      },
+      {
+        "name": "native_service_center.client_keys",
+        "status": "PASS",
+        "detail": "Smart Gateway client-key creation is native and plaintext is returned only on creation"
+      },
+      {
+        "name": "native_service_center.request_log",
+        "status": "PASS",
+        "detail": "request-log can be toggled from HMS with config verification and safe HMS-owned router restart"
+      },
+      {
+        "name": "native_service_center.routing",
+        "status": "PASS",
+        "detail": "routing/pool/router/diagnostics are visible and controllable natively"
+      },
+      {
+        "name": "native_service_center.failover",
+        "status": "PASS",
+        "detail": "bounded live failover test is available inside the native GUI"
+      },
+      {
+        "name": "native_service_center.no_destructive_key_delete",
+        "status": "PASS",
+        "detail": "native client-key center does not expose destructive deletion"
+      },
+      {
+        "name": "startup_hotfix.account_center_parent",
+        "status": "PASS",
+        "detail": "Account Center settings shortcut is parented to the SettingGroup card ancestor"
+      },
+      {
+        "name": "startup_hotfix.fatal_guard",
+        "status": "PASS",
+        "detail": "startup exceptions are logged and surfaced via a GUI error dialog instead of disappearing silently"
+      },
+      {
+        "name": "ux.one_click_shell",
+        "status": "PASS",
+        "detail": "v25.23.1 explicitly exposes one primary daily action"
+      },
+      {
+        "name": "ux.single_primary_action",
+        "status": "PASS",
+        "detail": "legacy control wall is hidden; one large toggle plus one settings gear remain visible"
+      },
+      {
+        "name": "ux.one_click_orchestrator",
+        "status": "PASS",
+        "detail": "one-click wrapper composes existing transactional router/Codex engine"
+      },
+      {
+        "name": "ux.one_click_policy_authority",
+        "status": "PASS",
+        "detail": "hidden legacy controls cannot overwrite one-click runtime settings"
+      },
+      {
+        "name": "ux.foreign_port_autoselect",
+        "status": "PASS",
+        "detail": "one-click automatically avoids foreign/Cockpit listeners without killing them"
+      },
+      {
+        "name": "ux.cockpit_interaction_patterns",
+        "status": "PASS",
+        "detail": "rounded surfaces, hover feedback, fade-in and compact service state remain"
+      },
+      {
+        "name": "ux.engine_preserved",
+        "status": "PASS",
+        "detail": "previous routing/failover/control-plane engines remain callable behind one-click UX"
+      },
+      {
+        "name": "gui.no_cmd_start",
+        "status": "PASS",
+        "detail": "main GUI contains no direct cmd.exe launch"
+      },
+      {
+        "name": "gui.no_visible_windowstyle",
+        "status": "PASS",
+        "detail": "main GUI has no Minimized/Normal console helper launch"
+      },
+      {
+        "name": "gui.router_hidden",
+        "status": "PASS",
+        "detail": "CLIProxyAPI Router starts hidden with diagnostic redirection"
+      },
+      {
+        "name": "gui.oauth_dialog",
+        "status": "PASS",
+        "detail": "OAuth uses an HMS WinForms dialog and hidden child instead of cmd.exe"
+      },
+      {
+        "name": "gui.embedded_cli",
+        "status": "PASS",
+        "detail": "advanced Codex CLI uses an embedded WinForms terminal with no console window"
+      },
+      {
+        "name": "gui.powershell_helpers_hidden",
+        "status": "PASS",
+        "detail": "all direct PowerShell helper launches are hidden"
+      },
+      {
+        "name": "gui.runtime_no_visible_console",
+        "status": "PASS",
+        "detail": "all PowerShell UI/helper launch paths are hidden"
+      },
+      {
+        "name": "gui.window_restore_contract",
+        "status": "PASS",
+        "detail": "main GUI uses normal taskbar minimize/restore and cannot hide itself via legacy tray policy"
+      },
+      {
+        "name": "gui.window_restore_focus",
+        "status": "PASS",
+        "detail": "restore helper explicitly returns the main WinForms window to foreground"
+      },
+      {
+        "name": "ui.button_token_boundaries",
+        "status": "PASS",
+        "detail": "button helper calls cannot absorb numeric coordinates into quoted labels"
+      },
+      {
+        "name": "failover.bounded_single_auth_mutation",
+        "status": "PASS",
+        "detail": "live failover disables exactly one selected auth only after 2-account preflight"
+      },
+      {
+        "name": "failover.single_live_responses_probe",
+        "status": "PASS",
+        "detail": "failover proof uses one bounded Responses API request"
+      },
+      {
+        "name": "failover.request_log_account_proof",
+        "status": "PASS",
+        "detail": "failover verdict is tied to Request Log Auth mapping"
+      },
+      {
+        "name": "failover.finally_restore",
+        "status": "PASS",
+        "detail": "selected auth disabled state is restored in finally and restore failure is terminal"
+      },
+      {
+        "name": "failover.no_auth_delete",
+        "status": "PASS",
+        "detail": "live failover test never deletes the selected credential"
+      }
+    ]
+  }
+}

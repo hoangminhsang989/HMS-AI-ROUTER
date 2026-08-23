@@ -1,0 +1,56 @@
+HMS AI Cockpit v25.32 — BUILD VALIDATION
+
+TRANCHE
+- CODEX_ONLY / CIRCUIT_BREAKER_FAILOVER_STATE_MACHINE
+- Baseline: v25.31 Closed-loop Routing
+- Rollback baseline preserved: v25.31
+
+VERIFIED IN BUILD ENVIRONMENT
+- Python compileall: PASS
+- HMS_GUI.pyw compile: PASS
+- GUI startup smoke: PASS (7 seconds under X display; stderr 0; timeout exit is expected because GUI remained alive)
+- PowerShell StaticLint: PASS
+  - Script variables referenced/assigned: 182/182
+  - Settings referenced/declared: 274/359
+  - Missing settings: 0
+  - Duplicate settings: 0
+  - Glue/syntax findings: 0
+- PowerShell Coherence Audit: PASS
+  - High-confidence compact syntax findings: 0
+- Runtime Kit Validator: PASS 124/124
+- Circuit Breaker synthetic state machine: PASS
+  - OBSERVE auth failure -> OPEN plan
+  - GUARDED_AUTO quarantine
+  - circuit-owned disabled state not misclassified as manual
+  - OPEN -> HALF_OPEN -> CLOSED recovery
+  - exact previous disabled-property restoration
+  - externally/manual disabled account preserved
+  - Closed-loop excludes OPEN accounts from new routing
+  - HALF_OPEN receives probe-only low priority
+  - secret-like plan rejection
+  - auth path traversal rejection
+- Transactional apply rollback: PASS
+  - forced second-account failure restored first auth file byte-for-byte
+  - circuit state file restored byte-for-byte
+- Active GUI Antigravity references: 0
+- Antigravity bridge payload files: 0
+
+SAFETY CONTRACT
+- Stable Codex endpoint is not changed by Circuit Breaker.
+- Existing session affinity is not rewritten by Circuit Breaker.
+- Project binding is not rewritten by Circuit Breaker.
+- OAuth token/cookie contents are not copied into circuit plan/state.
+- Circuit quarantine changes only the existing auth disabled property and records ownership.
+- Pre-existing/manual disabled accounts are never auto-enabled.
+- No delete-instance/project/account action added.
+- No automatic deletion of previous release.
+
+EVIDENCE STATE
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED on real Windows Codex failover/session continuity: DEFERRED_BY_OPERATOR
+- SOAK VERIFIED: NOT YET
+
+FINAL NOTE
+This build must not be described as real-Windows runtime verified until a live Codex failover/session-continuity run is completed.

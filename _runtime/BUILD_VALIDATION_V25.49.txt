@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.49 — BUILD VALIDATION
+VERDICT: PASS_REAL_CODEX_CERTIFICATION_HARNESS
+EDITION: CODEX_ONLY
+
+REAL_WINDOWS_CODEX_CERTIFICATION: NOT_EXECUTED_IN_BUILD_ENVIRONMENT
+HOST_PREFLIGHT: HARNESS_READY_RUNTIME_DEFERRED
+PRODUCTION_CERTIFICATION: NOT_CLAIMED
+
+PASS GATES
+- Real Codex synthetic validator: 65/65
+- Compatibility Freeze: 133/133
+- Codex Client Compatibility/Migration: 27/27
+- Runtime Kit: 229/229
+- Regression Freeze: 17/17 suites; 617/617 assertions
+- Unified Diagnostics Real Codex privacy: 6/6
+- Diagnostics Bundle privacy: 5/5
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+- Python compileall: PASS
+- GUI headless/Xvfb startup: PASS (7 sec, stderr 0)
+
+PUBLIC CONTRACT
+- BackendAction exact count: 90
+- BackendAction added by v25.49: NO
+- Auth/account mutation added by certification: NO
+- Credential deletion added: NO
+
+CLAIM BOUNDARY
+This build certifies the harness, regression contract, privacy boundary and target-machine procedure. It does NOT certify a real Windows/Codex deployment. PASS_REAL_CODEX_CERTIFIED requires an explicit target-machine LIVE 1 run with >=2 real managed Codex instances.

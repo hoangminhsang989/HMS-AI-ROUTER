@@ -1,0 +1,35 @@
+HMS AI Cockpit v25.34 — Advanced Quota Center
+
+BASELINE
+- v25.33 Predictive Quota Engine.
+- Codex-only scope retained.
+
+DELIVERED
+- Added HMS_Codex_QuotaCenter.py.
+- Added durable SQLite quota_snapshots and forecast_predictions tables.
+- Imports legacy codex-quota-history.jsonl idempotently; old history is not deleted.
+- Tracks 5h/7d live remaining, reset timestamps, source freshness and optional additional/model-specific windows.
+- Adds FRESH / AGING / STALE / UNKNOWN source semantics.
+- Stores bounded prediction checkpoints and resolves them against later observed quota.
+- Reports forecast MAE, bias, last error and sample count by account/window.
+- Added Advanced Quota Center page to native GUI with fixed-scale 0..100 sparklines, reset timeline, source age, alerts and forecast accuracy.
+- Added get_quota_center / sync_quota_center native backend actions.
+- Added background Quota Center maintenance scheduling.
+- Added settings for retention, freshness, chart history, prediction horizon/tolerance and alert thresholds.
+- Runtime Kit Validator extended with Quota Center engine/integration/safety/GUI checks.
+
+SAFETY
+- Live quota remains authoritative; forecast never replaces live values.
+- No prompt/request body/OAuth token/cookie/API key stored by Quota Center.
+- No credential, stable endpoint, Project Affinity or session-affinity mutation.
+- Telemetry retention pruning only affects old quota/forecast database rows.
+- No destructive account/project/instance action added.
+
+VERIFICATION
+- Python compileall: PASS.
+- Native GUI startup smoke: PASS (7s, stderr 0).
+- Quota Center synthetic database/history/freshness/accuracy test: PASS.
+- PowerShell StaticLint v25.34: PASS.
+- PowerShell CoherenceAudit v25.34: PASS.
+- Runtime Kit Validator v25.34: PASS 132/132.
+- Real Windows Codex runtime/soak: DEFERRED_BY_OPERATOR.

@@ -1,0 +1,248 @@
+{
+  "ok": true,
+  "data": {
+    "product": "HMS AI Cockpit",
+    "version": "25.61",
+    "suite": "NATIVE_USAGE_TOKEN_CENTER_PARITY_PLUS",
+    "generated_utc": "2026-08-22T11:19:53.927338+00:00",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 36,
+      "fail": 0,
+      "total": 36
+    },
+    "tests": [
+      {
+        "name": "build_valid",
+        "status": "PASS",
+        "detail": {
+          "ok": true,
+          "errors": [],
+          "cards": 5
+        }
+      },
+      {
+        "name": "version_25_61",
+        "status": "PASS",
+        "detail": "25.61"
+      },
+      {
+        "name": "five_plan_classes",
+        "status": "PASS",
+        "detail": {
+          "FREE": 1,
+          "PLUS": 1,
+          "PRO": 1,
+          "TEAM_BUSINESS": 1,
+          "ENTERPRISE": 1,
+          "UNKNOWN": 0
+        }
+      },
+      {
+        "name": "plan_free",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "plan_plus",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "plan_pro",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "plan_team_business",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "plan_enterprise",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "reset_countdown_present",
+        "status": "PASS",
+        "detail": {
+          "kind": "FIVE_HOUR",
+          "name": "5 giờ",
+          "label": "5h",
+          "present": true,
+          "remaining_pct": 70.0,
+          "window_minutes": 300,
+          "source": "WHAM_USAGE",
+          "freshness_state": "FRESH",
+          "reset_utc": "2026-08-22T10:00:00+00:00",
+          "seconds_remaining": 7200.0,
+          "countdown_text": "2h 0m",
+          "absolute_utc_text": "2026-08-22 10:00 UTC",
+          "state": "UPCOMING"
+        }
+      },
+      {
+        "name": "reset_absolute_present",
+        "status": "PASS",
+        "detail": "2026-08-22 10:00 UTC"
+      },
+      {
+        "name": "source_and_freshness_same_row_model",
+        "status": "PASS",
+        "detail": {
+          "source": "WHAM_USAGE",
+          "fresh": "FRESH"
+        }
+      },
+      {
+        "name": "model_specific_window",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "package_expiry_explicit",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "token_expiry_separate",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "package_expiry_not_invented",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "malformed_reset_fail_soft",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "malformed_package_not_timestamp",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "stale_preserved",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "stale_not_promoted_by_reset_preview",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "router_preview_scenario_only",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "router_preview_has_rank_now",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "router_preview_has_rank_after_reset",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "preferred_now_single",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "preferred_after_single",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "history_reset_timestamp_change",
+        "status": "PASS",
+        "detail": {
+          "events": 4,
+          "reset_timestamp_changes": 1,
+          "reset_replenishment_observed": 2,
+          "package_expiry_metadata_changes": 1
+        }
+      },
+      {
+        "name": "history_replenishment_observed",
+        "status": "PASS",
+        "detail": {
+          "events": 4,
+          "reset_timestamp_changes": 1,
+          "reset_replenishment_observed": 2,
+          "package_expiry_metadata_changes": 1
+        }
+      },
+      {
+        "name": "history_package_change",
+        "status": "PASS",
+        "detail": {
+          "events": 4,
+          "reset_timestamp_changes": 1,
+          "reset_replenishment_observed": 2,
+          "package_expiry_metadata_changes": 1
+        }
+      },
+      {
+        "name": "replay_metadata_only",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "history_round_trip",
+        "status": "PASS",
+        "detail": 2
+      },
+      {
+        "name": "history_no_secret_fields",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "secret_detector_access_token",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "report_no_secret_like_fields",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "missing_metadata_remains_missing",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "package_token_non_conflation",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "live_quota_authoritative",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "preview_no_router_mutation",
+        "status": "PASS",
+        "detail": null
+      }
+    ],
+    "fixture_matrix": {
+      "plans": 5,
+      "accounts": 5,
+      "model_specific": 1,
+      "malformed": 2,
+      "stale": 1
+    },
+    "production_certification": "NOT_CLAIMED_USAGE_TOKEN_CENTER_SYNTHETIC_ONLY"
+  }
+}

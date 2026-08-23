@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "version": "25.44",
+  "generated_utc": "2026-08-21T11:10:03.850436+00:00",
+  "verdict": "PASS",
+  "file_count": 11,
+  "privacy": {
+    "contains_raw_oauth": false,
+    "contains_request_body": false,
+    "contains_api_keys": false,
+    "contains_cookies": false,
+    "redaction_applied": true
+  },
+  "raw_secret_hits": 0,
+  "smart_model_evidence_present": true,
+  "smart_model_entries": [
+    "data/smart-model-router/smart-model-router-plan-v2544.json"
+  ],
+  "note": "Synthetic diagnostics-bundle redaction validation; real Windows runtime remains authoritative."
+}

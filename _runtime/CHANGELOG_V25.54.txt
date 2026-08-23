@@ -1,0 +1,53 @@
+HMS AI Cockpit v25.54 — Production Simulation & Fault-Injection Lab
+
+SCOPE
+- Codex-only continuation.
+- Development can continue without a real Windows/Codex/LAN target machine.
+- Target-machine production certification remains preserved as a final production gate, not a development blocker.
+
+NEW
+1. HMS_Codex_ProductionSimulationLab.py
+   - deterministic seeded digital twin of account/quota/session/process/queue control-plane state;
+   - 15 fault/event classes: NEW/CONTINUE session, quota drain/stale/refresh, HTTP 429, account recovery,
+     process crash/restart, auth refresh isolation, queue burst/backpressure, SMB transient, LAN partition/rejoin,
+     and clock skew;
+   - replayable trace SHA-256 per seed;
+   - exhaustive quota state-space matrix;
+   - unsafe stale-quota mutation sensitivity check;
+   - reuses v25.51 Rotation Torture and LAN Failure Matrix as focused runtime-module cross-checks.
+2. HMS_Codex_ProductionSimulationLabValidator.py
+   - release gate with deterministic replay, mutation sensitivity, safety/claim-boundary and GUI/integration checks.
+3. Native LAN Pool UI
+   - PRODUCTION SIMULATION LAB v25.54 card;
+   - SIM LAB runs 8 deterministic seeds / 300 cycles each;
+   - REPLAY runs a fixed deterministic seed;
+   - non-blocking worker; no real model request, quota, auth mutation or SMB/NAS required.
+4. PowerShell Mission Control
+   - local/internal Show-HmsProductionSimulationLab surface;
+   - SIM LAB / REPLAY and evidence viewer;
+   - no new BackendAction; frozen public contract remains 90 actions.
+5. Unified Diagnostics + Diagnostics Bundle
+   - metadata-only simulation event/layer;
+   - simulation evidence allowlisted with redaction;
+   - prompt/request/response/token/key defensive redaction retained.
+6. Regression Freeze
+   - v25.54 adds Production Simulation Lab as suite #22;
+   - benchmark-sensitive Performance and Simulation suites run exclusive; remaining suites retain bounded parallelism.
+7. Forward-compat test harness
+   - v25.53 Target-Machine validator now accepts main versions >=25.53 while preserving all seven stage gates.
+
+RELEASE EVIDENCE
+- Production Simulation full: 8 seeds / 2400 cycles / 15 of 15 fault classes / 0 invariant failures.
+- Quota state-space: 132/132 PASS.
+- Deterministic replay: 2/2 PASS.
+- Simulation release validator: 40/40 PASS.
+- Runtime Kit: 266/266 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Full Regression Freeze: 22/22 suites / 910/910 numeric assertions PASS.
+- Unified Diagnostics + Diagnostics Bundle privacy: 18/18 PASS.
+- Native GUI startup: 5/5 PASS, 7-second headless survival, stderr=0.
+- Parity score intentionally unchanged: feature 93.0%, production 55.2%.
+
+CLAIM BOUNDARY
+PASS_PRODUCTION_SIMULATION_LAB_V25_54 is synthetic/digital-twin evidence only.
+It cannot emit or substitute PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.

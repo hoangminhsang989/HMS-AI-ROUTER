@@ -1,0 +1,78 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.69",
+  "suite": "PROMOTION_DECISION_LEDGER_VALIDATION",
+  "generated_utc": "2026-08-23T02:22:39.069103+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "total": 11
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 11,
+        "fail": 0,
+        "total": 11
+      }
+    },
+    {
+      "name": "proof_11",
+      "status": "PASS",
+      "detail": {
+        "pass": 11,
+        "fail": 0,
+        "total": 11
+      }
+    },
+    {
+      "name": "hash_chain_append_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "optimistic_concurrency",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dual_distinct_review",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "pseudonymous_reviewer",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "superseding_invalidation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "reevaluation_triggers",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_historical_delete",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "eligibility_separate_from_score",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "decision_set_exact",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

@@ -1,0 +1,38 @@
+HMS AI Cockpit v25.51 — BUILD VALIDATION
+
+Generated UTC: 2026-08-22T03:10:26.342187+00:00
+Verdict: PASS_V25_51_SEAMLESS_ROTATION_TORTURE_RELEASE_CANDIDATE
+
+CORE GATES
+- Seamless Rotation Torture: 63/63 PASS (1000-cycle synthetic validator)
+- Compatibility Freeze: 133/133 PASS
+- Runtime Kit: 246/246 PASS
+- Full Regression: 19/19 suites; 749/749 numeric assertions PASS
+- Unified Diagnostics rotation metadata/privacy: 6/6 PASS
+- Diagnostics Bundle privacy/redaction: 7/7 PASS
+- GUI startup headless 7s: 5/5 PASS; stderr=0 bytes
+- Python compileall: PASS
+- PowerShell static lint: PASS
+- Coherence audit: PASS
+
+REAL DEFECTS FIXED
+- Adaptive/Closed-loop Router now preserves the real active account even when it becomes ineligible for NEW sessions; this prevents the router from suppressing the required rotation.
+- Smart Gateway now resolves an existing healthy session affinity across all eligible targets before priority ranking; a recovered high-priority account cannot pull an in-flight failed-over session back and create ping-pong.
+
+SAFETY / CLAIM BOUNDARY
+- Existing sessions keep affinity while NEW sessions rotate away from stale/reserve/429-ineligible accounts.
+- Authentication isolation is fingerprint-checked; torture evidence contains no raw access token/refresh token/prompt/request body/response body.
+- LAN lease takeover/rejoin uses epoch ownership and signed state; stale node rejoin cannot steal the active lease.
+- v25.51 torture is synthetic/regression evidence. It is NOT a Windows/real-Codex/real-quota/multi-PC production certificate.
+- Real 6h/24h soak, real Free/Plus/Pro quota fidelity, LIVE Codex target-machine certification and multi-PC SMB/NAS evidence remain required.
+
+PARITY AUDITOR
+- Verdict: FEATURE_PARITY_CANDIDATE
+- Feature evidence: 93.0%
+- Production evidence: 55.2%
+- Windows runtime certified: false
+- v25.51 Rotation Torture is a non-benchmark safety gate and does not increase parity scores.
+
+NEXT LOCKED STAGE
+- v25.52 — UX / Cockpit Parity+: account/quota/instance/router operational UX polish while preserving v25.51 rotation invariants.
+- v26.0 production-superset claim remains prohibited until target-machine hard gates pass.

@@ -1,0 +1,151 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.46",
+  "suite": "CODEX_CLIENT_COMPATIBILITY_AND_MIGRATION",
+  "generated_utc": "2026-08-21T16:38:08.097825+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 27,
+    "fail": 0,
+    "total": 27
+  },
+  "tests": [
+    {
+      "name": "client_process_detection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "codex_cli_discovery",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "codex_desktop_discovery",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "chatgpt_desktop_launch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "global_provider_contract",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instance_provider_contract",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stable_loopback_endpoint",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "snapshot_before_mutation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "restore_on_disable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "restart_generation_guard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "current_settings_path_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "fallback_settings.settings_v2522_json",
+      "ok": true,
+      "detail": "settings-v2522.json"
+    },
+    {
+      "name": "fallback_settings.settings_v60_json",
+      "ok": true,
+      "detail": "settings-v60.json"
+    },
+    {
+      "name": "fallback_settings.settings_v50_json",
+      "ok": true,
+      "detail": "settings-v50.json"
+    },
+    {
+      "name": "fallback_settings.settings_v40_json",
+      "ok": true,
+      "detail": "settings-v40.json"
+    },
+    {
+      "name": "fallback_settings.settings_v30_json",
+      "ok": true,
+      "detail": "settings-v30.json"
+    },
+    {
+      "name": "fallback_settings.settings_v20_json",
+      "ok": true,
+      "detail": "settings-v20.json"
+    },
+    {
+      "name": "fallback_settings.settings_v15_json",
+      "ok": true,
+      "detail": "settings-v15.json"
+    },
+    {
+      "name": "fallback_settings.settings_v10_json",
+      "ok": true,
+      "detail": "settings-v10.json"
+    },
+    {
+      "name": "fallback_settings.settings_v08_json",
+      "ok": true,
+      "detail": "settings-v08.json"
+    },
+    {
+      "name": "corrupt_settings_backup",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "protected_router_key_target_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "protected_lan_pairing_target_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "lan_pairing_kdf_salt_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "plain_key_protected_migration",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "settings_save_removes_plain_global_key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no_client_version_whitelist",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "runtime_windows_cli_desktop": "DEFERRED_BY_OPERATOR",
+  "powershell_5_1_runtime": "DEFERRED_BY_OPERATOR"
+}

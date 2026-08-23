@@ -1,0 +1,68 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.67",
+  "suite": "TARGET_CERTIFICATION_CAMPAIGN_VALIDATION",
+  "generated_utc": "2026-08-23T01:05:50.715741+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "proof_13",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "matrix_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "resume_never_silent_repeat",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "per_case_arm",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "manifest_trust_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "hash_chain",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "disarmed_default",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_not_auto",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

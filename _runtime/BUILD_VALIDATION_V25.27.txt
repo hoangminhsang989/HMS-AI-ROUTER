@@ -1,0 +1,30 @@
+HMS AI Cockpit v25.27 BUILD VALIDATION
+=======================================
+Runtime test policy: DEFERRED_BY_OPERATOR
+
+STATIC / SYNTHETIC GATES
+- Python top-level runtime modules: 40
+- Python compileall / py_compile: PASS
+- PowerShell StaticLint 25.27: PASS
+  script variables referenced/assigned: 173/173; missing 0
+  settings referenced: 226; declared: 310; missing 0; duplicates 0
+  lexical glue findings: 0
+- Adaptive Router synthetic evaluate: PASS
+- Adaptive Router GUARDED_AUTO apply + auth-file readback: PASS
+- Adaptive Router rollback priority/weight: PASS
+- OAuth/token field preservation in synthetic auth files: PASS
+- Signed feed RSA-PKCS1-v1_5-SHA256 verify: PASS
+- Signed package size + SHA-256 verify: PASS
+- Safe ZIP stage + release manifest verification: PASS
+- Staged activation through versioned Release Manager: PASS
+- Tampered feed/signature rejection: PASS (fail closed)
+- Native Tk GUI startup smoke under build X display: PASS (alive until 6s harness timeout)
+- Final release manifest self-verify: PASS (110/110 files)
+- Final ZIP integrity + SHA-256: outer packaging gate (see companion .sha256)
+
+SAFETY STATUS
+- Adaptive default mode: OBSERVE
+- Auto update activation: NONE
+- Production update URL policy: HTTPS only
+- Existing release auto-deletion: NONE
+- Real Windows Codex/Antigravity/failover/quota/hot-reload runtime: DEFERRED_BY_OPERATOR

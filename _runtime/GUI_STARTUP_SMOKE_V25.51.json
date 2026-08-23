@@ -1,0 +1,16 @@
+{
+  "version": "25.51",
+  "verdict": "PASS",
+  "passed": 5,
+  "total": 5,
+  "checks": {
+    "timeout_alive_7s": true,
+    "stderr_empty": true,
+    "app_version_25_51": true,
+    "rotation_torture_surface": true,
+    "rotation_test_action": true
+  },
+  "process_return_code": 124,
+  "duration_seconds": 7,
+  "stderr_bytes": 0
+}

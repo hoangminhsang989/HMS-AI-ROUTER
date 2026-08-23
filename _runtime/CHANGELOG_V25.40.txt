@@ -1,0 +1,16 @@
+HMS AI Cockpit v25.40 — Codex Security Hardening
+
+- Added HMS_Codex_SecurityHardening.py metadata-only audit/planning engine.
+- Added native GUI Security page and backend actions: get_security / audit_security / harden_security / seal_security.
+- Added Windows Credential Manager primary storage for canonical HMS Router keys with DPAPI CurrentUser fallback.
+- Removed canonical LocalApiKey from persisted settings JSON and canonical instance apiKey from instance store; retained protected references.
+- Added immediate and fleet ACL hardening for security vault, sensitive files and isolated Codex instance paths.
+- Added reparse/symlink/junction fail-closed checks and prelaunch security gate.
+- Added HMAC-SHA256 integrity seals for stable authority/config files.
+- Integrity mismatches are never auto-resealed; explicit operator RESEAL is separate from AUTO-SAFE hardening.
+- Added unified strict redaction for backend output and diagnostics.
+- Self-Healing sensitive rollback backups now use DPAPI; evidence keeps redact/metadata views.
+- Credential-pool recovery evidence no longer stores raw OAuth credential copies.
+- Added honest audit of runtime key materialization files and their ACL posture.
+- Preserved v25.39 Self-Healing, v25.38 API Compatibility, Identity Isolation, Project Affinity, session affinity and adaptive routing stack.
+- Windows Codex runtime verification remains DEFERRED_BY_OPERATOR.

@@ -1,0 +1,149 @@
+{
+  "product": "HMS AI Cockpit",
+  "edition": "CODEX_ONLY",
+  "version": "25.53",
+  "schema_version": 1,
+  "suite": "TARGET_MACHINE_CERTIFICATION",
+  "generated_utc": "2026-08-22T04:02:59.260970+00:00",
+  "verdict": "HARNESS_READY_TARGET_RUNTIME_DEFERRED",
+  "production_certification": "NOT_CLAIMED",
+  "summary": {
+    "stages_pass": 0,
+    "stages_total": 7,
+    "production_certified": false
+  },
+  "stages": {
+    "host": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "verdict": "HARNESS_READY_RUNTIME_DEFERRED",
+        "windows": false,
+        "powershell_5_1": false,
+        "codex_cli": false,
+        "codex_version": "",
+        "managed_instances": 0,
+        "healthy_instances": 0,
+        "live_requests_pass": 0,
+        "exact_ttft": 0,
+        "isolated_topology": false,
+        "blockers": [
+          "WINDOWS_TARGET_REQUIRED_FOR_REAL_CERTIFICATION",
+          "WINDOWS_POWERSHELL_5_1_GATE_NOT_PASS",
+          "CODEX_CLI_NOT_DETECTED_OR_VERSION_UNREADABLE",
+          "TWO_MANAGED_INSTANCES_REQUIRED"
+        ]
+      }
+    },
+    "codex": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "verdict": "HARNESS_READY_RUNTIME_DEFERRED",
+        "windows": false,
+        "powershell_5_1": false,
+        "codex_cli": false,
+        "codex_version": "",
+        "managed_instances": 0,
+        "healthy_instances": 0,
+        "live_requests_pass": 0,
+        "exact_ttft": 0,
+        "isolated_topology": false,
+        "blockers": [
+          "WINDOWS_TARGET_REQUIRED_FOR_REAL_CERTIFICATION",
+          "WINDOWS_POWERSHELL_5_1_GATE_NOT_PASS",
+          "CODEX_CLI_NOT_DETECTED_OR_VERSION_UNREADABLE",
+          "TWO_MANAGED_INSTANCES_REQUIRED"
+        ]
+      }
+    },
+    "quota": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "accounts": 0,
+        "error": "QUOTA_SNAPSHOT_MISSING"
+      }
+    },
+    "failover": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "verdict": "MISSING",
+        "restored": false,
+        "probe_http": 0,
+        "different_account_proven": false,
+        "evidence_age_sec": null,
+        "target_hash": "",
+        "selected_hash": "",
+        "evidence_file_hash": ""
+      }
+    },
+    "lan": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "nodes": 0,
+        "online": 0,
+        "error": "LAN_SNAPSHOT_MISSING",
+        "shared_roundtrip": {
+          "pass": false,
+          "available": false,
+          "error": "SHARED_PATH_NOT_CONFIGURED",
+          "shared_path_hash": ""
+        }
+      }
+    },
+    "soak_6h": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "verdict": "MISSING",
+        "profile": "",
+        "active_elapsed_sec": 0.0,
+        "target_duration_sec": 0.0,
+        "coverage_complete": false,
+        "synthetic": false,
+        "session_count": 0,
+        "cycle_count": 0,
+        "resume_semantics": ""
+      }
+    },
+    "soak_24h": {
+      "pass": false,
+      "detail": {
+        "pass": false,
+        "verdict": "MISSING",
+        "profile": "",
+        "active_elapsed_sec": 0.0,
+        "target_duration_sec": 0.0,
+        "coverage_complete": false,
+        "synthetic": false,
+        "session_count": 0,
+        "cycle_count": 0,
+        "resume_semantics": ""
+      }
+    }
+  },
+  "blockers": [
+    "HOST",
+    "CODEX",
+    "QUOTA",
+    "FAILOVER",
+    "LAN",
+    "SOAK_6H",
+    "SOAK_24H"
+  ],
+  "safety": {
+    "preflight_consumes_quota": false,
+    "runner_mutates_auth": false,
+    "runner_disables_account": false,
+    "live_request_requires_separate_explicit_bridge_confirmation": true,
+    "failover_requires_explicit_bounded_operator_test": true,
+    "soak_downtime_counted": false,
+    "raw_auth_or_token_persisted": false,
+    "prompt_or_response_body_persisted": false,
+    "shared_registry_credentials": false
+  },
+  "claim_boundary": "Production PASS requires real Windows PowerShell 5.1 + real Codex live request + >=2 isolated instances + real fresh quota + bounded restored failover + >=2 signed LAN nodes + real 6h and 24h soak. Synthetic evidence never satisfies a production stage."
+}

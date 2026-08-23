@@ -1,0 +1,50 @@
+HMS AI Cockpit v25.64 — BUILD VALIDATION
+Generated UTC: 2026-08-22T14:53:49.313853+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+
+CORE GATES
+- Windows Recovery Observer Bridge: 16/16 PASS
+- Real-Effect Crash Certification contract: 15/15 PASS; REAL_CODEX_EFFECT target run NOT EXECUTED
+- Target Recovery Evidence Bundle: 8/8 PASS
+- Startup Recovery Reconciler: 26/26 PASS
+- Unified Diagnostics Windows Recovery: 12/12 PASS
+- Diagnostics Bundle Privacy v25.64: 18/18 PASS
+- Runtime Kit: 363/363 PASS
+- Compatibility Freeze: 133/133 PASS; 90 public BackendActions
+- Full Regression Freeze: 43/43 suites; 1493/1493 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS; stderr 0 bytes
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+- Parity claim boundary: 7/7 PASS
+- Cockpit parity audit: 93.0% feature / 55.2% production / FEATURE_PARITY_CANDIDATE
+
+WINDOWS OBSERVER BRIDGE INVARIANTS
+- Effect observations expose evidence_class, freshness_state and failure_reason.
+- Codex auth file observation hashes raw bytes but does not serialize credential content.
+- Keyring/auto observation requires an external digest-only provider and fails closed when unavailable.
+- Process observation does not collect process command line or environment.
+- Router/LAN observation emits selected metadata digests; raw lease-owner identity is not exported.
+- LAB_FIXTURE evidence is never production-score eligible.
+
+REAL-EFFECT CERTIFICATION INVARIANTS
+- Real-effect mode is DISARMED by default.
+- Arming requires Windows host + exact arm token + exact operator phrase + environment gate + valid audited adapter manifest.
+- Adapter execution is argv-only; shell command modes are rejected.
+- Cold-start recovery probes digest/idempotency witness before any effect can repeat.
+- Durable journal without matching external witness fails closed to OPERATOR_REQUIRED.
+- No real Codex auth/restart/router/LAN side effect was executed by this build-host validation.
+
+TARGET EVIDENCE / PRIVACY
+- Evidence classes remain distinct: LAB_PROCESS_KILL / LAB_FIXTURE / WINDOWS_TARGET_OBSERVER / REAL_CODEX_EFFECT.
+- Target bundle hashes host/runtime identity and projects aggregate metadata only.
+- Unified Diagnostics does not project transaction/effect/account identity.
+- Diagnostics Bundle redacts access-token, generic Bearer, prompt, account and hostname-shaped data.
+
+PARITY / CLAIM BOUNDARY
+- Cockpit reference baseline: v1.3.24.
+- Feature evidence score: 93.0% (unchanged).
+- Production evidence score: 55.2% (unchanged).
+- v25.64 control-plane/fixture evidence is benchmark=false and does not promote production score.
+- Current build host is not accepted as Windows target evidence.
+- PRODUCTION CERTIFICATION IS NOT CLAIMED.

@@ -1,0 +1,94 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.61",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_USAGE_TOKEN",
+  "generated_utc": "2026-08-22T11:21:26.367568+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 14,
+    "fail": 0,
+    "total": 14
+  },
+  "tests": [
+    {
+      "name": "allow_usage_latest",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "allow_usage_history",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "deny_auth_path",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bundle_command_pass",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "bundle_exists",
+      "ok": true,
+      "detail": "/tmp/hms-v2561-bundle-jchrcsy6/out/HMS_DIAGNOSTICS_20260822T112126Z.zip"
+    },
+    {
+      "name": "latest_included",
+      "ok": true,
+      "detail": [
+        "data/usage-token-v2561/usage-token-history-v2561.jsonl",
+        "data/usage-token-v2561/usage-token-latest-v2561.json",
+        "runtime/BUILD_VALIDATION_V25.61.txt",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "history_included",
+      "ok": true,
+      "detail": [
+        "data/usage-token-v2561/usage-token-history-v2561.jsonl",
+        "data/usage-token-v2561/usage-token-latest-v2561.json",
+        "runtime/BUILD_VALIDATION_V25.61.txt",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "manifest_version_25_61",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "access_token_redacted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "refresh_token_redacted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "api_key_redacted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "prompt_redacted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "request_response_redacted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bearer_redacted",
+      "ok": true,
+      "detail": null
+    }
+  ]
+}

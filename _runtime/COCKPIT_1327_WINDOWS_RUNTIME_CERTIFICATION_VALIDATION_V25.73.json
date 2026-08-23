@@ -1,0 +1,76 @@
+{
+  "version": "25.73",
+  "suite": "COCKPIT_1327_WINDOWS_RUNTIME_CERTIFICATION_VALIDATION",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "seven_runtime_cases",
+      "status": "PASS",
+      "detail": [
+        "FOREIGN_PORT_AUTO_REBIND",
+        "ACCOUNT_OCCUPANCY_GUARD",
+        "CLIENT_AUTH_API_SERVICE_SPLIT",
+        "OFFICIAL_ACCOUNT_USAGE_CONTINUITY",
+        "WEBSOCKET_PREFERENCE_PERSISTENCE",
+        "BOUNDED_BACKUP_ROLLBACK_NTFS",
+        "STREAM_IDENTITY_ISOLATION"
+      ]
+    },
+    {
+      "name": "baseline_1327",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lab_never_certified",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "requires_real_source_mode",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "requires_observer_and_real_effect",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "requires_exact_manifest",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "requires_current_cockpit_baseline",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "privacy_guards",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_mutation_authority",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "windows_runtime_certified": false,
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

@@ -1,0 +1,57 @@
+{
+  "version": "25.72",
+  "suite": "COCKPIT_1327_WINDOWS_RUNTIME_GUI_VALIDATION",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "name": "app_version_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "runtime_card_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "three_proof_controls",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "certify_is_validator_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "auditor_is_validator_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "evidence_is_diagnostics_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_backend_mutation_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_real_effect_arm_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "human_review_message",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "verdict": "PASS"
+}

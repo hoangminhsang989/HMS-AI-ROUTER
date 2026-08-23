@@ -1,0 +1,50 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.69",
+  "suite": "EVIDENCE_INBOX_GUI_VALIDATION",
+  "generated_utc": "2026-08-23T02:22:42.496449+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "tests": [
+    {
+      "name": "app_version",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "evidence_ledger_card",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "proof_buttons",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "read_only_copy",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "proof_validator_bindings",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_backend_mutation_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "real_effect_controls_still_preflight_lab",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

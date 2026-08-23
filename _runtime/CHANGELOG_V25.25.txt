@@ -1,0 +1,19 @@
+v25.25 ACCOUNT POOL INTELLIGENCE + ANTIGRAVITY CONTROL
+
+ADDED
+- Per-account request/route signal counters from redacted OperationsAnalyzer attribution window.
+- Reset/quota/health/load-aware HMS Rank with explicit advisory semantics.
+- Native account policy metadata: alias, group, role AUTO/PREFERRED/RESERVE, favorite.
+- Native Antigravity 2.0 Control Center: installed/bridge/current/mode status, OAuth, bridge install/test, app open, account switch.
+- Native Antigravity settings tab and GUI maintenance Auto Switch lane.
+
+SAFETY
+- No token deletion. Pool policy metadata is separate from OAuth credentials.
+- Usage counters are evidence signals from the scanned log window, not fabricated exact billing/token counters.
+- Antigravity seamless path keeps host-only transactional behavior; restart fallback is explicit and configurable.
+- Antigravity OAuth helper process started by HMS is terminated on timeout to avoid orphan background processes.
+- Existing v25.23.1 settings/state and v25.24 package remain compatible/rollback-safe.
+
+TEST POLICY
+- Real Codex/Antigravity runtime tests remain deferred by operator request.
+- Python compile/static package checks only; runtime PASS is not claimed.

@@ -1,0 +1,299 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.55",
+  "suite": "AUTONOMOUS_ROUTER_DIGITAL_TWIN_VALIDATOR",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 57,
+    "fail": 0,
+    "total": 57
+  },
+  "tests": [
+    {
+      "name": "verdict_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "version_25_55",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "six_seeds",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "at_least_1800_cycles",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "pool_32_accounts",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "pool_12_instances",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "pool_24_projects",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "all_seeds_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "all_events_exercised",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "all_15_events",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "zero_invariant_failures",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "hard_failover_exercised",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rotation_exercised",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "backpressure_rejection_exercised",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_eligible_starvation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "fairness_jain_reasonable",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "max_share_bounded",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "instance_capacity_bounded",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "two_replays",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "deterministic_replay",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "same_seed_same_hash",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "different_seed_different_hash",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "small_seed_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "model_checker_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "model_checker_zero_fail",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "model_checker_3072_states",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "model_checker_broad",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mutant_detected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "trace_minimization_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "trace_reduced",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "trace_reduced_to_at_most_3",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "trace_contains_fail_recover",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "trace_hash_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "adversarial_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_account_recovery_pullback",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_instance_recovery_pullback",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stale_high_quota_blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "adversarial_has_sessions",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "synthetic_only",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_codex_request",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_quota",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_auth",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_lan_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "project_affinity_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "session_continuity_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stale_fail_closed",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "production_never_claimed",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "claim_boundary_explicit",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "report_has_no_secret_shape",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "engine_version_literal",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "regression_suite_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "main_version_25_55",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "native_gui_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "gui_replay_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "target_cert_preserved",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "engine_cannot_issue_target_cert",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "artifact_roundtrip",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_DIGITAL_TWIN_ONLY"
+}

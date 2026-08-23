@@ -1,0 +1,67 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.72",
+  "suite": "WINDOWS_TARGET_EVIDENCE_CAPTURE_KIT_PROOF",
+  "generated_utc": "2026-08-23T05:28:55.813622+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "tests": [
+    {
+      "name": "exact_seven_cases",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "kit_disarmed_default",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "exact_package_manifest_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_version_pseudonymous_ref",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "privacy_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lab_fixture_cannot_be_real_report",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "signed_report_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "signed_report_no_secret_payload_keys",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "privacy_index_complete",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "capture_kit_never_promotes_score",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "production_score_eligible": false
+}

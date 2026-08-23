@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "version": "25.45",
+  "unified_diagnostics": {
+    "schema": 1,
+    "product": "HMS AI Cockpit",
+    "version": "25.45",
+    "generated_utc": "2026-08-21T16:25:09.781759+00:00",
+    "privacy": {
+      "contains_prompt": false,
+      "contains_request_body": false,
+      "contains_raw_secret": false,
+      "metadata_only": true
+    },
+    "summary": {
+      "total": 2,
+      "errors": 0,
+      "warnings": 0,
+      "requests": 0,
+      "route_decisions": 0,
+      "smart_model_decisions": 0,
+      "failovers": 0,
+      "circuit_open": 0,
+      "self_healing": 0
+    },
+    "layers": {
+      "request": "NO_DATA",
+      "routing": "NO_DATA",
+      "circuit": "NO_DATA",
+      "self_healing": "NO_DATA",
+      "security": "NO_DATA",
+      "lan_pool": "OK"
+    },
+    "by_source": {
+      "lan-pool": 2
+    },
+    "accounts": [],
+    "requests": [],
+    "timeline": [
+      {
+        "time_utc": "2026-08-21T16:25:00+00:00",
+        "source": "lan-pool",
+        "kind": "LAN_NODE",
+        "severity": "INFO",
+        "request_id": "",
+        "instance_id": "",
+        "project": "",
+        "account": "",
+        "model": "",
+        "status": "",
+        "latency_ms": null,
+        "message": "LAN node PC-A: ONLINE",
+        "details": {
+          "node_id": "node-a",
+          "node_name": "PC-A",
+          "state": "ONLINE",
+          "signature_ok": true,
+          "age_sec": 2,
+          "capacity": 3,
+          "running_instances": 1
+        },
+        "event_id": "74597ed867045d5964a68903"
+      },
+      {
+        "time_utc": "2026-08-21T16:25:00+00:00",
+        "source": "lan-pool",
+        "kind": "LAN_PROJECT_LEASE",
+        "severity": "INFO",
+        "request_id": "",
+        "instance_id": "",
+        "project": "",
+        "account": "",
+        "model": "",
+        "status": "",
+        "latency_ms": null,
+        "message": "Project lease node=PC-A epoch=2 state=ACTIVE",
+        "details": {
+          "fingerprint": "abc",
+          "node_id": "node-a",
+          "node_name": "PC-A",
+          "epoch": 2,
+          "state": "ACTIVE",
+          "active": true,
+          "signature_ok": true
+        },
+        "event_id": "359ecbd4f10ad82fa2272727"
+      }
+    ]
+  }
+}

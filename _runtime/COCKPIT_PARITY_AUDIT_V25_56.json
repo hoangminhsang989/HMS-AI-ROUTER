@@ -1,0 +1,297 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.56",
+    "generated_utc": "2026-08-22T05:45:55.552805+00:00",
+    "cockpit_baseline": {
+      "label": "Cockpit current release v1.3.24",
+      "evidence_note": "Public GitHub release v1.3.24 confirmed on 2026-08-22; Codex-only parity scope preserved.",
+      "production_maturity": "PUBLIC_RELEASED"
+    },
+    "hms": {
+      "verdict": "FEATURE_PARITY_CANDIDATE",
+      "feature_evidence_score_pct": 93.0,
+      "production_evidence_score_pct": 55.2,
+      "windows_runtime_certified": false,
+      "gaps": [],
+      "runtime_pending": [
+        "multi_account",
+        "multi_instance",
+        "quota_plan",
+        "images",
+        "profile_takeover"
+      ]
+    },
+    "capabilities": [
+      {
+        "id": "multi_account",
+        "label": "Codex multi-account management",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS account pool exists; real Windows account lifecycle still pending.",
+        "benchmark": true
+      },
+      {
+        "id": "multi_instance",
+        "label": "Codex isolated multi-instance",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS has isolated instance/fleet/session layers; target-PC runtime certification pending.",
+        "benchmark": true
+      },
+      {
+        "id": "quota_plan",
+        "label": "Hourly/weekly quota + plan recognition",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS has quota history/metadata, but live fidelity across OAuth/PAT/Team remains runtime gap.",
+        "benchmark": true
+      },
+      {
+        "id": "named_keys",
+        "label": "Named local client API keys",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Digest-only key store; plaintext shown only at creation.",
+        "benchmark": true
+      },
+      {
+        "id": "per_key_model",
+        "label": "Per-key model allow/deny + prefix",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v24 adds model prefix exposure/rewriting plus existing allow/deny.",
+        "benchmark": true
+      },
+      {
+        "id": "routing_modes",
+        "label": "Auto/random/single/quota/plan/expiry/custom routing",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v24 closes current Cockpit routing-mode gap.",
+        "benchmark": true
+      },
+      {
+        "id": "priority_weight_backup",
+        "label": "Priority/weight/backup routing",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Can be overridden per client key.",
+        "benchmark": true
+      },
+      {
+        "id": "per_key_pool",
+        "label": "Per-key target/account pool",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS extension: each client key can have its own target subset.",
+        "benchmark": false
+      },
+      {
+        "id": "quota_reserve",
+        "label": "Fresh quota reserve fail-closed",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Requires real quota metadata feed for production.",
+        "benchmark": true
+      },
+      {
+        "id": "affinity_health",
+        "label": "Session affinity + cooldown/failover",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Affinity is client-key scoped in v24.",
+        "benchmark": true
+      },
+      {
+        "id": "http_surface",
+        "label": "Models/chat/responses/backend Codex generic HTTP surface",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS generic relay covers paths; exact real-Codex compatibility remains target-PC gate.",
+        "benchmark": true
+      },
+      {
+        "id": "websocket",
+        "label": "Responses WebSocket relay",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Synthetic handshake/relay/failover PASS.",
+        "benchmark": true
+      },
+      {
+        "id": "images",
+        "label": "Image endpoint compatibility",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "Generic relay exists, but no dedicated image-tool mapping/concurrency scheduler in HMS yet.",
+        "benchmark": true
+      },
+      {
+        "id": "cors",
+        "label": "Local CORS preflight",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Loopback-origin allowlist by default.",
+        "benchmark": true
+      },
+      {
+        "id": "usage_stats",
+        "label": "Daily/week/month/all usage by account/model/key",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Trace-derived analytics; token coverage depends on upstream usage fields.",
+        "benchmark": true
+      },
+      {
+        "id": "pricing",
+        "label": "Custom model pricing + estimated value",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "No hard-coded possibly stale prices; operator supplies pricing.",
+        "benchmark": true
+      },
+      {
+        "id": "diagnostics",
+        "label": "Request ID/account/retry/timing diagnostics",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS also captures TTFT/bytes/protocol telemetry.",
+        "benchmark": true
+      },
+      {
+        "id": "profile_takeover",
+        "label": "Backup/restore managed Codex profile",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS safety architecture exists but needs explicit Windows runtime proof.",
+        "benchmark": true
+      },
+      {
+        "id": "session_repair",
+        "label": "Session/history visibility repair",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS Session Doctor backs up session metadata and repairs known state_5.sqlite thread provider fields.",
+        "benchmark": true
+      },
+      {
+        "id": "timeout_retry",
+        "label": "Advanced timeout/retry/stream controls",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Some Cockpit presets/controls remain richer in UI.",
+        "benchmark": true
+      },
+      {
+        "id": "proxy_fail_closed",
+        "label": "Proxy fail-closed egress",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS Proxy Fleet is deeper than baseline proxy-url handling.",
+        "benchmark": true
+      },
+      {
+        "id": "egress_integrity",
+        "label": "Public-IP baseline/drift/quarantine",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS-specific control-plane extension.",
+        "benchmark": false
+      },
+      {
+        "id": "ha_soak_policy",
+        "label": "HA + Soak + Policy Kernel",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.47 resumable soak harness synthetic PASS; real 6h/24h Windows soak still pending.",
+        "benchmark": false
+      },
+      {
+        "id": "runtime_evidence",
+        "label": "Windows source/runtime evidence gates",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS-specific certification layer; real target-PC gate has not been executed.",
+        "benchmark": false
+      },
+      {
+        "id": "performance_scale",
+        "label": "Performance / scale + bounded backpressure",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.48 synthetic/local control-plane benchmark PASS; real Codex model TTFT and Windows scale evidence remain deferred.",
+        "benchmark": false
+      },
+      {
+        "id": "real_codex_certification",
+        "label": "Real Codex target-machine certification harness",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.49 harness/validator PASS; build host is non-Windows without live Codex, so real target-machine certification is explicitly deferred.",
+        "benchmark": false
+      },
+      {
+        "id": "live_quota_intelligence",
+        "label": "Last-good quota freshness + plan reserve fail-closed",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.50 synthetic gate PASS; real Free/Plus/Pro quota fidelity on Windows remains target-machine evidence and does not increase parity score.",
+        "benchmark": false
+      },
+      {
+        "id": "seamless_rotation_torture",
+        "label": "Seamless rotation torture regression gate",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.51 1000-cycle synthetic rotation torture is a regression/safety gate only; it does not increase production parity without target-machine evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "target_machine_certification",
+        "label": "Target-machine production certification aggregator",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.53 aggregator/negative validator PASS; production score remains unchanged until its real Windows/Codex/quota/failover/LAN/6h/24h evidence itself returns PASS.",
+        "benchmark": false
+      },
+      {
+        "id": "ux_cockpit_parity_plus",
+        "label": "Unified operator UX + route/quota decision surface",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.52 native + loopback read-only Unified UX exposes route eligibility, hold/stale reasons, active route and local filters while preserving the frozen public backend contract.",
+        "benchmark": false
+      },
+      {
+        "id": "production_simulation_lab",
+        "label": "Deterministic production digital twin + fault injection",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.54 multi-seed/replayable control-plane simulation exercises quota/429/crash/auth/backpressure/SMB/LAN/clock-skew but never increases production evidence score.",
+        "benchmark": false
+      },
+      {
+        "id": "autonomous_router_digital_twin",
+        "label": "Autonomous router large-pool digital twin + bounded model checking",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.55 32-account/12-instance/24-project twin + 3,072-state bounded checker + minimized counterexample; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "protocol_chaos_fuzzer",
+        "label": "Protocol chaos / API compatibility fuzzer",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.56 deterministic SSE/WebSocket/JSON/chunked/retry/EOF fuzzing plus gateway integrity hardening; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      }
+    ],
+    "interpretation": {
+      "feature_score": "Evidence-weighted implementation/parity score, not a benchmark of real throughput.",
+      "production_score": "Penalizes synthetic/static-only evidence. It is intentionally much lower until Windows runtime gates pass.",
+      "no_superset_claim": "HMS must not be called a production superset until the v25.49 live target-machine Real Codex gate, v25.50 real Free/Plus/Pro quota fidelity gate, v25.51 target-machine rotation torture, v25.52 UX target-machine review and the v25.53 seven-stage real target-machine certificate pass. v25.54 simulation, v25.55 autonomous-router model checking and v25.56 protocol chaos fuzzing are explicitly non-production evidence."
+    }
+  }
+}

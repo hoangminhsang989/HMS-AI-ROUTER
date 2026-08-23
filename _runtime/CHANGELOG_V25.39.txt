@@ -1,0 +1,11 @@
+HMS AI Cockpit v25.39 — Codex Self-Healing
+
+- Added HMS_Codex_SelfHealing.py planning/audit engine.
+- Added native GUI page: Tự sửa Codex.
+- Added backend actions: get_self_healing, audit_self_healing, repair_self_healing.
+- Added guarded repairs for global/instance config drift, binding drift, stale PID metadata, owned-router PID adoption, router config regeneration, stopped-instance credential pool sync, and stopped-client model policy reapply.
+- Added per-run evidence directory with pre-state/plan/post-state/result.
+- Added ownership hard gate: foreign listener never receives stop/kill action.
+- Added background auto-audit; background auto-repair remains OFF by default.
+- Preserved stable endpoint, Project Affinity, Identity Isolation, session affinity, Circuit Breaker, Closed-loop Router, Predictive Quota, Account Analytics and API Compatibility v25.38.
+- Windows Codex runtime verification remains deferred by operator.

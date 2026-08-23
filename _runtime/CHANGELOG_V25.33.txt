@@ -1,0 +1,41 @@
+HMS AI Cockpit v25.33 — Predictive Quota Engine
+================================================
+
+BASELINE
+- v25.32 Circuit Breaker + Failover State Machine.
+- Codex-only scope retained.
+
+ADDED
+- HMS_Codex_PredictiveQuota.py.
+- Reset-aware quota epoch segmentation.
+- Per-account 5h + weekly burn velocity, runway, projected-at-reset and exhaust-before-reset forecast.
+- Risk classes UNKNOWN / LOW / MEDIUM / HIGH / EMERGENCY.
+- New-session load factor and score penalty for Closed-loop Router.
+- Predictive quota state/plan files under %LOCALAPPDATA%\HMS_AI_MultiRouter\predictive-quota.
+- Native GUI forecast summary + DỰ BÁO action.
+- Predictive Quota settings group.
+- Background forecast refresh.
+
+CHANGED
+- Quota history snapshots now also capture hourly/weekly reset and window metadata.
+- Closed-loop Router v25.33 consumes Predictive Quota alongside Usage Ledger, live quota, health and Circuit Breaker.
+- Routing weights for NEW sessions are pressure-scaled; stable endpoint and existing session affinity remain unchanged.
+- Predictive EMERGENCY can mark current account critical so Closed-loop may bypass hysteresis/hold for new-session preference.
+
+SAFETY
+- Forecast is advisory metadata and is never substituted for live quota.
+- No OAuth/token/cookie/API-key mutation by Predictive Quota.
+- No credential delete.
+- No project-binding change.
+- No forced migration of sticky sessions.
+- Existing Closed-loop transaction rollback remains authoritative for priority/weight writes.
+
+EVIDENCE
+- Python compileall: PASS.
+- Native GUI startup smoke: PASS (7s, stderr 0).
+- PowerShell StaticLint: PASS.
+- PowerShell Coherence: PASS.
+- Runtime Kit: PASS 128/128.
+- Synthetic reset-aware forecast: PASS.
+- Synthetic forecast-pressure Closed-loop rerank/load-shaping: PASS.
+- Real Windows Codex runtime / quota/failover continuity: DEFERRED_BY_OPERATOR.

@@ -1,0 +1,352 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.59",
+  "suite": "V25_28_TO_V25_59_REGRESSION_FREEZE_CANONICAL_ISOLATED_AGGREGATION",
+  "generated_utc": "2026-08-22T07:30:09.793366+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "suite_pass": 27,
+    "suite_fail": 0,
+    "suite_total": 27,
+    "numeric_assertions_pass": 1162,
+    "numeric_assertions_total": 1162
+  },
+  "method": "CANONICAL_ISOLATED_SUITE_AGGREGATION",
+  "threshold_relaxed": false,
+  "suite_skipped": false,
+  "per_suite_timeout_sec": 120,
+  "suites": [
+    {
+      "index": 0,
+      "suite": "compatibility_freeze",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.568,
+      "summary": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      },
+      "stderr": ""
+    },
+    {
+      "index": 1,
+      "suite": "client_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.568,
+      "summary": {
+        "pass": 27,
+        "fail": 0,
+        "total": 27
+      },
+      "stderr": ""
+    },
+    {
+      "index": 2,
+      "suite": "lan_pool",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.618,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15
+      },
+      "stderr": ""
+    },
+    {
+      "index": 3,
+      "suite": "lan_failure_matrix",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.969,
+      "summary": {
+        "pass": 20,
+        "fail": 0,
+        "total": 20
+      },
+      "stderr": ""
+    },
+    {
+      "index": 4,
+      "suite": "reliability_soak_harness",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 2.424,
+      "summary": {
+        "pass": 42,
+        "fail": 0,
+        "total": 42
+      },
+      "stderr": ""
+    },
+    {
+      "index": 5,
+      "suite": "performance_scale",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 2.724,
+      "summary": {
+        "pass": 35,
+        "fail": 0,
+        "total": 35
+      },
+      "stderr": ""
+    },
+    {
+      "index": 6,
+      "suite": "real_codex_certification",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 12.262,
+      "summary": {
+        "pass": 65,
+        "fail": 0,
+        "total": 65
+      },
+      "stderr": ""
+    },
+    {
+      "index": 7,
+      "suite": "live_quota_intelligence",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.618,
+      "summary": {
+        "pass": 52,
+        "fail": 0,
+        "total": 52
+      },
+      "stderr": ""
+    },
+    {
+      "index": 8,
+      "suite": "seamless_rotation_torture",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.668,
+      "summary": {
+        "pass": 63,
+        "fail": 0,
+        "total": 63
+      },
+      "stderr": ""
+    },
+    {
+      "index": 9,
+      "suite": "ux_cockpit_parity_plus",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 1.071,
+      "summary": {
+        "pass": 62,
+        "fail": 0,
+        "total": 62
+      },
+      "stderr": ""
+    },
+    {
+      "index": 10,
+      "suite": "target_machine_certification",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.568,
+      "summary": {
+        "pass": 39,
+        "fail": 0,
+        "total": 39
+      },
+      "stderr": ""
+    },
+    {
+      "index": 11,
+      "suite": "production_simulation_lab",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 2.128,
+      "summary": {
+        "pass": 40,
+        "fail": 0,
+        "total": 40
+      },
+      "stderr": ""
+    },
+    {
+      "index": 12,
+      "suite": "autonomous_router_digital_twin",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 1.421,
+      "summary": {
+        "pass": 57,
+        "fail": 0,
+        "total": 57
+      },
+      "stderr": ""
+    },
+    {
+      "index": 13,
+      "suite": "protocol_chaos_fuzzer",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 14.608,
+      "summary": {
+        "pass": 64,
+        "fail": 0,
+        "total": 64
+      },
+      "stderr": ""
+    },
+    {
+      "index": 14,
+      "suite": "recovery_planner",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 1.173,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": ""
+    },
+    {
+      "index": 15,
+      "suite": "compound_fault_recovery",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 4.78,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15,
+        "model_states": 72960
+      },
+      "stderr": ""
+    },
+    {
+      "index": 16,
+      "suite": "official_auth_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.72,
+      "summary": {
+        "pass": 67,
+        "fail": 0,
+        "total": 67
+      },
+      "stderr": ""
+    },
+    {
+      "index": 17,
+      "suite": "runtime_kit",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.781,
+      "summary": {
+        "pass": 303,
+        "fail": 0,
+        "total": 303
+      },
+      "stderr": ""
+    },
+    {
+      "index": 18,
+      "suite": "smart_model_router",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.618,
+      "summary": {
+        "pass": 16,
+        "fail": 0,
+        "total": 16
+      },
+      "stderr": ""
+    },
+    {
+      "index": 19,
+      "suite": "api_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 1.679,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": ""
+    },
+    {
+      "index": 20,
+      "suite": "api_superset",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 1.622,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "stderr": ""
+    },
+    {
+      "index": 21,
+      "suite": "protocol",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 4.132,
+      "summary": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      },
+      "stderr": ""
+    },
+    {
+      "index": 22,
+      "suite": "self_healing",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.568,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "index": 23,
+      "suite": "security_hardening",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.618,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "index": 24,
+      "suite": "project_orchestrator",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.569,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "index": 25,
+      "suite": "powershell_static_lint",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.768,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "index": 26,
+      "suite": "powershell_coherence",
+      "ok": true,
+      "exit_code": 0,
+      "elapsed_sec": 0.622,
+      "summary": {},
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": "25.40",
+  "verdict": "PASS",
+  "checks": {
+    "bundle_created": true,
+    "strict_redaction": true,
+    "safe_content_preserved": true,
+    "raw_secret_hits": 0
+  },
+  "privacy": {
+    "contains_raw_oauth": false,
+    "contains_request_body": false,
+    "contains_api_keys": false,
+    "contains_cookies": false,
+    "redaction_applied": true
+  },
+  "file_count": 2
+}

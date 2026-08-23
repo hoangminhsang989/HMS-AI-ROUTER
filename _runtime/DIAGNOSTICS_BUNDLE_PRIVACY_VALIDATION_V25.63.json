@@ -1,0 +1,92 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.63",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_STARTUP_RECOVERY",
+  "generated_utc": "2026-08-22T14:30:40.056933+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "tests": [
+    {
+      "name": "allow_startup_latest",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_crash_latest",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "deny_auth_path",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bundle_command_pass",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "bundle_exists",
+      "status": "PASS",
+      "detail": "/tmp/hms-v2563-bundle-nihq7dpk/out/HMS_DIAGNOSTICS_20260822T143039Z.zip"
+    },
+    {
+      "name": "startup_latest_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2563/startup-recovery-latest-v2563.json",
+        "data/startup-recovery-v2563/target-crash-harness-latest-v2563.json",
+        "runtime/STARTUP_RECOVERY_RECONCILER_VALIDATION_V25.63.json",
+        "runtime/TARGET_CRASH_HARNESS_VALIDATION_V25.63.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "crash_latest_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2563/startup-recovery-latest-v2563.json",
+        "data/startup-recovery-v2563/target-crash-harness-latest-v2563.json",
+        "runtime/STARTUP_RECOVERY_RECONCILER_VALIDATION_V25.63.json",
+        "runtime/TARGET_CRASH_HARNESS_VALIDATION_V25.63.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "runtime_validators_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2563/startup-recovery-latest-v2563.json",
+        "data/startup-recovery-v2563/target-crash-harness-latest-v2563.json",
+        "runtime/STARTUP_RECOVERY_RECONCILER_VALIDATION_V25.63.json",
+        "runtime/TARGET_CRASH_HARNESS_VALIDATION_V25.63.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "manifest_version_25_63",
+      "status": "PASS",
+      "detail": "25.63"
+    },
+    {
+      "name": "access_token_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bearer_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "prompt_redacted",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

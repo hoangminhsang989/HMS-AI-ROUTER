@@ -1,0 +1,385 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.23.1",
+    "generated_utc": "2026-08-19T15:59:51.035503+00:00",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 74,
+      "fail": 0,
+      "total": 74
+    },
+    "tests": [
+      {
+        "name": "entrypoint.gui_only",
+        "status": "PASS",
+        "detail": "normal entrypoint is WScript-hidden and main WinForms runs in the same hidden PowerShell host"
+      },
+      {
+        "name": "orchestrator.required_stages",
+        "status": "PASS",
+        "detail": "required stages present"
+      },
+      {
+        "name": "all_ready.non_mutating_router",
+        "status": "PASS",
+        "detail": "ALL_READY does not call router/safe runtime stages"
+      },
+      {
+        "name": "snapshot.private_inputs",
+        "status": "PASS",
+        "detail": "snapshot covers configs and best-effort ACL"
+      },
+      {
+        "name": "snapshot.no_oauth_copy",
+        "status": "PASS",
+        "detail": "OAuth auth is inventoried as metadata"
+      },
+      {
+        "name": "port_profile.safe_defaults",
+        "status": "PASS",
+        "detail": "first runtime profile keeps automation off"
+      },
+      {
+        "name": "guarded_launcher.runtime_ready",
+        "status": "PASS",
+        "detail": "guarded launcher blocks incomplete checkpoint"
+      },
+      {
+        "name": "wizard.sequence",
+        "status": "PASS",
+        "detail": "operator sequence visible"
+      },
+      {
+        "name": "main.runtime_cert_tab",
+        "status": "PASS",
+        "detail": "main Mission Control links Runtime Certification"
+      },
+      {
+        "name": "gate.v25_23_1_authority",
+        "status": "PASS",
+        "detail": "runtime gate authority migrated to v25.23.1"
+      },
+      {
+        "name": "manifest.v25_23_1",
+        "status": "PASS",
+        "detail": "manifest files=66"
+      },
+      {
+        "name": "powershell.no_reserved_auto_alias",
+        "status": "PASS",
+        "detail": "no manual PID/HOST/HOME automatic-variable aliases"
+      },
+      {
+        "name": "wizard.fatal_evidence",
+        "status": "PASS",
+        "detail": "wizard captures child stdout/stderr and publishes emergency evidence"
+      },
+      {
+        "name": "powershell.ps51_generic_list_compat",
+        "status": "PASS",
+        "detail": "all Generic List[T] use direct .NET constructors"
+      },
+      {
+        "name": "runtime_gate.toarray_publication",
+        "status": "PASS",
+        "detail": "critical runtime evidence publication avoids @() around Generic List"
+      },
+      {
+        "name": "runtime_gate.fatal_evidence",
+        "status": "PASS",
+        "detail": "Windows Runtime Gate publishes FATAL JSON/text evidence on unhandled error"
+      },
+      {
+        "name": "powershell.no_bare_log_calls",
+        "status": "PASS",
+        "detail": "all Log calls use quoted/expression arguments"
+      },
+      {
+        "name": "wizard.shown_guarded",
+        "status": "PASS",
+        "detail": "Form.Shown initialization is guarded by try/catch"
+      },
+      {
+        "name": "inventory.current_release_authority",
+        "status": "PASS",
+        "detail": "Inventory checks the current v25.23.1 main script and current release manifest"
+      },
+      {
+        "name": "inventory.operator_spacing",
+        "status": "PASS",
+        "detail": "Inventory PowerShell comparison operator is tokenized safely"
+      },
+      {
+        "name": "inventory.detailed_missing",
+        "status": "PASS",
+        "detail": "Inventory publishes exact missing prerequisite names instead of a generic failure"
+      },
+      {
+        "name": "runtime.evidence_initialized_before_use",
+        "status": "PASS",
+        "detail": "RunEvidenceDir is initialized and created before Invoke-WindowsGate can use it"
+      },
+      {
+        "name": "runtime.no_orphan_evidenceDir",
+        "status": "PASS",
+        "detail": "Orchestrator contains no orphan/uninitialized $evidenceDir reference"
+      },
+      {
+        "name": "runtime.current_namespace_authority",
+        "status": "PASS",
+        "detail": "no stale runtime authority names"
+      },
+      {
+        "name": "powershell.real_parser_regression_patterns",
+        "status": "PASS",
+        "detail": "no known PS5.1 parser regression patterns"
+      },
+      {
+        "name": "powershell.wakeup_parenthesis",
+        "status": "PASS",
+        "detail": "Wake-up router guard has balanced closing parentheses"
+      },
+      {
+        "name": "launcher_setup.scalar_count_safe",
+        "status": "PASS",
+        "detail": "launcher.setup wraps pipeline output before Count under StrictMode"
+      },
+      {
+        "name": "websmoke.server_consumes_post_body",
+        "status": "PASS",
+        "detail": "read-only POST consumes request body before returning 405"
+      },
+      {
+        "name": "websmoke.server_content_length",
+        "status": "PASS",
+        "detail": "Unified UX emits explicit Content-Length and Connection: close"
+      },
+      {
+        "name": "websmoke.httpclient_windows_safe",
+        "status": "PASS",
+        "detail": "Windows HttpWebRequest disables keep-alive and Expect: 100-continue"
+      },
+      {
+        "name": "websmoke.diagnostic_evidence",
+        "status": "PASS",
+        "detail": "WEB_SMOKE captures child logs and per-request HTTP trace"
+      },
+      {
+        "name": "saferuntime.output_file_no_stdout_tail",
+        "status": "PASS",
+        "detail": "RuntimeValidator does not print full Unicode JSON after publishing --output"
+      },
+      {
+        "name": "saferuntime.deferred_first_run_state",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME separates deferred first-run state from true blockers"
+      },
+      {
+        "name": "saferuntime.process_exit_authority",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME captures child ExitCode/stdout/stderr explicitly"
+      },
+      {
+        "name": "saferuntime.pass_semantics",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME PASS depends on structured fail/verdict, not deferred state"
+      },
+      {
+        "name": "liveapi.explicit_config_path",
+        "status": "PASS",
+        "detail": "CLIProxyAPI is started with an explicit --config path"
+      },
+      {
+        "name": "liveapi.key_fingerprint_audit",
+        "status": "PASS",
+        "detail": "live handoff verifies local key membership without exposing the secret"
+      },
+      {
+        "name": "liveapi.http_error_body",
+        "status": "PASS",
+        "detail": "401/403 diagnostics include HTTP status and redacted response body"
+      },
+      {
+        "name": "liveapi.transactional_handoff",
+        "status": "PASS",
+        "detail": "failed live handoff restores CLIProxy config and Codex mutation occurs only after local API success"
+      },
+      {
+        "name": "json.empty_array_safe",
+        "status": "PASS",
+        "detail": "Save-Json preserves empty arrays as valid [] JSON"
+      },
+      {
+        "name": "listener.get_nettcp_repaired",
+        "status": "PASS",
+        "detail": "valid Get-NetTCPConnection cmdlet restored after parser normalization"
+      },
+      {
+        "name": "ui.footer_current_release",
+        "status": "PASS",
+        "detail": "legacy hidden footer authority identifies the current one-click release"
+      },
+      {
+        "name": "cliproxy.safemode_template_cleanup",
+        "status": "PASS",
+        "detail": "HMS removes only official CLIProxy template keys before live startup"
+      },
+      {
+        "name": "cliproxy.safemode_audit",
+        "status": "PASS",
+        "detail": "live handoff refuses to start if template keys survive cleanup"
+      },
+      {
+        "name": "cliproxy.safemode_header",
+        "status": "PASS",
+        "detail": "403 diagnostics capture CLIProxy X-CPA-SAFE-MODE header"
+      },
+      {
+        "name": "cliproxy.custom_keys_preserved",
+        "status": "PASS",
+        "detail": "cleanup targets exact unsafe placeholders rather than all custom keys"
+      },
+      {
+        "name": "codexenv.restart_barrier",
+        "status": "PASS",
+        "detail": "HMS blocks provider/.env mutation while an old Codex/ChatGPT process survives"
+      },
+      {
+        "name": "codexenv.disk_verification",
+        "status": "PASS",
+        "detail": "HMS verifies ~/.codex/.env after writing the local router key"
+      },
+      {
+        "name": "codexenv.fresh_process_confirmation",
+        "status": "PASS",
+        "detail": "HMS only confirms API-mode launch after a fresh desktop process starts"
+      },
+      {
+        "name": "codexenv.open_button_stale_guard",
+        "status": "PASS",
+        "detail": "MỞ CODEX refuses to silently focus a stale process in HMS API mode"
+      },
+      {
+        "name": "codexenv.failed_enable_rollback",
+        "status": "PASS",
+        "detail": "failed env reload rolls Codex config/.env back to the pre-HMS snapshot"
+      },
+      {
+        "name": "codexenv.disable_restart_barrier",
+        "status": "PASS",
+        "detail": "disable flow does not remove the router while a stale HMS provider process survives"
+      },
+      {
+        "name": "ucc.stat_card_token_boundaries",
+        "status": "PASS",
+        "detail": "Native UCC StatCard command names cannot absorb quoted arguments"
+      },
+      {
+        "name": "ucc.current_version_title",
+        "status": "PASS",
+        "detail": "Native UCC title tracks the package revision"
+      },
+      {
+        "name": "ux.one_click_shell",
+        "status": "PASS",
+        "detail": "v25.23.1 explicitly exposes one primary daily action"
+      },
+      {
+        "name": "ux.single_primary_action",
+        "status": "PASS",
+        "detail": "legacy control wall is hidden; one large toggle plus one settings gear remain visible"
+      },
+      {
+        "name": "ux.one_click_orchestrator",
+        "status": "PASS",
+        "detail": "one-click wrapper composes existing transactional router/Codex engine"
+      },
+      {
+        "name": "ux.one_click_policy_authority",
+        "status": "PASS",
+        "detail": "hidden legacy controls cannot overwrite one-click runtime settings"
+      },
+      {
+        "name": "ux.foreign_port_autoselect",
+        "status": "PASS",
+        "detail": "one-click automatically avoids foreign/Cockpit listeners without killing them"
+      },
+      {
+        "name": "ux.cockpit_interaction_patterns",
+        "status": "PASS",
+        "detail": "rounded surfaces, hover feedback, fade-in and compact service state remain"
+      },
+      {
+        "name": "ux.engine_preserved",
+        "status": "PASS",
+        "detail": "previous routing/failover/control-plane engines remain callable behind one-click UX"
+      },
+      {
+        "name": "gui.no_cmd_start",
+        "status": "PASS",
+        "detail": "main GUI contains no direct cmd.exe launch"
+      },
+      {
+        "name": "gui.no_visible_windowstyle",
+        "status": "PASS",
+        "detail": "main GUI has no Minimized/Normal console helper launch"
+      },
+      {
+        "name": "gui.router_hidden",
+        "status": "PASS",
+        "detail": "CLIProxyAPI Router starts hidden with diagnostic redirection"
+      },
+      {
+        "name": "gui.oauth_dialog",
+        "status": "PASS",
+        "detail": "OAuth uses an HMS WinForms dialog and hidden child instead of cmd.exe"
+      },
+      {
+        "name": "gui.embedded_cli",
+        "status": "PASS",
+        "detail": "advanced Codex CLI uses an embedded WinForms terminal with no console window"
+      },
+      {
+        "name": "gui.powershell_helpers_hidden",
+        "status": "PASS",
+        "detail": "all direct PowerShell helper launches are hidden"
+      },
+      {
+        "name": "gui.runtime_no_visible_console",
+        "status": "PASS",
+        "detail": "all PowerShell UI/helper launch paths are hidden"
+      },
+      {
+        "name": "ui.button_token_boundaries",
+        "status": "PASS",
+        "detail": "button helper calls cannot absorb numeric coordinates into quoted labels"
+      },
+      {
+        "name": "failover.bounded_single_auth_mutation",
+        "status": "PASS",
+        "detail": "live failover disables exactly one selected auth only after 2-account preflight"
+      },
+      {
+        "name": "failover.single_live_responses_probe",
+        "status": "PASS",
+        "detail": "failover proof uses one bounded Responses API request"
+      },
+      {
+        "name": "failover.request_log_account_proof",
+        "status": "PASS",
+        "detail": "failover verdict is tied to Request Log Auth mapping"
+      },
+      {
+        "name": "failover.finally_restore",
+        "status": "PASS",
+        "detail": "selected auth disabled state is restored in finally and restore failure is terminal"
+      },
+      {
+        "name": "failover.no_auth_delete",
+        "status": "PASS",
+        "detail": "live failover test never deletes the selected credential"
+      }
+    ]
+  }
+}

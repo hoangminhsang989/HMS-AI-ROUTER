@@ -1,0 +1,38 @@
+{
+  "version": "25.36",
+  "generated_utc": "2026-08-21T01:52:20.216697+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "name": "valid_instance_fingerprint",
+      "status": "PASS",
+      "detail": "valid isolated instance gets deterministic metadata-only fingerprint"
+    },
+    {
+      "name": "fingerprint_secret_free",
+      "status": "PASS",
+      "detail": "identity-v2536.json excludes OAuth/API secret fields"
+    },
+    {
+      "name": "cross_instance_path_collision_rejected",
+      "status": "PASS",
+      "detail": "shared CODEX_HOME across instances is fail-closed"
+    },
+    {
+      "name": "binding_secret_field_rejected",
+      "status": "PASS",
+      "detail": "binding metadata containing secret-like field is rejected"
+    },
+    {
+      "name": "stable_endpoint_mismatch_rejected",
+      "status": "PASS",
+      "detail": "Codex config endpoint must equal instance stable endpoint"
+    }
+  ],
+  "runtime_windows_codex": "DEFERRED_BY_OPERATOR"
+}

@@ -1,0 +1,32 @@
+HMS AI Cockpit v25.56 — Protocol Chaos / API Compatibility Fuzzer
+
+SCOPE
+- Codex-only continuation without requiring a real target machine.
+- Protocol fuzzing is synthetic safety/compatibility evidence only.
+
+NEW / HARDENED
+1. HMS_Codex_ProtocolChaosFuzzer.py
+   - deterministic 300-case structural fuzz corpus: SSE, WebSocket upgrade, malformed JSON;
+   - live loopback gateway scenarios: split SSE frames, duplicate/malformed SSE data, early EOF, retry sequence, malformed upstream errors, chunked request corruption;
+   - malformed WebSocket 101 failover and fragmented-frame tunnel verification;
+   - trace privacy assertions for token/key/prompt/request/response markers.
+2. Smart Gateway SSE integrity
+   - metadata-only SSEIntegrityProbe on /v1/responses and /v1/chat/completions;
+   - COMPLETE / TRUNCATED_EOF / CLIENT_ABORT / UPSTREAM_READ_ERROR classification;
+   - truncated OpenAI SSE penalizes target health for the NEXT request; never replays a partial stream.
+3. HTTP body integrity
+   - declared Content-Length is compared with bytes actually received;
+   - early EOF becomes CONTENT_LENGTH_MISMATCH / UPSTREAM_EOF metadata and target health failure;
+   - client abort remains separate and does not penalize upstream health.
+4. WebSocket 101 validation
+   - requires complete HTTP head, Upgrade: websocket, Connection: Upgrade and Sec-WebSocket-Accept;
+   - Sec-WebSocket-Accept is constant-time compared with the expected client key digest;
+   - malformed 101 is never relayed and may bounded-failover to another eligible target.
+5. Regression / operator integration
+   - Protocol Chaos becomes suite #24 and runs exclusive from timing-sensitive shared test load;
+   - native LAN Pool: FUZZ 300 + evidence surface; PowerShell mirror surface;
+   - Unified Diagnostics, Diagnostics Bundle and Parity Auditor receive metadata-only evidence.
+
+CLAIM BOUNDARY
+PASS_PROTOCOL_CHAOS_API_COMPATIBILITY_FUZZER_V25_56 is synthetic protocol evidence only.
+It cannot emit or substitute PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.

@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.62 — BUILD VALIDATION
+Generated UTC: 2026-08-22T11:38:52.111615+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+
+CORE GATES
+- Recovery Transaction Replay: 30/30 PASS; 30/30 crash scenarios safe
+- Unified Diagnostics Recovery Replay: 13/13 PASS
+- Diagnostics Bundle Replay Privacy: 10/10 PASS
+- Runtime Kit: 334/334 PASS
+- Compatibility Freeze: 133/133 PASS; 90 public BackendActions
+- Full Regression Freeze: 34/34 suites; 1326/1326 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+
+SAFETY INVARIANTS
+- At-most-once durable side effect.
+- External observable verification before repeat/verify decisions.
+- Idempotency key per side effect; raw idempotency key is not journaled.
+- Compensation requires ownership proof and runs reverse dependency order.
+- Unknown/concurrent external change => OPERATOR_REQUIRED fail-closed.
+
+PARITY / CLAIM BOUNDARY
+- Feature evidence score: 93.0% (carried forward)
+- Production evidence score: 55.2% (unchanged)
+- Verdict: FEATURE_PARITY_CANDIDATE
+- Real Windows PowerShell 5.1/runtime, Codex Desktop/CLI auth, encrypted Secrets backend, live quota fidelity, LAN/NAS failover and 6h/24h soak remain target-machine gates.
+- PRODUCTION CERTIFICATION IS NOT CLAIMED.

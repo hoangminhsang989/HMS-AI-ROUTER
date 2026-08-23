@@ -1,0 +1,17 @@
+HMS AI Cockpit v25.57 — RELEASE FREEZE
+Verdict: PASS_RECOVERY_PLANNER_SELF_HEALING_DECISION_PROOF_V25_57
+
+Recovery proof core: 17/17 PASS
+Recovery release validator: 12/12 PASS
+Model checker: 9,216 states / 0 safety violations
+Compatibility Freeze: 133/133 PASS
+Runtime Kit: 289/289 PASS
+Regression: 25/25 suites / 1,066/1,066 numeric assertions PASS (isolated canonical-suite aggregation; no threshold relaxed, no suite skipped)
+Unified Diagnostics recovery/privacy: 10/10 PASS
+Diagnostics Bundle recovery/privacy: 9/9 PASS
+GUI startup: 5/5 PASS
+PowerShell static lint: PASS
+PowerShell coherence: PASS
+Python compileall: PASS
+Parity: 93.0% feature / 55.2% production / FEATURE_PARITY_CANDIDATE
+Production certification: NOT CLAIMED — target-machine gate remains authoritative.

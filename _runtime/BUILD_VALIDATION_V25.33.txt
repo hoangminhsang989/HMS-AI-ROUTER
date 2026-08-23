@@ -1,0 +1,47 @@
+HMS AI Cockpit v25.33 — BUILD VALIDATION
+=========================================
+
+TRANCHE: PREDICTIVE_QUOTA_ENGINE
+BASELINE: v25.32 CIRCUIT_BREAKER_FAILOVER
+EDITION: CODEX_ONLY
+
+GATES
+- Python compileall: PASS.
+- HMS_GUI.pyw py_compile: PASS.
+- Native GUI startup smoke: PASS (7 seconds under X display, stderr 0; timeout expected because GUI remained alive).
+- PowerShell StaticLint v25.33: PASS.
+  - script variables referenced/assigned: 185/185
+  - missing script variables: 0
+  - settings referenced/declared: 287/372
+  - missing settings: 0
+  - duplicate settings: 0
+  - lexical glue findings: 0
+- PowerShell CoherenceAudit v25.33: PASS.
+- Runtime Kit Validator v25.33: PASS 128/128.
+
+SYNTHETIC PREDICTIVE QUOTA GATES
+- Reset-aware quota epoch segmentation: PASS.
+- Burn velocity + ETA/runway: PASS.
+- Exhaust-before-reset risk: PASS.
+- Risk -> new-session load factor: PASS.
+- Secret-like field plan validation: FAIL-CLOSED PASS.
+- Forecast/live-quota separation invariant: PASS.
+
+SYNTHETIC CLOSED-LOOP INTEGRATION
+- Predictive pressure lowers account score: PASS.
+- New-session routing reranks healthier fallback: PASS.
+- Predictive load factor scales routing weight: PASS.
+- Stable endpoint preserved through apply: PASS.
+- Existing session-affinity safety invariant: PASS.
+- Closed-loop apply + rollback restores priority/weight: PASS.
+
+RUNTIME STATUS
+- REAL WINDOWS CODEX QUOTA VELOCITY: DEFERRED_BY_OPERATOR.
+- REAL 429 AVOIDANCE: DEFERRED_BY_OPERATOR.
+- REAL FAILOVER WITHOUT CODEX RESTART: DEFERRED_BY_OPERATOR.
+- REAL SESSION CONTINUITY: DEFERRED_BY_OPERATOR.
+- SOAK: NOT_YET.
+
+VERDICT
+PASS_V25_33_IMPLEMENTED_STATIC_SYNTHETIC_VERIFIED_RUNTIME_DEFERRED
+- Release manifest: PASS 134/134 file hashes (manifest self-excluded).

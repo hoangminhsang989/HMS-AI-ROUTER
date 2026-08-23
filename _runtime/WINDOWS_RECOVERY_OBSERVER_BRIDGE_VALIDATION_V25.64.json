@@ -1,0 +1,103 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.64",
+  "suite": "WINDOWS_RECOVERY_OBSERVER_BRIDGE_VALIDATION",
+  "generated_utc": "2026-08-22T14:53:14.165970+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "total": 16
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "proof_13",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "four_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "evidence_classes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "auth_raw_hash_no_export",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "keyring_digest_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "process_generation_no_cmdline",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "router_live_metadata",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lease_owner_hashed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "freshness_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "failure_reason_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_boundary",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "version_sync",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "startup_reconciler_bridge",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_windows_observer",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "ps_gate_v2564",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_WINDOWS_TARGET_OBSERVER_EVIDENCE_REQUIRED"
+}

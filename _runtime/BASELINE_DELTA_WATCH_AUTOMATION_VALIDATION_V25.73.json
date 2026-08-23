@@ -1,0 +1,62 @@
+{
+  "version": "25.73",
+  "suite": "BASELINE_DELTA_WATCH_AUTOMATION_VALIDATION",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "baseline_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "two_checkpoint_current_pass",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "newer_freezes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_only_delta_queue",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_merge",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_promotion",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "digest_bound",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "antigravity_not_imported",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_promotion_eligible": false,
+  "verdict": "PASS"
+}

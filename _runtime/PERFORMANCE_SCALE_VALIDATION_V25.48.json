@@ -1,0 +1,191 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.48",
+  "suite": "PERFORMANCE_SCALE_VALIDATION",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 35,
+    "fail": 0,
+    "total": 35
+  },
+  "checks": [
+    {
+      "name": "version_is_25_48",
+      "ok": true,
+      "detail": "25.48"
+    },
+    {
+      "name": "default_concurrency_levels",
+      "ok": true,
+      "detail": "[1, 4, 8, 16, 32]"
+    },
+    {
+      "name": "model_ttft_not_faked_by_health_probe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid_target_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "percentile_statistics_present",
+      "ok": true,
+      "detail": "{'count': 5, 'min': 1.0, 'max': 100.0, 'avg': 22.0, 'p50': 3.0, 'p95': 80.8, 'p99': 96.16}"
+    },
+    {
+      "name": "bounded_queue_never_exceeds_capacity",
+      "ok": true,
+      "detail": "{'workers': 1, 'queue_capacity': 2, 'burst': 40, 'accepted': 2, 'rejected': 38, 'completed': 2, 'max_queue_depth': 2, 'bounded': True, 'no_silent_drop': True, 'backpressure_observed': True}"
+    },
+    {
+      "name": "backpressure_rejects_overload",
+      "ok": true,
+      "detail": "{'workers': 1, 'queue_capacity': 2, 'burst': 40, 'accepted': 2, 'rejected': 38, 'completed': 2, 'max_queue_depth': 2, 'bounded': True, 'no_silent_drop': True, 'backpressure_observed': True}"
+    },
+    {
+      "name": "accepted_work_has_no_silent_drop",
+      "ok": true,
+      "detail": "{'workers': 1, 'queue_capacity': 2, 'burst': 40, 'accepted': 2, 'rejected': 38, 'completed': 2, 'max_queue_depth': 2, 'bounded': True, 'no_silent_drop': True, 'backpressure_observed': True}"
+    },
+    {
+      "name": "health_probe_application_success",
+      "ok": true,
+      "detail": "Probe(ok=True, status=200, latency_ms=1.297, ttfb_ms=1.215, bytes_read=33, error='')"
+    },
+    {
+      "name": "health_probe_has_control_plane_ttfb",
+      "ok": true,
+      "detail": "Probe(ok=True, status=200, latency_ms=1.297, ttfb_ms=1.215, bytes_read=33, error='')"
+    },
+    {
+      "name": "full_matrix_passes",
+      "ok": true,
+      "detail": "PASS"
+    },
+    {
+      "name": "concurrency_profiles_exercised",
+      "ok": true,
+      "detail": "[{'concurrency': 1, 'requests': 10, 'success': 10, 'fail': 0, 'error_rate': 0.0, 'elapsed_sec': 0.0067, 'throughput_rps': 1501.132, 'latency_ms': {'count': 10, 'min': 0.468, 'max': 0.908, 'avg': 0.576, 'p50': 0.551, 'p95': 0.786, 'p99': 0.884}, 'control_plane_ttfb_ms': {'count': 10, 'min': 0.397, 'max': 0.872, 'avg': 0.534, 'p50': 0.511, 'p95': 0.756, 'p99': 0.849}, 'per_target': {'0': {'requests': 4, 'success': 4, 'latency_ms': {'count': 4, 'min': 0.468, 'max': 0.908, 'avg': 0.613, 'p50': 0.537"
+    },
+    {
+      "name": "scaling_analysis_has_all_levels",
+      "ok": true,
+      "detail": "{'rows': [{'concurrency': 1, 'throughput_rps': 1501.132, 'vs_single_x': 1.0, 'parallel_efficiency': 1.0, 'latency_p95_ms': 0.786, 'control_plane_ttfb_p95_ms': 0.756, 'error_rate': 0.0}, {'concurrency': 4, 'throughput_rps': 1316.391, 'vs_single_x': 0.877, 'parallel_efficiency': 0.2192, 'latency_p95_ms': 3.726, 'control_plane_ttfb_p95_ms': 3.147, 'error_rate': 0.0}, {'concurrency': 8, 'throughput_rps': 1244.295, 'vs_single_x': 0.829, 'parallel_efficiency': 0.1036, 'latency_p95_ms': 5.564, 'control"
+    },
+    {
+      "name": "scaling_baseline_is_single_concurrency",
+      "ok": true,
+      "detail": "{'rows': [{'concurrency': 1, 'throughput_rps': 1501.132, 'vs_single_x': 1.0, 'parallel_efficiency': 1.0, 'latency_p95_ms': 0.786, 'control_plane_ttfb_p95_ms': 0.756, 'error_rate': 0.0}, {'concurrency': 4, 'throughput_rps': 1316.391, 'vs_single_x': 0.877, 'parallel_efficiency': 0.2192, 'latency_p95_ms': 3.726, 'control_plane_ttfb_p95_ms': 3.147, 'error_rate': 0.0}, {'concurrency': 8, 'throughput_rps': 1244.295, 'vs_single_x': 0.829, 'parallel_efficiency': 0.1036, 'latency_p95_ms': 5.564, 'control"
+    },
+    {
+      "name": "scaling_peak_concurrency_is_observed_level",
+      "ok": true,
+      "detail": "{'rows': [{'concurrency': 1, 'throughput_rps': 1501.132, 'vs_single_x': 1.0, 'parallel_efficiency': 1.0, 'latency_p95_ms': 0.786, 'control_plane_ttfb_p95_ms': 0.756, 'error_rate': 0.0}, {'concurrency': 4, 'throughput_rps': 1316.391, 'vs_single_x': 0.877, 'parallel_efficiency': 0.2192, 'latency_p95_ms': 3.726, 'control_plane_ttfb_p95_ms': 3.147, 'error_rate': 0.0}, {'concurrency': 8, 'throughput_rps': 1244.295, 'vs_single_x': 0.829, 'parallel_efficiency': 0.1036, 'latency_p95_ms': 5.564, 'control"
+    },
+    {
+      "name": "high_concurrency_retention_is_bounded",
+      "ok": true,
+      "detail": "{'rows': [{'concurrency': 1, 'throughput_rps': 1501.132, 'vs_single_x': 1.0, 'parallel_efficiency': 1.0, 'latency_p95_ms': 0.786, 'control_plane_ttfb_p95_ms': 0.756, 'error_rate': 0.0}, {'concurrency': 4, 'throughput_rps': 1316.391, 'vs_single_x': 0.877, 'parallel_efficiency': 0.2192, 'latency_p95_ms': 3.726, 'control_plane_ttfb_p95_ms': 3.147, 'error_rate': 0.0}, {'concurrency': 8, 'throughput_rps': 1244.295, 'vs_single_x': 0.829, 'parallel_efficiency': 0.1036, 'latency_p95_ms': 5.564, 'control"
+    },
+    {
+      "name": "scale_efficiency_metric_present",
+      "ok": true,
+      "detail": "{'rows': [{'concurrency': 1, 'throughput_rps': 1501.132, 'vs_single_x': 1.0, 'parallel_efficiency': 1.0, 'latency_p95_ms': 0.786, 'control_plane_ttfb_p95_ms': 0.756, 'error_rate': 0.0}, {'concurrency': 4, 'throughput_rps': 1316.391, 'vs_single_x': 0.877, 'parallel_efficiency': 0.2192, 'latency_p95_ms': 3.726, 'control_plane_ttfb_p95_ms': 3.147, 'error_rate': 0.0}, {'concurrency': 8, 'throughput_rps': 1244.295, 'vs_single_x': 0.829, 'parallel_efficiency': 0.1036, 'latency_p95_ms': 5.564, 'control"
+    },
+    {
+      "name": "all_control_plane_requests_succeed",
+      "ok": true,
+      "detail": "{'request_success': 50, 'request_total': 50, 'max_latency_p95_ms': 5.599, 'max_control_plane_ttfb_p95_ms': 5.045, 'max_throughput_rps': 1501.132, 'baseline_single_rps': 1501.132, 'peak_concurrency': 1, 'high_concurrency_retention': 0.8679, 'multi_instance_exercised': True, 'shared_contention_exercised': True, 'backpressure_observed': True, 'reconnect_storm_requests': 20}"
+    },
+    {
+      "name": "router_and_multi_instance_roles_explicit",
+      "ok": true,
+      "detail": "{'target_count': 3, 'router_configured': True, 'instance_target_count': 2, 'target_roles': ['router', 'instance-1', 'instance-2'], 'target_hashes': ['5d3f92eca8aba3e0', '5d3f92eca8aba3e0', 'e318039766e1e17e'], 'shared_path_hash': '9fb0c25d6819c0fe415cc836e88ea20381c53e3960d7af81f49ce38027ebf7b1'}"
+    },
+    {
+      "name": "multi_instance_throughput_exercised",
+      "ok": true,
+      "detail": "{'request_success': 50, 'request_total': 50, 'max_latency_p95_ms': 5.599, 'max_control_plane_ttfb_p95_ms': 5.045, 'max_throughput_rps': 1501.132, 'baseline_single_rps': 1501.132, 'peak_concurrency': 1, 'high_concurrency_retention': 0.8679, 'multi_instance_exercised': True, 'shared_contention_exercised': True, 'backpressure_observed': True, 'reconnect_storm_requests': 20}"
+    },
+    {
+      "name": "per_target_distribution_present",
+      "ok": true,
+      "detail": "router + 2 instances per level"
+    },
+    {
+      "name": "reconnect_storm_exercised",
+      "ok": true,
+      "detail": "{'concurrency': 8, 'requests': 20, 'success': 20, 'fail': 0, 'error_rate': 0.0, 'elapsed_sec': 0.015, 'throughput_rps': 1335.499, 'latency_ms': {'count': 20, 'min': 1.934, 'max': 7.258, 'avg': 4.095, 'p50': 3.782, 'p95': 6.067, 'p99': 7.02}, 'control_plane_ttfb_ms': {'count': 20, 'min': 1.501, 'max': 7.132, 'avg': 3.442, 'p50': 3.192, 'p95': 5.548, 'p99': 6.815}, 'per_target': {'0': {'requests': 7, 'success': 7, 'latency_ms': {'count': 7, 'min': 1.934, 'max': 7.258, 'avg': 4.137, 'p50': 3.503, '"
+    },
+    {
+      "name": "shared_contention_exercised",
+      "ok": true,
+      "detail": "{'workers': 4, 'ops_per_worker': 5, 'ops': 20, 'success': 20, 'fail': 0, 'error_rate': 0.0, 'throughput_ops_sec': 1930.229, 'latency_ms': {'count': 20, 'min': 1.015, 'max': 3.221, 'avg': 1.86, 'p50': 1.739, 'p95': 2.743, 'p99': 3.125}, 'namespace': '.hms_perf/<run_id>', 'errors': []}"
+    },
+    {
+      "name": "shared_contention_namespace_isolated",
+      "ok": true,
+      "detail": ".hms_perf/<run_id>"
+    },
+    {
+      "name": "production_certification_not_claimed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "model_ttft_explicitly_not_measured",
+      "ok": true,
+      "detail": "{'control_plane_ttfb': 'GET /hms/health response-header latency; NOT model token TTFT', 'model_ttft': 'NOT_MEASURED_NO_QUOTA_CONSUMPTION', 'payload_capture': False, 'authorization_capture': False}"
+    },
+    {
+      "name": "privacy_no_payload_or_auth_capture",
+      "ok": true,
+      "detail": "{'control_plane_ttfb': 'GET /hms/health response-header latency; NOT model token TTFT', 'model_ttft': 'NOT_MEASURED_NO_QUOTA_CONSUMPTION', 'payload_capture': False, 'authorization_capture': False}"
+    },
+    {
+      "name": "raw_targets_not_persisted",
+      "ok": true,
+      "detail": "targets stored as hashes/indexes only"
+    },
+    {
+      "name": "raw_shared_path_not_persisted",
+      "ok": true,
+      "detail": "{'target_count': 3, 'router_configured': True, 'instance_target_count': 2, 'target_roles': ['router', 'instance-1', 'instance-2'], 'target_hashes': ['5d3f92eca8aba3e0', '5d3f92eca8aba3e0', 'e318039766e1e17e'], 'shared_path_hash': '9fb0c25d6819c0fe415cc836e88ea20381c53e3960d7af81f49ce38027ebf7b1'}"
+    },
+    {
+      "name": "single_target_marks_multi_instance_gap",
+      "ok": true,
+      "detail": "['MULTI_INSTANCE_SCALE_NOT_EXERCISED', 'LAN_CONTENTION_NOT_EXERCISED']"
+    },
+    {
+      "name": "missing_shared_marks_lan_gap",
+      "ok": true,
+      "detail": "['MULTI_INSTANCE_SCALE_NOT_EXERCISED', 'LAN_CONTENTION_NOT_EXERCISED']"
+    },
+    {
+      "name": "health_not_ok_rejected",
+      "ok": true,
+      "detail": "Probe(ok=False, status=200, latency_ms=1.023, ttfb_ms=0.98, bytes_read=12, error='HEALTH_NOT_OK')"
+    },
+    {
+      "name": "invalid_health_json_rejected",
+      "ok": true,
+      "detail": "Probe(ok=False, status=200, latency_ms=5.158, ttfb_ms=5.124, bytes_read=8, error='INVALID_HEALTH_JSON')"
+    },
+    {
+      "name": "unreachable_target_failure_explicit",
+      "ok": true,
+      "detail": "Probe(ok=False, status=0, latency_ms=0.359, ttfb_ms=0.359, bytes_read=0, error='ConnectionRefusedError')"
+    },
+    {
+      "name": "unreachable_benchmark_fails_closed",
+      "ok": true,
+      "detail": "['CONTROL_PLANE_REQUEST_FAILURE', 'RECONNECT_STORM_FAILURE']"
+    }
+  ],
+  "real_codex_model_ttft": "DEFERRED_TO_V25.49",
+  "real_windows_multi_instance": "DEFERRED_BY_OPERATOR",
+  "real_multi_pc_smb_nas": "DEFERRED_BY_OPERATOR"
+}

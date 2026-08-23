@@ -1,0 +1,469 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.63",
+  "suite": "V25_28_TO_V25_63_REGRESSION_FREEZE_CHECKPOINT_ISOLATED",
+  "generated_utc": "2026-08-22T14:27:10.130891+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "suite_pass": 38,
+    "suite_fail": 0,
+    "suite_total": 38,
+    "numeric_assertions_pass": 1408,
+    "numeric_assertions_total": 1408
+  },
+  "method": {
+    "execution": "sequential checkpoint-isolated groups",
+    "same_suite_commands_as": "HMS_Codex_RegressionFreezeValidator.py",
+    "per_suite_timeout_seconds": 120,
+    "assertions_removed": false,
+    "reason": "avoid outer supervisor timeout/inherited-handle noise"
+  },
+  "suites": [
+    {
+      "suite": "compatibility_freeze",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      },
+      "stderr": "",
+      "index": 0
+    },
+    {
+      "suite": "client_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 27,
+        "fail": 0,
+        "total": 27
+      },
+      "stderr": "",
+      "index": 1
+    },
+    {
+      "suite": "lan_pool",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15
+      },
+      "stderr": "",
+      "index": 2
+    },
+    {
+      "suite": "lan_failure_matrix",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 20,
+        "fail": 0,
+        "total": 20
+      },
+      "stderr": "",
+      "index": 3
+    },
+    {
+      "suite": "reliability_soak_harness",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 42,
+        "fail": 0,
+        "total": 42
+      },
+      "stderr": "",
+      "index": 4
+    },
+    {
+      "suite": "performance_scale",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 35,
+        "fail": 0,
+        "total": 35
+      },
+      "stderr": "",
+      "index": 5
+    },
+    {
+      "suite": "real_codex_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 65,
+        "fail": 0,
+        "total": 65
+      },
+      "stderr": "",
+      "index": 6
+    },
+    {
+      "suite": "live_quota_intelligence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 52,
+        "fail": 0,
+        "total": 52
+      },
+      "stderr": "",
+      "index": 7
+    },
+    {
+      "suite": "seamless_rotation_torture",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 63,
+        "fail": 0,
+        "total": 63
+      },
+      "stderr": "",
+      "index": 8
+    },
+    {
+      "suite": "ux_cockpit_parity_plus",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 62,
+        "fail": 0,
+        "total": 62
+      },
+      "stderr": "",
+      "index": 9
+    },
+    {
+      "suite": "target_machine_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 39,
+        "fail": 0,
+        "total": 39
+      },
+      "stderr": "",
+      "index": 10
+    },
+    {
+      "suite": "production_simulation_lab",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 40,
+        "fail": 0,
+        "total": 40
+      },
+      "stderr": "",
+      "index": 11
+    },
+    {
+      "suite": "autonomous_router_digital_twin",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 57,
+        "fail": 0,
+        "total": 57
+      },
+      "stderr": "",
+      "index": 12
+    },
+    {
+      "suite": "protocol_chaos_fuzzer",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 64,
+        "fail": 0,
+        "total": 64
+      },
+      "stderr": "",
+      "index": 13
+    },
+    {
+      "suite": "recovery_planner",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": "",
+      "index": 14
+    },
+    {
+      "suite": "compound_fault_recovery",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15,
+        "model_states": 72960
+      },
+      "stderr": "",
+      "index": 15
+    },
+    {
+      "suite": "official_auth_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 67,
+        "fail": 0,
+        "total": 67
+      },
+      "stderr": "",
+      "index": 16
+    },
+    {
+      "suite": "recovery_transaction_journal",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 18,
+        "fail": 0,
+        "total": 18,
+        "crash_cases": 25
+      },
+      "stderr": "",
+      "index": 17
+    },
+    {
+      "suite": "usage_token_center",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 36,
+        "fail": 0,
+        "total": 36
+      },
+      "stderr": "",
+      "index": 18
+    },
+    {
+      "suite": "unified_diagnostics_usage_token",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": "",
+      "index": 19
+    },
+    {
+      "suite": "diagnostics_bundle_privacy_v2561",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 14,
+        "fail": 0,
+        "total": 14
+      },
+      "stderr": "",
+      "index": 20
+    },
+    {
+      "suite": "recovery_transaction_replay",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 30,
+        "fail": 0,
+        "total": 30,
+        "crash_cases": 30
+      },
+      "stderr": "",
+      "index": 21
+    },
+    {
+      "suite": "unified_diagnostics_recovery_replay",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "stderr": "",
+      "index": 22
+    },
+    {
+      "suite": "diagnostics_bundle_privacy_v2562",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      },
+      "stderr": "",
+      "index": 23
+    },
+    {
+      "suite": "startup_recovery_reconciler",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 26,
+        "fail": 0,
+        "total": 26
+      },
+      "stderr": "",
+      "index": 24
+    },
+    {
+      "suite": "target_crash_harness",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 18,
+        "fail": 0,
+        "total": 18,
+        "crash_cases": 12
+      },
+      "stderr": "",
+      "index": 25
+    },
+    {
+      "suite": "unified_diagnostics_startup_recovery",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "stderr": "",
+      "index": 26
+    },
+    {
+      "suite": "diagnostics_bundle_privacy_v2563",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": "",
+      "index": 27
+    },
+    {
+      "suite": "runtime_kit",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 347,
+        "fail": 0,
+        "total": 347
+      },
+      "stderr": "",
+      "index": 28
+    },
+    {
+      "suite": "smart_model_router",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 16,
+        "fail": 0,
+        "total": 16
+      },
+      "stderr": "",
+      "index": 29
+    },
+    {
+      "suite": "api_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": "",
+      "index": 30
+    },
+    {
+      "suite": "api_superset",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "stderr": "",
+      "index": 31
+    },
+    {
+      "suite": "protocol",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      },
+      "stderr": "",
+      "index": 32
+    },
+    {
+      "suite": "self_healing",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": "",
+      "index": 33
+    },
+    {
+      "suite": "security_hardening",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": "",
+      "index": 34
+    },
+    {
+      "suite": "project_orchestrator",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": "",
+      "index": 35
+    },
+    {
+      "suite": "powershell_static_lint",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": "",
+      "index": 36
+    },
+    {
+      "suite": "powershell_coherence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": "",
+      "index": 37
+    }
+  ],
+  "windows_powershell_5_1": "TARGET_MACHINE_GATE_READY",
+  "real_codex_cli_desktop": "TARGET_MACHINE_GATE_READY",
+  "real_multi_pc_smb_nas": "DEFERRED_BY_OPERATOR",
+  "soak": "HARNESS_READY_6H_24H_NOT_EXECUTED",
+  "startup_recovery_reconciler": "PASS_SYNTHETIC_READ_ONLY_OBSERVER_GATE",
+  "target_crash_harness": "PASS_OS_PROCESS_KILL_LAB_WINDOWS_REAL_CODEX_EFFECTS_REQUIRED"
+}

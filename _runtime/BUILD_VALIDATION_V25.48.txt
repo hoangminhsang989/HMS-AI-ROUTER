@@ -1,0 +1,49 @@
+HMS AI Cockpit v25.48 BUILD VALIDATION
+
+VERDICT: PASS_FEATURE_PARITY_CANDIDATE_PERFORMANCE_SCALE
+PRODUCTION_CERTIFICATION: NOT_CLAIMED
+
+Regression Freeze: 16/16 suites PASS; 536/536 numeric assertions PASS
+Compatibility Freeze: 133/133 PASS
+Codex Client Compatibility/Migration: 27/27 PASS
+LAN Pool: 15/15 PASS
+LAN Failure Matrix: 20/20 PASS
+Reliability Soak Harness: 42/42 PASS
+Performance / Scale: 30/30 PASS
+Runtime Kit: 218/218 PASS
+Smart Model Router: 16/16 PASS
+API Compatibility: 12/12 PASS
+API Superset: 13/13 PASS
+Protocol: 10/10 PASS
+Self-Healing: 6/6 PASS
+Security Hardening: 9/9 PASS
+Project Orchestrator: 9/9 PASS
+Unified Diagnostics Performance: 6/6 PASS
+Diagnostics Bundle / redaction: 5/5 PASS
+GUI startup smoke: PASS (7s alive; stderr 0 bytes)
+Python compileall: PASS
+Production-shaped local performance smoke: PASS
+- topology: 1 Router HTTP + 2 managed-instance-shaped HTTP endpoints + shared filesystem
+- concurrency-profile requests: 80/80 PASS
+- reconnect storm: 48/48 PASS
+- shared contention: PASS
+- production certification: NOT_CLAIMED
+
+Parity Auditor against Cockpit public v1.3.24 baseline:
+- Feature evidence: 93.0%
+- Production evidence: 55.2%
+- Verdict: FEATURE_PARITY_CANDIDATE
+
+Metric boundary:
+- control-plane TTFB = GET /hms/health response-header latency
+- model token TTFT = NOT MEASURED in v25.48
+- no model request / no quota consumption by default benchmark
+
+Deferred / not executed:
+- Windows PowerShell 5.1 + real Codex runtime
+- real Codex model TTFT / quota-backed request path
+- real multi-PC SMB/NAS
+- standard 6H soak
+- standard 24H soak
+
+No production/superset claim is permitted from this build alone.

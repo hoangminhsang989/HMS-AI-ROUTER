@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "note": "TEMPLATE ONLY. Real mode remains disarmed until a target Windows operator supplies audited adapter executables and all arming gates.",
+  "effects": {
+    "auth": {"effect_kind": "OFFICIAL_AUTH_REWRITE", "apply_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "apply", "auth"], "probe_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "probe", "auth"], "probe_contract": "DIGEST_AND_IDEMPOTENCY_WITNESS_ONLY"},
+    "restart": {"effect_kind": "CONTROLLED_CODEX_RESTART", "apply_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "apply", "restart"], "probe_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "probe", "restart"], "probe_contract": "DIGEST_AND_IDEMPOTENCY_WITNESS_ONLY"},
+    "router": {"effect_kind": "ROUTER_STATE_TRANSITION", "apply_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "apply", "router"], "probe_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "probe", "router"], "probe_contract": "DIGEST_AND_IDEMPOTENCY_WITNESS_ONLY"},
+    "lease": {"effect_kind": "LAN_LEASE_HANDOFF", "apply_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "apply", "lease"], "probe_argv": ["C:/HMS/Adapters/hms-real-effect-adapter.exe", "probe", "lease"], "probe_contract": "DIGEST_AND_IDEMPOTENCY_WITNESS_ONLY"}
+  }
+}

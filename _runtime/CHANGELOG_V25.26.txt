@@ -1,0 +1,28 @@
+v25.26 DURABLE USAGE LEDGER + SAFE RELEASE MANAGER
+
+ADDED
+- HMS_Codex_UsageLedger.py: SQLite request ledger deduplicated/upserted by request_id.
+- Native GUI page “Sử dụng” with 24h/7d stats, token coverage, success rate, per-account/per-model and recent requests.
+- Adaptive Pool Advisory (ADVISORY_ONLY) based on 7-day historical success/latency/sample confidence.
+- HMS_DiagnosticsBundle.py: curated + redacted one-click diagnostics ZIP.
+- Native Release Manager controls: status, local register/activate, no-delete rollback.
+- Release manager auto-selects the correct version manifest, verifies package root, verifies post-copy before activation, and creates stable bootstrap.
+- Native GUI maintenance lane for periodic Usage Ledger sync.
+- Settings: UsageLedgerEnabled, UsageLedgerSyncSec, UsageLedgerMaxTraceLines, AdaptivePoolAdvisoryEnabled.
+
+CHANGED
+- Runtime version 25.25 -> 25.26.
+- Release manifest authority moved to RELEASE_MANIFEST_V25_26.json.
+- ReleaseManager --root now targets package root rather than _runtime.
+- Native GUI temp/result prefixes moved to v2526.
+
+SAFETY
+- Ledger never stores request body/prompt/OAuth/API key/cookie.
+- Adaptive policy is advisory only and cannot silently mutate Router/account state in v25.26.
+- Diagnostics bundle uses allowlist + redaction and records privacy flags in manifest.
+- Release install/rollback require explicit GUI confirmation for state-changing actions.
+- Release rollback changes pointer only; no release deletion.
+
+TEST POLICY
+- Real Codex/Antigravity/Windows runtime remains DEFERRED_BY_OPERATOR.
+- Static/build/helper smoke checks only; runtime PASS is not claimed.

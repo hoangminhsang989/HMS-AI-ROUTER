@@ -1,0 +1,8 @@
+{
+  "version": "25.44",
+  "timeout_exit_code": 124,
+  "expected_timeout_alive": true,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "verdict": "PASS"
+}

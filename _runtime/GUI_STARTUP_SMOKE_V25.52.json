@@ -1,0 +1,19 @@
+{
+  "version": "25.52",
+  "generated_utc": "2026-08-22T03:26:03.591656+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": {
+    "process_survived_full_window": true,
+    "stderr_empty": true,
+    "app_version_25_52": true,
+    "operator_filter_surface_present": true,
+    "unified_web_read_only": true
+  },
+  "exit_code": 124,
+  "stderr_bytes": 0
+}

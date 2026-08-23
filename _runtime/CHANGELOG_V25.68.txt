@@ -1,0 +1,36 @@
+HMS AI Cockpit v25.68 — CHANGELOG
+Generated UTC: 2026-08-23T01:26:03.672413+00:00
+
+1. Target Campaign Executor
+- Added one-case-at-a-time Windows target campaign execution contract.
+- Requires explicit per-case ARMED state; campaign completion never authorizes batch execution.
+- Binds each case to exact package version, release-manifest SHA-256 and frozen trust-snapshot SHA-256.
+- Requires Windows host, PowerShell 5.1 parser/runtime, Codex process ownership, Official Auth observer and idempotency witness preflight.
+- LAN lease handoff remains separately ownership/readback gated.
+- Uses structured argv with shell disabled.
+- AUTO_DISARM is required after every attempt; automatic next-case and automatic re-arm remain forbidden.
+- Durable/ambiguous state converges to verify-only or OPERATOR_REQUIRED rather than silently repeating an effect.
+
+2. Attested Promotion Review Console
+- Reviews exactly 12 signed reports for the 4 effects × 3 crash-window matrix.
+- Rejects incomplete, duplicate, mixed-package, manifest-mismatch, trust-snapshot-mismatch, stale, revoked, unsigned or non-real-effect evidence.
+- RETIRED signer evidence may remain historically auditable but is not valid for new case signing/current promotion.
+- Produces Vietnamese human-review explanations.
+- Can export an offline pseudonymous review bundle without account credential or private signing material.
+- Review eligibility is never automatic production certification.
+
+3. UI / Diagnostics / Privacy
+- Added TARGET CAMPAIGN EXECUTOR + PROMOTION REVIEW surface with EXECUTOR / REVIEW / OFFLINE proof controls only.
+- Added structural GUI validation proving no real-effect arm command is bound to the new controls.
+- Added aggregate Target Campaign Executor and Promotion Review layers to Unified Diagnostics.
+- Diagnostics Bundle v25.68 keeps campaign/review evidence metadata-only and privacy-redacted.
+- No new public BackendAction; exact set remains 90.
+
+4. Compatibility / Validation
+- Forward-compatible legacy recovery/diagnostics validators now accept the current v25.68 surface without weakening behavioral gates.
+- Runtime Kit: 420/420 PASS.
+- Compatibility: 133/133 PASS.
+- Full Regression Freeze: 64/64 suites · 1,732/1,732 numeric assertions PASS.
+- GUI smoke/structural validation: PASS; stderr 0.
+- PowerShell static lint/coherence and Python compileall: PASS.
+- Parity remains 93.0% feature / 55.2% production; Windows runtime certification remains false.

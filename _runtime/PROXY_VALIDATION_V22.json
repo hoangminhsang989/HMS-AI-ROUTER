@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "data": {
+    "version": "22.0",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 8,
+      "fail": 0,
+      "total": 8
+    },
+    "tests": [
+      {
+        "name": "assignment.capacity",
+        "status": "PASS",
+        "detail": "{'p1': 5, 'p2': 5, 'p3': 2}"
+      },
+      {
+        "name": "assignment.stable_preserve",
+        "status": "PASS",
+        "detail": "existing bindings preserved"
+      },
+      {
+        "name": "policy.strict_fail_closed",
+        "status": "PASS",
+        "detail": "{\"email\": \"user01@example.com\", \"decision\": \"BLOCKED\", \"reason\": \"STRICT_PROXY_UNHEALTHY\", \"proxy_profile_id\": \"p1\"}"
+      },
+      {
+        "name": "plan.strict_blocks_unhealthy",
+        "status": "PASS",
+        "detail": "start_allowed=False"
+      },
+      {
+        "name": "plan.unique_ports",
+        "status": "PASS",
+        "detail": "[8420, 8421, 8422]"
+      },
+      {
+        "name": "export.no_proxy_passwords",
+        "status": "PASS",
+        "detail": "safe export redacts secret refs"
+      },
+      {
+        "name": "health.http_connect",
+        "status": "PASS",
+        "detail": "{\"status\": \"PASS\", \"checked_utc\": \"2026-08-20T00:30:58.492805+00:00\", \"latency_ms\": 1.14, \"tls_ms\": null, \"probe_host\": \"example.com\", \"probe_port\": 443, \"error\": null}"
+      },
+      {
+        "name": "health.socks5",
+        "status": "PASS",
+        "detail": "{\"status\": \"PASS\", \"checked_utc\": \"2026-08-20T00:30:58.994177+00:00\", \"latency_ms\": 0.42, \"tls_ms\": null, \"probe_host\": \"example.com\", \"probe_port\": 443, \"error\": null}"
+      }
+    ]
+  }
+}

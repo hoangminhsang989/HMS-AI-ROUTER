@@ -1,0 +1,73 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.55",
+  "suite": "UNIFIED_DIAGNOSTICS_ROUTER_TWIN_PRIVACY",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "tests": [
+    {
+      "name": "unified_exit_zero",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_version_25_55",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_twin_layer_ok",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_source_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_no_access_token",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unified_no_prompt",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_exit_zero",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_ok",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_twin_evidence_included",
+      "status": "PASS",
+      "detail": "['data/autonomous-router-twin-v2555/autonomous-router-twin-latest-v2555.json', 'runtime/AUTONOMOUS_ROUTER_TWIN_VALIDATION_V25.55.json', 'runtime/COCKPIT_PARITY_AUDIT_V25_55.json', 'runtime/RUNTIME_KIT_VALIDATION_V25.55.json', 'runtime/COMPA"
+    },
+    {
+      "name": "bundle_no_access_token",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_no_prompt",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bundle_redaction_marker",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

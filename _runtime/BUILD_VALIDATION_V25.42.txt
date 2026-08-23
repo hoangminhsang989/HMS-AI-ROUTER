@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.42 — BUILD VALIDATION
+
+STATUS
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED (real Windows Codex): DEFERRED_BY_OPERATOR
+- SOAK: NOT_YET
+
+GATES
+- Python compile: PASS
+- Native GUI startup smoke 7s: PASS, stderr 0
+- Native GUI Project Orchestrator synthetic render: PASS
+- Project Orchestrator synthetic validator: PASS 9/9
+- PowerShell StaticLint: PASS 217/217 variables, 0 missing; 342 referenced settings / 429 declared, 0 missing/duplicate
+- PowerShell Coherence: PASS
+- Runtime Kit Validator: PASS 171/171
+- API Compatibility regression: PASS 12/12
+- API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- Self-Healing synthetic regression: PASS
+- Security Hardening synthetic regression: PASS
+
+SAFETY ASSERTIONS
+- No unowned process kill from Project Orchestrator.
+- Identity Isolation and Security Hardening are hard gates.
+- Stable endpoint and session affinity are preserved.
+- Project Orchestrator does not mutate Project Affinity automatically.
+- No prompt/request body/OAuth/API key/cookie logging.

@@ -1,0 +1,34 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.59",
+  "suite": "GUI_STARTUP_SMOKE_V25.59",
+  "generated_utc": "2026-08-22T07:30:44.808146+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "name": "process_started",
+      "pass": true
+    },
+    {
+      "name": "survived_7_seconds",
+      "pass": true
+    },
+    {
+      "name": "timeout_exit_expected_124",
+      "pass": true
+    },
+    {
+      "name": "stderr_empty",
+      "pass": true
+    },
+    {
+      "name": "headless_xvfb",
+      "pass": true
+    }
+  ]
+}

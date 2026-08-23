@@ -1,0 +1,19 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "DIAGNOSTICS_BUNDLE_REDACTION",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": {
+    "bundle_created": true,
+    "manifest_privacy_claim": true,
+    "sentinel_secrets_absent": true,
+    "redaction_marker_present": true,
+    "normal_metadata_preserved": true
+  },
+  "bundle_file_count": 32
+}

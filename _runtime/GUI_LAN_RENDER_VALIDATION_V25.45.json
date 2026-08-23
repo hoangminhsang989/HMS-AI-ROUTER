@@ -1,0 +1,10 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.45",
+  "test": "LAN_POOL_PAGE_SYNTHETIC_RENDER",
+  "verdict": "PASS",
+  "stdout": "LAN_GUI_RENDER_PASS",
+  "stderr_bytes": 0,
+  "windows_runtime": "DEFERRED_BY_OPERATOR",
+  "generated_utc": "2026-08-21T16:25:47.333687+00:00"
+}

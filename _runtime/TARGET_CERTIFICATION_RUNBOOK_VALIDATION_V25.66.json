@@ -1,0 +1,63 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.66",
+  "suite": "TARGET_CERTIFICATION_RUNBOOK_VALIDATION",
+  "generated_utc": "2026-08-23T00:32:40.517477+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "proof_10",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "one_shot_operator_gates",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "auto_disarm_finally",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_invented_target_command",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "structured_argv",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "vietnamese_phases",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_not_auto_promoted",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

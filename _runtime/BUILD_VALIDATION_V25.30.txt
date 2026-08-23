@@ -1,0 +1,43 @@
+HMS AI Cockpit v25.30 — BUILD VALIDATION
+
+PRODUCT SCOPE
+- CODEX ONLY.
+- v25.29 remains rollback baseline.
+- GUI remains the user-facing workflow.
+
+IMPLEMENTED
+- Stable endpoint per managed Codex instance.
+- binding-v2530 migration; prior bindings retained.
+- Project Affinity primary + fallback credential pool behind same instance Router.
+- Atomic credential snapshot copy with SHA-256 verification.
+- Stale credential archive instead of automatic deletion.
+- router-pool-v2530.json metadata-only manifest.
+- Session affinity + TTL + bounded max-retry-credentials.
+- SEAMLESS_FALLBACK_READY project state.
+- GUI endpoint/pool status + SYNC ROUTER action.
+- Backend sync_project_router action.
+- SeamlessRouterValidator positive and negative synthetic gates.
+
+STATIC / BUILD VERIFICATION
+- Python compileall: PASS.
+- HMS_GUI.pyw compile: PASS.
+- GUI startup smoke under Xvfb: PASS (alive 6s; stderr 0 bytes).
+- PowerShell StaticLint: PASS; script variables 176/176; settings missing 0; duplicate settings 0; glue findings 0.
+- PowerShell CoherenceAudit: PASS; missing variables/settings 0.
+- Codex-only / Seamless Router structural assertions: PASS 12/12.
+- Seamless Router validator valid primary+2 fallback pool: PASS.
+- Validator primary-order negative case: PASS (rejected as expected, exit 2).
+- Validator secret-field negative case: PASS (rejected as expected).
+- Stable endpoint contract under fallback metadata: PASS.
+
+RUNTIME EVIDENCE
+- Real Windows Codex failover without Codex restart: DEFERRED_BY_OPERATOR.
+- Real session affinity continuity across account health changes: DEFERRED_BY_OPERATOR.
+- Real quota/cooldown-driven fallback: DEFERRED_BY_OPERATOR.
+- Multi-hour soak: NOT YET.
+
+SAFETY
+- No automatic release deletion.
+- No delete-instance/project-affinity action.
+- Binding/pool manifests exclude secrets.
+- Foreign PID ownership guard remains enforced.

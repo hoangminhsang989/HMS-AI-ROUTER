@@ -1,0 +1,14 @@
+HMS AI Cockpit v25.50 — LIVE QUOTA INTELLIGENCE
+
+- Preserve last-good quota on refresh failure.
+- Separate lastAttemptUtc from lastSuccessUtc/refreshedUtc.
+- Add FRESH/AGING/STALE/UNKNOWN TTL semantics.
+- Fail-closed STALE/UNKNOWN for NEW-session routing while preserving existing session affinity.
+- Add plan reserves: Free 25 / Plus 15 / Pro 10 / Team-Business 10 / Enterprise 8 / Default 15.
+- Add 5% reserve release margin to reduce routing churn.
+- Adaptive Router + Closed-Loop Router consume explicit routing_eligible metadata.
+- Account Center shows freshness/reserve/usable quota and HOLD/ROUTE OK.
+- No new frozen public BackendAction.
+- Quota failure telemetry uses generic QUOTA_REFRESH_FAILED and never stores auth token/prompt/body.
+
+Production boundary: real Free/Plus/Pro target-machine refresh remains required.

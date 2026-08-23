@@ -1,0 +1,29 @@
+HMS AI COCKPIT v25.37 — BUILD VALIDATION
+
+CURRENT RESULT
+- Python compileall: PASS (49 .py/.pyw runtime entry files)
+- Model/Reasoning synthetic validation: PASS 6/6
+- Runtime Kit Validator: PASS 143/143
+- PowerShell StaticLint: PASS
+  variables referenced/assigned: 197/197
+  missing variables: 0
+  settings referenced/declared: 315/400
+  missing settings: 0
+  duplicate settings: 0
+  lexical glue findings: 0
+- PowerShell Coherence Audit: PASS
+  high-confidence compact syntax findings: 0
+- GUI startup smoke under build environment: PASS, visible for 7s timeout, stderr 0
+- Windows Codex runtime: DEFERRED_BY_OPERATOR
+- Soak: NOT_YET
+
+SYNTHETIC MODEL/REASONING CASES
+1. Valid model policy accepted.
+2. Apply preserves stable Router contract and returns restart recommendation for a running client.
+3. Unsupported reasoning effort rejected.
+4. Secret-like policy field rejected.
+5. Stable endpoint mismatch fails closed and leaves config byte-identical.
+6. Non-live model rejected when live-model requirement is enabled.
+
+NOTE
+A real Windows Codex runtime remains authoritative for actual model availability, model acceptance and restart/no-restart behavior.

@@ -1,0 +1,77 @@
+{
+  "version": "25.74",
+  "suite": "BASELINE_DRIFT_RECONCILIATION_VALIDATION",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "version_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "newer_baseline_freezes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "superseding_invalidation_entries",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "append_only_ledger_reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "delta_audit_codex_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "capability_binding_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_silent_grandfathering",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_merge",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_mutation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_only_scope",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_promotion_eligible": false,
+  "verdict": "PASS"
+}

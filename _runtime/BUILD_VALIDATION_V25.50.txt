@@ -1,0 +1,32 @@
+HMS AI Cockpit v25.50 — BUILD VALIDATION
+
+VERDICT: PASS_V25_50_LIVE_QUOTA_INTELLIGENCE_RELEASE_CANDIDATE
+
+CORE GATES
+- Live Quota Intelligence: 52/52 PASS
+- Compatibility Freeze: 133/133 PASS
+- Client Compatibility/Migration: 27/27 PASS
+- Runtime Kit: 237/237 PASS
+- Full Regression: 18/18 suites; 677/677 numeric assertions PASS
+- Diagnostics defensive privacy: 5/5 PASS
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+- Native GUI headless startup: PASS (7s, stderr 0)
+
+V25.50 SAFETY/ROUTING
+- Failed quota refresh preserves last-good values and last-success timestamp.
+- Failed attempt updates lastAttempt/sourceState/errorCode only.
+- STALE/UNKNOWN quota fail-closed for NEW session routing.
+- Existing session affinity is not terminated by quota freshness state.
+- Plan reserve defaults: Free 25%, Plus 15%, Pro 10%, Team/Business 10%, Enterprise 8%, Default 15%.
+- Reserve release margin: 5%.
+- Frozen public BackendAction count remains 90; no v25.50 public action added.
+- No raw OAuth token, API key, prompt, request body or response body in v25.50 quota evidence.
+
+EVIDENCE BOUNDARY
+- Build host is not the target Windows/Codex workstation.
+- Real Free/Plus/Pro quota fidelity: TARGET_MACHINE_REQUIRED.
+- v25.49 LIVE 1 Real Codex certification: still TARGET_MACHINE_REQUIRED.
+- Real multi-PC SMB/NAS and 6h/24h soak: still REQUIRED before production-superset claim.
+- Cockpit parity auditor remains feature=93.0%, production=55.2%, verdict=FEATURE_PARITY_CANDIDATE.

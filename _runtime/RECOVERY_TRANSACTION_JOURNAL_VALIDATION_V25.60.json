@@ -1,0 +1,116 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.60",
+  "suite": "RECOVERY_TRANSACTION_JOURNAL_VALIDATION",
+  "generated_utc": "2026-08-22T08:41:18.505436+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 18,
+    "fail": 0,
+    "total": 18,
+    "crash_cases": 25
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "ok": true,
+      "detail": {
+        "pass": 14,
+        "fail": 0,
+        "total": 14,
+        "crash_cases": 25
+      }
+    },
+    {
+      "name": "proof_14_checks_or_more",
+      "ok": true,
+      "detail": {
+        "pass": 14,
+        "fail": 0,
+        "total": 14,
+        "crash_cases": 25
+      }
+    },
+    {
+      "name": "crash_matrix_25_cases",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "no_duplicate_commit_policy",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "resume_after_commit_verify",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "commit_resume_is_verify",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "chain_valid",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "duplicate_commit_transition_blocked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "done_terminal",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "fsync_durability",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "hash_chain",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "secret_redaction",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "supported_actions",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "production_claim_blocked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "powershell_journal_wiring",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "usage_reset_absolute_ui",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "package_expiry_ui",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "main_version_25_60",
+      "ok": true,
+      "detail": null
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_RECOVERY_JOURNAL_SYNTHETIC_ONLY"
+}

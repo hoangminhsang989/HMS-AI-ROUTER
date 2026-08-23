@@ -1,0 +1,36 @@
+HMS AI Cockpit v25.52 — BUILD VALIDATION
+
+Generated UTC: 2026-08-22T03:26:25.082664+00:00
+Verdict: PASS_V25_52_UX_COCKPIT_PARITY_PLUS_RELEASE_CANDIDATE
+
+CORE GATES
+- UX / Cockpit Parity+: 62/62 PASS
+- Seamless Rotation Torture v25.51 invariant: 63/63 PASS
+- Live Quota Intelligence v25.50 invariant: 52/52 PASS
+- Compatibility Freeze: 133/133 PASS
+- Runtime Kit: 252/252 PASS
+- Full Regression: 20/20 suites; 817/817 numeric assertions PASS
+- Diagnostics Bundle privacy/redaction: 10/10 PASS
+- GUI startup headless 7s: 5/5 PASS; stderr=0 bytes
+- Python compileall: PASS
+- PowerShell static lint: PASS
+- Coherence audit: PASS
+
+UX / SAFETY CONTRACT
+- Public BackendAction contract remains exactly 90 actions; no v25.52 mutation action added.
+- Native Account Center exposes ROUTE OK / HOLD / STALE / FAVORITE filters and WHY HOLD reason codes.
+- Existing sticky session affinity remains authoritative for healthy in-flight sessions; NEW-session routing uses current quota/circuit eligibility.
+- Unified web surface remains loopback-only + read-only; mutation POST returns HTTP 405.
+- Secrets, prompt, request body and response body are excluded/redacted from diagnostics evidence.
+
+PARITY / CLAIM BOUNDARY
+- Parity Auditor: FEATURE_PARITY_CANDIDATE.
+- Feature evidence: 93.0%.
+- Production evidence: 55.2%.
+- v25.52 UX gate is non-benchmark evidence and does not increase production score.
+- Windows PowerShell 5.1, real Codex CLI/Desktop, real Free/Plus/Pro quota, multi-PC SMB/NAS and 6h+24h soak remain target-machine gates.
+- v26.0 production-superset claim remains prohibited until those target-machine gates pass.
+
+FINAL FREEZE EXECUTION
+- Regression Freeze now runs Performance/Scale as an exclusive benchmark-sensitive suite, then runs the remaining suites with bounded parallelism; this prevents host-load timing false negatives without relaxing any benchmark threshold.
+- Post-fix Regression Freeze confirmed 20/20 suites, 817/817 assertions; Performance/Scale remains 35/35 at its original thresholds.

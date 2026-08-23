@@ -1,0 +1,65 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.73",
+  "suite": "COCKPIT_1327_GUI_SAFETY",
+  "generated_utc": "2026-08-23T06:14:42.332947+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "tests": [
+    {
+      "name": "gui_version_current",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "parity_card_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "proof_buttons_exact",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "proof_runner_structured_argv",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "proof_runner_no_backend_mutation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "proof_runner_no_target_arm",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "validator_mapping_exact",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "public_backend_action_frozen_90",
+      "status": "PASS",
+      "detail": "count=90"
+    },
+    {
+      "name": "claim_boundary_visible",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "claim_boundary": {
+    "proof_only": true,
+    "target_arm_exposed": false,
+    "sensitive_auth_export_exposed": false,
+    "production_score_changed": false
+  }
+}

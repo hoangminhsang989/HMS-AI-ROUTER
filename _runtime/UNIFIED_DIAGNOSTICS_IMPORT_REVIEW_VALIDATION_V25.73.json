@@ -1,0 +1,48 @@
+{
+  "version": "25.73",
+  "suite": "UNIFIED_DIAGNOSTICS_IMPORT_REVIEW_VALIDATION",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "checks": [
+    {
+      "name": "import_event_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dual_review_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_two_checkpoints_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_freeze_visible_false",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "aggregate_only_no_identity_or_secret",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_account_project_instance",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_promotion",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

@@ -1,0 +1,24 @@
+HMS AI Cockpit v25.40 — Build Validation
+
+Status model:
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED (Windows Codex): DEFERRED_BY_OPERATOR
+- SOAK VERIFIED: NOT_YET
+
+Security validation:
+- Python source compile: PASS 52 .py/.pyw files
+- Security synthetic engine: PASS 9/9
+- Security structural validation: PASS 20/20
+- Diagnostic redaction synthetic: PASS, 0 raw secret hits
+- Runtime Kit: PASS 161/161
+- API Compatibility regression: PASS 12/12
+- API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- GUI startup smoke: PASS (7-second process remained alive; stderr 0)
+- PowerShell StaticLint: PASS, 211/211 script variables, 0 missing settings, 0 duplicates
+- PowerShell CoherenceAudit: PASS
+
+Important limitation:
+Credential Manager/DPAPI protects the canonical HMS Router-key source. CLIProxy/Codex protocol may require a key to be materialized in local runtime config/.env files. v25.40 explicitly audits and ACL-hardens those runtime materializations; it does not falsely claim that no plaintext key exists anywhere while Router runtime is configured.

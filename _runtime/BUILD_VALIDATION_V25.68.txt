@@ -1,0 +1,38 @@
+HMS AI Cockpit v25.68 — BUILD VALIDATION
+Generated UTC: 2026-08-23T01:26:03.672413+00:00
+
+VERDICT: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+Track: Codex-only
+
+CORE v25.68
+- Target Campaign Executor: PASS · proof 12/12 · validator 9/9.
+- Attested Promotion Review Console: PASS · proof 11/11 · validator 9/9.
+- Unified Diagnostics Campaign Review: 7/7 PASS.
+- Diagnostics Bundle Privacy v25.68: 9/9 PASS.
+- Campaign Review GUI structural validation: 7/7 PASS.
+
+CARRIED TARGET / ATTESTATION CONTROLS
+- Windows Attestation Trust Store / Offline Verifier / Resumable Campaign remain regression-green.
+- Windows Attestation Signer, one-shot Runbook and cryptographic Promotion Gate remain regression-green.
+- Target real effects remain DISARMED by default and were not executed on this host.
+
+FREEZE
+- Runtime Kit: 420/420 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Full Regression Freeze: 64/64 suites · 1,732/1,732 numeric assertions PASS.
+- GUI startup/structural smoke: 6/6 PASS · stderr 0.
+- PowerShell static lint/coherence: PASS.
+- Python compileall: PASS.
+- Parity Claim Boundary: 12/12 PASS.
+
+CLAIM BOUNDARY
+- Feature evidence score: 93.0%.
+- Production evidence score: 55.2%.
+- windows_runtime_certified=false.
+- real_codex_effects_executed=false.
+- windows_signing_executed=false.
+- automatic_production_certification=false.
+- production_score_promotion_eligible=false.
+- public BackendAction count remains 90.
+
+Synthetic/control-plane Campaign Executor and Promotion Review Console evidence intentionally DOES NOT increase production score.

@@ -1,0 +1,338 @@
+{
+  "version": "25.23.1",
+  "product": "HMS AI Cockpit",
+  "candidate": "STARTUP CRASH HOTFIX",
+  "generated_utc": "2026-08-19T15:57:53Z",
+  "files": [
+    {
+      "path": "HMS_AI_Cockpit_v25.23.1.ps1",
+      "sha256": "89c8896f627190d4aea4ec4a2df0af0fe1d21d47c537eb52e2ce73248335a9ff",
+      "size": 535649
+    },
+    {
+      "path": "HMS_AI_Cockpit_v25.23.1.bat",
+      "sha256": "d2477ea7b1b6ef828fb36df675dbd4b20c73fa052ba1f463ef79fa8670474b28",
+      "size": 114
+    },
+    {
+      "path": "HMS_Launcher.ps1",
+      "sha256": "f8c07ee21213b681137bcf0bd6fa5343dc47fa8de29abf7c81ae3dcb3118a88a",
+      "size": 3448
+    },
+    {
+      "path": "HMS_Launcher.bat",
+      "sha256": "3cd6b21d30e095789c39e590ed7ec8166ff9a8974fb271dda4d99e684713bd74",
+      "size": 107
+    },
+    {
+      "path": "HMS_Setup.ps1",
+      "sha256": "6ff4852de5a2acfee26a5022f407e025db087cc60f79ff2a2084ae1b2c956d9b",
+      "size": 1039
+    },
+    {
+      "path": "HMS_Setup.bat",
+      "sha256": "0895b86a1f77ed9aa7072eabb4a40572a68d362dae4028b021e5376c9f65ec1e",
+      "size": 581
+    },
+    {
+      "path": "HMS_Windows_Runtime_Gate.ps1",
+      "sha256": "4721f7589b2809517e3e15a34411ef8e77c84cb85f8749971300f7314e11ade1",
+      "size": 28476
+    },
+    {
+      "path": "HMS_Windows_Runtime_Gate.bat",
+      "sha256": "a3a9ddbd1c6f46eec206d1f6b8acc630e04f1a4ebf27e4bfd2422f01cd787423",
+      "size": 202
+    },
+    {
+      "path": "HMS_Runtime_Orchestrator.ps1",
+      "sha256": "eeb4907cfd5b7fb8bd370f1533a771144615cf03d57cb97369cb2790d2b3fe75",
+      "size": 21687
+    },
+    {
+      "path": "HMS_Apply_Runtime_Profile.ps1",
+      "sha256": "999d0f48fd2f8997369f862a16646a43630359a2ec6d179c1ff1a5cbea1d5b1d",
+      "size": 4725
+    },
+    {
+      "path": "HMS_FirstRun_Wizard.ps1",
+      "sha256": "eefe092868358f438a39b1b99bc94e21edcf0f6d9562d072bc6808bd66aa30a7",
+      "size": 12804
+    },
+    {
+      "path": "HMS_Start_RuntimeReady.ps1",
+      "sha256": "b46af39269413a930217809403dd25a7f68f0133fe74294564ac45d91209e794",
+      "size": 1393
+    },
+    {
+      "path": "HMS_Runtime_Status.ps1",
+      "sha256": "71b033c93f6cb2dc32cecb5be3e9403956b15bc63a974cb07a36d5d101ebfa33",
+      "size": 868
+    },
+    {
+      "path": "HMS_Runtime_KitValidator.py",
+      "sha256": "5376139e9e9cca967b8fecd24cf7d8eaef53607779d64d88dfdb40866f7f8717",
+      "size": 25659
+    },
+    {
+      "path": "01_BAT_DAU_CHAY_HMS.bat",
+      "sha256": "d2477ea7b1b6ef828fb36df675dbd4b20c73fa052ba1f463ef79fa8670474b28",
+      "size": 114
+    },
+    {
+      "path": "01_BAT_DAU_CHAY_HMS_V25_23_1.bat",
+      "sha256": "d2477ea7b1b6ef828fb36df675dbd4b20c73fa052ba1f463ef79fa8670474b28",
+      "size": 114
+    },
+    {
+      "path": "02_KIEM_TRA_ALL_READY.bat",
+      "sha256": "da3b9cf5622873f690a9e07dfd4bf2b91e9a1b40d47217a44a4a41c9828dc8fa",
+      "size": 153
+    },
+    {
+      "path": "03_MO_HMS_SAU_KHI_PASS.bat",
+      "sha256": "d2477ea7b1b6ef828fb36df675dbd4b20c73fa052ba1f463ef79fa8670474b28",
+      "size": 114
+    },
+    {
+      "path": "04_MO_HMS_KHI_RUNTIME_READY.bat",
+      "sha256": "f47f90c73eb2155ca9c2146bd19b470e1d2802067987030125a7c9482474c3e5",
+      "size": 120
+    },
+    {
+      "path": "05_XEM_TRANG_THAI_RUNTIME.bat",
+      "sha256": "9dc38353da96ad0837feac502eedb0a67385aaee747ba1119718781a9fad5828",
+      "size": 116
+    },
+    {
+      "path": "HMS_Codex_SmartGateway.py",
+      "sha256": "107e4b1978e06113cb92ed51ae30dc3425415efc3268926e014b35eb5c12ba49",
+      "size": 43413
+    },
+    {
+      "path": "HMS_Codex_GatewayControl.py",
+      "sha256": "936b1dd6240dbfcdd8f0ca84caf3690772246c05e44741973045f67fa2ec5234",
+      "size": 8866
+    },
+    {
+      "path": "HMS_Codex_ProtocolValidator.py",
+      "sha256": "267d9216ec8a4e0be9c461d34319f7eee639f0720f5c806b45c35fe227215dc2",
+      "size": 16327
+    },
+    {
+      "path": "HMS_Codex_ApiAnalytics.py",
+      "sha256": "c86f17938e3b12981b0493cb92c8557cb529c07d1d17a2d590ab86d2f6f268d5",
+      "size": 5133
+    },
+    {
+      "path": "HMS_Codex_ApiSupersetValidator.py",
+      "sha256": "f40bb794d428c425960e526525fd91aa37b4ba64ba4385b11d7c531ccfd50acf",
+      "size": 11745
+    },
+    {
+      "path": "HMS_Cockpit_ParityAuditor.py",
+      "sha256": "09a659b182a7db897373479485c3d1573b39df344c8f0f0e693ef5b048719ba1",
+      "size": 9403
+    },
+    {
+      "path": "HMS_Codex_ProxyManager.py",
+      "sha256": "6cd025795cb000278502d01a33ec0c903ec48bccf8f1b6907c33e3fb7a76e5d9",
+      "size": 12738
+    },
+    {
+      "path": "HMS_Codex_ProxyHealth.py",
+      "sha256": "7071eb7c4278bef9c3f258c6283f2b9d0c6be6c07d8087d54fd3d9e9846a2379",
+      "size": 5588
+    },
+    {
+      "path": "HMS_Codex_ProxyValidator.py",
+      "sha256": "e649ed6a087c2646b3b26734d6f00affae2c4032971dace45ba7882b4346ed4d",
+      "size": 5439
+    },
+    {
+      "path": "HMS_Codex_EgressGuard.py",
+      "sha256": "bd74af613285f496c548b313da77b0614830db1d78ff8442ecf23852a15f8c05",
+      "size": 10184
+    },
+    {
+      "path": "HMS_Codex_ProxyFleet.py",
+      "sha256": "a42255689d8f305c284317ab4a602d180c2050a0d5db947aee60e18bcc710471",
+      "size": 9908
+    },
+    {
+      "path": "HMS_Codex_ProxyFleetValidator.py",
+      "sha256": "b090ebe60f05ebe8687f7572e408abadf7d74711f6d1ac9aa405a87f6c1abbe0",
+      "size": 7352
+    },
+    {
+      "path": "HMS_Codex_RuntimeValidator.py",
+      "sha256": "c6e128cbec07653444a3a2709f304716dae8ac16f461d1b7557725b45324a285",
+      "size": 6160
+    },
+    {
+      "path": "HMS_Codex_ReleaseManager.py",
+      "sha256": "0f6f9416ae74df76bbe8d55b784c97d147b2f0dfb06f2e336f5604e4205ecdbf",
+      "size": 7120
+    },
+    {
+      "path": "HMS_PowerShell_StaticLint.py",
+      "sha256": "76fa94bf722ca2c06b46bd08f3d9933aa16352154ad018529fe95e371597bfd9",
+      "size": 4487
+    },
+    {
+      "path": "HMS_PowerShell_CoherenceAudit.py",
+      "sha256": "149d3f705f293e213f0034b46ae8a8e1547ebfd256d0e566db8bf711b27b4198",
+      "size": 2690
+    },
+    {
+      "path": "HMS_Codex_UnifiedUX.py",
+      "sha256": "49146fe24a50003b271b72808cb9e98822d2764a76d62efcf57425ada2f08b8a",
+      "size": 25912
+    },
+    {
+      "path": "HMS_Codex_PolicyKernel.py",
+      "sha256": "b69e8f433d15148c528504289b0bd09da2bf8b97d1e2705118ae3245e8389786",
+      "size": 8250
+    },
+    {
+      "path": "HMS_Codex_PerformanceAnalytics.py",
+      "sha256": "da1474550d0bdc17305edfe8cf0b82a52f96e31945ed2ec27cb116119c6be555",
+      "size": 12463
+    },
+    {
+      "path": "HMS_Codex_SoakAnalyzer.py",
+      "sha256": "0b9b9c26edc3f42e253ba7c2fc9ee279323028d4cc79d574111ba5e1a41e3853",
+      "size": 5702
+    },
+    {
+      "path": "HMS_Codex_PoolReconciler.py",
+      "sha256": "a6948ae907f0f47c9a6f1d869ca16502d250ef894ec072ea233f0a508b2b5d0c",
+      "size": 7592
+    },
+    {
+      "path": "HMS_Codex_RouterIntelligence.py",
+      "sha256": "384dac07def3e0cc994216032f62814fb54c47889287ba92865b852a11dc2667",
+      "size": 5694
+    },
+    {
+      "path": "HMS_Codex_AccountSessionIndex.py",
+      "sha256": "a80ac0470d82ae2129e770c96bba6460d972ffe3a7ae7bf5efa41c6692c653b9",
+      "size": 4273
+    },
+    {
+      "path": "HMS_Codex_SessionDoctor.py",
+      "sha256": "6d4ad222ddfc802832073ed658e5a8728d70da8c7323e378683d42d0dc27292a",
+      "size": 8554
+    },
+    {
+      "path": "HMS_Codex_ThreadSync.py",
+      "sha256": "519aef3b4f6435f3a8e7f84723f5867f83e4c68b5a05a49a69ef12ecbb2a16d0",
+      "size": 4565
+    },
+    {
+      "path": "HMS_Codex_EvidencePacker.py",
+      "sha256": "a5c2595111548185325ccca26b8737af08b2127c106653ee1ca5a3ae68838765",
+      "size": 1396
+    },
+    {
+      "path": "HMS_Codex_ProductionDoctor.py",
+      "sha256": "3b03ef96cd2909bf8f47262f234edf908f53455d5638ceb5e63c0f0640e40092",
+      "size": 5453
+    },
+    {
+      "path": "HMS_Codex_ConfigDoctor.py",
+      "sha256": "5096f472eb7fe81c16145af327d9b5a26f534459245d25fbb85fd2fd318089f0",
+      "size": 2405
+    },
+    {
+      "path": "HMS_Codex_CorrelationEngine.py",
+      "sha256": "66bf2e42c1e38aaf6b2122916ce019e7c65733f5763091afe5c4ce03ac2e4916",
+      "size": 2546
+    },
+    {
+      "path": "HMS_Codex_FleetPolicy.py",
+      "sha256": "78a62f0df230a44d7dfb9775fa01caa6c6e8449c97bcb4d27620228d4efe5dde",
+      "size": 3714
+    },
+    {
+      "path": "HMS_Codex_HAEngine.py",
+      "sha256": "66c76d019d3cd5f027a15f7f70ce3e3f37bbb51730d4c6c3fa8080ef5a8d5dcd",
+      "size": 7741
+    },
+    {
+      "path": "HMS_Codex_OperationsAnalyzer.py",
+      "sha256": "d4a9f1fb643e1120523d1cb9275f35724c50991f380c20cc5b2ecc4409ab621a",
+      "size": 3448
+    },
+    {
+      "path": "HMS_Codex_PredictiveEngine.py",
+      "sha256": "883e24beaeff691060dfc24d35fa64a29ea392531a6abdfe6b558f2b05c9f71d",
+      "size": 3687
+    },
+    {
+      "path": "HMS_Codex_WebDashboard.py",
+      "sha256": "798a5a20bfb8b68536308a0e3d573e794eb9a82969f80480f56b0cd51c100e39",
+      "size": 7533
+    },
+    {
+      "path": "BAT_DAU_CHAY_README.txt",
+      "sha256": "bca8a1726719b320ab53b730af618863b06ed040eacfefd1e8fd52c681192417",
+      "size": 163
+    },
+    {
+      "path": "README_VI.txt",
+      "sha256": "74c40b6e4c4946717df56b75d69030606eafb9406e84d42999541af8330e1e7c",
+      "size": 456
+    },
+    {
+      "path": "CHANGELOG_V25.23.1.txt",
+      "sha256": "cb3b07a13acb1c7f8e5f1c4f169194e94406e85112d7d71e33e60c815131a7f0",
+      "size": 978
+    },
+    {
+      "path": "RUNTIME_RUNBOOK_V25.md",
+      "sha256": "74ec8936b949d9e405a6a09ab8a0e13273a417b33242ce849f2679325f938659",
+      "size": 3293
+    },
+    {
+      "path": "RUNTIME_CHECKLIST_V25.md",
+      "sha256": "6c458e01bfa1350a19f95a1cb15e871e5131c81aa6d7254ca09b4cf14927d60e",
+      "size": 726
+    },
+    {
+      "path": "ROADMAP_V25_RUNTIME_CERTIFICATION.md",
+      "sha256": "605c73adb8a82f2356d095892be343277494df72033cf9921d88e8dc4a148533",
+      "size": 1335
+    },
+    {
+      "path": "ROADMAP_V24_CODEX_API_SUPERSET.md",
+      "sha256": "eb03973e3832c11e71e90c2d357ee7987628d5bcb264d04db83f28247b649c8c",
+      "size": 2183
+    },
+    {
+      "path": "COCKPIT_PARITY_MATRIX.md",
+      "sha256": "f18a815edf6447fb0fd4c22c2726ac8963a042a2caa8a1ec5f780f6407f432ea",
+      "size": 2530
+    },
+    {
+      "path": "COCKPIT_BASELINE_2026-08-19.md",
+      "sha256": "d9c9c28883558cdff1c73006c0812215b9f497f2fa27a8bf0049706e20541fb0",
+      "size": 945
+    },
+    {
+      "path": "THIRD_PARTY_REFERENCES.md",
+      "sha256": "8e7b6c498fed8a24a746983d22a5dfe11a73c08edca6d62c993f097a3ded4aa8",
+      "size": 1237
+    },
+    {
+      "path": "bridge/HMS_Antigravity_Bridge_v0.7.1.vsix",
+      "sha256": "46d8111d9be92a986e7041c7c4615377f0b63f6d9f86a473df6130ae810eef87",
+      "size": 5215
+    },
+    {
+      "path": "HMS_GUI_Launcher.vbs",
+      "sha256": "96a00a1f3be711aa0736c95b1be8cd99fbad62bc13e123d6012d04a6a913a552",
+      "size": 422
+    }
+  ]
+}

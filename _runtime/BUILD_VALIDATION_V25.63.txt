@@ -1,0 +1,38 @@
+HMS AI Cockpit v25.63 — BUILD VALIDATION
+Generated UTC: 2026-08-22T14:30:01.805350+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+
+CORE GATES
+- Startup Recovery Reconciler: 26/26 PASS
+- Target Crash Harness: 18/18 PASS; 12/12 process-kill/cold-start crash cases safe
+- Unified Diagnostics Startup Recovery: 13/13 PASS
+- Diagnostics Bundle Privacy v25.63: 12/12 PASS
+- Runtime Kit: 347/347 PASS
+- Compatibility Freeze: 133/133 PASS; 90 public BackendActions
+- Full Regression Freeze: 38/38 suites; 1408/1408 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+- Cockpit parity audit: 93.0% feature / 55.2% production / FEATURE_PARITY_CANDIDATE
+
+STARTUP RECOVERY INVARIANTS
+- Unresolved recovery journal is reconciled before conflicting mutation.
+- Invalid hash-chain/observer ambiguity/concurrent change fails closed.
+- External observation is metadata/digest-only; raw credentials are never exported.
+- Durable effects are VERIFY_ONLY_NO_REPEAT.
+- Public BackendAction contract remains exactly 90.
+
+CRASH HARNESS INVARIANTS
+- Real OS subprocess kill is used in the lab harness.
+- Recovery runs in a distinct cold-start PID.
+- Each lab side effect executes at most once across all 12 crash cases.
+- Current host Windows target evidence: FALSE.
+- Real Codex auth/restart/router/LAN side effects executed by harness: FALSE.
+
+PARITY / CLAIM BOUNDARY
+- Cockpit reference baseline: v1.3.24.
+- Feature evidence score: 93.0% (unchanged).
+- Production evidence score: 55.2% (unchanged).
+- v25.63 is synthetic/control-plane + OS-process lab evidence, not real Windows/Codex production evidence.
+- PRODUCTION CERTIFICATION IS NOT CLAIMED.

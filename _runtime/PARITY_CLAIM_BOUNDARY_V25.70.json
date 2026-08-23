@@ -1,0 +1,175 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.70",
+  "suite": "PARITY_CLAIM_BOUNDARY",
+  "generated_utc": "2026-08-23T04:10:40.621966+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "total": 20
+  },
+  "tests": [
+    {
+      "name": "version_25_70",
+      "status": "PASS",
+      "detail": "25.70"
+    },
+    {
+      "name": "cockpit_baseline_1_3_27",
+      "status": "PASS",
+      "detail": "1.3.27"
+    },
+    {
+      "name": "feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "feature_score_frozen",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_frozen",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "parity_reset_22",
+      "status": "PASS",
+      "detail": {
+        "pass": 22,
+        "fail": 0,
+        "total": 22
+      }
+    },
+    {
+      "name": "source_integration_29",
+      "status": "PASS",
+      "detail": {
+        "pass": 29,
+        "fail": 0,
+        "total": 29
+      }
+    },
+    {
+      "name": "gui_parity_safety_9",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "official_auth_67",
+      "status": "PASS",
+      "detail": {
+        "pass": 67,
+        "fail": 0,
+        "total": 67
+      }
+    },
+    {
+      "name": "runtime_440",
+      "status": "PASS",
+      "detail": {
+        "pass": 440,
+        "fail": 0,
+        "total": 440
+      }
+    },
+    {
+      "name": "compatibility_133",
+      "status": "PASS",
+      "detail": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      }
+    },
+    {
+      "name": "regression_freeze_72",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 72,
+        "suite_fail": 0,
+        "suite_total": 72,
+        "numeric_assertions_pass": 1856,
+        "numeric_assertions_total": 1856
+      }
+    },
+    {
+      "name": "public_backend_actions_90",
+      "status": "PASS",
+      "detail": 90
+    },
+    {
+      "name": "gui_smoke_6",
+      "status": "PASS",
+      "detail": {
+        "pass": 6,
+        "fail": 0,
+        "total": 6
+      }
+    },
+    {
+      "name": "parity_reset_nonbenchmark",
+      "status": "PASS",
+      "detail": {
+        "id": "cockpit_1327_parity_reset",
+        "label": "Cockpit Tools v1.3.27 Codex parity reset",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "v25.70 resets the competitive baseline from Cockpit v1.3.24 to v1.3.27 and audits the Codex-only changes from v1.3.25-v1.3.27 without weakening HMS transactional/fail-closed guarantees.",
+        "benchmark": false
+      }
+    },
+    {
+      "name": "source_integration_nonbenchmark",
+      "status": "PASS",
+      "detail": {
+        "id": "cockpit_1327_source_integration",
+        "label": "Cockpit v1.3.27 source-level parity integration",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.70 integrates runtime foreign-port rebind, launch-time account occupancy, client/API split state, official-account-ref usage continuity, bounded credential backups, WebSocket preservation, composite conversation identity and live-only model context metadata. Windows runtime proof remains pending.",
+        "benchmark": false
+      }
+    },
+    {
+      "name": "no_automatic_production_certification",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "no_production_score_promotion",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "release_synthetic_parity_only",
+      "status": "PASS",
+      "detail": {
+        "external_windows_target_evidence_imported": false,
+        "real_codex_effects_executed": false,
+        "windows_signing_executed": false
+      }
+    }
+  ],
+  "cockpit_baseline": "1.3.27",
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "external_windows_target_evidence_imported": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false
+}

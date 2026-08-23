@@ -1,0 +1,12 @@
+{
+  "version": "25.74",
+  "generated_utc": "2026-08-23T07:28:08.628014+00:00",
+  "repository": "jlcodes99/cockpit-tools",
+  "ref": "main",
+  "package_version": "1.3.27",
+  "package_blob_sha": "6cc1d64ad6a02eb8de7672a7d5974ff2a9337e6f",
+  "baseline": "1.3.27",
+  "state": "CURRENT",
+  "promotion_frozen": false,
+  "codex_only": true
+}

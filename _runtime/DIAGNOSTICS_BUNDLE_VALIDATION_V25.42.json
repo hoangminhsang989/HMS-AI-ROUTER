@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "path": "/mnt/data/v2542_diagout/HMS_DIAGNOSTICS_20260821T071623Z.zip",
+  "sha256": "e0299ff01dccc20f84bd49aa662e6bdb2ca1002e3fd9dbc75ca45efbce9ae332",
+  "file_count": 8,
+  "privacy": {
+    "contains_raw_oauth": false,
+    "contains_request_body": false,
+    "contains_api_keys": false,
+    "contains_cookies": false,
+    "redaction_applied": true
+  }
+}

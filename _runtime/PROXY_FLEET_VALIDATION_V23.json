@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "data": {
+    "version": "23.0",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 8,
+      "fail": 0,
+      "total": 8
+    },
+    "tests": [
+      {
+        "name": "egress.baseline_learn",
+        "status": "PASS",
+        "detail": "{\"status\": \"PASS\", \"observed_ip\": \"203.0.113.10\", \"ip_version\": 4, \"latency_ms\": 1.05, \"probe_url\": \"http://probe.invalid/ip\", \"checked_utc\": \"2026-08-20T00:30:59.552500+00:00\", \"error\": null, \"integrity_status\": \"PASS\", \"expected_ip\": \"203.0.113.10\", \"drift_count\": 0, \"strict_block\": false, \"baseline_learned\": true, \"updated_utc\": \"2026-08-20T00:30:59.552628+00:00\"}"
+      },
+      {
+        "name": "egress.stable",
+        "status": "PASS",
+        "detail": "{\"status\": \"PASS\", \"observed_ip\": \"203.0.113.10\", \"ip_version\": 4, \"latency_ms\": 0.29, \"probe_url\": \"http://probe.invalid/ip\", \"checked_utc\": \"2026-08-20T00:30:59.553068+00:00\", \"error\": null, \"integrity_status\": \"PASS\", \"expected_ip\": \"203.0.113.10\", \"drift_count\": 0, \"strict_block\": false, \"baseline_learned\": false, \"updated_utc\": \"2026-08-20T00:30:59.553310+00:00\"}"
+      },
+      {
+        "name": "egress.drift_block",
+        "status": "PASS",
+        "detail": "{\"status\": \"PASS\", \"observed_ip\": \"203.0.113.11\", \"ip_version\": 4, \"latency_ms\": 0.23, \"probe_url\": \"http://probe.invalid/ip\", \"checked_utc\": \"2026-08-20T00:30:59.553704+00:00\", \"error\": null, \"integrity_status\": \"DRIFT\", \"expected_ip\": \"203.0.113.10\", \"drift_count\": 1, \"strict_block\": true, \"baseline_learned\": false, \"updated_utc\": \"2026-08-20T00:30:59.553813+00:00\"}"
+      },
+      {
+        "name": "fleet.drift_recommends_quarantine",
+        "status": "PASS",
+        "detail": "{\"profile_id\": \"p1\", \"profile_name\": \"VN-01\", \"ops_state\": \"ACTIVE\", \"ops_reason\": \"\", \"assigned\": 1, \"capacity\": 5, \"capacity_ok\": true, \"health_status\": \"PASS\", \"egress_status\": \"DRIFT\", \"expected_ip\": \"203.0.113.10\", \"observed_ip\": \"203.0.113.11\", \"sidecar_running\": true, \"sidecar_pid\": 123, \"sidecar_port\": 8420, \"severity\": \"CRITICAL\", \"recommendation\": \"QUARANTINE_EGRESS_DRIFT\", \"auto_action\": \"QUARANTINE\"}"
+      },
+      {
+        "name": "fleet.quarantined_state",
+        "status": "PASS",
+        "detail": "{\"profile_id\": \"p1\", \"profile_name\": \"VN-01\", \"ops_state\": \"QUARANTINED\", \"ops_reason\": \"TEST_DRIFT\", \"assigned\": 1, \"capacity\": 5, \"capacity_ok\": true, \"health_status\": \"PASS\", \"egress_status\": \"DRIFT\", \"expected_ip\": \"203.0.113.10\", \"observed_ip\": \"203.0.113.11\", \"sidecar_running\": true, \"sidecar_pid\": 123, \"sidecar_port\": 8420, \"severity\": \"QUARANTINED\", \"recommendation\": \"STOP_AND_REVIEW\", \"auto_action\": null}"
+      },
+      {
+        "name": "fleet.stale_evidence_not_healthy",
+        "status": "PASS",
+        "detail": "{\"profile_id\": \"p1\", \"profile_name\": \"VN-01\", \"ops_state\": \"ACTIVE\", \"ops_reason\": \"TEST_ACTIVE\", \"assigned\": 1, \"capacity\": 5, \"capacity_ok\": true, \"health_status\": \"STALE\", \"egress_status\": \"STALE\", \"expected_ip\": \"203.0.113.10\", \"observed_ip\": \"203.0.113.10\", \"sidecar_running\": true, \"sidecar_pid\": 123, \"sidecar_port\": 8420, \"severity\": \"DEGRADED\", \"recommendation\": \"CHECK_HEALTH\", \"auto_action\": null}"
+      },
+      {
+        "name": "gateway.hot_reload_quarantine",
+        "status": "PASS",
+        "detail": "changed=True; ids=['B']; affinity={}"
+      },
+      {
+        "name": "fleet.safe_export",
+        "status": "PASS",
+        "detail": "no secret_ref/password fields"
+      }
+    ]
+  }
+}

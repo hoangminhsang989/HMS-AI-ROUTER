@@ -1,0 +1,26 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.65",
+  "suite": "PARITY_CLAIM_BOUNDARY_V25.65",
+  "generated_utc": "2026-08-22T20:14:51.844956+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": {
+    "version": true,
+    "verdict": true,
+    "feature_score_frozen": true,
+    "production_score_frozen": true,
+    "windows_not_certified": true,
+    "v2565_new_capabilities_nonbenchmark": true,
+    "real_effect_direct_promotion_forbidden": true,
+    "target_bundle_direct_promotion_forbidden": true,
+    "promotion_gate_requires_attested_target_pair": true
+  },
+  "feature_score_pct": 93.0,
+  "production_score_pct": 55.2,
+  "production_certification": "NOT_CLAIMED_ATTESTED_WINDOWS_REAL_CODEX_EFFECT_EVIDENCE_REQUIRED"
+}

@@ -1,0 +1,42 @@
+HMS AI Cockpit v25.60 — Recovery Transaction Journal & Usage Reset UX
+
+FINAL SOURCE FREEZE: PASS
+
+Recovery Transaction Journal
+- Core proof: 14/14 PASS.
+- Release validator: 18/18 PASS.
+- Crash-window matrix: 25/25 PASS.
+- Durable phases: PREPARE -> COMMIT -> VERIFY -> DONE/ROLLBACK.
+- PREPARE resumes through VERIFY_EXTERNAL_THEN_COMMIT; durable COMMIT resumes through VERIFY only.
+- Append-only SHA-256 hash chain + fsync; tamper detected fail-closed.
+- Metadata/hash-only journal; secret-shaped fields redacted.
+- Official Auth switch is journal-wrapped with verified rollback.
+
+Usage/reset UX
+- 5-hour and Weekly quota rows show reset countdown plus absolute local reset time.
+- Optional package/subscription expiry is displayed only from explicit upstream fields.
+- Package expiry and auth/token expiry remain distinct.
+- Existing quota freshness/reserve/session-affinity semantics remain frozen.
+
+Validation
+- Recovery Transaction Journal: 18/18 PASS, 25 crash cases.
+- Compatibility Freeze: 133/133 PASS.
+- Runtime Kit: 311/311 PASS.
+- Canonical isolated Regression Freeze: 28/28 suites, 1212/1212 numeric assertions PASS.
+- Unified Diagnostics recovery-journal privacy/integration: 9/9 PASS.
+- Diagnostics Bundle privacy injection: 11/11 PASS.
+- GUI startup headless 8 s: 5/5 PASS, stderr empty.
+- PowerShell static lint/coherence: PASS.
+- Python compileall: PASS.
+- Parity Auditor: 93.0% feature evidence / 55.2% production evidence; FEATURE_PARITY_CANDIDATE.
+- Public BackendAction contract remains 90 actions.
+
+Regression execution note
+- The monolithic wrapper can exceed the build-container process/pipe window because several legacy network validators spawn short-lived children.
+- Final regression evidence therefore uses canonical isolated-suite aggregation with each original suite, timeout and threshold unchanged.
+- Performance and Protocol Chaos were rerun exclusive; no suite was skipped and no threshold was relaxed.
+
+Claim boundary
+- Synthetic/control-plane evidence only for v25.60 additions.
+- Real Windows PowerShell/Codex App/encrypted Secrets keyring/live OAuth/multi-PC SMB/NAS/6h-24h target soak remain target-machine evidence.
+- v25.60 cannot issue PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.

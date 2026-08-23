@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "version": "25.59",
+  "unified_diagnostics": {
+    "schema": 1,
+    "product": "HMS AI Cockpit",
+    "version": "25.59",
+    "generated_utc": "2026-08-22T07:30:55.283936+00:00",
+    "privacy": {
+      "contains_prompt": false,
+      "contains_request_body": false,
+      "contains_raw_secret": false,
+      "metadata_only": true
+    },
+    "summary": {
+      "total": 1,
+      "errors": 0,
+      "warnings": 0,
+      "requests": 0,
+      "route_decisions": 0,
+      "smart_model_decisions": 0,
+      "failovers": 0,
+      "circuit_open": 0,
+      "self_healing": 0
+    },
+    "layers": {
+      "request": "NO_DATA",
+      "routing": "NO_DATA",
+      "circuit": "NO_DATA",
+      "self_healing": "NO_DATA",
+      "security": "NO_DATA",
+      "lan_pool": "NO_DATA",
+      "reliability_soak": "NO_DATA",
+      "performance_scale": "NO_DATA",
+      "real_codex_cert": "NO_DATA",
+      "target_machine_cert": "NO_DATA",
+      "rotation_torture": "NO_DATA",
+      "production_simulation": "NO_DATA",
+      "autonomous_router_twin": "NO_DATA",
+      "protocol_chaos": "NO_DATA",
+      "recovery_planner": "NO_DATA",
+      "compound_fault_recovery": "NO_DATA",
+      "official_auth_compat": "OK"
+    },
+    "by_source": {
+      "official-auth-compat": 1
+    },
+    "accounts": [],
+    "requests": [],
+    "timeline": [
+      {
+        "time_utc": "2026-08-22T07:30:23.418794+00:00",
+        "source": "official-auth-compat",
+        "kind": "CODEX_AUTH_COMPATIBILITY",
+        "severity": "INFO",
+        "request_id": "",
+        "instance_id": "",
+        "project": "",
+        "account": "",
+        "model": "",
+        "status": "PASS",
+        "latency_ms": null,
+        "message": "Official Auth Compatibility PASS: 67/67 baseline=v1.3.24",
+        "details": {
+          "status": "PASS",
+          "pass": 67,
+          "total": 67,
+          "cockpit_parity_baseline": "v1.3.24",
+          "originator": "codex_vscode",
+          "user_agent": "codex_vscode/0.146.0",
+          "claim_boundary": "SYNTHETIC_FILE_DIRECT_KEYRING_FIXTURES; SECRETS_BACKEND_GUARDED; REAL_CODEX_APP_SWITCH_DEFERRED",
+          "time_utc": "2026-08-22T07:30:23.418794+00:00"
+        },
+        "event_id": "a67b780d22be5b2c0dcd5558"
+      }
+    ]
+  }
+}

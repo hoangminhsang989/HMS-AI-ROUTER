@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.73 — BUILD VALIDATION
+Generated UTC: 2026-08-23T06:17:44.934804+00:00
+
+VERDICT: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+
+Cockpit baseline: 1.3.27 (public main package.json rechecked before final freeze)
+Feature evidence: 93.0%
+Production evidence: 55.2%
+Windows runtime certified: FALSE
+External Windows target evidence imported: FALSE
+
+Core validation:
+- Cockpit 1.3.27 parity reset: 22/22 PASS
+- Source integration: 29/29 PASS
+- Windows runtime certification contract: 10/10 PASS
+- Production evidence promotion auditor: 10/10 PASS
+- Seven-case Windows Target Evidence Import Review: 12/12 PASS
+- Baseline Delta Watch Automation: 9/9 PASS
+- Unified Diagnostics import review: 7/7 PASS
+- Diagnostics privacy: 13/13 PASS
+- Import Review GUI safety: 9/9 PASS
+- Official Auth Compatibility: 67/67 PASS
+- Runtime Kit: 458/458 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full regression: 86/86 suites, 2006/2006 numeric assertions PASS
+- GUI live smoke: PASS (8-second expected-timeout, stdout/stderr 0)
+- PowerShell static lint/coherence: PASS
+- Python compileall: PASS
+- Claim Boundary: 37/37 PASS
+
+Safety boundary:
+- v25.73 does not repurpose the legacy 12-case crash-matrix ingest schema; seven runtime-parity reports use a dedicated reviewer while reusing the same cryptographic trust/replay/privacy/ledger primitives.
+- Baseline watch is mandatory BEFORE_IMPORT and BEFORE_PROMOTION_REVIEW.
+- Newer Cockpit baseline freezes promotion and creates Codex-only delta-audit work; no automatic upstream merge.
+- Invalid/stale/replayed/mixed-version evidence is quarantined read-only.
+- Dual review remains append-only and does not mutate production score.
+- No real Windows target evidence was imported by this build.

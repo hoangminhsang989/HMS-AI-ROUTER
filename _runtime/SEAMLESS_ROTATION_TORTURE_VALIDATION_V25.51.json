@@ -1,0 +1,330 @@
+{
+  "product": "HMS AI",
+  "version": "25.51",
+  "suite": "SEAMLESS_ROTATION_TORTURE_VALIDATION",
+  "generated_utc": "2026-08-23T07:45:27.508931+00:00",
+  "verdict": "PASS_SEAMLESS_ROTATION_TORTURE_VALIDATION_V25_51",
+  "summary": {
+    "pass": 63,
+    "fail": 0,
+    "total": 63
+  },
+  "checks": [
+    {
+      "name": "engine_version_25_51",
+      "ok": true,
+      "detail": "25.51"
+    },
+    {
+      "name": "engine_schema_v1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core_torture_verdict",
+      "ok": true,
+      "detail": "PASS_SEAMLESS_ROTATION_TORTURE_V25_51"
+    },
+    {
+      "name": "core_torture_1000_cycles",
+      "ok": true,
+      "detail": "{'pass': 34, 'fail': 0, 'total': 34, 'cycles': 1000}"
+    },
+    {
+      "name": "core_torture_all_pass",
+      "ok": true,
+      "detail": "{'pass': 34, 'fail': 0, 'total': 34, 'cycles': 1000}"
+    },
+    {
+      "name": "core.active_real_current_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.active_rotates_to_eligible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.active_switch_required",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.active_switch_bypasses_hold_when_critical",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.active_affinity_not_mutated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.hysteresis_zero_switches",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.hysteresis_cycles_exercised",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.stale_high_quota_not_promoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.recovered_account_does_not_immediate_pingpong",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.gateway_initial_affinity_beta",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.gateway_429_rotates_to_gamma",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.gateway_existing_session_stays_gamma_after_beta_recovery",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.gateway_new_session_can_use_recovered_beta",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.gateway_affinity_scoped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.auth_routing_apply_succeeds",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.auth_identity_payload_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.auth_files_distinct",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.auth_cross_bleed_absent",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.auth_apply_report_redacted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.multi_instance_two_exercised",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.multi_instance_both_switchable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.multi_instance_both_critical",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.multi_instance_affinity_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.multi_instance_stable_endpoints_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_first_acquired",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_second_blocked_while_owner_active",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_expired_takeover",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_epoch_increased",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_old_node_rejoin_cannot_steal",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_owner_is_new_node",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_two_nodes_online",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_no_invalid_signature",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.lan_shared_metadata_no_secret_fields",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core.report_secret_shape_absent",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "active_reason_critical_override",
+      "ok": true,
+      "detail": "{'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'reasons': ['CURRENT_CRITICAL_OVERRIDE'], 'session_affinity_untouched': True}"
+    },
+    {
+      "name": "active_current_not_rewritten_to_candidate",
+      "ok": true,
+      "detail": "{'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'reasons': ['CURRENT_CRITICAL_OVERRIDE'], 'session_affinity_untouched': True}"
+    },
+    {
+      "name": "hysteresis_exercised_all_cycles",
+      "ok": true,
+      "detail": "{'cycles': 1000, 'switchable': 0, 'recommended_alpha': 1000, 'held': 1000}"
+    },
+    {
+      "name": "hysteresis_candidate_can_differ_without_apply",
+      "ok": true,
+      "detail": "{'cycles': 1000, 'switchable': 0, 'recommended_alpha': 1000, 'held': 1000}"
+    },
+    {
+      "name": "stale_recovery_has_hold_reason",
+      "ok": true,
+      "detail": "{'stale_recommended': 'beta@example.test', 'stale_alpha_eligible': False, 'recovery_recommended': 'alpha@example.test', 'recovery_can_switch_immediately': False, 'recovery_reasons': ['MIN_HOLD', 'SWITCH_COOLDOWN']}"
+    },
+    {
+      "name": "gateway_failover_not_affinity_reason_when_target_cooled",
+      "ok": true,
+      "detail": "{'first': 'B', 'first_reason': 'FILL-FIRST', 'after_429': 'C', 'after_429_reason': 'FILL-FIRST', 'existing_after_recovery': 'C', 'existing_after_recovery_reason': 'AFFINITY', 'new_after_recovery': 'B', 'new_after_recovery_reason': 'FILL-FIRST', 'affinity_entries': 2}"
+    },
+    {
+      "name": "gateway_recovered_existing_is_affinity",
+      "ok": true,
+      "detail": "{'first': 'B', 'first_reason': 'FILL-FIRST', 'after_429': 'C', 'after_429_reason': 'FILL-FIRST', 'existing_after_recovery': 'C', 'existing_after_recovery_reason': 'AFFINITY', 'new_after_recovery': 'B', 'new_after_recovery_reason': 'FILL-FIRST', 'affinity_entries': 2}"
+    },
+    {
+      "name": "gateway_new_session_uses_ranking",
+      "ok": true,
+      "detail": "{'first': 'B', 'first_reason': 'FILL-FIRST', 'after_429': 'C', 'after_429_reason': 'FILL-FIRST', 'existing_after_recovery': 'C', 'existing_after_recovery_reason': 'AFFINITY', 'new_after_recovery': 'B', 'new_after_recovery_reason': 'FILL-FIRST', 'affinity_entries': 2}"
+    },
+    {
+      "name": "auth_fixture_two_files",
+      "ok": true,
+      "detail": "{'applied': True, 'active_account': 'beta@example.test', 'immutable_fingerprints_preserved': True, 'account_files_distinct': True, 'synthetic_alpha_still_in_alpha_file': True, 'synthetic_beta_still_in_beta_file': True, 'cross_bleed_absent': True, 'report_contains_raw_credential': False, 'auth_file_count': 2, 'raw_fixture_bytes': 315}"
+    },
+    {
+      "name": "auth_fixture_nonempty",
+      "ok": true,
+      "detail": "{'applied': True, 'active_account': 'beta@example.test', 'immutable_fingerprints_preserved': True, 'account_files_distinct': True, 'synthetic_alpha_still_in_alpha_file': True, 'synthetic_beta_still_in_beta_file': True, 'cross_bleed_absent': True, 'report_contains_raw_credential': False, 'auth_file_count': 2, 'raw_fixture_bytes': 315}"
+    },
+    {
+      "name": "multi_instances_have_distinct_endpoints",
+      "ok": true,
+      "detail": "{'instances': 2, 'switchable': 2, 'critical': 2, 'rows': [{'instance_id': 'I1', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18101'}, {'instance_id': 'I2', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18102'}], 'session_affinity_untouched': True, 'stable_e"
+    },
+    {
+      "name": "multi_instances_all_real_current_alpha",
+      "ok": true,
+      "detail": "{'instances': 2, 'switchable': 2, 'critical': 2, 'rows': [{'instance_id': 'I1', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18101'}, {'instance_id': 'I2', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18102'}], 'session_affinity_untouched': True, 'stable_e"
+    },
+    {
+      "name": "multi_instances_all_recommend_beta",
+      "ok": true,
+      "detail": "{'instances': 2, 'switchable': 2, 'critical': 2, 'rows': [{'instance_id': 'I1', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18101'}, {'instance_id': 'I2', 'current': 'alpha@example.test', 'recommended': 'beta@example.test', 'switch_needed': True, 'can_switch': True, 'critical': True, 'stable_endpoint': 'http://127.0.0.1:18102'}], 'session_affinity_untouched': True, 'stable_e"
+    },
+    {
+      "name": "lan_takeover_epoch_exact_2",
+      "ok": true,
+      "detail": "{'first_status': 'ACQUIRED', 'blocked_status': 'BLOCKED_OWNED_BY_OTHER_NODE', 'takeover_status': 'TAKEOVER_EXPIRED', 'takeover_epoch': 2, 'rejoin_attempt_status': 'BLOCKED_OWNED_BY_OTHER_NODE', 'online_nodes': 2, 'invalid_signatures': 0, 'lease_owner': 'NODE-B', 'secret_fields_in_shared_status': False}"
+    },
+    {
+      "name": "adaptive_real_active_comment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "adaptive_ineligible_active_guard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "closed_loop_policy_25_51",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "closed_loop_ineligible_current_guard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gateway_affinity_before_priority_comment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gateway_uses_all_eligible_before_available",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_main_version_at_least_25_51",
+      "ok": true,
+      "detail": "(25, 74)"
+    },
+    {
+      "name": "gui_main_version_at_least_25_51",
+      "ok": true,
+      "detail": "(25, 74)"
+    },
+    {
+      "name": "gui_rotation_torture_visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_rotation_torture_button",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "claim_boundary": "Synthetic torture only; real Codex/quota/LAN target-machine certification remains required."
+}

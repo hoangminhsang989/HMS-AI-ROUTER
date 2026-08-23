@@ -1,0 +1,19 @@
+HMS-AI-ROUTER Cockpit v25.31 — CURRENT BUILD SUMMARY
+=============================================
+
+PASS  Python compileall
+PASS  HMS_GUI.pyw compile
+PASS  GUI startup smoke under Xvfb (7s, stderr 0)
+PASS  PowerShell StaticLint
+PASS  PowerShell CoherenceAudit
+PASS  Closed-loop structural assertions 17/17
+PASS  Usage Ledger v2 feedback synthetic gate
+PASS  Closed-loop OBSERVE / GUARDED_AUTO apply / rollback
+PASS  minimum-samples + critical override gates
+PASS  unsafe-path transaction rollback gate
+PASS  stable endpoint + session-affinity invariants
+DEFERRED  Real Windows Codex closed-loop routing
+DEFERRED  Real session continuity / failover without restart
+DEFERRED  Runtime soak
+
+See BUILD_VALIDATION_V25.31.txt for details.

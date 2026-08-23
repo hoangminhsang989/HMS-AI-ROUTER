@@ -1,0 +1,355 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.59",
+  "suite": "OFFICIAL_AUTH_COMPATIBILITY_LAYER",
+  "generated_utc": "2026-08-22T08:29:44.795984+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 67,
+    "fail": 0,
+    "total": 67
+  },
+  "tests": [
+    {
+      "name": "snapshot_before_switch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "snapshot_raw_not_in_metadata",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "codex_home_default",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "store_key_shape",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "file_store_parse",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_store_parse",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "auto_store_parse",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "default_store_file",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_backend_direct_default",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_backend_secrets_feature",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_backend_direct_feature",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "preserve_unrelated_custom",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stale_account_identity_removed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stale_tokens_replaced",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "oauth_auth_mode",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "oauth_type_codex",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "oauth_clears_api_key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "new_account_id",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "missing_auth_mode_repaired",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty_refresh_key_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "target_agent_identity_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "api_mode_normalized",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "api_stale_tokens_removed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "api_last_refresh_removed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "api_key_replaced",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "file_switch_ok",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "file_switch_readback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "file_switch_serialized",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "atomic_no_temp_left",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_service_name",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_switch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "keyring_removes_auth_file",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "secrets_backend_fail_closed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "auto_fallback_file",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "auto_prefers_keyring_on_save",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "auto_removes_stale_file",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "serialized_lock_waits",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "serialized_final_consistent",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "readback_mismatch_raises",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "readback_mismatch_rolls_back",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ephemeral_fail_closed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "originator_v1324",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "user_agent_compat_fallback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "future_identity_derived",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "official_cli_profile",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "audit_metadata_only",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "audit_claim_boundary",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "redaction_defense",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "release_version_ps",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "release_version_gui",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "default_store_setting",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "official_keyring_setting",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "powershell_secret_backend_guard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "official_originator_setting",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "official_ua_setting",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "snapshot_credential_manager",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "snapshot_cleanup",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "serialized_switch_mutex",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "field_preserving_rewrite",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "controlled_restart",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "powershell_readback_verify",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "powershell_rollback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_surface",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "native_account_switch_button",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "private_switch_path_no_backend_action",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime_gate_wired",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "regression_gate_wired",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "cockpit_parity_baseline": "v1.3.24",
+  "oauth_identity": {
+    "originator": "codex_vscode",
+    "User-Agent": "codex_vscode/0.146.0"
+  },
+  "claim_boundary": "SYNTHETIC_FILE_DIRECT_KEYRING_FIXTURES; SECRETS_BACKEND_GUARDED; REAL_CODEX_APP_SWITCH_DEFERRED"
+}

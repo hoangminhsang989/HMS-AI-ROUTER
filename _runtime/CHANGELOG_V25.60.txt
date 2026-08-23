@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.60 — Recovery Transaction Journal & Usage Reset UX
+
+RECOVERY TRANSACTION JOURNAL
+- Added durable append-only SHA-256 hash-chain journal for recovery side effects.
+- Transaction phases: PREPARE -> COMMIT -> VERIFY -> DONE / ROLLBACK.
+- Added fsync durability at every journal append.
+- PREPARE recovery is fail-safe: VERIFY_EXTERNAL_THEN_COMMIT, never blind re-execution.
+- Durable COMMIT resumes at VERIFY only; duplicate COMMIT is forbidden.
+- Integrated Official Auth switch with transaction journal and rollback evidence.
+- Covers OFFICIAL_AUTH_SWITCH, ROUTER_RESTART, CLIENT_RESTART, CONFIG_REPAIR and LEASE_REELECTION.
+- Added 25 deterministic crash-window cases and tamper/hash-chain validation.
+- Journal metadata is redacted/hash-only; no raw credential/prompt/request/response storage.
+
+USAGE & TOKEN CENTER / ACCOUNT CENTER
+- Added absolute reset timestamp beside 5-hour and Weekly quota countdowns.
+- Reset presentation now reads as countdown + local absolute time.
+- Added optional subscription/package expiry fields when explicitly exposed by upstream metadata.
+- Package expiry is never inferred from token/auth expiry.
+- Existing freshness/reserve/route-eligibility policy remains unchanged.
+
+HARDENING
+- Unified Diagnostics now exposes recovery-journal crash-case/duplicate-commit metadata only.
+- Diagnostics Bundle includes v25.60 evidence through normal redaction and deny-list boundaries.
+- Recovery journal PowerShell helpers return the actual helper envelope, avoiding a null .data projection for append/resume modes.
+- Public BackendAction contract remains frozen at 90 actions.
+
+CLAIM BOUNDARY
+- Crash/recovery and quota-reset behavior is synthetic/control-plane validated without a real target machine.
+- Real Windows/Codex/keyring/SMB/soak production certification is not claimed by v25.60.

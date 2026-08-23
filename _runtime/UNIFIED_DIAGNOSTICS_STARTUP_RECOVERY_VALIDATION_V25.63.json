@@ -1,0 +1,79 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.63",
+  "suite": "UNIFIED_DIAGNOSTICS_STARTUP_RECOVERY_VALIDATION",
+  "generated_utc": "2026-08-22T14:30:38.804991+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "total": 13
+  },
+  "tests": [
+    {
+      "name": "startup_one_aggregate_event",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "startup_source",
+      "status": "PASS",
+      "detail": "startup-recovery"
+    },
+    {
+      "name": "startup_kind",
+      "status": "PASS",
+      "detail": "STARTUP_RECOVERY_GATE"
+    },
+    {
+      "name": "startup_counts_projected",
+      "status": "PASS",
+      "detail": "Startup Recovery OPERATOR_REQUIRED: unresolved=1 operator=1 blocked=23"
+    },
+    {
+      "name": "startup_identity_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "crash_one_aggregate_event",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "crash_source",
+      "status": "PASS",
+      "detail": "target-crash-harness"
+    },
+    {
+      "name": "crash_cases_aggregate",
+      "status": "PASS",
+      "detail": "Crash Harness PASS: 12/12 crash_cases=12 windows_target=False"
+    },
+    {
+      "name": "crash_case_details_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "report_version_25_63",
+      "status": "PASS",
+      "detail": "25.63"
+    },
+    {
+      "name": "startup_layer_error",
+      "status": "PASS",
+      "detail": "ERROR"
+    },
+    {
+      "name": "crash_layer_ok",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "report_privacy",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

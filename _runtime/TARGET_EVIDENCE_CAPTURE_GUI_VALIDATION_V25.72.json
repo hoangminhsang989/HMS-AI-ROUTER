@@ -1,0 +1,57 @@
+{
+  "version": "25.72",
+  "suite": "TARGET_EVIDENCE_CAPTURE_GUI_VALIDATION",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "name": "app_version_current",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "card_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "proof_only_buttons",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_backend_mutation_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_real_effect_arm_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "uses_validator_subprocess",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_credential_export_button",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_actions_not_extended",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "verdict": "PASS"
+}

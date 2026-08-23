@@ -1,0 +1,36 @@
+HMS AI Cockpit v25.35 — Account Analytics
+
+BASELINE
+- v25.34 Advanced Quota Center.
+- Codex-only scope retained.
+
+DELIVERED
+- Added HMS_Codex_AccountAnalytics.py.
+- Added durable SQLite account_snapshots for long-term quality trend.
+- Aggregates normalized Usage Ledger metadata at 24h / 7d / 30d windows.
+- Builds confidence-aware account quality score from success, latency, retry, 429, auth/server errors, health, quota pressure, Predictive Quota and Circuit Breaker state.
+- Builds Account × Model and Account × Workload performance profiles.
+- Generates model recommendations only after minimum-sample gate; recommendation remains advisory.
+- Added Account Analytics page to native GUI.
+- Added get_account_analytics / sync_account_analytics backend actions.
+- Added background Account Analytics maintenance scheduling before Closed-loop evaluation.
+- Closed-loop Router consumes Analytics through bounded ±8 score adjustment; hard Circuit Breaker/quota eligibility remains authoritative.
+- Added settings for analytics interval, retention and minimum samples.
+- Runtime Kit Validator extended with Account Analytics engine, privacy, PowerShell, GUI and bounded-router checks.
+
+SAFETY
+- No prompt/request body/OAuth token/cookie/API key/client secret/password stored by Account Analytics.
+- No stable endpoint, Project Affinity, credential or existing session-affinity mutation.
+- No destructive account/project/instance action added.
+- Analytics cannot reopen Circuit Breaker OPEN accounts.
+
+VERIFICATION
+- Python compileall: PASS (47 Python/PYW files).
+- Native GUI startup smoke under Xvfb: PASS (7s alive, stderr 0).
+- Account Analytics synthetic Usage/Quota/Circuit test: PASS.
+- Account × Model / Workload profiles: PASS.
+- Closed-loop bounded Analytics signal: PASS (±8 cap; OPEN still excluded).
+- PowerShell StaticLint v25.35: PASS (192/192 script vars, 0 missing settings, 0 duplicates).
+- PowerShell CoherenceAudit v25.35: PASS.
+- Runtime Kit Validator v25.35: PASS 137/137.
+- Real Windows Codex runtime/soak: DEFERRED_BY_OPERATOR.

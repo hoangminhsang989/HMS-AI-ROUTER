@@ -1,0 +1,11 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "GUI_STARTUP_SMOKE",
+  "verdict": "PASS",
+  "duration_sec": 7,
+  "exit_code": 124,
+  "expected_timeout_exit_code": 124,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0
+}

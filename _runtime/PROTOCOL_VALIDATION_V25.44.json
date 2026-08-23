@@ -1,0 +1,81 @@
+{
+  "ok": true,
+  "data": {
+    "version": "21.0",
+    "generated_utc": "2026-08-21T11:05:55Z",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 10,
+      "fail": 0,
+      "total": 10
+    },
+    "tests": [
+      {
+        "name": "http.forwarding",
+        "status": "PASS",
+        "detail": "status=200; selected=0d6e4079e367",
+        "extra": {}
+      },
+      {
+        "name": "models.policy",
+        "status": "PASS",
+        "detail": "models=['gpt-5.6']",
+        "extra": {}
+      },
+      {
+        "name": "sse.streaming",
+        "status": "PASS",
+        "detail": "status=200; chunks=3; bytes=27",
+        "extra": {
+          "chunk_times": [
+            0.0,
+            0.06,
+            0.12
+          ]
+        }
+      },
+      {
+        "name": "post.no_idempotency_no_replay",
+        "status": "PASS",
+        "detail": "status=503; attempts=1",
+        "extra": {}
+      },
+      {
+        "name": "post.idempotent_failover",
+        "status": "PASS",
+        "detail": "status=200; attempts=2",
+        "extra": {}
+      },
+      {
+        "name": "websocket.relay",
+        "status": "PASS",
+        "detail": "handshake=True; echo=True",
+        "extra": {}
+      },
+      {
+        "name": "websocket.model_hint_policy",
+        "status": "PASS",
+        "detail": "blocked_without_model=True",
+        "extra": {}
+      },
+      {
+        "name": "websocket.handshake_failover",
+        "status": "PASS",
+        "detail": "attempts_2=True; echo=True",
+        "extra": {}
+      },
+      {
+        "name": "trace.privacy",
+        "status": "PASS",
+        "detail": "body/key absent from trace",
+        "extra": {}
+      },
+      {
+        "name": "trace.protocol_telemetry",
+        "status": "PASS",
+        "detail": "SSE/WS/TTFT trace markers present",
+        "extra": {}
+      }
+    ]
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.63",
+  "suite": "TARGET_CRASH_HARNESS_VALIDATION",
+  "generated_utc": "2026-08-22T14:30:38.209493+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 18,
+    "fail": 0,
+    "total": 18,
+    "crash_cases": 12
+  },
+  "host": {
+    "os_name": "posix",
+    "platform": "linux",
+    "windows_target_evidence": false
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12,
+        "crash_cases": 12,
+        "effects": 4,
+        "windows": 3
+      }
+    },
+    {
+      "name": "exact_12_crash_cases",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12,
+        "crash_cases": 12,
+        "effects": 4,
+        "windows": 3
+      }
+    },
+    {
+      "name": "four_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "three_crash_windows",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "every_process_killed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "cold_start_distinct_pid",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all_effects_exactly_once",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all_journals_valid",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all_converge_healthy",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all_recovery_rc_zero",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all_cases_safe",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "host_evidence_explicit",
+      "status": "PASS",
+      "detail": {
+        "os_name": "posix",
+        "platform": "linux",
+        "windows_target_evidence": false
+      }
+    },
+    {
+      "name": "nonwindows_does_not_fake_windows",
+      "status": "PASS",
+      "detail": {
+        "os_name": "posix",
+        "platform": "linux",
+        "windows_target_evidence": false
+      }
+    },
+    {
+      "name": "real_codex_not_executed",
+      "status": "PASS",
+      "detail": {
+        "subprocess_termination": true,
+        "cold_start_new_process": true,
+        "at_most_once_required": true,
+        "real_codex_effects_executed": false,
+        "production_certification": "NOT_CLAIMED_OS_PROCESS_KILL_LAB_REAL_CODEX_EFFECTS_NOT_EXECUTED"
+      }
+    },
+    {
+      "name": "production_claim_blocked",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "actual_subprocess_kill",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "durable_fsync",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "danger_window_observe_no_repeat",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_OS_PROCESS_KILL_LAB_REAL_CODEX_EFFECTS_NOT_EXECUTED"
+}

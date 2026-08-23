@@ -1,0 +1,48 @@
+HMS AI Cockpit v25.36 — BUILD VALIDATION
+Tranche: CODEX_IDENTITY_ISOLATION_HARDENING
+
+RESULT
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED (real Windows Codex): DEFERRED_BY_OPERATOR
+- SOAK VERIFIED: NOT_YET
+
+BUILD / STATIC
+- Python compileall: PASS (48 Python/pyw entry files under _runtime).
+- Native GUI source compile: PASS.
+- Native GUI startup smoke under isolated display: process remained alive for 6s timeout; stderr 0 bytes.
+- PowerShell StaticLint v25.36: PASS.
+  - script variables referenced/assigned: 194/194
+  - missing script variables: 0
+  - referenced settings: 309
+  - declared settings: 394
+  - missing settings: 0
+  - duplicate settings: 0
+  - high-confidence glue findings: 0
+- PowerShell CoherenceAudit v25.36: PASS.
+- Runtime Kit Validator v25.36: PASS 140/140.
+
+IDENTITY ISOLATION SYNTHETIC
+- Valid isolated instance fingerprint: PASS.
+- identity-v2536.json secret-free metadata contract: PASS.
+- Cross-instance shared CODEX_HOME collision: REJECTED as expected.
+- Secret-like field injected into binding-v2536.json: REJECTED as expected.
+- Codex stable endpoint mismatch: REJECTED as expected.
+
+CODEX-ONLY
+- Native GUI Antigravity references: 0.
+- Packaged Antigravity bridge payload files: 0.
+- No new Antigravity work in this tranche.
+
+SAFETY
+- No destructive instance/project/account delete action added.
+- Legacy binding-v2530/v2529/v2528 files are retained; v2536 is copy-forward authority.
+- Fingerprint uses hashes/metadata only; OAuth/API secrets are not read into fingerprint output.
+- Existing stable endpoint, Project Affinity and session affinity remain unchanged by identity audit.
+- Process ownership guard still requires matching PID/path/start-time before HMS kills a managed client.
+
+PACKAGE
+- RELEASE_MANIFEST_V25_36.json is the current release manifest authority.
+- Expected file count excluding current manifest: 154.
+- ZIP integrity and post-zip manifest verification are performed after manifest generation.

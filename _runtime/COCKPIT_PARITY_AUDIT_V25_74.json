@@ -1,0 +1,569 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.74",
+    "generated_utc": "2026-08-23T07:27:25.561648+00:00",
+    "cockpit_baseline": {
+      "label": "Cockpit current release v1.3.27",
+      "evidence_note": "Public GitHub releases v1.3.25, v1.3.26 and latest v1.3.27 confirmed on 2026-08-23; Codex-only parity scope preserved.",
+      "production_maturity": "PUBLIC_RELEASED"
+    },
+    "hms": {
+      "verdict": "FEATURE_PARITY_CANDIDATE",
+      "feature_evidence_score_pct": 93.0,
+      "production_evidence_score_pct": 55.2,
+      "windows_runtime_certified": false,
+      "gaps": [],
+      "runtime_pending": [
+        "multi_account",
+        "multi_instance",
+        "quota_plan",
+        "images",
+        "profile_takeover"
+      ]
+    },
+    "capabilities": [
+      {
+        "id": "multi_account",
+        "label": "Codex multi-account management",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS account pool exists; real Windows account lifecycle still pending.",
+        "benchmark": true
+      },
+      {
+        "id": "multi_instance",
+        "label": "Codex isolated multi-instance",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS has isolated instance/fleet/session layers; target-PC runtime certification pending.",
+        "benchmark": true
+      },
+      {
+        "id": "quota_plan",
+        "label": "Hourly/weekly quota + plan recognition",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS has quota history/metadata, but live fidelity across OAuth/PAT/Team remains runtime gap.",
+        "benchmark": true
+      },
+      {
+        "id": "named_keys",
+        "label": "Named local client API keys",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Digest-only key store; plaintext shown only at creation.",
+        "benchmark": true
+      },
+      {
+        "id": "per_key_model",
+        "label": "Per-key model allow/deny + prefix",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v24 adds model prefix exposure/rewriting plus existing allow/deny.",
+        "benchmark": true
+      },
+      {
+        "id": "routing_modes",
+        "label": "Auto/random/single/quota/plan/expiry/custom routing",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v24 closes current Cockpit routing-mode gap.",
+        "benchmark": true
+      },
+      {
+        "id": "priority_weight_backup",
+        "label": "Priority/weight/backup routing",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Can be overridden per client key.",
+        "benchmark": true
+      },
+      {
+        "id": "per_key_pool",
+        "label": "Per-key target/account pool",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS extension: each client key can have its own target subset.",
+        "benchmark": false
+      },
+      {
+        "id": "quota_reserve",
+        "label": "Fresh quota reserve fail-closed",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Requires real quota metadata feed for production.",
+        "benchmark": true
+      },
+      {
+        "id": "affinity_health",
+        "label": "Session affinity + cooldown/failover",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Affinity is client-key scoped in v24.",
+        "benchmark": true
+      },
+      {
+        "id": "http_surface",
+        "label": "Models/chat/responses/backend Codex generic HTTP surface",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS generic relay covers paths; exact real-Codex compatibility remains target-PC gate.",
+        "benchmark": true
+      },
+      {
+        "id": "websocket",
+        "label": "Responses WebSocket relay",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Synthetic handshake/relay/failover PASS.",
+        "benchmark": true
+      },
+      {
+        "id": "images",
+        "label": "Image endpoint compatibility",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "Generic relay exists, but no dedicated image-tool mapping/concurrency scheduler in HMS yet.",
+        "benchmark": true
+      },
+      {
+        "id": "cors",
+        "label": "Local CORS preflight",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Loopback-origin allowlist by default.",
+        "benchmark": true
+      },
+      {
+        "id": "usage_stats",
+        "label": "Daily/week/month/all usage by account/model/key",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Trace-derived analytics; token coverage depends on upstream usage fields.",
+        "benchmark": true
+      },
+      {
+        "id": "pricing",
+        "label": "Custom model pricing + estimated value",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "No hard-coded possibly stale prices; operator supplies pricing.",
+        "benchmark": true
+      },
+      {
+        "id": "diagnostics",
+        "label": "Request ID/account/retry/timing diagnostics",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS also captures TTFT/bytes/protocol telemetry.",
+        "benchmark": true
+      },
+      {
+        "id": "profile_takeover",
+        "label": "Backup/restore managed Codex profile",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS safety architecture exists but needs explicit Windows runtime proof.",
+        "benchmark": true
+      },
+      {
+        "id": "session_repair",
+        "label": "Session/history visibility repair",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS Session Doctor backs up session metadata and repairs known state_5.sqlite thread provider fields.",
+        "benchmark": true
+      },
+      {
+        "id": "timeout_retry",
+        "label": "Advanced timeout/retry/stream controls",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Some Cockpit presets/controls remain richer in UI.",
+        "benchmark": true
+      },
+      {
+        "id": "proxy_fail_closed",
+        "label": "Proxy fail-closed egress",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS Proxy Fleet is deeper than baseline proxy-url handling.",
+        "benchmark": true
+      },
+      {
+        "id": "egress_integrity",
+        "label": "Public-IP baseline/drift/quarantine",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "HMS-specific control-plane extension.",
+        "benchmark": false
+      },
+      {
+        "id": "ha_soak_policy",
+        "label": "HA + Soak + Policy Kernel",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.47 resumable soak harness synthetic PASS; real 6h/24h Windows soak still pending.",
+        "benchmark": false
+      },
+      {
+        "id": "runtime_evidence",
+        "label": "Windows source/runtime evidence gates",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "HMS-specific certification layer; real target-PC gate has not been executed.",
+        "benchmark": false
+      },
+      {
+        "id": "performance_scale",
+        "label": "Performance / scale + bounded backpressure",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.48 synthetic/local control-plane benchmark PASS; real Codex model TTFT and Windows scale evidence remain deferred.",
+        "benchmark": false
+      },
+      {
+        "id": "real_codex_certification",
+        "label": "Real Codex target-machine certification harness",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.49 harness/validator PASS; build host is non-Windows without live Codex, so real target-machine certification is explicitly deferred.",
+        "benchmark": false
+      },
+      {
+        "id": "live_quota_intelligence",
+        "label": "Last-good quota freshness + plan reserve fail-closed",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.50 synthetic gate PASS; real Free/Plus/Pro quota fidelity on Windows remains target-machine evidence and does not increase parity score.",
+        "benchmark": false
+      },
+      {
+        "id": "seamless_rotation_torture",
+        "label": "Seamless rotation torture regression gate",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.51 1000-cycle synthetic rotation torture is a regression/safety gate only; it does not increase production parity without target-machine evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "target_machine_certification",
+        "label": "Target-machine production certification aggregator",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.53 aggregator/negative validator PASS; production score remains unchanged until its real Windows/Codex/quota/failover/LAN/6h/24h evidence itself returns PASS.",
+        "benchmark": false
+      },
+      {
+        "id": "ux_cockpit_parity_plus",
+        "label": "Unified operator UX + route/quota decision surface",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.52 native + loopback read-only Unified UX exposes route eligibility, hold/stale reasons, active route and local filters while preserving the frozen public backend contract.",
+        "benchmark": false
+      },
+      {
+        "id": "production_simulation_lab",
+        "label": "Deterministic production digital twin + fault injection",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.54 multi-seed/replayable control-plane simulation exercises quota/429/crash/auth/backpressure/SMB/LAN/clock-skew but never increases production evidence score.",
+        "benchmark": false
+      },
+      {
+        "id": "autonomous_router_digital_twin",
+        "label": "Autonomous router large-pool digital twin + bounded model checking",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.55 32-account/12-instance/24-project twin + 3,072-state bounded checker + minimized counterexample; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "protocol_chaos_fuzzer",
+        "label": "Protocol chaos / API compatibility fuzzer",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.56 deterministic SSE/WebSocket/JSON/chunked/retry/EOF fuzzing plus gateway integrity hardening; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "recovery_planner_decision_proof",
+        "label": "Cause-aware recovery planner + self-healing decision proof",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.57 cause-aware bounded recovery, rollback proof, loop breaker and 9,216-state safety checker; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "compound_fault_recovery_convergence",
+        "label": "Compound-fault recovery DAG + global convergence proof",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.58 compound-fault DAG/global budget with 72,960-state convergence checker to HEALTHY/DEGRADED_SAFE/OPERATOR_REQUIRED; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "official_auth_v1324",
+        "label": "Official Codex auth compatibility / account switching",
+        "cockpit_reference": "YES",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.59 established Cockpit v1.3.24 auth semantics; v25.70 re-baselines compatibility to Cockpit v1.3.27 while retaining file/direct-keyring/auto semantics, pre-switch snapshot, serialized field-preserving rewrite, stale-credential cleanup, version-derived Codex identity and controlled restart; encrypted Secrets backend is detected/fail-closed until an official Codex helper is available.",
+        "benchmark": false
+      },
+      {
+        "id": "recovery_transaction_journal",
+        "label": "Crash-consistent recovery transaction journal",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.60 durable hash-chain PREPARE/COMMIT/VERIFY/DONE-or-ROLLBACK journal prevents duplicate auth rewrite/restart/lease reelection after crash; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "usage_token_center",
+        "label": "Native Usage & Token Center parity+",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.61 read-only plan/quota/reset/package-expiry/OAuth-lifecycle interpretation, source/freshness and scenario-only after-reset preview; synthetic/control-plane evidence only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "recovery_transaction_replay",
+        "label": "Multi-subsystem recovery transaction replay",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.62 idempotent replay/verification and reverse-DAG compensation across auth/restart/router/LAN effects with operator-required fail-closed convergence; synthetic-only and does not increase production evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "startup_recovery_reconciler",
+        "label": "Startup recovery reconciler",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.63 cold-start journal discovery, metadata/digest-only external observation and mutation preflight gating; target Windows/Codex live observation remains required.",
+        "benchmark": false
+      },
+      {
+        "id": "target_crash_injection_harness",
+        "label": "Target-machine crash injection harness foundation",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.63 executes real subprocess kill/cold-start recovery in a lab state model, but real Codex effects and Windows target-machine evidence are explicitly not claimed.",
+        "benchmark": false
+      },
+      {
+        "id": "windows_recovery_observer_bridge",
+        "label": "Live Windows recovery observer bridge foundation",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.64 observer/evidence contracts are validated without claiming a live Windows target run; real target evidence remains required.",
+        "benchmark": false
+      },
+      {
+        "id": "real_effect_crash_certification",
+        "label": "Controlled real-effect crash certification contract",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.64/v25.65 real-effect mode remains DISARMED by default and cannot directly promote production score.",
+        "benchmark": false
+      },
+      {
+        "id": "target_recovery_evidence_bundle",
+        "label": "Target recovery evidence bundle",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "Target evidence bundle is an attestation candidate only; bundle presence alone never certifies production.",
+        "benchmark": false
+      },
+      {
+        "id": "windows_target_adapter_pack",
+        "label": "Windows Target Adapter Pack",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.65 structured-argv adapters expose digest/idempotency witnesses only; synthetic/control-plane validation does not increase production score.",
+        "benchmark": false
+      },
+      {
+        "id": "attested_evidence_promotion_gate",
+        "label": "Attested Evidence Promotion Gate",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.65 centralizes promotion eligibility behind nonce/run/package/signer/freshness/hash-chain and complete 4x3 crash-matrix validation. No target attestation is bundled in this release.",
+        "benchmark": false
+      },
+      {
+        "id": "recovery_operator_timeline",
+        "label": "Vietnamese Recovery Operator Timeline",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.65 metadata-only Vietnamese timeline improves operator evidence visibility and is non-benchmark control-plane evidence.",
+        "benchmark": false
+      },
+      {
+        "id": "windows_attestation_signer",
+        "label": "Windows-local cryptographic attestation signer",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.66 validates DPAPI/certificate signing contracts and cryptographic verification using safe fixtures; no Windows target signing was executed in this build.",
+        "benchmark": false
+      },
+      {
+        "id": "controlled_target_certification_runbook",
+        "label": "One-shot controlled target certification runbook",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.66 locks dry-run/preflight/operator arming/auto-disarm workflow; target mode remains disarmed and requires real Windows integration.",
+        "benchmark": false
+      },
+      {
+        "id": "attestation_exchange",
+        "label": "Privacy-safe attestation export/import and Vietnamese promotion explanation",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.66 verifies bundle integrity/privacy and explains promotion decisions without making automatic production certification claims.",
+        "benchmark": false
+      },
+      {
+        "id": "attestation_trust_store",
+        "label": "Windows attestation trust store / certificate lifecycle",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.67 certificate pinning/rotation/revocation plus DPAPI lifecycle metadata and deterministic trust snapshot; control-plane evidence only.",
+        "benchmark": false
+      },
+      {
+        "id": "offline_attestation_verifier",
+        "label": "Offline trust-snapshot attestation verifier",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.67 verifies package/signature/trust state without account credentials or network; synthetic certificate fixture does not raise production score.",
+        "benchmark": false
+      },
+      {
+        "id": "resumable_target_cert_campaign",
+        "label": "Resumable 4x3 target certification campaign",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.67 one-shot per-case campaign journal resumes via VERIFY_ONLY/ATTEST_ONLY/OPERATOR_REQUIRED and never silently repeats durable effects.",
+        "benchmark": false
+      },
+      {
+        "id": "target_campaign_executor",
+        "label": "Windows-only one-case target campaign executor",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.68 binds one explicitly armed case to frozen manifest/trust snapshot, Windows/PS5.1/Codex observer preflight and idempotency witness; synthetic proof never executes real effects.",
+        "benchmark": false
+      },
+      {
+        "id": "attested_promotion_review_console",
+        "label": "Attested 12-case promotion review console",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.68 reviews exactly 12 signed reports with freshness/revocation/mixed-version checks and Vietnamese human-review decision; no automatic production certification.",
+        "benchmark": false
+      },
+      {
+        "id": "target_certification_evidence_ingest",
+        "label": "Read-only Windows target certification evidence ingest",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.69 verifies cryptographic binding/replay/trust/package/campaign state and quarantines invalid imported reports without executing target effects or auto-repair.",
+        "benchmark": false
+      },
+      {
+        "id": "promotion_decision_ledger",
+        "label": "Append-only dual-review promotion decision ledger",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.69 hash-chained reviewer decisions require two distinct pseudonymous reviewers and superseding invalidation entries; promotion eligibility remains separate from production score mutation.",
+        "benchmark": false
+      },
+      {
+        "id": "cockpit_1327_parity_reset",
+        "label": "Cockpit Tools v1.3.27 Codex parity reset",
+        "cockpit_reference": "YES",
+        "hms_status": "IMPLEMENTED_PENDING_RUNTIME",
+        "notes": "v25.70 resets the competitive baseline from Cockpit v1.3.24 to v1.3.27 and audits the Codex-only changes from v1.3.25-v1.3.27 without weakening HMS transactional/fail-closed guarantees.",
+        "benchmark": false
+      },
+      {
+        "id": "cockpit_1327_source_integration",
+        "label": "Cockpit v1.3.27 source-level parity integration",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.70 integrates runtime foreign-port rebind, launch-time account occupancy, client/API split state, official-account-ref usage continuity, bounded credential backups, WebSocket preservation, composite conversation identity and live-only model context metadata. Windows runtime proof remains pending.",
+        "benchmark": false
+      },
+      {
+        "id": "cockpit_1327_windows_runtime_certification",
+        "label": "Cockpit v1.3.27 Windows runtime parity certification",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.71 defines seven target cases bound to external Windows/Codex signed evidence. Synthetic validation proves the gate contract only; windows_runtime_certified remains false until external evidence is imported.",
+        "benchmark": false
+      },
+      {
+        "id": "production_evidence_promotion_auditor",
+        "label": "Production evidence promotion proposal auditor",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.71 re-verifies runtime certificate, dual-review chain and current Cockpit baseline, then may propose human review only. It never mutates production score or auto-certifies.",
+        "benchmark": false
+      },
+      {
+        "id": "windows_target_evidence_capture_kit",
+        "label": "Portable Windows target evidence capture kit",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.72 packages seven one-case target capture flows with exact ZIP/manifest/Codex binding, privacy-safe signed reports and DISARMED default. Real Windows execution remains external.",
+        "benchmark": false
+      },
+      {
+        "id": "cockpit_baseline_watch_gate",
+        "label": "Cockpit public baseline watch and promotion freeze gate",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.72 freezes target campaign/promotion whenever public Cockpit is newer than 1.3.27 and requires a Codex-only delta audit before continuing.",
+        "benchmark": false
+      },
+      {
+        "id": "windows_target_evidence_import_review",
+        "label": "Seven-case Windows target evidence import review",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.73 verifies the seven v25.72 runtime-parity reports with exact package/manifest/trust/signature/replay/freshness binding and dual-review ledger semantics; synthetic fixtures never certify Windows runtime.",
+        "benchmark": false
+      },
+      {
+        "id": "baseline_delta_watch_automation",
+        "label": "Two-checkpoint Cockpit baseline delta watch automation",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.73 rechecks Cockpit before import and before promotion review; any newer public baseline freezes promotion and queues Codex-only delta audit without auto-merge.",
+        "benchmark": false
+      },
+      {
+        "id": "external_windows_evidence_review_packet",
+        "label": "Immutable external Windows evidence review packet",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.74 derives a privacy-safe hash-chained review packet from seven target report digests and pseudonymous append-only review metadata; raw evidence is never normalized in place or embedded.",
+        "benchmark": false
+      },
+      {
+        "id": "baseline_drift_reconciliation",
+        "label": "Baseline drift eligibility invalidation and capability reuse reconciliation",
+        "cockpit_reference": "NOT_CORE_REFERENCE",
+        "hms_status": "SYNTHETIC_PASS",
+        "notes": "v25.74 freezes review packets on newer Cockpit baselines, generates superseding INVALIDATE ledger entries, and allows evidence reuse only after Codex-only capability binding plus a new dual-review epoch; no silent grandfathering.",
+        "benchmark": false
+      }
+    ],
+    "interpretation": {
+      "feature_score": "Evidence-weighted implementation/parity score, not a benchmark of real throughput.",
+      "production_score": "Penalizes synthetic/static-only evidence. It is intentionally much lower until Windows runtime gates pass.",
+      "no_superset_claim": "HMS must not be called a production superset until the v25.49 live target-machine Real Codex gate, v25.50 real Free/Plus/Pro quota fidelity gate, v25.51 target-machine rotation torture, v25.52 UX target-machine review and the v25.53 seven-stage real target-machine certificate pass. v25.54 simulation, v25.55 autonomous-router model checking, v25.56 protocol chaos fuzzing, v25.57 recovery decision proof, v25.58 compound-fault convergence proof, v25.59 official-auth compatibility fixtures, v25.60 crash-consistent recovery journal proof, v25.61 Usage & Token Center proof, v25.62 transaction replay proof, and v25.63 startup-recovery/crash-lab proof, v25.64 Windows-observer/real-effect contract proof, and v25.65 adapter/attestation/promotion/timeline proof plus v25.66 cryptographic signer/runbook/exchange proof and v25.67 trust-store/offline-verifier/resumable-campaign proof plus v25.68 one-case executor/promotion-review proof and v25.69 evidence-ingest/dual-review-ledger proof and v25.70 Cockpit-v1.3.27 parity reset/source-integration proof plus v25.71 Windows-runtime-certification/promotion-auditor contract proof and v25.72 portable target-capture/baseline-watch proof plus v25.73 seven-case import-review/two-checkpoint baseline-delta-watch proof and v25.74 immutable-review-packet/baseline-drift-reconciliation proof are explicitly non-production evidence until real Windows/Codex evidence is imported, cryptographically validated, dual-reviewed and separately audited for production-score promotion."
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "mode": "synthetic",
+  "data": {
+    "version": "25.40",
+    "checks": [
+      {
+        "name": "clean_snapshot_passes",
+        "ok": true
+      },
+      {
+        "name": "global_secret_migration_planned",
+        "ok": true
+      },
+      {
+        "name": "instance_secret_migration_planned",
+        "ok": true
+      },
+      {
+        "name": "reparse_is_fail_closed",
+        "ok": true
+      },
+      {
+        "name": "seal_mismatch_never_auto_resealed",
+        "ok": true
+      },
+      {
+        "name": "acl_hardening_planned",
+        "ok": true
+      },
+      {
+        "name": "runtime_materialization_acl_hardening_planned",
+        "ok": true
+      },
+      {
+        "name": "strict_redaction_planned",
+        "ok": true
+      },
+      {
+        "name": "secret_values_rejected_from_snapshot",
+        "ok": true
+      }
+    ],
+    "pass": 9,
+    "total": 9,
+    "verdict": "PASS"
+  }
+}

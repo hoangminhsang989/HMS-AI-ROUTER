@@ -1,0 +1,334 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.56",
+  "suite": "PROTOCOL_CHAOS_API_COMPATIBILITY_FUZZER_VALIDATOR",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 64,
+    "fail": 0,
+    "total": 64
+  },
+  "tests": [
+    {
+      "name": "chaos.fuzz.structural_all_cases",
+      "status": "PASS",
+      "detail": "cases=300; failures=0"
+    },
+    {
+      "name": "chaos.fuzz.sse_coverage",
+      "status": "PASS",
+      "detail": "{'sse': 100, 'ws': 100, 'json': 100}"
+    },
+    {
+      "name": "chaos.fuzz.websocket_coverage",
+      "status": "PASS",
+      "detail": "{'sse': 100, 'ws': 100, 'json': 100}"
+    },
+    {
+      "name": "chaos.fuzz.json_coverage",
+      "status": "PASS",
+      "detail": "{'sse': 100, 'ws': 100, 'json': 100}"
+    },
+    {
+      "name": "chaos.sse.split_partial_frames_preserved",
+      "status": "PASS",
+      "detail": "status=200; bytes=244"
+    },
+    {
+      "name": "chaos.sse.complete_integrity",
+      "status": "PASS",
+      "detail": "COMPLETE"
+    },
+    {
+      "name": "chaos.sse.usage_capture_survives_splits",
+      "status": "PASS",
+      "detail": "usage=2/2"
+    },
+    {
+      "name": "chaos.sse.truncated_partial_still_passthrough",
+      "status": "PASS",
+      "detail": "status=200; bytes=63"
+    },
+    {
+      "name": "chaos.sse.truncated_detected",
+      "status": "PASS",
+      "detail": "TRUNCATED_EOF"
+    },
+    {
+      "name": "chaos.sse.truncated_health_penalty",
+      "status": "PASS",
+      "detail": "last=599"
+    },
+    {
+      "name": "chaos.sse.no_midstream_replay",
+      "status": "PASS",
+      "detail": "attempts=1"
+    },
+    {
+      "name": "chaos.sse.done_terminal_accepted",
+      "status": "PASS",
+      "detail": "COMPLETE"
+    },
+    {
+      "name": "chaos.sse.duplicate_event_preserved",
+      "status": "PASS",
+      "detail": "dup_count=2"
+    },
+    {
+      "name": "chaos.sse.malformed_data_passthrough",
+      "status": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "name": "chaos.sse.malformed_usage_no_crash",
+      "status": "PASS",
+      "detail": "NO_DATA"
+    },
+    {
+      "name": "chaos.json.malformed_upstream_error_passthrough",
+      "status": "PASS",
+      "detail": "status=400; bytes=20"
+    },
+    {
+      "name": "chaos.http.early_eof_contained",
+      "status": "PASS",
+      "detail": "client_exception=True; trace=True"
+    },
+    {
+      "name": "chaos.http.early_eof_health_penalty",
+      "status": "PASS",
+      "detail": "last=599"
+    },
+    {
+      "name": "chaos.http.early_eof_error_metadata_only",
+      "status": "PASS",
+      "detail": "IncompleteBody"
+    },
+    {
+      "name": "chaos.retry.sequence_503_429_200",
+      "status": "PASS",
+      "detail": "status=200; attempts=3"
+    },
+    {
+      "name": "chaos.retry.attempt_budget_exact",
+      "status": "PASS",
+      "detail": "[503, 429, 200]"
+    },
+    {
+      "name": "chaos.retry.budget_never_exceeded",
+      "status": "PASS",
+      "detail": "status=429; attempts=2"
+    },
+    {
+      "name": "chaos.retry.post_without_idempotency_not_replayed",
+      "status": "PASS",
+      "detail": "status=503; attempts=1"
+    },
+    {
+      "name": "chaos.websocket.malformed_101_failover.missing_accept",
+      "status": "PASS",
+      "detail": "head=b'HTTP/1.1 101 Switching Protocols'"
+    },
+    {
+      "name": "chaos.websocket.fragment_tunnel.missing_accept",
+      "status": "PASS",
+      "detail": "frames=True/True"
+    },
+    {
+      "name": "chaos.websocket.malformed_attempt_metadata.missing_accept",
+      "status": "PASS",
+      "detail": "['MALFORMED_UPGRADE', 'UPGRADE']"
+    },
+    {
+      "name": "chaos.websocket.malformed_101_failover.wrong_accept",
+      "status": "PASS",
+      "detail": "head=b'HTTP/1.1 101 Switching Protocols'"
+    },
+    {
+      "name": "chaos.websocket.fragment_tunnel.wrong_accept",
+      "status": "PASS",
+      "detail": "frames=True/True"
+    },
+    {
+      "name": "chaos.websocket.malformed_attempt_metadata.wrong_accept",
+      "status": "PASS",
+      "detail": "['MALFORMED_UPGRADE', 'UPGRADE']"
+    },
+    {
+      "name": "chaos.websocket.malformed_101_failover.missing_upgrade",
+      "status": "PASS",
+      "detail": "head=b'HTTP/1.1 101 Switching Protocols'"
+    },
+    {
+      "name": "chaos.websocket.fragment_tunnel.missing_upgrade",
+      "status": "PASS",
+      "detail": "frames=True/True"
+    },
+    {
+      "name": "chaos.websocket.malformed_attempt_metadata.missing_upgrade",
+      "status": "PASS",
+      "detail": "['MALFORMED_UPGRADE', 'UPGRADE']"
+    },
+    {
+      "name": "chaos.websocket.malformed_101_failover.partial_head",
+      "status": "PASS",
+      "detail": "head=b'HTTP/1.1 101 Switching Protocols'"
+    },
+    {
+      "name": "chaos.websocket.fragment_tunnel.partial_head",
+      "status": "PASS",
+      "detail": "frames=True/True"
+    },
+    {
+      "name": "chaos.websocket.malformed_attempt_metadata.partial_head",
+      "status": "PASS",
+      "detail": "['MALFORMED_UPGRADE', 'UPGRADE']"
+    },
+    {
+      "name": "chaos.chunked.invalid_hex_400",
+      "status": "PASS",
+      "detail": "bytes=371"
+    },
+    {
+      "name": "chaos.chunked.truncated_400",
+      "status": "PASS",
+      "detail": "bytes=362"
+    },
+    {
+      "name": "chaos.chunked.bad_terminator_400",
+      "status": "PASS",
+      "detail": "bytes=389"
+    },
+    {
+      "name": "chaos.chunked.over_limit_413",
+      "status": "PASS",
+      "detail": "bytes=368"
+    },
+    {
+      "name": "chaos.privacy.no_secret_markers_in_trace",
+      "status": "PASS",
+      "detail": "trace_bytes=13396"
+    },
+    {
+      "name": "chaos.privacy.no_authorization_header_in_trace",
+      "status": "PASS",
+      "detail": "trace_bytes=13396"
+    },
+    {
+      "name": "chaos.privacy.request_body_logged_false",
+      "status": "PASS",
+      "detail": "all traces metadata-only"
+    },
+    {
+      "name": "fuzz_cases_300",
+      "status": "PASS",
+      "detail": "300"
+    },
+    {
+      "name": "seed_locked_2556",
+      "status": "PASS",
+      "detail": "2556"
+    },
+    {
+      "name": "child_verdict_pass",
+      "status": "PASS",
+      "detail": "PASS_PROTOCOL_CHAOS_API_COMPATIBILITY_FUZZER_V25_56"
+    },
+    {
+      "name": "no_real_codex",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_quota",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_real_auth",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_prompt_persist",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "production_never_claimed",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "partial_stream_replay_forbidden",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "malformed_ws_failover_boundary",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "gateway_sse_integrity_probe",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "gateway_body_length_integrity",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "gateway_ws_101_validation",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "client_abort_not_upstream_failure",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "fuzzer_retry_budget",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "fuzzer_chunked_mutations",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "regression_suite_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "runtime_contract_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "native_gui_surface",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "powershell_surface",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "main_version_at_least_25_56",
+      "status": "PASS",
+      "detail": "25.56"
+    },
+    {
+      "name": "fuzzer_cannot_mint_target_cert",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_PROTOCOL_CHAOS_SYNTHETIC_ONLY"
+}

@@ -1,0 +1,35 @@
+HMS AI Cockpit v25.27 — ADAPTIVE ROUTER + SIGNED UPDATE CHANNEL
+
+ADDED
+- HMS_Codex_AdaptiveRouterPolicy.py
+- Adaptive Router OBSERVE / GUARDED_AUTO
+- hysteresis: min samples, score delta, hold, cooldown, quota floor, emergency override
+- routing hint snapshot/readback/rollback
+- Adaptive Router controls in Usage + Advanced Settings
+- HMS_UpdateChannel.py
+- pinned RSA update public key
+- HTTPS feed validation
+- RSA-PKCS1-v1_5-SHA256 feed signature verification
+- SHA-256/size verification
+- safe ZIP staging + manifest verification
+- update CHECK/STAGE/KÍCH HOẠT GUI controls
+- optional background CHECK and Auto Stage; never Auto Activate
+
+CHANGED
+- Usage Ledger adaptive result is now a historical signal feeding v25.27 policy.
+- Release Manager status advertises signed staging support.
+- Failed post-copy release verification is preserved/quarantined instead of silently deleting the copy.
+- Native GUI/runtime version = 25.27.
+
+SAFETY
+- Adaptive Router default mode OBSERVE.
+- GUARDED_AUTO must be explicitly saved before apply.
+- OAuth tokens are not changed by adaptive apply/rollback.
+- Existing session-affinity configuration is not changed.
+- Update feed production accepts HTTPS only.
+- Invalid signature/SHA/manifest fails closed.
+- Update activation always remains a separate operator-confirmed action.
+- No automatic deletion of old releases.
+
+TEST POLICY
+- Real Windows Codex/Antigravity runtime remains DEFERRED_BY_OPERATOR.

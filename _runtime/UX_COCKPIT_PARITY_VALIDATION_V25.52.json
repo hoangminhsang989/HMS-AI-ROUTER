@@ -1,0 +1,325 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.52",
+  "suite": "UX_COCKPIT_PARITY_PLUS_VALIDATION",
+  "generated_utc": "2026-08-22T11:24:05.924995+00:00",
+  "verdict": "PASS_UX_COCKPIT_PARITY_PLUS_V25_52",
+  "summary": {
+    "pass": 62,
+    "fail": 0,
+    "total": 62
+  },
+  "checks": [
+    {
+      "name": "powershell_version_at_least_25_52",
+      "ok": true,
+      "detail": "(25, 61)"
+    },
+    {
+      "name": "native_gui_version_at_least_25_52",
+      "ok": true,
+      "detail": "(25, 61)"
+    },
+    {
+      "name": "public_backend_contract_exact",
+      "ok": true,
+      "detail": "expected=90 actual=90"
+    },
+    {
+      "name": "public_backend_action_count_90",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "ux_no_new_public_mutation_action",
+      "ok": true,
+      "detail": "['get_lan_pool', 'pair_lan_pool', 'heartbeat_lan_pool', 'acquire_lan_project', 'release_lan_project']"
+    },
+    {
+      "name": "native.operator_ux_v25_52_live_quota_v25_50",
+      "ok": true,
+      "detail": "Operator UX v25.52 · Live Quota v25.50"
+    },
+    {
+      "name": "native._route_eligible_route_ok_",
+      "ok": true,
+      "detail": "(\"route_eligible\",\"ROUTE OK\")"
+    },
+    {
+      "name": "native._hold_hold_",
+      "ok": true,
+      "detail": "(\"hold\",\"HOLD\")"
+    },
+    {
+      "name": "native._stale_stale_",
+      "ok": true,
+      "detail": "(\"stale\",\"STALE\")"
+    },
+    {
+      "name": "native._favorite_favorite_",
+      "ok": true,
+      "detail": "(\"favorite\",\"FAVORITE\")"
+    },
+    {
+      "name": "native.self_account_filter_var_tk_stringvar_value_t_t_c_",
+      "ok": true,
+      "detail": "self.account_filter_var=tk.StringVar(value=\"TẤT CẢ\")"
+    },
+    {
+      "name": "native.values_t_t_c_route_ok_hold_stale_favorite_",
+      "ok": true,
+      "detail": "values=[\"TẤT CẢ\",\"ROUTE OK\",\"HOLD\",\"STALE\",\"FAVORITE\"]"
+    },
+    {
+      "name": "native.active_route_active_",
+      "ok": true,
+      "detail": "ACTIVE ROUTE {active}"
+    },
+    {
+      "name": "native.hold_new_session",
+      "ok": true,
+      "detail": "HOLD NEW SESSION"
+    },
+    {
+      "name": "native.why_hold_",
+      "ok": true,
+      "detail": "WHY HOLD:"
+    },
+    {
+      "name": "native.def_filtered_account_items_self_",
+      "ok": true,
+      "detail": "def _filtered_account_items(self):"
+    },
+    {
+      "name": "native.operator_pulse_route_ok",
+      "ok": true,
+      "detail": "Operator Pulse · ROUTE OK"
+    },
+    {
+      "name": "snapshot.route_eligible_int_routeeligible",
+      "ok": true,
+      "detail": "route_eligible=[int]$routeEligible"
+    },
+    {
+      "name": "snapshot.hold_int_hold",
+      "ok": true,
+      "detail": "hold=[int]$hold"
+    },
+    {
+      "name": "snapshot.stale_int_stale",
+      "ok": true,
+      "detail": "stale=[int]$stale"
+    },
+    {
+      "name": "snapshot.aging_int_aging",
+      "ok": true,
+      "detail": "aging=[int]$aging"
+    },
+    {
+      "name": "snapshot.favorite_int_favorite",
+      "ok": true,
+      "detail": "favorite=[int]$favorite"
+    },
+    {
+      "name": "snapshot.active_route_eligible_",
+      "ok": true,
+      "detail": "active_route_eligible="
+    },
+    {
+      "name": "snapshot.freshness_string_livequota_freshnessstate",
+      "ok": true,
+      "detail": "Freshness=[string]$liveQuota.freshnessState"
+    },
+    {
+      "name": "snapshot.reservepct_double_livequota_reservepct",
+      "ok": true,
+      "detail": "ReservePct=[double]$liveQuota.reservePct"
+    },
+    {
+      "name": "snapshot.usablepct_livequota_usableremainingpct",
+      "ok": true,
+      "detail": "UsablePct=$liveQuota.usableRemainingPct"
+    },
+    {
+      "name": "snapshot.routeeligible_bool_livequota_routingeligible",
+      "ok": true,
+      "detail": "RouteEligible=[bool]$liveQuota.routingEligible"
+    },
+    {
+      "name": "snapshot.holdreasons_livequota_reasoncodes_",
+      "ok": true,
+      "detail": "HoldReasons=@($liveQuota.reasonCodes)"
+    },
+    {
+      "name": "snapshot.quota_routing_quotaroute",
+      "ok": true,
+      "detail": "quota_routing=$quotaRoute"
+    },
+    {
+      "name": "snapshot.operator_attention_operatorattention_toarray_",
+      "ok": true,
+      "detail": "operator_attention=@($operatorAttention.ToArray())"
+    },
+    {
+      "name": "snapshot.no_route_eligible_account",
+      "ok": true,
+      "detail": "NO_ROUTE_ELIGIBLE_ACCOUNT"
+    },
+    {
+      "name": "snapshot.active_route_hold",
+      "ok": true,
+      "detail": "ACTIVE_ROUTE_HOLD"
+    },
+    {
+      "name": "web.unified_ux_v25_52",
+      "ok": true,
+      "detail": "Unified UX v25.52"
+    },
+    {
+      "name": "web.route_eligible",
+      "ok": true,
+      "detail": "Route eligible"
+    },
+    {
+      "name": "web.hold",
+      "ok": true,
+      "detail": "Hold"
+    },
+    {
+      "name": "web.stale_quota",
+      "ok": true,
+      "detail": "Stale quota"
+    },
+    {
+      "name": "web.data_filter_route_ok_",
+      "ok": true,
+      "detail": "data-filter=\"ROUTE_OK\""
+    },
+    {
+      "name": "web.data_filter_hold_",
+      "ok": true,
+      "detail": "data-filter=\"HOLD\""
+    },
+    {
+      "name": "web.data_filter_stale_",
+      "ok": true,
+      "detail": "data-filter=\"STALE\""
+    },
+    {
+      "name": "web.data_filter_favorite_",
+      "ok": true,
+      "detail": "data-filter=\"FAVORITE\""
+    },
+    {
+      "name": "web.why_hold_",
+      "ok": true,
+      "detail": "WHY HOLD:"
+    },
+    {
+      "name": "web.reserve",
+      "ok": true,
+      "detail": "Reserve"
+    },
+    {
+      "name": "web.usable",
+      "ok": true,
+      "detail": "Usable"
+    },
+    {
+      "name": "web.active_route",
+      "ok": true,
+      "detail": "ACTIVE ROUTE"
+    },
+    {
+      "name": "web.operator_attention",
+      "ok": true,
+      "detail": "operator_attention"
+    },
+    {
+      "name": "web.c_n_ch_",
+      "ok": true,
+      "detail": "CẦN CHÚ Ý"
+    },
+    {
+      "name": "web.account_filter",
+      "ok": true,
+      "detail": "ACCOUNT_FILTER"
+    },
+    {
+      "name": "web.renderaccountgrid",
+      "ok": true,
+      "detail": "renderAccountGrid"
+    },
+    {
+      "name": "web_bind_loopback_only",
+      "ok": true,
+      "detail": "read-only web surface remains local-only"
+    },
+    {
+      "name": "web_post_read_only_405",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "web_security_headers",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "web_no_secret_fields",
+      "ok": true,
+      "detail": "HTML/JS must not ask for OAuth secrets"
+    },
+    {
+      "name": "rotation_engine_stays_25_51",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "rotation_validator_forward_version_compatible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "adaptive_real_active_invariant",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gateway_affinity_invariant",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "closed_loop_25_51_invariant",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime_html_v25_52_surface",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime_snapshot_roundtrip",
+      "ok": true,
+      "detail": "{'eligible': 1, 'hold': 1, 'fresh': 1, 'aging': 0, 'stale': 1, 'unknown': 0}"
+    },
+    {
+      "name": "runtime_health_read_only",
+      "ok": true,
+      "detail": "{'ok': True, 'read_only': True, 'time': 1787397845.4229393}"
+    },
+    {
+      "name": "runtime_post_rejected_405",
+      "ok": true,
+      "detail": "405"
+    },
+    {
+      "name": "runtime_post_rejection_message",
+      "ok": true,
+      "detail": "{\"error\":\"read-only surface; use native HMS console for operator actions\"}"
+    }
+  ],
+  "claim_boundary": "UX/control-plane parity gate only. It does not increase real Windows/Codex/quota/LAN production evidence."
+}

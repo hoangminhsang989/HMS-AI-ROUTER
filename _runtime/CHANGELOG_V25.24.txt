@@ -1,0 +1,23 @@
+﻿v25.24 LIVE AUTOMATION & ROUTE VISIBILITY
+
+ADDED
+- Native Tk GUI background maintenance tick (15s scheduler).
+- Core background lanes: Router Watchdog, Operations attribution, HA, optional auto quota, Policy Kernel, health certificate.
+- Live Route card on Overview.
+- Recent route account highlighting on Overview and Account Center.
+- Structured route/failover signals in Native Logs page.
+- CodexOpsEnabled and CodexHaEnabled switches in Advanced settings.
+- OperationsAnalyzer scanned_utc timestamp.
+
+FIXED
+- CodexAutoQuotaRefresh previously existed as a setting in Native GUI but had no Native GUI scheduler. v25.24 executes it when enabled.
+- Legacy PowerShell WinForms timers were not alive when users launched the new Tk GUI. Core automation is now explicitly driven by the Native GUI backend maintenance tick.
+
+COMPATIBILITY
+- No account/auth deletion.
+- Existing settings-v2523_1.json and state-v2523_1.json are preserved/reused.
+- v25.23.1 package remains rollback fallback.
+
+TEST POLICY FOR THIS REVISION
+- Real runtime tests deferred by operator request.
+- Static parse/compile checks may be run, but no runtime PASS claim is made from those checks.

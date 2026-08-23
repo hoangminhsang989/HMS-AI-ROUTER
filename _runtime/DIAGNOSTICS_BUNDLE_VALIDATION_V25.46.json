@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "path": "/tmp/tmp.DU8372Qd70/out/HMS_DIAGNOSTICS_20260821T164324Z.zip",
+  "sha256": "f38e4f83c7ec384f32434b9fbe588a6e6485605d0e9bd05cceefae94766faaf9",
+  "file_count": 23,
+  "privacy": {
+    "contains_raw_oauth": false,
+    "contains_request_body": false,
+    "contains_api_keys": false,
+    "contains_cookies": false,
+    "redaction_applied": true
+  }
+}

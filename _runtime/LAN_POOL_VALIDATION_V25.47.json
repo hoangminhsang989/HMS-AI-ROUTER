@@ -1,0 +1,30 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "tranche": "LAN_POOL_RELIABILITY_REGRESSION",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "total": 15
+  },
+  "checks": {
+    "same_git_origin_same_cross_pc_fingerprint": true,
+    "first_node_acquires_lease": true,
+    "second_node_blocked_while_lease_active": true,
+    "non_owner_cannot_release": true,
+    "owner_can_release": true,
+    "other_node_can_acquire_after_release": true,
+    "epoch_nonce_present": true,
+    "signed_node_registry": true,
+    "failover_candidate_visible": true,
+    "tampered_heartbeat_rejected": true,
+    "expired_lease_takeover_allowed": true,
+    "shared_payload_has_no_secret_fields": true,
+    "raw_credentials_not_shared_contract": true,
+    "pairing_key_not_written_to_shared_registry": true,
+    "local_path_fallback_marked_non_cross_pc": true
+  },
+  "runtime_windows_multi_pc": "DEFERRED_BY_OPERATOR",
+  "soak": "NOT_YET"
+}

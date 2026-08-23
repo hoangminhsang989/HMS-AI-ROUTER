@@ -1,0 +1,44 @@
+HMS AI Cockpit v25.47 — RELIABILITY / SOAK HARNESS
+
+Scope: Codex-only. Baseline: v25.46 Regression & Compatibility Freeze.
+
+ADDED
+- Resumable Reliability / Soak Harness with exact SMOKE, 6H and 24H profiles.
+- Active-process-time-only accounting. Downtime between sessions is never credited to soak duration.
+- Immutable standard duration for named 6H/24H profiles; they cannot be shortened with --duration-sec.
+- Application-layer Router and instance health probes: GET /hms/health must return HTTP 200 and JSON ok=true.
+- 6H/24H completion gate requires Router + at least two distinct Codex instance targets + shared LAN path.
+- Atomic shared-filesystem write/read/delete roundtrip with bounded retry and explicit recovery exhaustion evidence.
+- Isolated .hms_soak/<run-id> namespace for signed LAN heartbeat/lease exercises; production LAN registry is untouched.
+- Synthetic lease ownership collision, lease churn, node disconnect/rejoin, transient shared-I/O recovery and duplicate-run lock coverage.
+- Cooperative STOP -> checkpoint + PAUSED state; no force-kill. Resume preserves run identity/session history.
+- LAN Pool GUI controls: SMOKE / 6H / 24H / TIẾP TỤC / DỪNG with progress, cycles, sessions and recovery counters.
+- Unified Diagnostics reliability-soak surface, metadata-only.
+
+COMPATIBILITY / SAFETY
+- Frozen v25.46 public backend contract remains exact: 90 BackendAction values.
+- Stable provider names, default Router port 8317, wire_api=responses, settings/state names and LAN KDF salt preserved.
+- No Antigravity public BackendAction.
+- Soak evidence stores no raw OAuth/API key/cookie/prompt/request body/pairing code.
+- production_certification remains NOT_CLAIMED automatically.
+
+VALIDATION
+- Reliability Soak validator: 42/42 PASS.
+- Runtime Kit: 209/209 PASS.
+- Regression Freeze: 15/15 suites, 497/497 numeric assertions PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Codex Client Compatibility/Migration: 27/27 PASS.
+- LAN Pool: 15/15 PASS.
+- LAN Failure Matrix: 20/20 PASS.
+- Project Orchestrator: 9/9 PASS.
+- Unified Diagnostics soak surface: 5/5 PASS.
+- GUI headless startup smoke: PASS, 7 seconds alive, stderr 0 bytes.
+- Python compileall: PASS.
+- Non-synthetic single-node production-shaped smoke: PASS with 1 Router HTTP + 2 instance HTTP + shared filesystem; short custom duration only.
+
+NOT YET CERTIFIED
+- Real Windows PowerShell 5.1 + real Codex CLI/Desktop runtime: DEFERRED_BY_OPERATOR.
+- Real multi-PC SMB/NAS: DEFERRED_BY_OPERATOR.
+- Standard real 6-hour soak: NOT EXECUTED.
+- Standard real 24-hour soak: NOT EXECUTED.
+- Production/superset claim: NOT ALLOWED YET.

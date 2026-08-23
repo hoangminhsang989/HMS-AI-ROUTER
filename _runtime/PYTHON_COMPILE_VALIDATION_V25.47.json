@@ -1,0 +1,8 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "PYTHON_COMPILEALL",
+  "verdict": "PASS",
+  "root": "_runtime",
+  "note": "python -m compileall -q . completed with exit code 0"
+}

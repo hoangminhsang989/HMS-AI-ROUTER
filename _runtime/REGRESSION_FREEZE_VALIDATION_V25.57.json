@@ -1,0 +1,278 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.57",
+  "suite": "V25_28_TO_V25_57_REGRESSION_FREEZE",
+  "generated_utc": "2026-08-22T06:15:50.134313+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "suite_pass": 25,
+    "suite_fail": 0,
+    "suite_total": 25,
+    "numeric_assertions_pass": 1066,
+    "numeric_assertions_total": 1066
+  },
+  "execution": {
+    "mode": "INDEPENDENT_ISOLATED_SUITE_AGGREGATION",
+    "reason": "Build-host nested regression wrapper can retain validator child handles; each canonical suite was executed independently with its original thresholds. Release runner source is sequential in v25.57 to remove cross-suite port/file/load races.",
+    "thresholds_relaxed": false,
+    "suite_skipped": false
+  },
+  "suites": [
+    {
+      "suite": "compatibility_freeze",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "client_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 27,
+        "fail": 0,
+        "total": 27
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "lan_pool",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "lan_failure_matrix",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 20,
+        "fail": 0,
+        "total": 20
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "reliability_soak_harness",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 42,
+        "fail": 0,
+        "total": 42
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "performance_scale",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 35,
+        "fail": 0,
+        "total": 35
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "real_codex_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 65,
+        "fail": 0,
+        "total": 65
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "live_quota_intelligence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 52,
+        "fail": 0,
+        "total": 52
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "seamless_rotation_torture",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 63,
+        "fail": 0,
+        "total": 63
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "ux_cockpit_parity_plus",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 62,
+        "fail": 0,
+        "total": 62
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "target_machine_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 39,
+        "fail": 0,
+        "total": 39
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "production_simulation_lab",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 40,
+        "fail": 0,
+        "total": 40
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "autonomous_router_digital_twin",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 57,
+        "fail": 0,
+        "total": 57
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "protocol_chaos_fuzzer",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 64,
+        "fail": 0,
+        "total": 64
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "recovery_planner",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "runtime_kit",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 289,
+        "fail": 0,
+        "total": 289
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "smart_model_router",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 16,
+        "fail": 0,
+        "total": 16
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "api_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "api_superset",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "protocol",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      },
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "self_healing",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "security_hardening",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "project_orchestrator",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "powershell_static_lint",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "execution": "ISOLATED_PROCESS"
+    },
+    {
+      "suite": "powershell_coherence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "execution": "ISOLATED_PROCESS"
+    }
+  ],
+  "production_claim": "NOT_CLAIMED_RECOVERY_DECISION_PROOF_SYNTHETIC_ONLY"
+}

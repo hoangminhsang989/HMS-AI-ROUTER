@@ -1,0 +1,3 @@
+KHÔNG CÓ SCRIPT AUTO-RUN CASE.
+Dùng HMS_Codex_TargetCampaignExecutor.py hiện có để arm/execute đúng MỘT case.
+Sau attempt phải AUTO_DISARM. Không chạy case kế tiếp tự động.

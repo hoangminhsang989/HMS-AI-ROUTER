@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.28 — BUILD VALIDATION
+
+PRODUCT SCOPE
+- CODEX ONLY
+- Antigravity removed from native GUI, active backend action surface, and packaged bridge payload.
+
+IMPLEMENTED
+- Native GUI page: Codex Instances
+- Backend actions: get/create/start/stop/restart/focus instance
+- Dedicated Project + Account + CODEX_HOME + app-data + Router/auth/port per managed instance
+- binding-v2528.json with project/account/port binding; secret fields excluded
+- Unique project guard and dedicated-account guard
+- Credential snapshot refresh before start when fully stopped, SHA-256 verified, previous auth archived (not deleted)
+- HMS_ROUTER_API_KEY / HMS_CODEX_INSTANCE_ID / HMS_CODEX_PROJECT / HMS_CODEX_ACCOUNT inherited by managed client process
+- Router PID ownership guard and client PID ownership guard
+- Stop/restart refuses to kill foreign PID/process ownership mismatches
+- No delete-instance action in v25.28
+
+STATIC / BUILD VERIFICATION
+- Python compileall: PASS
+- HMS_GUI.pyw compile: PASS
+- GUI startup smoke under Xvfb: PASS (remained alive for 5s, no stderr)
+- PowerShell StaticLint: PASS; variables 173/173; settings missing 0; glue findings 0
+- PowerShell CoherenceAudit: PASS; missing variables/settings 0
+- Codex-only / isolation structural assertions: PASS 12/12
+
+RUNTIME EVIDENCE
+- Real Windows Codex multi-instance: DEFERRED_BY_OPERATOR
+- Real multi-account isolation: DEFERRED_BY_OPERATOR
+- Real Desktop classic --user-data-dir behavior: DEFERRED_BY_OPERATOR
+- Multi-hour soak: NOT YET
+
+SAFETY
+- No automatic deletion of releases or instances
+- v25.27 remains rollback baseline
+- API key is not returned by get_instances native GUI response
+- Foreign process ownership mismatch => fail-safe warning; HMS does not kill the foreign process

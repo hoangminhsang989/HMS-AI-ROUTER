@@ -1,0 +1,13 @@
+{
+  "version": "25.43",
+  "verdict": "PASS",
+  "checks": {
+    "team_store_included": true,
+    "team_history_included": true,
+    "api_key_redacted": true,
+    "bearer_redacted": true,
+    "build_validation_included": true,
+    "team_validation_included": true
+  },
+  "note": "Synthetic diagnostics bundle verified team metadata inclusion and redaction; temporary bundle path intentionally omitted from release evidence."
+}

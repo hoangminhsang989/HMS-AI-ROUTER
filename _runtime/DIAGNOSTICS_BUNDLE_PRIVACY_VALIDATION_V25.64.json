@@ -1,0 +1,136 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.64",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_WINDOWS_RECOVERY",
+  "generated_utc": "2026-08-22T14:53:17.655472+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 18,
+    "fail": 0,
+    "total": 18
+  },
+  "tests": [
+    {
+      "name": "allow_startup-recovery-latest-v2564.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_windows-recovery-observer-latest-v2564.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_real-effect-preflight-latest-v2564.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_real-effect-crash-cert-latest-v2564.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_target-recovery-evidence-latest-v2564.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "deny_auth_path",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bundle_command_pass",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "bundle_exists",
+      "status": "PASS",
+      "detail": "/tmp/hms-v2564-bundle-16__7i9h/out/HMS_DIAGNOSTICS_20260822T145317Z.zip"
+    },
+    {
+      "name": "observer_latest_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2564/real-effect-preflight-latest-v2564.json",
+        "data/startup-recovery-v2564/windows-recovery-observer-latest-v2564.json",
+        "data/startup-recovery-v2564/target-recovery-evidence-latest-v2564.json",
+        "runtime/WINDOWS_RECOVERY_OBSERVER_BRIDGE_VALIDATION_V25.64.json",
+        "runtime/REAL_EFFECT_CRASH_CERT_VALIDATION_V25.64.json",
+        "runtime/TARGET_RECOVERY_EVIDENCE_BUNDLE_VALIDATION_V25.64.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "real_preflight_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2564/real-effect-preflight-latest-v2564.json",
+        "data/startup-recovery-v2564/windows-recovery-observer-latest-v2564.json",
+        "data/startup-recovery-v2564/target-recovery-evidence-latest-v2564.json",
+        "runtime/WINDOWS_RECOVERY_OBSERVER_BRIDGE_VALIDATION_V25.64.json",
+        "runtime/REAL_EFFECT_CRASH_CERT_VALIDATION_V25.64.json",
+        "runtime/TARGET_RECOVERY_EVIDENCE_BUNDLE_VALIDATION_V25.64.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "target_evidence_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2564/real-effect-preflight-latest-v2564.json",
+        "data/startup-recovery-v2564/windows-recovery-observer-latest-v2564.json",
+        "data/startup-recovery-v2564/target-recovery-evidence-latest-v2564.json",
+        "runtime/WINDOWS_RECOVERY_OBSERVER_BRIDGE_VALIDATION_V25.64.json",
+        "runtime/REAL_EFFECT_CRASH_CERT_VALIDATION_V25.64.json",
+        "runtime/TARGET_RECOVERY_EVIDENCE_BUNDLE_VALIDATION_V25.64.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "runtime_validators_included",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2564/real-effect-preflight-latest-v2564.json",
+        "data/startup-recovery-v2564/windows-recovery-observer-latest-v2564.json",
+        "data/startup-recovery-v2564/target-recovery-evidence-latest-v2564.json",
+        "runtime/WINDOWS_RECOVERY_OBSERVER_BRIDGE_VALIDATION_V25.64.json",
+        "runtime/REAL_EFFECT_CRASH_CERT_VALIDATION_V25.64.json",
+        "runtime/TARGET_RECOVERY_EVIDENCE_BUNDLE_VALIDATION_V25.64.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "manifest_version_current",
+      "status": "PASS",
+      "detail": "25.64"
+    },
+    {
+      "name": "access_token_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bearer_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "prompt_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "account_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "hostname_redacted",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

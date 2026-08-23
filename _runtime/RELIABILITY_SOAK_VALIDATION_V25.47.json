@@ -1,0 +1,227 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "RELIABILITY_SOAK_HARNESS",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 42,
+    "fail": 0,
+    "total": 42
+  },
+  "checks": [
+    {
+      "name": "version_is_25_47",
+      "ok": true,
+      "detail": "25.47"
+    },
+    {
+      "name": "profile_6h_exact",
+      "ok": true,
+      "detail": "{'smoke': 30, '6h': 21600, '24h': 86400}"
+    },
+    {
+      "name": "profile_24h_exact",
+      "ok": true,
+      "detail": "{'smoke': 30, '6h': 21600, '24h': 86400}"
+    },
+    {
+      "name": "standard_6h_24h_duration_immutable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "resume_semantics_constant",
+      "ok": true,
+      "detail": "downtime is not wall-clock credited"
+    },
+    {
+      "name": "router_tcp_probe_success",
+      "ok": true,
+      "detail": "ProbeResult(ok=True, latency_ms=0.19, error='')"
+    },
+    {
+      "name": "multi_instance_tcp_probe_success",
+      "ok": true,
+      "detail": "ProbeResult(ok=True, latency_ms=0.04, error='')"
+    },
+    {
+      "name": "tcp_probe_failure_explicit",
+      "ok": true,
+      "detail": "ProbeResult(ok=False, latency_ms=0.026, error='ConnectionRefusedError')"
+    },
+    {
+      "name": "gateway_health_probe_success",
+      "ok": true,
+      "detail": "ProbeResult(ok=True, latency_ms=0.975, error='')"
+    },
+    {
+      "name": "gateway_health_probe_failure_explicit",
+      "ok": true,
+      "detail": "ProbeResult(ok=False, latency_ms=0.219, error='ConnectionRefusedError')"
+    },
+    {
+      "name": "invalid_tcp_target_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "partial_run_is_in_progress",
+      "ok": true,
+      "detail": "IN_PROGRESS"
+    },
+    {
+      "name": "checkpoint_created_atomically",
+      "ok": true,
+      "detail": "/tmp/hms-reliability-v2547-52n5hyec/state/soak-checkpoint-v2547-resume-test.json"
+    },
+    {
+      "name": "partial_active_time_positive",
+      "ok": true,
+      "detail": "0.11591392100001485"
+    },
+    {
+      "name": "session_count_initial",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "downtime_not_counted",
+      "ok": true,
+      "detail": "before=0.11591392100001485, after=0.11591392100001485"
+    },
+    {
+      "name": "resume_preserves_run_id",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "resume_increments_session_count",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "completed_synthetic_soak_passes",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "active_duration_reaches_target_only",
+      "ok": true,
+      "detail": "0.72"
+    },
+    {
+      "name": "shared_roundtrip_exercised",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "transient_smb_recovery_exercised",
+      "ok": true,
+      "detail": "{'router_probe_ok': 0, 'router_probe_fail': 0, 'instance_probe_ok': 0, 'instance_probe_fail': 0, 'distinct_instance_targets': 0, 'shared_roundtrip_ok': 10, 'shared_roundtrip_fail': 0, 'lan_heartbeat_ok': 10, 'lease_owner_ok': 10, 'foreign_lease_blocked': 10, 'node_disconnect_detected': 3, 'node_rejoin_ok': 3, 'transient_fault_recovered': 5, 'recovery_exhausted': 0, 'lease_churn_ok': 2}"
+    },
+    {
+      "name": "lease_owner_renew_exercised",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "foreign_silent_takeover_blocked",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "node_disconnect_detected",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "node_rejoin_exercised",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "lease_churn_exercised",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "event_journal_persisted",
+      "ok": true,
+      "detail": "/tmp/hms-reliability-v2547-52n5hyec/state/soak-events-v2547-resume-test.jsonl"
+    },
+    {
+      "name": "result_evidence_persisted",
+      "ok": true,
+      "detail": "/tmp/hms-reliability-v2547-52n5hyec/state/soak-result-v2547-resume-test.json"
+    },
+    {
+      "name": "synthetic_never_claims_production",
+      "ok": true,
+      "detail": "NOT_CLAIMED"
+    },
+    {
+      "name": "soak_evidence_secret_free",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "shared_path_stored_as_hash_only",
+      "ok": true,
+      "detail": "{'pairing_key_persisted': False, 'pairing_code_persisted': False, 'oauth_persisted': False, 'api_key_persisted': False, 'request_body_persisted': False, 'shared_path_hash': '3eaf0be3170fdec1e08f3e651fdf93d18c861cb66187793f71acb430a2882325', 'lan_key_mode': 'SYNTHETIC_TEST_NAMESPACE'}"
+    },
+    {
+      "name": "six_hour_profile_requires_full_topology",
+      "ok": true,
+      "detail": "['required_router_target', 'required_two_instance_targets', 'required_shared_lan_path']"
+    },
+    {
+      "name": "production_certification_never_auto_claimed",
+      "ok": true,
+      "detail": "NOT_CLAIMED"
+    },
+    {
+      "name": "resume_target_duration_change_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "graceful_stop_pauses_partial_run",
+      "ok": true,
+      "detail": "PAUSED"
+    },
+    {
+      "name": "graceful_stop_request_consumed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stop_contract_never_force_kills",
+      "ok": true,
+      "detail": "stop is cooperative"
+    },
+    {
+      "name": "duplicate_live_soak_blocked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dead_process_lock_reclaimed_for_restart",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bounded_recovery_attempt_count",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "recovery_exhaustion_prevents_pass",
+      "ok": true,
+      "detail": "IN_PROGRESS"
+    }
+  ],
+  "soak_6h": "HARNESS_READY_NOT_EXECUTED",
+  "soak_24h": "HARNESS_READY_NOT_EXECUTED",
+  "real_router_multi_instance": "PROBE_CONTRACT_VALIDATED_RUNTIME_DEFERRED",
+  "real_multi_pc_smb_nas": "DEFERRED_BY_OPERATOR"
+}

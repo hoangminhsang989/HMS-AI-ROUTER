@@ -1,0 +1,43 @@
+HMS AI Cockpit v25.62 — RECOVERY TRANSACTION REPLAY & MULTI-SUBSYSTEM CRASH CONSISTENCY
+Date: 2026-08-22
+Scope: Codex-only
+
+1. CROSS-SUBSYSTEM TRANSACTION IDENTITY
+- Added HMS_Codex_RecoveryTransactionReplay.py.
+- One operator intent spans Official Auth rewrite, controlled Codex restart, router state transition and LAN lease handoff.
+- Each effect carries a stable effect fingerprint and distinct idempotency key; the journal stores only the idempotency-key hash.
+
+2. DURABLE REPLAY / EXTERNAL VERIFICATION
+- PREPARED state is never treated as permission to blindly repeat a side effect.
+- Recovery observes external state first: desired state => record as already applied/no repeat; before state => apply once with idempotency; unknown concurrent state => OPERATOR_REQUIRED.
+- Durable-effect evidence always resumes through VERIFY_ONLY_NO_REPEAT.
+- Dangerous crash window after external effect but before durable journal record is explicitly fault-injected and converges without duplicate auth rewrite.
+
+3. COMPENSATION DAG / OWNERSHIP PROOF
+- Compensation runs in reverse dependency order: lease → router → restart → auth.
+- A compensation is allowed only when current external state still matches the transaction desired hash.
+- Concurrent external modification makes ownership unprovable and fails closed to OPERATOR_REQUIRED.
+
+4. SAFE CONVERGENCE
+- Explicit terminal vocabulary: HEALTHY / DEGRADED_SAFE / OPERATOR_REQUIRED.
+- Synthetic crash matrix: 30 scenarios, including pre/post phase, unjournaled-effect window, repeated replay and concurrent operator change.
+- Core replay validator: 30/30 PASS; crash matrix 30/30 safe.
+
+5. OPERATOR UX / DIAGNOSTICS
+- Native GUI adds RECOVERY REPLAY v25.62 and REPLAY PROOF without expanding public BackendAction.
+- Unified Diagnostics projects aggregate proof only; raw txn/effect/account/auth/prompt data are not exported.
+- Unified Diagnostics Replay validation: 13/13 PASS.
+- Diagnostics Bundle Replay privacy validation: 10/10 PASS.
+- Existing v25.61 diagnostics validators remain forward-compatible and PASS.
+
+6. FREEZE / COMPATIBILITY
+- Runtime Kit: 334/334 PASS.
+- Compatibility Freeze: 133/133 PASS; public BackendAction contract remains exactly 90.
+- Full regression freeze: 34/34 suites; 1326/1326 numeric assertions PASS.
+- GUI startup smoke: 5/5 PASS (xvfb-run 8s; stderr empty).
+- PowerShell static lint/coherence and Python compileall PASS.
+
+7. CLAIM BOUNDARY
+- v25.62 is synthetic/control-plane crash-consistency evidence only.
+- It does not prove real Windows process restart, real file/keyring/auto auth rewrites, live Codex external state, real LAN lease transitions or crash persistence across OS/process termination.
+- Production certification remains gated by target-machine Windows/Codex/live quota/LAN-NAS/6h-24h evidence.

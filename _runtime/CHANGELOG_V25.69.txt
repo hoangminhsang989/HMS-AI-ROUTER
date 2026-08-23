@@ -1,0 +1,51 @@
+HMS AI Cockpit v25.69 — CHANGELOG
+=================================
+
+Added
+-----
+1. Read-only Windows Target Certification Evidence Ingest.
+   - Exact package version, release-manifest digest, frozen trust snapshot, campaign/run/case binding.
+   - Cryptographic signer verification.
+   - Nonce, run-id and report-digest anti-replay indexes.
+   - 4-effect × 3-crash-window completeness model.
+   - Quarantine for replayed, mixed-version, mixed-trust, stale, revoked, conflicting or malformed reports.
+   - No target execution, no network dependency, no auto-repair and no automatic promotion.
+
+2. Append-only Promotion Decision Ledger.
+   - JSONL-style hash chain with previous-entry digest.
+   - Optimistic tail concurrency guard.
+   - APPROVE / REJECT / INVALIDATE decision set.
+   - Pseudonymous reviewer references only.
+   - Two distinct reviewers required for promotion eligibility.
+   - Superseding invalidation entries preserve all history.
+   - Revocation/staleness/package/manifest/trust-change re-evaluation reasons.
+   - Eligibility remains separate from production score mutation.
+
+3. Evidence Inbox + Promotion Ledger operator surface.
+   - Vietnamese read-only proof/diagnostics card.
+   - INGEST / LEDGER / INBOX run validators only.
+   - No target-arm or backend mutation binding.
+
+4. Unified Diagnostics / privacy integration.
+   - Aggregate accepted/quarantined/matrix-complete counts only.
+   - Aggregate ledger entry/dual-review state only.
+   - Reviewer identity/email, account identity, host identity, Bearer/token/private material remain redacted.
+
+Compatibility and freeze
+------------------------
+- Public BackendAction remains exactly 90.
+- Runtime Kit: 430/430 PASS.
+- Compatibility: 133/133 PASS.
+- Regression Freeze expanded to 69 suites: 1786/1786 assertions PASS.
+- Legacy v25.62-v25.68 validators were forward-fixed only for current-version/banner acceptance;
+  behavioral safety assertions were preserved.
+- GUI event-loop smoke: 6/6 PASS, stderr=0.
+- Parity remains FEATURE_PARITY_CANDIDATE, 93.0% feature / 55.2% production.
+
+Not claimed
+-----------
+- No real Windows/Codex effects were executed.
+- No Windows signing was executed.
+- No external Windows target evidence was imported as production evidence.
+- No production score was increased.
+- No automatic production certification exists.

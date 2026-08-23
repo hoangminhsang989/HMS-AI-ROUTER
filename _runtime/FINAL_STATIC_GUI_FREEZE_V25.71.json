@@ -1,0 +1,11 @@
+{
+  "version": "25.71",
+  "gui_exit_code": 124,
+  "gui_expected_timeout_alive": true,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "powershell_static_lint_exit": 0,
+  "powershell_coherence_exit": 0,
+  "compileall_exit": 0,
+  "verdict": "PASS"
+}

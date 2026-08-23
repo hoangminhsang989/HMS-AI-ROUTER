@@ -1,0 +1,74 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.46",
+  "edition": "CODEX_ONLY",
+  "policy": "RUNTIME_DISCOVERY_NO_HARDCODED_CLIENT_VERSION_WHITELIST",
+  "clients": [
+    {
+      "client": "Codex CLI",
+      "process": "Codex",
+      "launch": [
+        "codex.exe",
+        "discovered Codex.exe"
+      ],
+      "isolated_codex_home": true,
+      "provider": "hms_instance_router",
+      "runtime_windows": "DEFERRED_BY_OPERATOR"
+    },
+    {
+      "client": "Codex Desktop",
+      "process": "Codex",
+      "launch": [
+        "LocalAppData/Programs/Codex/Codex.exe",
+        "LocalAppData/Codex/Codex.exe",
+        "ProgramFiles/Codex/Codex.exe"
+      ],
+      "provider": "hms_api_router",
+      "runtime_windows": "DEFERRED_BY_OPERATOR"
+    },
+    {
+      "client": "ChatGPT Desktop (Codex view)",
+      "process": "ChatGPT",
+      "launch": [
+        "registered app name ChatGPT",
+        "chatgpt.exe"
+      ],
+      "provider": "hms_api_router",
+      "runtime_windows": "DEFERRED_BY_OPERATOR"
+    }
+  ],
+  "config_contract": {
+    "global_config": "~/.codex/config.toml",
+    "global_env": "~/.codex/.env",
+    "global_provider": "hms_api_router",
+    "instance_provider": "hms_instance_router",
+    "base_url": "http://127.0.0.1:<port>/v1",
+    "env_key": "HMS_ROUTER_API_KEY",
+    "wire_api": "responses",
+    "requires_openai_auth": false,
+    "stable_endpoint": true,
+    "snapshot_before_mutation": true,
+    "restore_on_disable": true,
+    "restart_generation_check": true
+  },
+  "migration_contract": {
+    "current_settings": "settings-v2523_1.json",
+    "fallback_settings": [
+      "settings-v2522.json",
+      "settings-v60.json",
+      "settings-v50.json",
+      "settings-v40.json",
+      "settings-v30.json",
+      "settings-v20.json",
+      "settings-v15.json",
+      "settings-v10.json",
+      "settings-v08.json"
+    ],
+    "security_router_key_target": "HMS_AI_Cockpit:RouterKey:global:v25.40",
+    "lan_pairing_target": "HMS_AI_Cockpit:LanPoolPairingKey:v25.45",
+    "lan_pairing_kdf_salt": "HMS-AI-Cockpit-LAN-Pool-v25.45",
+    "legacy_pairing_and_secret_refs_must_not_be_renamed": true,
+    "corrupt_settings_backup_before_default_recovery": true,
+    "plain_router_key_migrates_to_protected_store": true
+  }
+}

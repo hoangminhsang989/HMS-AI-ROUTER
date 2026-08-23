@@ -1,0 +1,58 @@
+{
+  "version": "25.74",
+  "suite": "UNIFIED_DIAGNOSTICS_REVIEW_PACKET_VALIDATION",
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "name": "packet_event_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "immutability_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dual_review_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_drift_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "invalidation_count_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "new_review_epoch_visible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "aggregate_only_no_identity_or_secret",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_account_project_instance",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_promotion",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

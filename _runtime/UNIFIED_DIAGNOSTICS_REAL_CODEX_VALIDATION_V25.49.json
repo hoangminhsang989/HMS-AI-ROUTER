@@ -1,0 +1,38 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.49",
+  "suite": "UNIFIED_DIAGNOSTICS_REAL_CODEX",
+  "generated_utc": "2026-08-22T01:53:35.880402+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "total": 6
+  },
+  "tests": [
+    {
+      "id": "real_cert_source_present",
+      "status": "PASS"
+    },
+    {
+      "id": "real_cert_layer_warning",
+      "status": "PASS"
+    },
+    {
+      "id": "timeline_kind",
+      "status": "PASS"
+    },
+    {
+      "id": "secret_absent",
+      "status": "PASS"
+    },
+    {
+      "id": "prompt_absent",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy_flags_clean",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": "25.51",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "total": 7
+  },
+  "checks": {
+    "bundle_ok": true,
+    "access_token_redacted": true,
+    "prompt_redacted": true,
+    "request_redacted": true,
+    "response_redacted": true,
+    "authorization_redacted": true,
+    "rotation_evidence_included": true
+  }
+}

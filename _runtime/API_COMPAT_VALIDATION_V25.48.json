@@ -1,0 +1,105 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.38",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 12,
+      "fail": 0,
+      "total": 12
+    },
+    "matrix": {
+      "models": "SYNTHETIC_VERIFIED",
+      "responses": "SYNTHETIC_VERIFIED",
+      "chat_completions": "SYNTHETIC_VERIFIED",
+      "streaming_sse": "SYNTHETIC_VERIFIED",
+      "tool_calls": "SYNTHETIC_VERIFIED",
+      "mcp": "SYNTHETIC_VERIFIED",
+      "web_search": "SYNTHETIC_VERIFIED",
+      "image_input": "SYNTHETIC_VERIFIED",
+      "attachments": "SYNTHETIC_VERIFIED",
+      "structured_output": "SYNTHETIC_VERIFIED",
+      "reasoning": "SYNTHETIC_VERIFIED",
+      "chunked_request": "SYNTHETIC_VERIFIED",
+      "patch": "SYNTHETIC_VERIFIED",
+      "error_mapping": "SYNTHETIC_VERIFIED",
+      "privacy": "SYNTHETIC_VERIFIED"
+    },
+    "tests": [
+      {
+        "name": "contract.discovery",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "{\"version\":\"25.38\",\"mode\":\"TRANSPARENT_PASS_THROUGH\",\"surfaces\":{\"/v1/models\":\"NATIVE_AGGREGATED\",\"/v1/responses\":\"PASS_THROUGH\",\"/v1/chat/completions\":\"PASS_THROUGH\",\"streaming_sse\":\"PASS_THROUGH_STREAM\",\"websocket\":\"PASS_THROUGH\",\"tool_calls\":\"BODY_PRESERVING_PASS_THROUGH\",\"mcp_tools\":\"BODY_PRESERVING_PASS_THROUGH\",\"web_search_tools\":\"BODY_PRESERVING_PASS_THROUGH\",\"image_input\":\"BODY_PRESERVING_PASS_THROUGH\",\"attachments\":\"BODY_PRESERVING_PASS_THROUGH\",\"structured_output\":\"BODY_PRESERVING_PASS_THROUGH\",\"reasoning\":\"BODY_PRESERVING_PASS_THROUGH\"},\"transport\":{\"chunked_request_decode\":true,\"sse_flush\":true,\"cors_loopback\":true,\"methods\":[\"GET\",\"POST\",\"PUT\",\"PATCH\",\"DELETE\",\"HEAD\",\"OPTIONS\"]},\"routing_invariants\":{\"stable_endpoint\":true,\"session_affinity\":true,\"body_logging\":false,\"upstream_error_body_passthrough\":true}}"
+      },
+      {
+        "name": "models.aggregate",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "[{'id': 'gpt-5.6-sol', 'object': 'model', 'owned_by': 'openai'}]"
+      },
+      {
+        "name": "responses.body_preservation",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "status=200 hash=e60c24b623fdfaead7f87ed23eca766369d018b9a78db38206288b0c54698049"
+      },
+      {
+        "name": "streaming.sse",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "bytes=284"
+      },
+      {
+        "name": "chat_completions.pass_through",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "status=200"
+      },
+      {
+        "name": "transport.patch",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "status=200"
+      },
+      {
+        "name": "transport.chunked_request",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "status=200"
+      },
+      {
+        "name": "errors.gateway_openai_shape",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "{\"error\": {\"message\": \"Invalid HMS client key.\", \"type\": \"authentication_error\", \"code\": \"INVALID_CLIENT_KEY\"}, \"hms_error\": \"INVALID_CLIENT_KEY\"}"
+      },
+      {
+        "name": "errors.upstream_passthrough",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "{\"error\": {\"message\": \"rate limited upstream\", \"type\": \"rate_limit_error\", \"code\": \"rate_limit_exceeded\"}}"
+      },
+      {
+        "name": "telemetry.capability_labels",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "['attachments', 'image_input', 'mcp', 'reasoning', 'responses', 'structured_output', 'tool_calls', 'web_search']"
+      },
+      {
+        "name": "privacy.no_body_or_secret_trace",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "trace contains metadata/capability labels only"
+      },
+      {
+        "name": "cors.loopback",
+        "status": "PASS",
+        "level": "SYNTHETIC_VERIFIED",
+        "detail": "status=204"
+      }
+    ],
+    "runtime_windows_codex": "DEFERRED_BY_OPERATOR",
+    "soak": "NOT_YET"
+  }
+}

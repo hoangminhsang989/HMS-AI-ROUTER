@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "version": "25.46",
+  "generated_utc": "2026-08-21T16:42:36.024174+00:00",
+  "checks": {
+    "app_version": true,
+    "lanpool_page_exists": true,
+    "lan_status_widget_exists": true,
+    "lan_shared_path_widget_exists": true,
+    "lan_pair_code_widget_exists": true,
+    "lanpool_page_mapped": true
+  },
+  "passed": 6,
+  "total": 6
+}

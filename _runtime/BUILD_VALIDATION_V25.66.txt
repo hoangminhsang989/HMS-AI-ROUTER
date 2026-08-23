@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.66 — BUILD VALIDATION
+Generated UTC: 2026-08-23T00:47:22.439877+00:00
+Verdict: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+
+CORE GATES
+- Windows Attestation Signer: 8/8 PASS; cryptographic proof 9/9 PASS; production_score_eligible=false
+- Controlled Target Certification Runbook: 8/8 PASS; one-shot proof 10/10 PASS; production_score_eligible=false
+- Attestation Exchange: 6/6 PASS; integrity/privacy proof 6/6 PASS
+- Attested Evidence Promotion Gate: 10/10 PASS; cryptographic promotion proof 9/9 PASS; outer production_score_promotion_eligible=false
+- Unified Diagnostics Signed Certification: 6/6 PASS
+- Diagnostics Bundle Privacy v25.66: 8/8 PASS
+- Runtime Kit: 396/396 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 54/54 suites; 1628/1628 numeric assertions PASS
+- GUI startup smoke: 5/5 PASS; stderr 0 bytes
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+- Python compileall / py_compile: PASS
+- Parity claim boundary: 9/9 PASS
+
+PUBLIC CONTRACT
+- Public BackendAction surface remains exactly 90 actions.
+- Real-effect target certification remains DISARMED by default.
+- Windows certificate signing uses structured argv and LocalMachine certificate store; no shell execution and no private key export.
+- DPAPI signer is machine-bound and cannot sign on a non-Windows build host.
+- One-shot runbook requires Windows host + environment gate + exact arm token + exact operator phrase and always auto-disarms in finally.
+- Attestation exchange is integrity checked and privacy filtered.
+- Cryptographic signature verification is mandatory before promotion eligibility can be considered.
+
+CLAIM BOUNDARY
+- Feature evidence: 93.0%.
+- Production evidence: 55.2%.
+- Verdict: FEATURE_PARITY_CANDIDATE.
+- windows_runtime_certified=false.
+- No real Windows target signing or REAL_CODEX_EFFECT certification run was executed in this build environment.
+- No synthetic cryptographic fixture is production-score eligible.
+- Real Windows PowerShell 5.1 parse/runtime, live Codex effects, target LAN/NAS and 6h/24h soak remain target-machine evidence gates.

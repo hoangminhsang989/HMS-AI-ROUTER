@@ -1,0 +1,60 @@
+HMS AI Cockpit v25.31 — BUILD VALIDATION
+
+PRODUCT SCOPE
+- CODEX ONLY.
+- v25.30 remains rollback baseline.
+- GUI remains the user-facing workflow.
+- Runtime certification is still deferred by operator.
+
+IMPLEMENTED
+- Closed-loop per-instance Router controller.
+- Usage Ledger v2 feedback windows: 1h / 24h / 7d.
+- Feedback signals: success rate, latency P95, retry rate, HTTP 429, 401/403, 5xx.
+- Fusion with quota 5h/7d, health and pool score.
+- Per-instance ranking + priority/weight hints.
+- Hysteresis, minimum samples, hold time and cooldown.
+- Emergency/current-critical override path.
+- OBSERVE default; GUARDED_AUTO required for writes.
+- Transactional priority/weight apply with manifest SHA-256 update/readback.
+- Rollback from previous routing snapshot; no credential deletion.
+- Stable endpoint/project binding/session-affinity invariants preserved.
+- Seamless credential refresh preserves instance-local routing metadata.
+- Closed-loop controls/settings integrated into native GUI.
+- Legacy Adaptive background controller skipped whenever Closed-loop is enabled.
+
+STATIC / BUILD VERIFICATION
+- Python compileall: PASS.
+- HMS_GUI.pyw compile: PASS.
+- GUI startup smoke under Xvfb: PASS (alive 7s; stderr 0 bytes).
+- PowerShell StaticLint: PASS; script variables 179/179; settings referenced 258; declared 343; missing 0; duplicate 0; glue findings 0.
+- PowerShell CoherenceAudit: PASS; missing variables/settings 0; compact-syntax findings 0.
+- Codex-only / Closed-loop structural assertions: PASS 17/17.
+- Seamless Router validator v25.31 primary+fallback case: PASS.
+
+SYNTHETIC CLOSED-LOOP VERIFICATION
+- Usage Ledger v2 retry-rate + HTTP429 counters: PASS.
+- Closed-loop recommendation from real-style feedback signals: PASS.
+- OBSERVE mode does not allow writes: PASS.
+- GUARDED_AUTO priority/weight apply: PASS.
+- OAuth/access-token field content preserved during apply: PASS.
+- Stable endpoint + session-affinity manifest preserved: PASS.
+- Manifest hashes updated to actual post-apply auth bytes: PASS.
+- Rollback restores prior priority/weight: PASS.
+- Minimum-sample gate: PASS.
+- Current-critical/emergency override: PASS.
+- Unsafe auth path rejection: PASS.
+- Transaction rollback restores already-touched auth file on later failure: PASS.
+
+RUNTIME EVIDENCE
+- Real Windows Codex request attribution into per-instance feedback: DEFERRED_BY_OPERATOR.
+- Real GUARDED_AUTO route preference change while Codex is open: DEFERRED_BY_OPERATOR.
+- Real existing-session continuity across preference changes: DEFERRED_BY_OPERATOR.
+- Real quota/cooldown-driven fallback: DEFERRED_BY_OPERATOR.
+- Multi-hour soak: NOT YET.
+
+SAFETY
+- No automatic release deletion.
+- No delete-instance/project-affinity action.
+- No Antigravity UI/bridge payload.
+- Closed-loop plan/state contain no OAuth token/API key/cookie/request body.
+- Foreign PID ownership guard remains enforced.

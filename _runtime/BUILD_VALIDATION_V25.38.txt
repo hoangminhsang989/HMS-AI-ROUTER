@@ -1,0 +1,37 @@
+HMS AI COCKPIT v25.38 — BUILD VALIDATION
+
+CURRENT RESULT
+- Full API compatibility synthetic audit: PASS 12/12
+- Legacy API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- Python compileall: PASS (50 .py/.pyw runtime entry files)
+- GUI source compile: PASS
+- GUI startup smoke under build environment: PASS, visible for 7s timeout, stderr 0
+- PowerShell StaticLint: PASS
+  variables referenced/assigned: 200/200
+  missing variables: 0
+  settings referenced/declared: 315/400
+  missing settings: 0
+  duplicate settings: 0
+  lexical glue findings: 0
+- PowerShell Coherence Audit: PASS
+- Runtime Kit Validator: PASS 149/149
+- Windows Codex runtime: DEFERRED_BY_OPERATOR
+- Soak: NOT_YET
+
+SYNTHETIC COMPATIBILITY SURFACES
+- /v1/models aggregation
+- /v1/responses body preservation
+- /v1/chat/completions body preservation
+- streaming/SSE continuity
+- tool calls + MCP + web_search feature preservation
+- image + file input preservation
+- structured output + reasoning preservation
+- PATCH forwarding + Transfer-Encoding: chunked request decode
+- OpenAI-shaped HMS gateway errors
+- upstream error body passthrough
+- metadata-only capability telemetry; no prompt/body/API key trace
+- loopback CORS
+
+NOTE
+Synthetic PASS validates HMS gateway mechanics only. Real Windows Codex requests, long-lived streaming, live tools/MCP/web search/image and model-specific behavior remain authoritative for RUNTIME VERIFIED.

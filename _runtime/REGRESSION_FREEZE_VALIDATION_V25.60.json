@@ -1,0 +1,321 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.60",
+  "suite": "V25_28_TO_V25_60_REGRESSION_FREEZE",
+  "generated_utc": "2026-08-22T08:42:02.920549+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "suite_pass": 28,
+    "suite_fail": 0,
+    "suite_total": 28,
+    "numeric_assertions_pass": 1212,
+    "numeric_assertions_total": 1212
+  },
+  "execution_mode": "CANONICAL_ISOLATED_SEQUENTIAL_FINAL_FREEZE",
+  "thresholds_relaxed": false,
+  "suites": [
+    {
+      "suite": "compatibility_freeze",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 133,
+        "total": 133
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "client_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 27,
+        "total": 27
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "lan_pool",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "total": 15
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "lan_failure_matrix",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 20,
+        "total": 20
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "reliability_soak_harness",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 42,
+        "total": 42
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "performance_scale",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 35,
+        "total": 35
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "real_codex_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 65,
+        "total": 65
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "live_quota_intelligence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 52,
+        "total": 52
+      },
+      "verdict": "PASS_LIVE_QUOTA_INTELLIGENCE_V25_50",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "seamless_rotation_torture",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 63,
+        "total": 63
+      },
+      "verdict": "PASS_SEAMLESS_ROTATION_TORTURE_VALIDATION_V25_51",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "ux_cockpit_parity_plus",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 62,
+        "total": 62
+      },
+      "verdict": "PASS_UX_COCKPIT_PARITY_PLUS_V25_52",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "target_machine_certification",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 39,
+        "total": 39
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "production_simulation_lab",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 40,
+        "total": 40
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "autonomous_router_digital_twin",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 57,
+        "total": 57
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "protocol_chaos_fuzzer",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 64,
+        "total": 64
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "recovery_planner",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "total": 12
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "compound_fault_recovery",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "total": 15
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "official_auth_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 67,
+        "total": 67
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "recovery_transaction_journal",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 18,
+        "total": 18
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "runtime_kit",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 311,
+        "total": 311
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "smart_model_router",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 16,
+        "total": 16
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "api_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "total": 12
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "api_superset",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "total": 13
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "protocol",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 10,
+        "total": 10
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "self_healing",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 6,
+        "total": 6
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "security_hardening",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 9,
+        "total": 9
+      },
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "project_orchestrator",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 9,
+        "total": 9
+      },
+      "verdict": null,
+      "stderr_tail": ""
+    },
+    {
+      "suite": "powershell_static_lint",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "verdict": "PASS",
+      "stderr_tail": ""
+    },
+    {
+      "suite": "powershell_coherence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "verdict": "PASS",
+      "stderr_tail": ""
+    }
+  ],
+  "claim_boundary": "SYNTHETIC_AND_CONTROL_PLANE_EVIDENCE_ONLY_REAL_TARGET_PRODUCTION_CERTIFICATION_NOT_CLAIMED"
+}

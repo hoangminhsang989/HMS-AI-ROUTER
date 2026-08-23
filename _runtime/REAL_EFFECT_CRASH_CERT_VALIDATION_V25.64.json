@@ -1,0 +1,111 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.64",
+  "suite": "REAL_EFFECT_CRASH_CERT_VALIDATION",
+  "generated_utc": "2026-08-22T14:53:14.715837+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "total": 15
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "proof_13",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "four_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "three_windows",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "default_disarmed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "template_schema_valid",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "preflight_not_armed",
+      "status": "PASS",
+      "detail": {
+        "armed": false,
+        "gates": {
+          "windows_host": false,
+          "arm_token": false,
+          "operator_phrase": false,
+          "environment_gate": false,
+          "adapter_manifest": true
+        },
+        "manifest_errors": [],
+        "production_score_eligible": false
+      }
+    },
+    {
+      "name": "nonwindows_cannot_arm",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "argv_no_shell",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "idempotency_witness",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "cold_start_kill",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "operator_required_fail_closed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "score_not_automatic",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_preflight_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_boundary",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "real_codex_effects_executed": false,
+  "production_score_eligible": false,
+  "production_certification": "NOT_CLAIMED_REAL_CODEX_EFFECT_TARGET_RUN_REQUIRED"
+}

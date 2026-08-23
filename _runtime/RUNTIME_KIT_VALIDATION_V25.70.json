@@ -1,0 +1,2215 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.70",
+    "generated_utc": "2026-08-23T04:10:24.968241+00:00",
+    "verdict": "PASS",
+    "summary": {
+      "pass": 440,
+      "fail": 0,
+      "total": 440
+    },
+    "tests": [
+      {
+        "name": "entrypoint.native_gui_host",
+        "status": "PASS",
+        "detail": "normal entrypoint launches HMS_GUI.pyw directly; PowerShell is not the primary UI host"
+      },
+      {
+        "name": "orchestrator.required_stages",
+        "status": "PASS",
+        "detail": "required stages present"
+      },
+      {
+        "name": "all_ready.non_mutating_router",
+        "status": "PASS",
+        "detail": "ALL_READY does not call router/safe runtime stages"
+      },
+      {
+        "name": "snapshot.private_inputs",
+        "status": "PASS",
+        "detail": "snapshot covers configs and best-effort ACL"
+      },
+      {
+        "name": "snapshot.no_oauth_copy",
+        "status": "PASS",
+        "detail": "OAuth auth is inventoried as metadata"
+      },
+      {
+        "name": "port_profile.safe_defaults",
+        "status": "PASS",
+        "detail": "first runtime profile keeps automation off"
+      },
+      {
+        "name": "guarded_launcher.runtime_ready",
+        "status": "PASS",
+        "detail": "guarded launcher blocks incomplete checkpoint"
+      },
+      {
+        "name": "wizard.sequence",
+        "status": "PASS",
+        "detail": "operator sequence visible"
+      },
+      {
+        "name": "main.runtime_cert_tab",
+        "status": "PASS",
+        "detail": "main Mission Control links Runtime Certification"
+      },
+      {
+        "name": "gate.v25_23_1_authority",
+        "status": "PASS",
+        "detail": "runtime gate authority migrated to v25.23.1"
+      },
+      {
+        "name": "manifest.v25_23_1",
+        "status": "PASS",
+        "detail": "manifest files=68"
+      },
+      {
+        "name": "powershell.no_reserved_auto_alias",
+        "status": "PASS",
+        "detail": "no manual PID/HOST/HOME automatic-variable aliases"
+      },
+      {
+        "name": "wizard.fatal_evidence",
+        "status": "PASS",
+        "detail": "wizard captures child stdout/stderr and publishes emergency evidence"
+      },
+      {
+        "name": "powershell.ps51_generic_list_compat",
+        "status": "PASS",
+        "detail": "all Generic List[T] use direct .NET constructors"
+      },
+      {
+        "name": "runtime_gate.toarray_publication",
+        "status": "PASS",
+        "detail": "critical runtime evidence publication avoids @() around Generic List"
+      },
+      {
+        "name": "runtime_gate.fatal_evidence",
+        "status": "PASS",
+        "detail": "Windows Runtime Gate publishes FATAL JSON/text evidence on unhandled error"
+      },
+      {
+        "name": "powershell.no_bare_log_calls",
+        "status": "PASS",
+        "detail": "all Log calls use quoted/expression arguments"
+      },
+      {
+        "name": "wizard.shown_guarded",
+        "status": "PASS",
+        "detail": "Form.Shown initialization is guarded by try/catch"
+      },
+      {
+        "name": "inventory.current_release_authority",
+        "status": "PASS",
+        "detail": "Inventory checks the current v25.23.1 main script and current release manifest"
+      },
+      {
+        "name": "inventory.operator_spacing",
+        "status": "PASS",
+        "detail": "Inventory PowerShell comparison operator is tokenized safely"
+      },
+      {
+        "name": "inventory.detailed_missing",
+        "status": "PASS",
+        "detail": "Inventory publishes exact missing prerequisite names instead of a generic failure"
+      },
+      {
+        "name": "runtime.evidence_initialized_before_use",
+        "status": "PASS",
+        "detail": "RunEvidenceDir is initialized and created before Invoke-WindowsGate can use it"
+      },
+      {
+        "name": "runtime.no_orphan_evidenceDir",
+        "status": "PASS",
+        "detail": "Orchestrator contains no orphan/uninitialized $evidenceDir reference"
+      },
+      {
+        "name": "runtime.current_namespace_authority",
+        "status": "PASS",
+        "detail": "no stale runtime authority names"
+      },
+      {
+        "name": "powershell.real_parser_regression_patterns",
+        "status": "PASS",
+        "detail": "no known PS5.1 parser regression patterns"
+      },
+      {
+        "name": "powershell.wakeup_parenthesis",
+        "status": "PASS",
+        "detail": "Wake-up router guard has balanced closing parentheses"
+      },
+      {
+        "name": "launcher_setup.scalar_count_safe",
+        "status": "PASS",
+        "detail": "launcher.setup wraps pipeline output before Count under StrictMode"
+      },
+      {
+        "name": "websmoke.server_consumes_post_body",
+        "status": "PASS",
+        "detail": "read-only POST consumes request body before returning 405"
+      },
+      {
+        "name": "websmoke.server_content_length",
+        "status": "PASS",
+        "detail": "Unified UX emits explicit Content-Length and Connection: close"
+      },
+      {
+        "name": "websmoke.httpclient_windows_safe",
+        "status": "PASS",
+        "detail": "Windows HttpWebRequest disables keep-alive and Expect: 100-continue"
+      },
+      {
+        "name": "websmoke.diagnostic_evidence",
+        "status": "PASS",
+        "detail": "WEB_SMOKE captures child logs and per-request HTTP trace"
+      },
+      {
+        "name": "saferuntime.output_file_no_stdout_tail",
+        "status": "PASS",
+        "detail": "RuntimeValidator does not print full Unicode JSON after publishing --output"
+      },
+      {
+        "name": "saferuntime.deferred_first_run_state",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME separates deferred first-run state from true blockers"
+      },
+      {
+        "name": "saferuntime.process_exit_authority",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME captures child ExitCode/stdout/stderr explicitly"
+      },
+      {
+        "name": "saferuntime.pass_semantics",
+        "status": "PASS",
+        "detail": "SAFE_RUNTIME PASS depends on structured fail/verdict, not deferred state"
+      },
+      {
+        "name": "liveapi.explicit_config_path",
+        "status": "PASS",
+        "detail": "CLIProxyAPI is started with an explicit --config path"
+      },
+      {
+        "name": "liveapi.key_fingerprint_audit",
+        "status": "PASS",
+        "detail": "live handoff verifies local key membership without exposing the secret"
+      },
+      {
+        "name": "liveapi.http_error_body",
+        "status": "PASS",
+        "detail": "401/403 diagnostics include HTTP status and redacted response body"
+      },
+      {
+        "name": "liveapi.transactional_handoff",
+        "status": "PASS",
+        "detail": "failed live handoff restores CLIProxy config and Codex mutation occurs only after local API success"
+      },
+      {
+        "name": "json.empty_array_safe",
+        "status": "PASS",
+        "detail": "Save-Json preserves empty arrays as valid [] JSON"
+      },
+      {
+        "name": "listener.get_nettcp_repaired",
+        "status": "PASS",
+        "detail": "valid Get-NetTCPConnection cmdlet restored after parser normalization"
+      },
+      {
+        "name": "ui.footer_current_release",
+        "status": "PASS",
+        "detail": "legacy hidden footer authority identifies the current one-click release"
+      },
+      {
+        "name": "cliproxy.safemode_template_cleanup",
+        "status": "PASS",
+        "detail": "HMS removes only official CLIProxy template keys before live startup"
+      },
+      {
+        "name": "cliproxy.safemode_audit",
+        "status": "PASS",
+        "detail": "live handoff refuses to start if template keys survive cleanup"
+      },
+      {
+        "name": "cliproxy.safemode_header",
+        "status": "PASS",
+        "detail": "403 diagnostics capture CLIProxy X-CPA-SAFE-MODE header"
+      },
+      {
+        "name": "cliproxy.custom_keys_preserved",
+        "status": "PASS",
+        "detail": "cleanup targets exact unsafe placeholders rather than all custom keys"
+      },
+      {
+        "name": "codexenv.restart_barrier",
+        "status": "PASS",
+        "detail": "HMS blocks provider/.env mutation while an old Codex/ChatGPT process survives"
+      },
+      {
+        "name": "codexenv.disk_verification",
+        "status": "PASS",
+        "detail": "HMS verifies ~/.codex/.env after writing the local router key"
+      },
+      {
+        "name": "codexenv.fresh_process_confirmation",
+        "status": "PASS",
+        "detail": "HMS only confirms API-mode launch after a fresh desktop process starts"
+      },
+      {
+        "name": "codexenv.open_button_stale_guard",
+        "status": "PASS",
+        "detail": "MỞ CODEX refuses to silently focus a stale process in HMS API mode"
+      },
+      {
+        "name": "codexenv.failed_enable_rollback",
+        "status": "PASS",
+        "detail": "failed env reload rolls Codex config/.env back to the pre-HMS snapshot"
+      },
+      {
+        "name": "codexenv.disable_restart_barrier",
+        "status": "PASS",
+        "detail": "disable flow does not remove the router while a stale HMS provider process survives"
+      },
+      {
+        "name": "ucc.stat_card_token_boundaries",
+        "status": "PASS",
+        "detail": "Native UCC StatCard command names cannot absorb quoted arguments"
+      },
+      {
+        "name": "ucc.current_version_title",
+        "status": "PASS",
+        "detail": "Native UCC title tracks the package revision"
+      },
+      {
+        "name": "native_gui.primary_host",
+        "status": "PASS",
+        "detail": "Tk GUI is created and shown before backend status polling begins"
+      },
+      {
+        "name": "native_gui.daily_actions",
+        "status": "PASS",
+        "detail": "daily overview exposes Router toggle plus a dedicated MỞ CODEX action"
+      },
+      {
+        "name": "native_gui.backend_hidden",
+        "status": "PASS",
+        "detail": "PowerShell backend calls are hidden and cannot create a console"
+      },
+      {
+        "name": "native_gui.failure_survives",
+        "status": "PASS",
+        "detail": "backend failure is surfaced inside the persistent HMS GUI"
+      },
+      {
+        "name": "native_gui.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell exposes bounded GUI backend actions including v25.37 model/reasoning controls"
+      },
+      {
+        "name": "predictive_quota.engine_present",
+        "status": "PASS",
+        "detail": "v25.33 Predictive Quota engine is reset-aware and explicitly keeps forecast distinct from live quota"
+      },
+      {
+        "name": "predictive_quota.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell snapshots quota history, evaluates forecast, and feeds the plan into Closed-loop Router"
+      },
+      {
+        "name": "predictive_quota.closed_loop_consumption",
+        "status": "PASS",
+        "detail": "Closed-loop lowers new-session score/weight from predictive pressure without changing existing session affinity"
+      },
+      {
+        "name": "predictive_quota.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes forecast status and on-demand evaluation without a destructive apply action"
+      },
+      {
+        "name": "identity_isolation.engine_present",
+        "status": "PASS",
+        "detail": "v25.36 identity auditor fingerprints boundaries and detects cross-instance collisions/secret-field regressions"
+      },
+      {
+        "name": "identity_isolation.powershell_prelaunch",
+        "status": "PASS",
+        "detail": "Codex launch is fail-closed behind v25.36 fingerprint audit and binding generation"
+      },
+      {
+        "name": "identity_isolation.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes one-click identity audit and strict isolation settings"
+      },
+      {
+        "name": "model_manager.engine_present",
+        "status": "PASS",
+        "detail": "v25.37 model manager validates live model policy and preserves isolated provider/endpoint contract"
+      },
+      {
+        "name": "model_manager.powershell_integration",
+        "status": "PASS",
+        "detail": "project model policy is available through native backend and optionally applied before instance launch"
+      },
+      {
+        "name": "model_manager.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes project-scoped model/reasoning policy without changing account binding"
+      },
+      {
+        "name": "quota_center.engine_present",
+        "status": "PASS",
+        "detail": "v25.34 Quota Center persists quota metadata and resolves forecast accuracy in SQLite"
+      },
+      {
+        "name": "quota_center.safety",
+        "status": "PASS",
+        "detail": "Quota Center never promotes forecast to live quota and excludes prompt/secrets"
+      },
+      {
+        "name": "quota_center.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell performs bounded background quota-center sync without touching credentials"
+      },
+      {
+        "name": "quota_center.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes durable 5h/7d history, freshness, reset timeline and forecast accuracy"
+      },
+      {
+        "name": "account_analytics.engine_present",
+        "status": "PASS",
+        "detail": "v25.35 Account Analytics builds confidence-aware long-term account/model/workload profiles"
+      },
+      {
+        "name": "account_analytics.safety",
+        "status": "PASS",
+        "detail": "Account Analytics consumes normalized metadata only and explicitly excludes prompt/body/secrets"
+      },
+      {
+        "name": "account_analytics.powershell_integration",
+        "status": "PASS",
+        "detail": "PowerShell updates Account Analytics before Closed-loop and passes a bounded report signal"
+      },
+      {
+        "name": "account_analytics.closed_loop_bounded",
+        "status": "PASS",
+        "detail": "Closed-loop consumes Account Analytics through a bounded ±8 score adjustment without touching sticky sessions"
+      },
+      {
+        "name": "account_analytics.native_gui",
+        "status": "PASS",
+        "detail": "native GUI provides account quality, model and workload drill-down"
+      },
+      {
+        "name": "native_gui.cockpit_palette",
+        "status": "PASS",
+        "detail": "native GUI uses the Cockpit dark design-system palette"
+      },
+      {
+        "name": "native_gui.cockpit_sidebar",
+        "status": "PASS",
+        "detail": "Cockpit-like fixed sidebar and active navigation are implemented"
+      },
+      {
+        "name": "native_gui.cockpit_cards_pills",
+        "status": "PASS",
+        "detail": "rounded floating cards, status pills and hover borders are implemented"
+      },
+      {
+        "name": "native_gui.cockpit_motion",
+        "status": "PASS",
+        "detail": "button color interpolation, window fade-in and page slide transitions are implemented"
+      },
+      {
+        "name": "native_gui.open_codex_action",
+        "status": "PASS",
+        "detail": "dedicated MỞ CODEX action is wired to the hidden backend"
+      },
+      {
+        "name": "native_gui.settings_tabs",
+        "status": "PASS",
+        "detail": "Settings uses Cockpit-like pill tabs, scrolling groups and card rows"
+      },
+      {
+        "name": "native_gui.settings_controls",
+        "status": "PASS",
+        "detail": "Settings exposes switches, selectors, inputs and explicit save/reload actions"
+      },
+      {
+        "name": "native_gui.settings_real_backend",
+        "status": "PASS",
+        "detail": "Settings reads/writes a bounded backend allowlist instead of being decorative"
+      },
+      {
+        "name": "native_gui.settings_core_fields",
+        "status": "PASS",
+        "detail": "core Codex/Router/Proxy/Policy settings are present in the native GUI"
+      },
+      {
+        "name": "native_gui.settings_safety",
+        "status": "PASS",
+        "detail": "settings preserve GUI-only safety invariants and validate keys/ranges"
+      },
+      {
+        "name": "native_gui.settings_migration",
+        "status": "PASS",
+        "detail": "v25.23.1 imports the immediately previous v25.22 settings before publishing the new settings file"
+      },
+      {
+        "name": "native_gui.settings_feedback",
+        "status": "PASS",
+        "detail": "settings provides dirty-state, restart-required feedback and animated toast"
+      },
+      {
+        "name": "native_gui.pixel_polish_windows",
+        "status": "PASS",
+        "detail": "Windows host applies best-effort dark title bar, rounded corners and stable taskbar app id"
+      },
+      {
+        "name": "native_gui.pixel_polish_tooltips",
+        "status": "PASS",
+        "detail": "primary actions expose delayed dark tooltips without adding visible clutter"
+      },
+      {
+        "name": "native_gui.pixel_polish_loading",
+        "status": "PASS",
+        "detail": "first backend poll uses a compact skeleton/loading state instead of a blank card"
+      },
+      {
+        "name": "native_gui.pixel_polish_quota_motion",
+        "status": "PASS",
+        "detail": "account quota bars animate into their live percentage"
+      },
+      {
+        "name": "native_gui.pixel_polish_status_pulse",
+        "status": "PASS",
+        "detail": "sidebar runtime indicator gets a restrained running pulse"
+      },
+      {
+        "name": "native_gui.pixel_polish_toggle_motion",
+        "status": "PASS",
+        "detail": "settings switches animate the knob instead of snapping"
+      },
+      {
+        "name": "native_gui.pixel_polish_compact_service",
+        "status": "PASS",
+        "detail": "Codex service hero, actions, stats and gateway are compacted to desktop-product density"
+      },
+      {
+        "name": "native_gui.visual_v2_vector_icons",
+        "status": "PASS",
+        "detail": "sidebar/service iconography uses a small HMS vector system instead of platform-dependent glyphs"
+      },
+      {
+        "name": "native_gui.visual_v2_app_icon",
+        "status": "PASS",
+        "detail": "native GUI ships and applies a dedicated HMS Windows application icon"
+      },
+      {
+        "name": "native_gui.visual_v2_button_ripple",
+        "status": "PASS",
+        "detail": "primary canvas buttons get restrained click-ripple feedback"
+      },
+      {
+        "name": "native_gui.visual_v2_account_summary",
+        "status": "PASS",
+        "detail": "Accounts page preserves live pool summary and extends it with routing-state cells"
+      },
+      {
+        "name": "native_gui.visual_v2_last_sync",
+        "status": "PASS",
+        "detail": "topbar communicates last successful/failed backend synchronization"
+      },
+      {
+        "name": "native_gui.visual_v2_settings_dirty_badge",
+        "status": "PASS",
+        "detail": "Settings navigation shows a small dirty-state badge until backend config is reloaded/saved"
+      },
+      {
+        "name": "native_gui.visual_v2_stat_motion",
+        "status": "PASS",
+        "detail": "numeric overview stats animate to refreshed values"
+      },
+      {
+        "name": "native_gui.visual_v2_shortcuts",
+        "status": "PASS",
+        "detail": "native desktop shortcuts are available for refresh, settings and Open Codex"
+      },
+      {
+        "name": "native_account_center.no_management_web",
+        "status": "PASS",
+        "detail": "daily account/quota/log workflow no longer opens the CLIProxy management webpage"
+      },
+      {
+        "name": "native_account_center.backend_actions",
+        "status": "PASS",
+        "detail": "native backend exposes account center, quota refresh, OAuth, enable/disable and safe logs"
+      },
+      {
+        "name": "native_account_center.direct_quota",
+        "status": "PASS",
+        "detail": "5h and weekly remaining quota are carried from direct quota cache into native GUI data"
+      },
+      {
+        "name": "native_account_center.extended_quota",
+        "status": "PASS",
+        "detail": "native quota model includes code-review, monthly/credits, reset-credit count and additional model windows"
+      },
+      {
+        "name": "native_account_center.quota_ui",
+        "status": "PASS",
+        "detail": "Account Center renders animated 5h/weekly quota bars with reset countdowns"
+      },
+      {
+        "name": "native_account_center.account_actions",
+        "status": "PASS",
+        "detail": "OAuth add and non-destructive credential enable/disable are native"
+      },
+      {
+        "name": "native_account_center.safe_logs",
+        "status": "PASS",
+        "detail": "logs are viewable in HMS while raw request bodies/tokens remain excluded"
+      },
+      {
+        "name": "native_service_center.tabs",
+        "status": "PASS",
+        "detail": "Codex API Service uses compact native tabs instead of new top-level windows"
+      },
+      {
+        "name": "native_service_center.models",
+        "status": "PASS",
+        "detail": "model discovery and /v1/models testing are native"
+      },
+      {
+        "name": "native_service_center.client_keys",
+        "status": "PASS",
+        "detail": "Smart Gateway client-key creation is native and plaintext is returned only on creation"
+      },
+      {
+        "name": "native_service_center.request_log",
+        "status": "PASS",
+        "detail": "request-log can be toggled from HMS with config verification and safe HMS-owned router restart"
+      },
+      {
+        "name": "native_service_center.routing",
+        "status": "PASS",
+        "detail": "routing/pool/router/diagnostics are visible and controllable natively"
+      },
+      {
+        "name": "native_service_center.failover",
+        "status": "PASS",
+        "detail": "bounded live failover test is available inside the native GUI"
+      },
+      {
+        "name": "native_service_center.no_destructive_key_delete",
+        "status": "PASS",
+        "detail": "native client-key center does not expose destructive deletion"
+      },
+      {
+        "name": "startup_hotfix.account_center_parent",
+        "status": "PASS",
+        "detail": "Account Center settings shortcut is parented to the SettingGroup card ancestor"
+      },
+      {
+        "name": "startup_hotfix.fatal_guard",
+        "status": "PASS",
+        "detail": "startup exceptions are logged and surfaced via a GUI error dialog instead of disappearing silently"
+      },
+      {
+        "name": "ux.one_click_shell",
+        "status": "PASS",
+        "detail": "v25.43 preserves one primary daily action while team/project orchestration/diagnostics/security remain behind GUI controls"
+      },
+      {
+        "name": "ux.single_primary_action",
+        "status": "PASS",
+        "detail": "legacy control wall is hidden; one large toggle plus one settings gear remain visible"
+      },
+      {
+        "name": "ux.one_click_orchestrator",
+        "status": "PASS",
+        "detail": "one-click wrapper composes existing transactional router/Codex engine"
+      },
+      {
+        "name": "ux.one_click_policy_authority",
+        "status": "PASS",
+        "detail": "hidden legacy controls cannot overwrite one-click runtime settings"
+      },
+      {
+        "name": "ux.foreign_port_autoselect",
+        "status": "PASS",
+        "detail": "one-click automatically avoids foreign/Cockpit listeners without killing them"
+      },
+      {
+        "name": "ux.cockpit_interaction_patterns",
+        "status": "PASS",
+        "detail": "rounded surfaces, hover feedback, fade-in and compact service state remain"
+      },
+      {
+        "name": "ux.engine_preserved",
+        "status": "PASS",
+        "detail": "previous routing/failover/control-plane engines remain callable behind one-click UX"
+      },
+      {
+        "name": "gui.no_cmd_start",
+        "status": "PASS",
+        "detail": "main GUI contains no direct cmd.exe launch"
+      },
+      {
+        "name": "gui.no_visible_windowstyle",
+        "status": "PASS",
+        "detail": "main GUI has no Minimized/Normal console helper launch"
+      },
+      {
+        "name": "gui.router_hidden",
+        "status": "PASS",
+        "detail": "CLIProxyAPI Router starts hidden with diagnostic redirection"
+      },
+      {
+        "name": "gui.oauth_dialog",
+        "status": "PASS",
+        "detail": "OAuth uses an HMS WinForms dialog and hidden child instead of cmd.exe"
+      },
+      {
+        "name": "gui.embedded_cli",
+        "status": "PASS",
+        "detail": "advanced Codex CLI uses an embedded WinForms terminal with no console window"
+      },
+      {
+        "name": "gui.powershell_helpers_hidden",
+        "status": "PASS",
+        "detail": "all direct PowerShell helper launches are hidden"
+      },
+      {
+        "name": "gui.runtime_no_visible_console",
+        "status": "PASS",
+        "detail": "all PowerShell UI/helper launch paths are hidden"
+      },
+      {
+        "name": "gui.window_restore_contract",
+        "status": "PASS",
+        "detail": "main GUI uses normal taskbar minimize/restore and cannot hide itself via legacy tray policy"
+      },
+      {
+        "name": "gui.window_restore_focus",
+        "status": "PASS",
+        "detail": "restore helper explicitly returns the main WinForms window to foreground"
+      },
+      {
+        "name": "ui.button_token_boundaries",
+        "status": "PASS",
+        "detail": "button helper calls cannot absorb numeric coordinates into quoted labels"
+      },
+      {
+        "name": "failover.bounded_single_auth_mutation",
+        "status": "PASS",
+        "detail": "live failover disables exactly one selected auth only after 2-account preflight"
+      },
+      {
+        "name": "failover.single_live_responses_probe",
+        "status": "PASS",
+        "detail": "failover proof uses one bounded Responses API request"
+      },
+      {
+        "name": "failover.request_log_account_proof",
+        "status": "PASS",
+        "detail": "failover verdict is tied to Request Log Auth mapping"
+      },
+      {
+        "name": "failover.finally_restore",
+        "status": "PASS",
+        "detail": "selected auth disabled state is restored in finally and restore failure is terminal"
+      },
+      {
+        "name": "failover.no_auth_delete",
+        "status": "PASS",
+        "detail": "live failover test never deletes the selected credential"
+      },
+      {
+        "name": "api_compat.contract_endpoint",
+        "status": "PASS",
+        "detail": "Smart Gateway exposes a versioned local compatibility contract"
+      },
+      {
+        "name": "api_compat.body_preserving_features",
+        "status": "PASS",
+        "detail": "Codex feature labels are detected without logging request bodies"
+      },
+      {
+        "name": "api_compat.transport",
+        "status": "PASS",
+        "detail": "chunked request decode, PATCH and SSE relay paths are present"
+      },
+      {
+        "name": "api_compat.error_semantics",
+        "status": "PASS",
+        "detail": "HMS-generated errors are normalized while upstream errors stay pass-through"
+      },
+      {
+        "name": "api_compat.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes API compatibility status and one-click local audit"
+      },
+      {
+        "name": "api_compat.synthetic_validator",
+        "status": "PASS",
+        "detail": "v25.38 validator covers body preservation, SSE, chunked transport and privacy"
+      },
+      {
+        "name": "self_heal.engine_contract",
+        "status": "PASS",
+        "detail": "v25.39 self-healing engine publishes explicit safety invariants"
+      },
+      {
+        "name": "self_heal.foreign_port_fail_closed",
+        "status": "PASS",
+        "detail": "foreign listeners never produce a kill/stop repair action"
+      },
+      {
+        "name": "self_heal.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes audit/repair orchestration"
+      },
+      {
+        "name": "self_heal.evidence_and_rollback",
+        "status": "PASS",
+        "detail": "self-healing writes pre/post evidence and explicit readback/rollback paths"
+      },
+      {
+        "name": "self_heal.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes one-click audit and guarded safe repair"
+      },
+      {
+        "name": "security.protected_secret_vault",
+        "status": "PASS",
+        "detail": "canonical Router keys use Credential Manager with CurrentUser DPAPI fallback; settings plaintext is cleared"
+      },
+      {
+        "name": "security.instance_secret_refs",
+        "status": "PASS",
+        "detail": "managed Codex instances persist protected key references instead of canonical plaintext keys"
+      },
+      {
+        "name": "security.acl_and_reparse_guard",
+        "status": "PASS",
+        "detail": "security/instance boundaries are ACL hardened and reparse points fail closed"
+      },
+      {
+        "name": "security.integrity_seals",
+        "status": "PASS",
+        "detail": "HMAC integrity seals never auto-accept an existing mismatch"
+      },
+      {
+        "name": "security.evidence_redaction",
+        "status": "PASS",
+        "detail": "sensitive self-heal rollback copies are DPAPI protected and diagnostics use unified strict redaction"
+      },
+      {
+        "name": "security.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes audit, guarded hardening and operator-only explicit reseal"
+      },
+      {
+        "name": "security.synthetic_engine_contract",
+        "status": "PASS",
+        "detail": "v25.40 security engine covers protected storage, ACL, reparse, seal mismatch and secret-free snapshot invariants"
+      },
+      {
+        "name": "unified_diagnostics.engine_contract",
+        "status": "PASS",
+        "detail": "v25.41 unifies request/router/quota/circuit/self-healing/security metadata"
+      },
+      {
+        "name": "unified_diagnostics.privacy",
+        "status": "PASS",
+        "detail": "Unified Diagnostics is metadata-only and explicitly excludes prompt/body/secret fields"
+      },
+      {
+        "name": "unified_diagnostics.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes read/refresh diagnostics without mutation actions"
+      },
+      {
+        "name": "unified_diagnostics.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes a dedicated unified diagnostics timeline"
+      },
+      {
+        "name": "unified_diagnostics.bundle_integration",
+        "status": "PASS",
+        "detail": "redacted diagnostics bundle includes the v25.41 metadata timeline and validation evidence"
+      },
+      {
+        "name": "project_orchestrator.engine_contract",
+        "status": "PASS",
+        "detail": "v25.42 orchestrator emits deterministic one-click plans with identity/security/foreign-port hard gates"
+      },
+      {
+        "name": "project_orchestrator.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes status/preflight/one-click launch actions"
+      },
+      {
+        "name": "project_orchestrator.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes dedicated one-click project orchestration"
+      },
+      {
+        "name": "project_orchestrator.no_destructive_process_policy",
+        "status": "PASS",
+        "detail": "project orchestrator fails closed on foreign port/process ownership"
+      },
+      {
+        "name": "project_orchestrator.synthetic_validator",
+        "status": "PASS",
+        "detail": "v25.42 synthetic suite covers core hard gates and privacy"
+      },
+      {
+        "name": "multi_codex_team.engine_contract",
+        "status": "PASS",
+        "detail": "v25.43 team engine models role topology, workspace/account conflicts and explicit epoch ownership"
+      },
+      {
+        "name": "multi_codex_team.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes team status/save/preflight/launch actions"
+      },
+      {
+        "name": "multi_codex_team.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes Coder/Reviewer/Tester team topology"
+      },
+      {
+        "name": "multi_codex_team.no_silent_takeover",
+        "status": "PASS",
+        "detail": "running role rebinding is blocked and process role identity carries explicit epoch"
+      },
+      {
+        "name": "multi_codex_team.diagnostics_bundle",
+        "status": "PASS",
+        "detail": "redacted diagnostics bundle includes v25.43 team metadata"
+      },
+      {
+        "name": "smart_model_router.engine_contract",
+        "status": "PASS",
+        "detail": "v25.44 Smart Model Router has capability gates, sticky-session protection and bounded account affinity"
+      },
+      {
+        "name": "smart_model_router.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes Smart Model status/evaluate/manual apply/rollback"
+      },
+      {
+        "name": "smart_model_router.closed_loop_signal",
+        "status": "PASS",
+        "detail": "Smart Model account affinity is passed to Closed-loop and hard bounded to ±8"
+      },
+      {
+        "name": "smart_model_router.no_hot_switch",
+        "status": "PASS",
+        "detail": "active managed clients are never hot-switched by Smart Model apply"
+      },
+      {
+        "name": "smart_model_router.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes dedicated Smart Model Router controls"
+      },
+      {
+        "name": "smart_model_router.privacy",
+        "status": "PASS",
+        "detail": "Smart Model Router consumes only metadata/capability signals and no prompt/body/secret"
+      },
+      {
+        "name": "smart_model_router.diagnostics_bundle",
+        "status": "PASS",
+        "detail": "redacted diagnostics bundle includes Smart Model decision state/plan/history and validation evidence"
+      },
+      {
+        "name": "lan_pool.engine_contract",
+        "status": "PASS",
+        "detail": "v25.45 LAN pool provides signed heartbeat, project lease/epoch and cross-PC Git-origin identity"
+      },
+      {
+        "name": "lan_pool.backend_actions",
+        "status": "PASS",
+        "detail": "PowerShell backend exposes LAN status/pair/heartbeat/lease actions and prelaunch ownership hard gate"
+      },
+      {
+        "name": "lan_pool.native_gui",
+        "status": "PASS",
+        "detail": "native GUI exposes LAN node pairing and signed registry status"
+      },
+      {
+        "name": "lan_pool.protected_pairing_secret",
+        "status": "PASS",
+        "detail": "pairing key stays in Windows Credential Manager/DPAPI and is passed to helper only via inherited environment"
+      },
+      {
+        "name": "lan_pool.no_raw_credentials",
+        "status": "PASS",
+        "detail": "shared registry uses account hashes/metadata and never transports Codex account credentials"
+      },
+      {
+        "name": "lan_pool.validator_contract",
+        "status": "PASS",
+        "detail": "synthetic LAN validator covers collision, signature tamper, release ownership and expired failover takeover"
+      },
+      {
+        "name": "lan_pool.diagnostics_bundle",
+        "status": "PASS",
+        "detail": "redacted diagnostics bundle includes v25.45 LAN metadata and validation evidence"
+      },
+      {
+        "name": "lan_pool.unified_diagnostics",
+        "status": "PASS",
+        "detail": "Unified Diagnostics includes signed LAN node/lease metadata without secrets"
+      },
+      {
+        "name": "v25_46.public_contract_freeze",
+        "status": "PASS",
+        "detail": "v25.46 freezes public backend actions and stable provider/state/secret references"
+      },
+      {
+        "name": "v25_46.compatibility_freeze_validator",
+        "status": "PASS",
+        "detail": "compatibility validator covers exact actions, Codex-only surface, milestone preservation and migration-stable LAN KDF"
+      },
+      {
+        "name": "v25_46.client_compatibility_matrix",
+        "status": "PASS",
+        "detail": "Codex CLI/Desktop compatibility matrix is explicit without a brittle client version whitelist"
+      },
+      {
+        "name": "v25_46.client_migration_validator",
+        "status": "PASS",
+        "detail": "client validator checks legacy settings fallback, corrupt backup, protected key migration and restart generation guard"
+      },
+      {
+        "name": "v25_46.lan_clock_payload_hardening",
+        "status": "PASS",
+        "detail": "LAN registry rejects future skew, malformed signed payloads, duplicate node ids and invalid leases"
+      },
+      {
+        "name": "v25_46.lan_smb_retry",
+        "status": "PASS",
+        "detail": "atomic JSON publish uses bounded retry and failure matrix exercises a transient SMB publish failure"
+      },
+      {
+        "name": "v25_46.lan_failure_matrix",
+        "status": "PASS",
+        "detail": "failure matrix covers unavailable share, locks, clock skew and controlled expired takeover"
+      },
+      {
+        "name": "v25_46.regression_aggregator",
+        "status": "PASS",
+        "detail": "v25.46 regression aggregator reruns cross-version structural and synthetic gates"
+      },
+      {
+        "name": "v25_47.soak_profiles_and_resume",
+        "status": "PASS",
+        "detail": "v25.47 provides exact 6h/24h profiles, resumable checkpoints and active-process-time-only accounting"
+      },
+      {
+        "name": "v25_47.standard_profile_duration_immutable",
+        "status": "PASS",
+        "detail": "6h/24h named profiles cannot be shortened with --duration-sec and falsely certified"
+      },
+      {
+        "name": "v25_47.full_topology_gate",
+        "status": "PASS",
+        "detail": "real 6h/24h cannot pass without Router, at least two instance targets and shared LAN path"
+      },
+      {
+        "name": "v25_47.application_health_probe",
+        "status": "PASS",
+        "detail": "Router and Codex instance probes require application-layer /hms/health success, not only an open TCP port"
+      },
+      {
+        "name": "v25_47.bounded_recovery",
+        "status": "PASS",
+        "detail": "soak harness records bounded reconnect recovery and fails closed on exhausted/budget-violating recovery"
+      },
+      {
+        "name": "v25_47.lease_and_node_faults",
+        "status": "PASS",
+        "detail": "synthetic reliability loop covers foreign ownership, lease churn and disconnect/rejoin"
+      },
+      {
+        "name": "v25_47.cooperative_stop",
+        "status": "PASS",
+        "detail": "STOP checkpoints and pauses instead of force-killing the soak process"
+      },
+      {
+        "name": "v25_47.native_gui_soak_controls",
+        "status": "PASS",
+        "detail": "LAN Pool GUI exposes smoke/6h/24h, resume, stop and live checkpoint status"
+      },
+      {
+        "name": "v25_47.diagnostics_soak_surface",
+        "status": "PASS",
+        "detail": "Unified Diagnostics exposes metadata-only soak state without prompt/body/secrets"
+      },
+      {
+        "name": "v25_47.soak_validator_contract",
+        "status": "PASS",
+        "detail": "v25.47 synthetic validator covers resume, topology gates, lease safety and cooperative stop"
+      },
+      {
+        "name": "v25_48.performance_control_plane_metrics",
+        "status": "PASS",
+        "detail": "v25.48 measures control-plane latency/TTFB without mislabeling it as model token TTFT or consuming model quota"
+      },
+      {
+        "name": "v25_48.performance_multi_instance_roles",
+        "status": "PASS",
+        "detail": "Router and managed instance targets are explicit and multi-instance coverage requires at least two instance targets"
+      },
+      {
+        "name": "v25_48.performance_backpressure",
+        "status": "PASS",
+        "detail": "bounded queue/backpressure contract rejects overload without silently dropping accepted work"
+      },
+      {
+        "name": "v25_48.performance_reconnect_and_lan_contention",
+        "status": "PASS",
+        "detail": "reconnect storm and isolated shared-filesystem contention are exercised with integrity checks"
+      },
+      {
+        "name": "v25_48.performance_privacy_and_claim_boundary",
+        "status": "PASS",
+        "detail": "performance evidence stores hashes/indexes only and never auto-claims production certification"
+      },
+      {
+        "name": "v25_48.performance_validator_contract",
+        "status": "PASS",
+        "detail": "synthetic validator covers saturation/backpressure, multi-instance distribution, reconnect storm, LAN contention and fail-closed targets"
+      },
+      {
+        "name": "v25_48.native_gui_performance_control",
+        "status": "PASS",
+        "detail": "LAN Pool GUI exposes a non-blocking benchmark and labels real model TTFT as not measured"
+      },
+      {
+        "name": "v25_48.unified_diagnostics_performance_surface",
+        "status": "PASS",
+        "detail": "Unified Diagnostics exposes metadata-only performance evidence"
+      },
+      {
+        "name": "v25_48.diagnostics_bundle_performance_surface",
+        "status": "PASS",
+        "detail": "Diagnostics bundle includes redacted v25.48 performance evidence and release validation"
+      },
+      {
+        "name": "v25_49.real_codex_capability_detection",
+        "status": "PASS",
+        "detail": "v25.49 detects installed Codex capabilities/version without a brittle version allowlist"
+      },
+      {
+        "name": "v25_49.auth_state_privacy",
+        "status": "PASS",
+        "detail": "auth state is fingerprinted/redacted without persisting token or API-key contents"
+      },
+      {
+        "name": "v25_49.windows_ps51_parser_gate",
+        "status": "PASS",
+        "detail": "target-machine harness has an explicit Windows PowerShell 5.1 parser/runtime gate"
+      },
+      {
+        "name": "v25_49.real_topology_generation_guard",
+        "status": "PASS",
+        "detail": "real certification requires two isolated instances and verifies process restart generation"
+      },
+      {
+        "name": "v25_49.live_budget_and_ttft_boundary",
+        "status": "PASS",
+        "detail": "live request path is explicit/bounded and exact token TTFT requires output_text.delta"
+      },
+      {
+        "name": "v25_49.credential_bridge_ephemeral_secret",
+        "status": "PASS",
+        "detail": "Windows bridge reads protected Router key into process environment only and clears it in finally"
+      },
+      {
+        "name": "v25_49.native_gui_real_cert_controls",
+        "status": "PASS",
+        "detail": "LAN Pool GUI exposes non-consuming preflight and explicit one-request live certification"
+      },
+      {
+        "name": "v25_49.real_cert_validator_contract",
+        "status": "PASS",
+        "detail": "synthetic validator covers cap/opt-in, TTFT event, redaction and auth immutability"
+      },
+      {
+        "name": "v25_49.public_backend_contract_preserved",
+        "status": "PASS",
+        "detail": "real certification stays out of the frozen BackendAction surface"
+      },
+      {
+        "name": "v25_49.unified_diagnostics_real_cert_surface",
+        "status": "PASS",
+        "detail": "Unified Diagnostics exposes metadata-only real-Codex certification state"
+      },
+      {
+        "name": "v25_49.diagnostics_bundle_real_cert_privacy",
+        "status": "PASS",
+        "detail": "Diagnostics bundle includes v25.49 certification evidence while defensively redacting prompt/request/response bodies"
+      },
+      {
+        "name": "v25_50.live_quota_last_good_freshness",
+        "status": "PASS",
+        "detail": "v25.50 uses last-success freshness and fail-closed stale/unknown gates for new sessions"
+      },
+      {
+        "name": "v25_50.plan_reserve_policy",
+        "status": "PASS",
+        "detail": "v25.50 applies explicit plan-specific reserve floors with a release margin"
+      },
+      {
+        "name": "v25_50.native_quota_cache_preserves_last_good",
+        "status": "PASS",
+        "detail": "failed live refresh attempts do not overwrite the last known-good quota timestamp/value"
+      },
+      {
+        "name": "v25_50.native_account_surface",
+        "status": "PASS",
+        "detail": "Account Center publishes freshness/reserve/routing eligibility metadata without raw auth data"
+      },
+      {
+        "name": "v25_50.adaptive_router_fail_closed",
+        "status": "PASS",
+        "detail": "Adaptive Router treats live quota eligibility as authoritative for new-session ranking"
+      },
+      {
+        "name": "v25_50.closed_loop_fail_closed",
+        "status": "PASS",
+        "detail": "Closed-loop Router also rejects stale/blocked quota candidates for new sessions"
+      },
+      {
+        "name": "v25_50.gui_live_quota_surface",
+        "status": "PASS",
+        "detail": "Account Center still shows freshness, plan reserve, usable quota and fail-closed routing state"
+      },
+      {
+        "name": "v25_50.validator_contract",
+        "status": "PASS",
+        "detail": "v25.50 validator covers stale, reserve, router integration and last-good refresh behavior"
+      },
+      {
+        "name": "v25_51.active_ineligible_rotation_fix",
+        "status": "PASS",
+        "detail": "Adaptive Router keeps the actual active account visible and rotates NEW sessions when it becomes ineligible"
+      },
+      {
+        "name": "v25_51.closed_loop_current_fix",
+        "status": "PASS",
+        "detail": "Closed-loop preserves real preferred account even when live quota/circuit makes it ineligible"
+      },
+      {
+        "name": "v25_51.gateway_affinity_authoritative",
+        "status": "PASS",
+        "detail": "Recovered higher-priority targets do not pull an existing sticky session back"
+      },
+      {
+        "name": "v25_51.torture_scenarios",
+        "status": "PASS",
+        "detail": "torture harness covers quota depletion, hysteresis, 429, auth isolation, 2+ instances and LAN lease rejoin"
+      },
+      {
+        "name": "v25_51.auth_cross_bleed_guard",
+        "status": "PASS",
+        "detail": "routing-only mutation is checked against immutable auth fingerprints and cross-account secret placement"
+      },
+      {
+        "name": "v25_51.lan_epoch_guard",
+        "status": "PASS",
+        "detail": "expired owner can fail over by epoch but a rejoined stale owner cannot steal the active lease"
+      },
+      {
+        "name": "v25_51.validator_1000_cycles",
+        "status": "PASS",
+        "detail": "release validator executes 1000-cycle torture and asserts sticky recovery/multi-instance/LAN invariants"
+      },
+      {
+        "name": "v25_51.gui_torture_surface",
+        "status": "PASS",
+        "detail": "LAN Pool GUI exposes an explicit non-quota-consuming 1000-cycle torture action"
+      },
+      {
+        "name": "v25_51.public_contract_unchanged",
+        "status": "PASS",
+        "detail": "v25.51 torture is an internal/local validation surface and adds no frozen BackendAction"
+      },
+      {
+        "name": "v25_52.native_operator_pulse",
+        "status": "PASS",
+        "detail": "native Account Center presents route eligibility/freshness/active-route decisions without another mutation backend"
+      },
+      {
+        "name": "v25_52.native_account_filters",
+        "status": "PASS",
+        "detail": "account list can be filtered locally by operational state and favorites"
+      },
+      {
+        "name": "v25_52.snapshot_decision_fields",
+        "status": "PASS",
+        "detail": "PowerShell publishes metadata-only route/hold/stale decision state to both native and web UX"
+      },
+      {
+        "name": "v25_52.unified_web_parity_plus",
+        "status": "PASS",
+        "detail": "read-only local Unified UX exposes high-density account/quota/router decision state"
+      },
+      {
+        "name": "v25_52.web_remains_read_only",
+        "status": "PASS",
+        "detail": "browser dashboard remains loopback-only/read-only; mutation stays in native operator console"
+      },
+      {
+        "name": "v25_52.validator_contract",
+        "status": "PASS",
+        "detail": "UX validator checks public contract, runtime HTTP read-only behavior and v25.51 rotation invariants"
+      },
+      {
+        "name": "v25_53.target_machine_seven_stage_gate",
+        "status": "PASS",
+        "detail": "v25.53 aggregates seven real target-machine stages and only emits production PASS when all are complete"
+      },
+      {
+        "name": "v25_53.synthetic_never_production",
+        "status": "PASS",
+        "detail": "synthetic quota/soak and unproven failover cannot satisfy production certification"
+      },
+      {
+        "name": "v25_53.failover_restore_and_freshness",
+        "status": "PASS",
+        "detail": "bounded failover evidence must be restored, recent, HTTP 200 and use a different account"
+      },
+      {
+        "name": "v25_53.real_lan_two_node_gate",
+        "status": "PASS",
+        "detail": "target certification requires two signed online LAN nodes plus real shared filesystem roundtrip"
+      },
+      {
+        "name": "v25_53.real_soak_duration_gate",
+        "status": "PASS",
+        "detail": "6h/24h production soak duration cannot be shortened and downtime is not counted"
+      },
+      {
+        "name": "v25_53.operator_safety_surface",
+        "status": "PASS",
+        "detail": "native Mission Control exposes one target-cert flow with explicit quota/failover actions"
+      },
+      {
+        "name": "v25_53.no_public_backend_action",
+        "status": "PASS",
+        "detail": "target-machine certification remains an internal/operator surface and does not extend the frozen 90-action backend"
+      },
+      {
+        "name": "v25_53.validator_negative_contract",
+        "status": "PASS",
+        "detail": "v25.53 validator explicitly proves weaker/synthetic evidence cannot create production PASS"
+      },
+      {
+        "name": "v25_54.digital_twin_fault_lab",
+        "status": "PASS",
+        "detail": "v25.54 adds deterministic multi-seed digital-twin fault injection with replay and state-space checks"
+      },
+      {
+        "name": "v25_54.fault_catalog",
+        "status": "PASS",
+        "detail": "simulation catalog covers quota, 429, process, auth, backpressure, SMB, partition and clock-skew faults"
+      },
+      {
+        "name": "v25_54.production_claim_boundary",
+        "status": "PASS",
+        "detail": "digital twin can never mint the target-machine production verdict"
+      },
+      {
+        "name": "v25_54.validator_replay_mutation",
+        "status": "PASS",
+        "detail": "validator proves deterministic replay and that an intentionally unsafe stale-quota mutant is detected"
+      },
+      {
+        "name": "v25_54.gui_simulation_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes non-production simulation and deterministic replay without requiring a real machine"
+      },
+      {
+        "name": "v25_54.public_contract_unchanged",
+        "status": "PASS",
+        "detail": "simulation lab is local/internal and does not extend the frozen BackendAction contract"
+      },
+      {
+        "name": "v25_55.autonomous_router_large_pool",
+        "status": "PASS",
+        "detail": "v25.55 digital twin models dynamic weighted routing across accounts/instances/projects"
+      },
+      {
+        "name": "v25_55.state_model_checker",
+        "status": "PASS",
+        "detail": "bounded checker exhaustively validates compact quota/health/instance/affinity state combinations"
+      },
+      {
+        "name": "v25_55.trace_minimizer",
+        "status": "PASS",
+        "detail": "unsafe pull-back mutant is detected and minimized to a short deterministic replay trace"
+      },
+      {
+        "name": "v25_55.adversarial_recovery_guard",
+        "status": "PASS",
+        "detail": "recovery cannot snap existing sessions back and stale high-quota candidates remain blocked"
+      },
+      {
+        "name": "v25_55.validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks model-state count, affinity recovery, fairness and minimized counterexample behavior"
+      },
+      {
+        "name": "v25_55.gui_twin_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes large-pool twin and bounded model-check actions"
+      },
+      {
+        "name": "v25_55.production_claim_boundary",
+        "status": "PASS",
+        "detail": "digital twin cannot mint target-machine production certification"
+      },
+      {
+        "name": "v25_56.protocol_chaos_fuzzer",
+        "status": "PASS",
+        "detail": "v25.56 deterministic protocol fuzzer covers SSE/WebSocket/JSON/chunked/retry paths"
+      },
+      {
+        "name": "v25_56.sse_integrity_hardening",
+        "status": "PASS",
+        "detail": "OpenAI SSE truncation and declared Content-Length mismatch become metadata-only upstream health failures"
+      },
+      {
+        "name": "v25_56.websocket_upgrade_hardening",
+        "status": "PASS",
+        "detail": "malformed WebSocket 101 responses are rejected before relay and bounded failover continues"
+      },
+      {
+        "name": "v25_56.no_midstream_replay",
+        "status": "PASS",
+        "detail": "partial SSE streams are never replayed and POST replay remains idempotency-gated"
+      },
+      {
+        "name": "v25_56.client_abort_not_upstream_failure",
+        "status": "PASS",
+        "detail": "client disconnect remains distinguishable from upstream truncation for health accounting"
+      },
+      {
+        "name": "v25_56.validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks fuzz count, transport hardening and synthetic claim boundary"
+      },
+      {
+        "name": "v25_56.gui_protocol_chaos_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes protocol chaos fuzzing without adding a public backend action"
+      },
+      {
+        "name": "v25_56.powershell_protocol_chaos_surface",
+        "status": "PASS",
+        "detail": "PowerShell operator surface mirrors the same synthetic-only protocol chaos gate"
+      },
+      {
+        "name": "v25_57.recovery_planner",
+        "status": "PASS",
+        "detail": "v25.57 adds cause-aware deterministic recovery planning instead of reflexive restart/rotation"
+      },
+      {
+        "name": "v25_57.loop_breaker",
+        "status": "PASS",
+        "detail": "recovery loops open a bounded circuit after repeated attempts and escalate instead of thrashing"
+      },
+      {
+        "name": "v25_57.rollback_proof",
+        "status": "PASS",
+        "detail": "config recovery is atomic/readback-verified and refuses mutation without rollback authority"
+      },
+      {
+        "name": "v25_57.model_checker",
+        "status": "PASS",
+        "detail": "bounded model checker proves no unowned restart, quota-triggered restart, unsafe lease takeover or recovery-loop escape"
+      },
+      {
+        "name": "v25_57.session_affinity_safety",
+        "status": "PASS",
+        "detail": "quota/429 never tears down or rotates an already-running sticky session"
+      },
+      {
+        "name": "v25_57.validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks the decision proof, bounded state count and synthetic-only claim boundary"
+      },
+      {
+        "name": "v25_57.gui_recovery_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes recovery proof/model-check without extending public backend actions"
+      },
+      {
+        "name": "v25_57.powershell_recovery_surface",
+        "status": "PASS",
+        "detail": "PowerShell operator surface mirrors the synthetic recovery proof"
+      },
+      {
+        "name": "v25_58.compound_fault_dag",
+        "status": "PASS",
+        "detail": "compound-fault recovery is merged into an acyclic dependency DAG instead of independent reflex actions"
+      },
+      {
+        "name": "v25_58.global_recovery_budget",
+        "status": "PASS",
+        "detail": "global recovery cost budget prevents restart/repair/retry storms across overlapping incidents"
+      },
+      {
+        "name": "v25_58.convergence_model",
+        "status": "PASS",
+        "detail": "bounded convergence lab accepts only safe terminal outcomes and caps recovery rounds"
+      },
+      {
+        "name": "v25_58.operator_dominance",
+        "status": "PASS",
+        "detail": "auth/identity/foreign ownership ambiguity dominates and blocks auto mutation"
+      },
+      {
+        "name": "v25_58.compound_model_checker",
+        "status": "PASS",
+        "detail": "pair/triple compound-fault state model checker proves safety and convergence"
+      },
+      {
+        "name": "v25_58.validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks 70k+ state coverage, DAG/budget/convergence semantics and synthetic claim boundary"
+      },
+      {
+        "name": "v25_58.gui_compound_fault_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes compound-fault proof/model checking without adding public backend actions"
+      },
+      {
+        "name": "v25_58.powershell_compound_fault_surface",
+        "status": "PASS",
+        "detail": "PowerShell operator surface mirrors the synthetic compound-fault convergence lab"
+      },
+      {
+        "name": "v25_59.official_auth_compat_layer",
+        "status": "PASS",
+        "detail": "P0 compatibility layer locks Cockpit v1.3.27 credential-face compatibility and file/keyring/auto switch semantics"
+      },
+      {
+        "name": "v25_59.auth_field_preservation",
+        "status": "PASS",
+        "detail": "rewrite removes stale credential/account identity while preserving unrelated current auth fields"
+      },
+      {
+        "name": "v25_59.auth_powershell_live_adapter",
+        "status": "PASS",
+        "detail": "PowerShell live adapter snapshots, serializes, verifies readback and rolls back before controlled app restart"
+      },
+      {
+        "name": "v25_59.official_oauth_identity",
+        "status": "PASS",
+        "detail": "OAuth login/refresh identity remains compatible under Cockpit v1.3.27 baseline"
+      },
+      {
+        "name": "v25_59.validator_contract",
+        "status": "PASS",
+        "detail": "release validator covers snapshot, serialization, rollback, version-derived OAuth identity, Secrets-backend fail-closed and native GUI wiring"
+      },
+      {
+        "name": "v25_59.native_gui_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes P0 Official Auth Compatibility audit without adding public backend mutation actions"
+      },
+      {
+        "name": "v25_60.recovery_journal_hash_chain",
+        "status": "PASS",
+        "detail": "durable append-only hash-chain journal records recovery phases with fsync"
+      },
+      {
+        "name": "v25_60.no_duplicate_commit_resume",
+        "status": "PASS",
+        "detail": "committed recovery resumes at VERIFY instead of repeating side effects"
+      },
+      {
+        "name": "v25_60.journal_secret_redaction",
+        "status": "PASS",
+        "detail": "journal stores metadata/hash only and redacts secret-shaped values"
+      },
+      {
+        "name": "v25_60.journal_validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks crash matrix, duplicate-commit guard and Usage/Token reset UX"
+      },
+      {
+        "name": "v25_60.auth_switch_journal_wiring",
+        "status": "PASS",
+        "detail": "Official Auth switch is journaled around PREPARE/COMMIT/VERIFY/DONE or ROLLBACK"
+      },
+      {
+        "name": "v25_60.usage_reset_absolute",
+        "status": "PASS",
+        "detail": "Account Center shows reset countdown plus absolute local reset time"
+      },
+      {
+        "name": "v25_60.package_expiry_optional",
+        "status": "PASS",
+        "detail": "package expiry is shown only when upstream explicitly exposes it"
+      },
+      {
+        "name": "v25_60.gui_recovery_journal_surface",
+        "status": "PASS",
+        "detail": "native LAN Pool exposes journal proof and crash-resume audit"
+      },
+      {
+        "name": "v25_61.usage_token_center_contract",
+        "status": "PASS",
+        "detail": "usage/token model exposes plan classes plus 5h, weekly and model-specific windows"
+      },
+      {
+        "name": "v25_61.lifecycle_separation",
+        "status": "PASS",
+        "detail": "package expiry and OAuth/token lifecycle are structurally separate without credential-shaped token object"
+      },
+      {
+        "name": "v25_61.reset_source_freshness",
+        "status": "PASS",
+        "detail": "reset rows carry countdown, absolute UTC, source and freshness"
+      },
+      {
+        "name": "v25_61.router_preview_scenario_only",
+        "status": "PASS",
+        "detail": "AFTER RESET router preview is explicitly hypothetical and non-mutating"
+      },
+      {
+        "name": "v25_61.history_replay",
+        "status": "PASS",
+        "detail": "metadata-only history is flushed durably and supports deterministic replay events"
+      },
+      {
+        "name": "v25_61.validator_contract",
+        "status": "PASS",
+        "detail": "usage/token validator covers lifecycle non-conflation, non-mutation and reset history"
+      },
+      {
+        "name": "v25_61.powershell_internal_wiring",
+        "status": "PASS",
+        "detail": "get_accounts and refresh_quota use an internal helper without expanding public BackendAction"
+      },
+      {
+        "name": "v25_61.gui_usage_surface",
+        "status": "PASS",
+        "detail": "native Account Center exposes usage/reset scenario and separate package/OAuth lifecycle labels"
+      },
+      {
+        "name": "v25_61.unified_diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "unified diagnostics projects usage aggregates only and validator enforces identity/secret exclusion"
+      },
+      {
+        "name": "v25_61.diagnostics_bearer_hardening",
+        "status": "PASS",
+        "detail": "diagnostics bundle includes v25.61 metadata artifacts and generic Bearer redaction proof"
+      },
+      {
+        "name": "v25_61.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_62.cross_subsystem_effect_contract",
+        "status": "PASS",
+        "detail": "one replay plan spans auth rewrite, controlled restart, router transition and LAN lease handoff"
+      },
+      {
+        "name": "v25_62.transaction_and_effect_identity",
+        "status": "PASS",
+        "detail": "transaction intent and each durable effect have stable fingerprints"
+      },
+      {
+        "name": "v25_62.idempotency_keys",
+        "status": "PASS",
+        "detail": "every side effect carries an idempotency key while journal stores only its hash"
+      },
+      {
+        "name": "v25_62.external_verify_before_repeat",
+        "status": "PASS",
+        "detail": "prepared/durable replay observes external state before deciding and never blindly repeats"
+      },
+      {
+        "name": "v25_62.ownership_fail_closed",
+        "status": "PASS",
+        "detail": "concurrent change or unproven ownership fails closed"
+      },
+      {
+        "name": "v25_62.compensation_dag",
+        "status": "PASS",
+        "detail": "compensation is reverse dependency order and ownership-gated"
+      },
+      {
+        "name": "v25_62.convergence_states",
+        "status": "PASS",
+        "detail": "safe terminal convergence vocabulary is explicit"
+      },
+      {
+        "name": "v25_62.crash_matrix_contract",
+        "status": "PASS",
+        "detail": "crash matrix covers pre/post durable phases, dangerous unjournaled-effect window and concurrent changes"
+      },
+      {
+        "name": "v25_62.validator_contract",
+        "status": "PASS",
+        "detail": "release validator locks at-most-once, fail-closed compensation and public surface"
+      },
+      {
+        "name": "v25_62.powershell_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell runtime v25.64 carries forward v25.62 replay without adding BackendAction"
+      },
+      {
+        "name": "v25_62.gui_replay_surface",
+        "status": "PASS",
+        "detail": "native LAN/recovery page exposes replay proof and convergence states"
+      },
+      {
+        "name": "v25_62.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_63.startup_observer_contract",
+        "status": "PASS",
+        "detail": "read-only observer adapters cover auth/process/router/LAN without reading keyring secrets"
+      },
+      {
+        "name": "v25_63.startup_fail_closed",
+        "status": "PASS",
+        "detail": "invalid chain, unknown ownership and durable mismatch fail closed"
+      },
+      {
+        "name": "v25_63.startup_gate_atomic",
+        "status": "PASS",
+        "detail": "startup gate is atomic/durable and carries conflicting-mutation block"
+      },
+      {
+        "name": "v25_63.powershell_direct_guard",
+        "status": "PASS",
+        "detail": "direct BackendAction/private Official Auth mutation cannot bypass startup preflight"
+      },
+      {
+        "name": "v25_63.gui_startup_reconcile",
+        "status": "PASS",
+        "detail": "native GUI automatically reconciles on startup and exposes operator state/crash lab"
+      },
+      {
+        "name": "v25_63.crash_process_kill",
+        "status": "PASS",
+        "detail": "crash harness terminates a real subprocess and recovers in a distinct process"
+      },
+      {
+        "name": "v25_63.crash_matrix_contract",
+        "status": "PASS",
+        "detail": "3 crash windows x 4 subsystem effects are locked"
+      },
+      {
+        "name": "v25_63.crash_no_fake_real_codex",
+        "status": "PASS",
+        "detail": "OS crash proof does not claim real Codex side effects"
+      },
+      {
+        "name": "v25_63.validator_contract",
+        "status": "PASS",
+        "detail": "v25.63 validators lock bypass resistance, at-most-once and target-evidence boundary"
+      },
+      {
+        "name": "v25_63.unified_diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "Unified Diagnostics exports only aggregate startup/crash metadata"
+      },
+      {
+        "name": "v25_63.diagnostics_bundle_privacy",
+        "status": "PASS",
+        "detail": "diagnostics bundle includes v25.63 aggregates with secret redaction"
+      },
+      {
+        "name": "v25_63.powershell_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell runtime v25.64 carries forward v25.63 recovery semantics"
+      },
+      {
+        "name": "v25_63.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_64.observer_evidence_contract",
+        "status": "PASS",
+        "detail": "observer exposes evidence class, freshness and explicit failure reason for target recovery"
+      },
+      {
+        "name": "v25_64.observer_secret_safe",
+        "status": "PASS",
+        "detail": "observer uses digest-only keyring provider and does not collect command line/environment/account identity"
+      },
+      {
+        "name": "v25_64.observer_validator_contract",
+        "status": "PASS",
+        "detail": "observer validator locks privacy, target-boundary and frozen public surface"
+      },
+      {
+        "name": "v25_64.real_effect_disarmed_default",
+        "status": "PASS",
+        "detail": "real-effect certification requires independent host, arm-token, operator, environment and adapter gates"
+      },
+      {
+        "name": "v25_64.real_effect_idempotency_witness",
+        "status": "PASS",
+        "detail": "cold-start recovery probes a digest-only idempotency witness before any repeat"
+      },
+      {
+        "name": "v25_64.real_effect_no_shell",
+        "status": "PASS",
+        "detail": "adapter execution is argv-only and shell command modes are rejected"
+      },
+      {
+        "name": "v25_64.real_effect_validator_contract",
+        "status": "PASS",
+        "detail": "real-effect validator locks multi-gate arming, witness semantics and public compatibility"
+      },
+      {
+        "name": "v25_64.target_evidence_classes",
+        "status": "PASS",
+        "detail": "target evidence bundle keeps lab, observer and real-effect evidence classes distinct"
+      },
+      {
+        "name": "v25_64.target_evidence_privacy",
+        "status": "PASS",
+        "detail": "target evidence bundle fingerprints host/runtime and embeds aggregate metadata only"
+      },
+      {
+        "name": "v25_64.target_evidence_validator_contract",
+        "status": "PASS",
+        "detail": "evidence validator locks no-score lab proof, metadata-only projection and bundle digest"
+      },
+      {
+        "name": "v25_64.startup_bridge_integration",
+        "status": "PASS",
+        "detail": "startup reconciler and direct PowerShell mutation preflight use v25.64 observer-backed state"
+      },
+      {
+        "name": "v25_64.gui_windows_recovery_surface",
+        "status": "PASS",
+        "detail": "native GUI exposes observer/preflight/lab surfaces while keeping real effects disarmed"
+      },
+      {
+        "name": "v25_64.unified_diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "Unified Diagnostics exposes aggregate target-recovery evidence only"
+      },
+      {
+        "name": "v25_64.diagnostics_bundle_privacy",
+        "status": "PASS",
+        "detail": "diagnostics bundle includes v25.64 artifacts while redacting secret and identity-shaped data"
+      },
+      {
+        "name": "v25_64.powershell_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell runtime reports v25.64"
+      },
+      {
+        "name": "v25_64.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_65.adapter_pack_four_effects",
+        "status": "PASS",
+        "detail": "adapter pack covers exact auth/restart/router/lease probes and exact readback contract"
+      },
+      {
+        "name": "v25_65.adapter_pack_secret_safe",
+        "status": "PASS",
+        "detail": "target adapters expose hashes/generation only and keep keyring/process/owner identity secret-safe"
+      },
+      {
+        "name": "v25_65.adapter_manifest_disarmed",
+        "status": "PASS",
+        "detail": "generated adapter manifest is structured argv and disarmed by default"
+      },
+      {
+        "name": "v25_65.adapter_validator_contract",
+        "status": "PASS",
+        "detail": "adapter validator locks readback, no-shell and target-evidence boundary"
+      },
+      {
+        "name": "v25_65.attestation_antireplay",
+        "status": "PASS",
+        "detail": "promotion gate rejects replay, event-chain tamper and mixed package versions"
+      },
+      {
+        "name": "v25_65.attestation_manifest_binding",
+        "status": "PASS",
+        "detail": "attestation binds current package digest and requires trusted target signer class"
+      },
+      {
+        "name": "v25_65.promotion_only_target_classes",
+        "status": "PASS",
+        "detail": "only live Windows observer and real Codex effect classes can enter promotion gate"
+      },
+      {
+        "name": "v25_65.promotion_complete_matrix",
+        "status": "PASS",
+        "detail": "real-effect evidence must contain complete 4x3 crash matrix"
+      },
+      {
+        "name": "v25_65.no_direct_score_promotion",
+        "status": "PASS",
+        "detail": "real-effect run and target bundle can only become attestation candidates; neither directly promotes score"
+      },
+      {
+        "name": "v25_65.promotion_validator_contract",
+        "status": "PASS",
+        "detail": "promotion validator locks anti-replay and non-automatic certification"
+      },
+      {
+        "name": "v25_65.timeline_vietnamese",
+        "status": "PASS",
+        "detail": "operator recovery timeline provides complete Vietnamese phase vocabulary"
+      },
+      {
+        "name": "v25_65.timeline_metadata_only",
+        "status": "PASS",
+        "detail": "timeline exposes source/freshness/safe fingerprint prefix/remediation only"
+      },
+      {
+        "name": "v25_65.timeline_validator_contract",
+        "status": "PASS",
+        "detail": "timeline validator locks Vietnamese semantics and privacy"
+      },
+      {
+        "name": "v25_65.gui_attested_surface",
+        "status": "PASS",
+        "detail": "native GUI exposes proof/preflight surfaces without an arming action"
+      },
+      {
+        "name": "v25_65.unified_diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "Unified Diagnostics projects v25.65 adapter/promotion/timeline metadata only"
+      },
+      {
+        "name": "v25_65.diagnostics_bundle_privacy",
+        "status": "PASS",
+        "detail": "diagnostics bundle includes v25.65 evidence with secret/identity redaction"
+      },
+      {
+        "name": "v25_65.startup_adapter_integration",
+        "status": "PASS",
+        "detail": "startup mutation gate prefers v25.65 target adapter pack"
+      },
+      {
+        "name": "v25_65.powershell_gui_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell and native GUI report v25.65"
+      },
+      {
+        "name": "v25_65.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_66.signer_crypto_binding",
+        "status": "PASS",
+        "detail": "attestation signature binds exact package/run/nonce/evidence payload"
+      },
+      {
+        "name": "v25_66.signer_private_material_local",
+        "status": "PASS",
+        "detail": "DPAPI/certificate signer keeps private material local and invokes PowerShell with structured argv"
+      },
+      {
+        "name": "v25_66.signer_validator_contract",
+        "status": "PASS",
+        "detail": "signer validator proves tamper/trust/host boundary"
+      },
+      {
+        "name": "v25_66.promotion_requires_crypto_signature",
+        "status": "PASS",
+        "detail": "promotion gate requires cryptographic signature plus full crash matrix"
+      },
+      {
+        "name": "v25_66.runbook_one_shot_auto_disarm",
+        "status": "PASS",
+        "detail": "target certification is one-shot and always auto-disarms"
+      },
+      {
+        "name": "v25_66.runbook_operator_gates",
+        "status": "PASS",
+        "detail": "runbook requires independent Windows/operator/env/arm gates and structured argv"
+      },
+      {
+        "name": "v25_66.runbook_validator_contract",
+        "status": "PASS",
+        "detail": "runbook validator locks auto-disarm even on failure"
+      },
+      {
+        "name": "v25_66.exchange_privacy_integrity",
+        "status": "PASS",
+        "detail": "evidence exchange hashes bundle and scrubs sensitive identity/signing data"
+      },
+      {
+        "name": "v25_66.exchange_vietnamese_decision",
+        "status": "PASS",
+        "detail": "promotion decision explanation is Vietnamese"
+      },
+      {
+        "name": "v25_66.unified_diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "Unified Diagnostics projects signed-certification aggregate metadata only"
+      },
+      {
+        "name": "v25_66.diagnostics_bundle_privacy",
+        "status": "PASS",
+        "detail": "Diagnostics Bundle includes v25.66 evidence with private/signing/identity redaction"
+      },
+      {
+        "name": "v25_66.gui_signed_cert_surface",
+        "status": "PASS",
+        "detail": "GUI exposes proof-only signer/runbook/evidence controls without arming target effects"
+      },
+      {
+        "name": "v25_66.powershell_gui_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell and native GUI report v25.66"
+      },
+      {
+        "name": "v25_66.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_67.trust_store_pin_rotation_revocation",
+        "status": "PASS",
+        "detail": "trust store pins certificates and tracks rotation/revocation with deterministic snapshot digest"
+      },
+      {
+        "name": "v25_67.dpapi_key_lifecycle_metadata_only",
+        "status": "PASS",
+        "detail": "DPAPI lifecycle exports only sealed-blob digest and pseudonymous key reference"
+      },
+      {
+        "name": "v25_67.trust_store_validator_contract",
+        "status": "PASS",
+        "detail": "trust store validator locks pin/rotate/revoke/expiry lifecycle"
+      },
+      {
+        "name": "v25_67.offline_verifier_fail_closed",
+        "status": "PASS",
+        "detail": "offline verifier binds trust snapshot and fails closed on revoked/DPAPI context"
+      },
+      {
+        "name": "v25_67.offline_verifier_validator_contract",
+        "status": "PASS",
+        "detail": "offline verifier validator locks package/trust/privacy checks"
+      },
+      {
+        "name": "v25_67.campaign_4x3_resume_no_repeat",
+        "status": "PASS",
+        "detail": "campaign resume never silently repeats durable effects and never auto-rearms"
+      },
+      {
+        "name": "v25_67.campaign_case_binding",
+        "status": "PASS",
+        "detail": "every case binds manifest+trust snapshot and uses explicit one-shot arm plus hash-chain journal"
+      },
+      {
+        "name": "v25_67.campaign_validator_contract",
+        "status": "PASS",
+        "detail": "campaign validator locks 4x3 resumability semantics"
+      },
+      {
+        "name": "v25_67.diagnostics_privacy",
+        "status": "PASS",
+        "detail": "Unified Diagnostics and Diagnostics Bundle project v25.67 aggregate metadata with private-material redaction"
+      },
+      {
+        "name": "v25_67.gui_trust_campaign_surface",
+        "status": "PASS",
+        "detail": "GUI exposes proof-only trust/offline/campaign surfaces without target arm action"
+      },
+      {
+        "name": "v25_67.powershell_gui_version_sync",
+        "status": "PASS",
+        "detail": "PowerShell and native GUI report current v25.69 while preserving v25.67 semantics"
+      },
+      {
+        "name": "v25_67.public_action_frozen",
+        "status": "PASS",
+        "detail": "public BackendAction remains exact contract set (90)"
+      },
+      {
+        "name": "v25_68.executor_one_case_only",
+        "status": "PASS",
+        "detail": "executor can execute only one explicitly armed case and never auto-advances"
+      },
+      {
+        "name": "v25_68.executor_frozen_binding",
+        "status": "PASS",
+        "detail": "every target case binds frozen package manifest and trust snapshot"
+      },
+      {
+        "name": "v25_68.executor_windows_preflight",
+        "status": "PASS",
+        "detail": "executor requires Windows/PowerShell/Codex ownership/observer/idempotency preflight"
+      },
+      {
+        "name": "v25_68.executor_auto_disarm_witness",
+        "status": "PASS",
+        "detail": "case attempt auto-disarms and durable effect requires witness before verify-only recovery"
+      },
+      {
+        "name": "v25_68.executor_structured_argv_lease_gate",
+        "status": "PASS",
+        "detail": "target adapter uses structured argv and LAN lease remains separately ownership-gated"
+      },
+      {
+        "name": "v25_68.executor_validator_contract",
+        "status": "PASS",
+        "detail": "executor validator locks one-shot fail-closed semantics"
+      },
+      {
+        "name": "v25_68.review_exact_12_crypto",
+        "status": "PASS",
+        "detail": "promotion review requires exactly 12 signed real Windows/Codex reports"
+      },
+      {
+        "name": "v25_68.review_trust_freshness",
+        "status": "PASS",
+        "detail": "review rejects stale/revoked/retired-current/mixed-trust evidence"
+      },
+      {
+        "name": "v25_68.review_historical_rotation",
+        "status": "PASS",
+        "detail": "retired certificates remain historically auditable but cannot sign new cases"
+      },
+      {
+        "name": "v25_68.review_bundle_privacy_human_gate",
+        "status": "PASS",
+        "detail": "offline review bundle is privacy-safe and promotion remains human-reviewed"
+      },
+      {
+        "name": "v25_68.diagnostics_metadata_only",
+        "status": "PASS",
+        "detail": "v25.68 executor/review evidence is projected metadata-only with privacy redaction"
+      },
+      {
+        "name": "v25_68.gui_version_public_action_frozen",
+        "status": "PASS",
+        "detail": "GUI v25.68 proof-only surface; public BackendAction remains exact 90 (90)"
+      },
+      {
+        "name": "v25_69.ingest_read_only_crypto_replay",
+        "status": "PASS",
+        "detail": "external target evidence ingest is read-only, cryptographically verified and anti-replay"
+      },
+      {
+        "name": "v25_69.ingest_binding_quarantine",
+        "status": "PASS",
+        "detail": "mixed package/trust/campaign evidence is quarantined without auto repair"
+      },
+      {
+        "name": "v25_69.ingest_validator_contract",
+        "status": "PASS",
+        "detail": "v25.69 evidence ingest validator locks read-only trust/replay semantics"
+      },
+      {
+        "name": "v25_69.ledger_hash_chain_dual_review",
+        "status": "PASS",
+        "detail": "promotion decisions are append-only hash-chained and require two distinct reviewers"
+      },
+      {
+        "name": "v25_69.ledger_supersede_no_delete",
+        "status": "PASS",
+        "detail": "revocation/trust/package changes require superseding entries; history is not deleted"
+      },
+      {
+        "name": "v25_69.ledger_validator_contract",
+        "status": "PASS",
+        "detail": "decision ledger validator locks append-only dual-review semantics"
+      },
+      {
+        "name": "v25_69.diagnostics_privacy",
+        "status": "PASS",
+        "detail": "v25.69 diagnostics project aggregate inbox/ledger metadata and redact reviewer/private identity"
+      },
+      {
+        "name": "v25_69.gui_proof_only",
+        "status": "PASS",
+        "detail": "GUI v25.69 exposes proof-only ingest/ledger/inbox controls with no target arm binding"
+      },
+      {
+        "name": "v25_69.version_public_action_frozen",
+        "status": "PASS",
+        "detail": "v25.69 current version synchronized; public BackendAction remains exact 90 (90)"
+      },
+      {
+        "name": "v25_69.no_auto_score_mutation",
+        "status": "PASS",
+        "detail": "ingest and dual-review eligibility remain separate from production score mutation"
+      },
+      {
+        "name": "v25_70.cockpit_baseline_1327",
+        "status": "PASS",
+        "detail": "competitive parity baseline is Cockpit Tools v1.3.27"
+      },
+      {
+        "name": "v25_70.source_port_rebind_no_foreign_kill",
+        "status": "PASS",
+        "detail": "foreign port conflicts rebind before launch and never kill the foreign process"
+      },
+      {
+        "name": "v25_70.runtime_account_occupancy",
+        "status": "PASS",
+        "detail": "dedicated OAuth account occupancy is rechecked at launch time"
+      },
+      {
+        "name": "v25_70.client_api_split",
+        "status": "PASS",
+        "detail": "client authorization and API credential availability are separate states"
+      },
+      {
+        "name": "v25_70.usage_official_account_continuity",
+        "status": "PASS",
+        "detail": "usage ledger prefers pseudonymous official account refs across delete/re-add"
+      },
+      {
+        "name": "v25_70.stream_identity_isolation",
+        "status": "PASS",
+        "detail": "gateway affinity identity combines client and composite conversation/thread/request identity"
+      },
+      {
+        "name": "v25_70.websocket_backup_model_metadata",
+        "status": "PASS",
+        "detail": "WebSocket preference, bounded backups and live model context/compaction metadata are preserved"
+      },
+      {
+        "name": "v25_70.auth_export_security_gate",
+        "status": "PASS",
+        "detail": "official auth.json export is manual, disabled by default and excluded from diagnostics"
+      },
+      {
+        "name": "v25_70.parity_validators",
+        "status": "PASS",
+        "detail": "reference parity and source integration validators are both present"
+      },
+      {
+        "name": "v25_70.gui_version_public_action_frozen",
+        "status": "PASS",
+        "detail": "v25.70 parity surface is proof-only; public BackendAction remains exact 90 (90)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.62",
+  "suite": "RECOVERY_TRANSACTION_REPLAY_VALIDATION",
+  "generated_utc": "2026-08-22T11:35:13.660238+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 30,
+    "fail": 0,
+    "total": 30,
+    "crash_cases": 30
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 18,
+        "fail": 0,
+        "total": 18,
+        "crash_cases": 30
+      }
+    },
+    {
+      "name": "proof_18_checks_or_more",
+      "status": "PASS",
+      "detail": {
+        "pass": 18,
+        "fail": 0,
+        "total": 18,
+        "crash_cases": 30
+      }
+    },
+    {
+      "name": "crash_matrix_30_plus",
+      "status": "PASS",
+      "detail": 30
+    },
+    {
+      "name": "crash_matrix_zero_fail",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "four_cross_subsystem_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "one_transaction_identity",
+      "status": "PASS",
+      "detail": "rrx-203e370a874e0421f65ec0df"
+    },
+    {
+      "name": "effect_fingerprint_unique",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "idempotency_key_unique",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "idempotency_key_not_effect_fingerprint",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dependency_dag_linear",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "danger_window_effect_once_before_resume",
+      "status": "PASS",
+      "detail": {
+        "auth": 1,
+        "restart": 1,
+        "router": 1,
+        "lease": 1
+      }
+    },
+    {
+      "name": "danger_window_converges_healthy",
+      "status": "PASS",
+      "detail": {
+        "status": "HEALTHY",
+        "reason": "ALL_EFFECTS_VERIFIED",
+        "executions": {
+          "auth": 1,
+          "restart": 1,
+          "router": 1,
+          "lease": 1
+        }
+      }
+    },
+    {
+      "name": "danger_window_no_duplicate_auth",
+      "status": "PASS",
+      "detail": {
+        "auth": 1,
+        "restart": 1,
+        "router": 1,
+        "lease": 1
+      }
+    },
+    {
+      "name": "all_effects_at_most_once",
+      "status": "PASS",
+      "detail": {
+        "auth": 1,
+        "restart": 1,
+        "router": 1,
+        "lease": 1
+      }
+    },
+    {
+      "name": "journal_chain_valid",
+      "status": "PASS",
+      "detail": {
+        "ok": true,
+        "records": 14,
+        "head_hash": "c1ceb4537d9e349294a919f75439bbc6496240e7f75f564b1af3867db2bd8d96",
+        "errors": []
+      }
+    },
+    {
+      "name": "journal_hides_raw_idempotency",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "journal_has_effect_fingerprint",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "second_replay_noop_healthy",
+      "status": "PASS",
+      "detail": {
+        "status": "HEALTHY",
+        "reason": "ALREADY_DONE"
+      }
+    },
+    {
+      "name": "concurrent_change_operator_required",
+      "status": "PASS",
+      "detail": {
+        "status": "OPERATOR_REQUIRED",
+        "effect_id": "auth",
+        "reason": "CONCURRENT_EXTERNAL_CHANGE_OWNERSHIP_UNPROVEN"
+      }
+    },
+    {
+      "name": "concurrent_change_not_overwritten",
+      "status": "PASS",
+      "detail": {
+        "auth": 0,
+        "restart": 0,
+        "router": 0,
+        "lease": 0
+      }
+    },
+    {
+      "name": "compensation_reverse_dependency_order",
+      "status": "PASS",
+      "detail": {
+        "status": "DEGRADED_SAFE",
+        "compensated": [
+          "lease",
+          "router",
+          "restart",
+          "auth"
+        ]
+      }
+    },
+    {
+      "name": "compensation_converges_degraded_safe",
+      "status": "PASS",
+      "detail": {
+        "status": "DEGRADED_SAFE",
+        "compensated": [
+          "lease",
+          "router",
+          "restart",
+          "auth"
+        ]
+      }
+    },
+    {
+      "name": "durable_fsync",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "explicit_operator_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "externally_observable_verify",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_claim_blocked",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "version_25_62_ps",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "version_25_62_gui",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_replay_surface",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_actions_still_90",
+      "status": "PASS",
+      "detail": 90
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_RECOVERY_REPLAY_SYNTHETIC_ONLY"
+}

@@ -1,0 +1,9 @@
+{
+  "version": "25.74",
+  "generated_utc": "2026-08-23T07:27:52.535832+00:00",
+  "gui_exit_code": 124,
+  "gui_expected_timeout_alive": true,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "verdict": "PASS"
+}

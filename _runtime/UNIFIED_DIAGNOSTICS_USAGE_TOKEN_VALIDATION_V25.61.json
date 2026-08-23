@@ -1,0 +1,79 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.61",
+  "suite": "UNIFIED_DIAGNOSTICS_USAGE_TOKEN_VALIDATION",
+  "generated_utc": "2026-08-22T11:20:43.106592+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "tests": [
+    {
+      "name": "collector_one_aggregate_event",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "collector_source",
+      "ok": true,
+      "detail": "usage-token-center"
+    },
+    {
+      "name": "collector_kind",
+      "ok": true,
+      "detail": "USAGE_TOKEN_METADATA"
+    },
+    {
+      "name": "account_identity_not_projected",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "access_token_not_projected",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "bearer_not_projected",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "prompt_not_projected",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "aggregate_counts_present",
+      "ok": true,
+      "detail": "Usage/Token metadata accounts=2 resets=1 package=1 stale=1"
+    },
+    {
+      "name": "report_version_25_61",
+      "ok": true,
+      "detail": "25.61"
+    },
+    {
+      "name": "usage_layer_ok",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "name": "report_privacy_metadata_only",
+      "ok": true,
+      "detail": {
+        "contains_prompt": false,
+        "contains_request_body": false,
+        "contains_raw_secret": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "name": "report_has_no_injected_secrets",
+      "ok": true,
+      "detail": null
+    }
+  ]
+}

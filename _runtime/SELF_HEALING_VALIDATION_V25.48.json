@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "mode": "synthetic",
+  "data": {
+    "version": "25.39",
+    "checks": [
+      {
+        "name": "adopt_owned_router",
+        "ok": true
+      },
+      {
+        "name": "clear_stale_client",
+        "ok": true
+      },
+      {
+        "name": "foreign_port_never_auto_killed",
+        "ok": true
+      },
+      {
+        "name": "config_repair_planned",
+        "ok": true
+      },
+      {
+        "name": "auth_resync_only_when_router_stopped",
+        "ok": true
+      },
+      {
+        "name": "secret_snapshot_rejected",
+        "ok": true
+      }
+    ],
+    "pass": 6,
+    "total": 6,
+    "verdict": "PASS"
+  }
+}

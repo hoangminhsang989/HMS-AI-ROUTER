@@ -1,0 +1,87 @@
+{
+  "version": "25.72",
+  "suite": "WINDOWS_TARGET_EVIDENCE_CAPTURE_KIT_VALIDATION",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "seven_cases_exact",
+      "status": "PASS",
+      "detail": [
+        "FOREIGN_PORT_AUTO_REBIND",
+        "ACCOUNT_OCCUPANCY_GUARD",
+        "CLIENT_AUTH_API_SERVICE_SPLIT",
+        "OFFICIAL_ACCOUNT_USAGE_CONTINUITY",
+        "WEBSOCKET_PREFERENCE_PERSISTENCE",
+        "BOUNDED_BACKUP_ROLLBACK_NTFS",
+        "STREAM_IDENTITY_ISOLATION"
+      ]
+    },
+    {
+      "name": "cockpit_1327_bound",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "disarmed_one_case_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "exact_zip_manifest_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "codex_version_bound",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "privacy_contract",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "reuses_target_executor",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "requires_observer_real_effect",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "portable_kit_files",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_baseline_watch_script",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_auto_score_or_cert",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "production_score_eligible": false,
+  "verdict": "PASS"
+}

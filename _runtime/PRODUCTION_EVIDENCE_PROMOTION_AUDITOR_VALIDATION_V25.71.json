@@ -1,0 +1,68 @@
+{
+  "version": "25.71",
+  "suite": "PRODUCTION_EVIDENCE_PROMOTION_AUDITOR_VALIDATION",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "checks": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "baseline_1327",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "windows_certificate_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "external_evidence_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "dual_review_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "baseline_change_invalidates",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "human_proposal_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_automatic_certification",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_score_mutation_authority",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "digest_only_evidence_refs",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false,
+  "automatic_production_certification": false,
+  "verdict": "PASS"
+}

@@ -1,0 +1,33 @@
+HMS AI Cockpit v25.36 — Codex Identity Isolation Hardening
+
+SCOPE
+- Codex-only.
+- Hardening multi-instance identity boundaries; no Antigravity roadmap work.
+
+IMPLEMENTED
+- Added HMS_Codex_IdentityIsolation.py metadata-only auditor.
+- Added deterministic SHA-256 identity fingerprint per managed instance.
+- New binding authority: binding-v2536.json, schema v5; legacy binding files are retained.
+- Audit boundaries: instance root, CODEX_HOME, app-data, Router directory, project, account identity hash, port, stable endpoint and config hash.
+- Detect cross-instance path collision/nesting, project collision, port collision and binding mismatches.
+- Reject identity binding secret fields.
+- Prelaunch fail-closed Identity Audit before Router/Codex start.
+- Inject HMS_CODEX_IDENTITY_FINGERPRINT / HMS_CODEX_PROFILE_ROOT / HMS_CODEX_APP_DATA into managed process environment.
+- Added one-click AUDIT ISOLATION in native GUI.
+- Instance cards show identity PASS/BLOCKED + short fingerprint.
+- Added strict identity settings to native Settings > Instances.
+
+SAFETY
+- Fingerprint is metadata/hash only; no OAuth/API key/cookie/password/client secret.
+- Existing session affinity / stable endpoint / Project Affinity remain authoritative.
+- No destructive delete action added.
+- Legacy bindings are migrated by copy-forward semantics and not auto-deleted.
+
+VERIFICATION
+- Python compile: PASS.
+- PowerShell StaticLint v25.36: PASS (194/194 script vars; 309 referenced settings / 394 declared; 0 missing; 0 duplicates; 0 glue findings).
+- PowerShell CoherenceAudit v25.36: PASS.
+- Runtime Kit Validator v25.36: PASS 140/140.
+- Identity synthetic valid fingerprint: PASS.
+- Cross-instance CODEX_HOME collision rejection: PASS.
+- Runtime Windows Codex identity continuity: DEFERRED_BY_OPERATOR.

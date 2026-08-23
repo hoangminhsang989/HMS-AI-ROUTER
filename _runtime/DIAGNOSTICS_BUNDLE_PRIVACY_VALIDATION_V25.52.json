@@ -1,0 +1,22 @@
+{
+  "version": "25.52",
+  "generated_utc": "2026-08-22T03:26:13.079753+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "checks": {
+    "bundle_ok": true,
+    "access_token_redacted": true,
+    "prompt_redacted": true,
+    "request_redacted": true,
+    "response_redacted": true,
+    "authorization_redacted": true,
+    "api_key_redacted": true,
+    "ux_v2552_evidence_included": true,
+    "privacy_v2552_evidence_included": true,
+    "v2552_build_notes_included": true
+  }
+}

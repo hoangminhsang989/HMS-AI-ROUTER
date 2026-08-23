@@ -1,0 +1,16 @@
+HMS AI Cockpit v25.32 — Circuit Breaker + Failover State Machine
+
+- Added HMS_Codex_CircuitBreaker.py.
+- Added per-instance/account CLOSED -> OPEN -> HALF_OPEN -> CLOSED state machine.
+- Added error classification for 401/403 auth, 429 rate-limit, 5xx server, timeout, network and generic failures.
+- Added consecutive-failure thresholds plus class-specific cooldown and bounded exponential backoff.
+- Added OBSERVE and GUARDED_AUTO; OBSERVE remains default.
+- Added circuit-owned auth.disabled quarantine with exact previous disabled-state restoration.
+- Added protection against auto-enabling accounts manually/external disabled before circuit ownership.
+- Added HALF_OPEN passive probe state.
+- Closed-loop Router v25.32 now consumes Circuit Breaker plan: OPEN is excluded; HALF_OPEN uses low probe priority/weight.
+- Added Circuit Breaker GUI status plus ĐÁNH GIÁ / ÁP DỤNG / RESET controls in Advanced settings.
+- Circuit Breaker automation runs before Closed-loop Router; legacy HA background control is skipped while the new breaker is enabled.
+- Stable endpoint, project binding, OAuth token and existing session affinity remain untouched.
+- Added auth path traversal/symlink rejection and secret-free plan validation.
+- Real Windows Codex circuit failover/session continuity remains DEFERRED_BY_OPERATOR.

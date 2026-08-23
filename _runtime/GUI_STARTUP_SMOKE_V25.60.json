@@ -1,0 +1,40 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.60",
+  "suite": "GUI_STARTUP_SMOKE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "duration_sec": 8,
+  "exit_code": 124,
+  "checks": [
+    {
+      "name": "process_remained_alive_until_smoke_timeout",
+      "ok": true,
+      "detail": 124
+    },
+    {
+      "name": "stderr_empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no_traceback_stdout",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_version_25_60",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "recovery_journal_surface_present",
+      "ok": true,
+      "detail": null
+    }
+  ]
+}

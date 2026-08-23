@@ -1,0 +1,39 @@
+HMS AI Cockpit v25.59 — Official Auth Compatibility Layer (P0)
+
+FINAL SOURCE FREEZE: PASS
+
+Parity baseline
+- Cockpit Tools v1.3.24 (2026-08-20).
+- OAuth credential-face compatibility baseline: originator=codex_vscode, User-Agent=codex_vscode/0.146.0.
+- Identity profile is version-derived/overridable; 0.146.0 is a compatibility fallback, not a permanent allowlist.
+
+P0 auth compatibility
+- CODEX_HOME-aware auth.json resolution.
+- cli_auth_credentials_store: file / keyring / auto; ephemeral persisted switching fails closed.
+- Direct keyring authority: service "Codex Auth", account cli|sha256(canonical CODEX_HOME)[:16].
+- secret_auth_storage encrypted Secrets backend is detected and fails closed unless an official Codex-owned helper is available; HMS does not manufacture a shadow generic credential.
+- Snapshot latest current auth before switch.
+- Serialized switch lock.
+- Preserve unrelated/custom auth fields while removing stale credential/account-identity fields.
+- Normalize OAuth ChatGPT auth_mode/type and clear stale API-key state; normalize API-key mode and remove stale OAuth state.
+- Atomic file replace / keyring commit, readback fingerprint verification and rollback.
+- Controlled Codex restart only after verified commit.
+- Native Account Center adds confirmed CHUYỂN AUTH via a private operator path; frozen public BackendAction remains 90.
+- Raw rollback snapshot exists only in Windows Credential Manager during a live switch and is cleared afterward.
+- Diagnostics/evidence is metadata-only.
+
+Validation
+- Official Auth Compatibility: 67/67 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Runtime Kit: 303/303 PASS.
+- Regression Freeze: 27/27 suites, 1162/1162 numeric assertions PASS.
+- Diagnostics Bundle privacy injection: 10/10 PASS.
+- GUI startup headless 7 s: 5/5 PASS, stderr empty.
+- PowerShell static lint/coherence: PASS.
+- Python compileall: PASS.
+- Parity Auditor: 93.0% feature evidence / 55.2% production evidence; FEATURE_PARITY_CANDIDATE.
+
+Claim boundary
+- Synthetic file/direct-keyring fixtures and deterministic switching semantics PASS.
+- No real Windows Codex App, encrypted Secrets backend, live OAuth refresh or live target-account switch is claimed by this release.
+- v25.59 cannot issue PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.

@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "path": "/mnt/data/work2545/diag45_out/HMS_DIAGNOSTICS_20260821T162510Z.zip",
+  "sha256": "a8b25a42e2d989b9530653d734e3994a8ddff4e835d9e03c8b8f55fe9cc8427c",
+  "file_count": 18,
+  "privacy": {
+    "contains_raw_oauth": false,
+    "contains_request_body": false,
+    "contains_api_keys": false,
+    "contains_cookies": false,
+    "redaction_applied": true
+  }
+}

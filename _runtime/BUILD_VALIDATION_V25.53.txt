@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.53 — BUILD VALIDATION
+
+Generated UTC: 2026-08-22T04:03Z
+Verdict: PASS_V25_53_TARGET_MACHINE_CERTIFICATION_RUNNER_RELEASE_CANDIDATE
+
+CORE GATES
+- Target-Machine Certification validator: 39/39 PASS
+- Compatibility Freeze: 133/133 PASS
+- Runtime Kit: 260/260 PASS
+- Full Regression Freeze: 21/21 suites; 864/864 numeric assertions PASS
+- UX / Cockpit Parity+ invariant: 62/62 PASS
+- Seamless Rotation Torture invariant: 63/63 PASS
+- Live Quota Intelligence invariant: 52/52 PASS
+- Diagnostics Bundle target/privacy injection: 12/12 PASS
+- Unified Diagnostics target-cert privacy: 3/3 PASS
+- GUI startup headless 7s: 5/5 PASS; stderr=0 bytes
+- Python compileall: PASS
+- PowerShell static lint: PASS
+- PowerShell coherence audit: PASS
+
+TARGET CERTIFICATION CONTRACT
+- Exactly seven production stages: Host, Codex, Quota, Failover, LAN, Soak 6h, Soak 24h.
+- PREFLIGHT does not send a model request and does not consume model quota.
+- Aggregator never mutates auth and never disables an account.
+- LIVE 1 remains a separate explicit-confirmation operation capped at one real request.
+- Quota must be real-source and fresh/aging; stale/mock/synthetic evidence is rejected.
+- Failover must prove a different target, HTTP success, restore=true and evidence freshness.
+- LAN must prove >=2 signed online nodes, no credential sharing and a real shared-path atomic roundtrip.
+- Soak must be non-synthetic, exact 6h/24h active process time, include Router + >=2 instances + shared roundtrip, and exclude downtime from elapsed time.
+- Target evidence persists hashes/metadata only; token/API key/prompt/request/response bodies are excluded/redacted.
+- Public BackendAction contract remains exactly 90 actions.
+
+BUILD-HOST CLAIM BOUNDARY
+- Actual build-host target preflight: HARNESS_READY_TARGET_RUNTIME_DEFERRED; 0/7 production stages because this build environment is not the intended Windows/Codex/LAN target.
+- Therefore PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED is NOT claimed in this release package.
+- Parity Auditor remains FEATURE_PARITY_CANDIDATE: feature evidence 93.0%, production evidence 55.2%.
+- v26.0 Production Superset remains prohibited until the intended Windows target completes all seven real stages.

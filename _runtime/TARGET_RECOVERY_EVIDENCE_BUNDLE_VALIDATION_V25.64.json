@@ -1,0 +1,63 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.64",
+  "suite": "TARGET_RECOVERY_EVIDENCE_BUNDLE_VALIDATION",
+  "generated_utc": "2026-08-22T14:53:15.295569+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 8,
+        "fail": 0,
+        "total": 8
+      }
+    },
+    {
+      "name": "proof_8",
+      "status": "PASS",
+      "detail": {
+        "pass": 8,
+        "fail": 0,
+        "total": 8
+      }
+    },
+    {
+      "name": "four_evidence_classes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "host_runtime_hashed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "source_payload_not_embedded",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "score_requires_observer_and_real",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bundle_sha256",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_boundary",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_BUNDLE_ALONE_DOES_NOT_CERTIFY_PRODUCTION"
+}

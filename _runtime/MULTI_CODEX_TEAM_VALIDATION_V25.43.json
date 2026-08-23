@@ -1,0 +1,55 @@
+{
+  "version": "25.43",
+  "passed": 12,
+  "total": 12,
+  "tests": [
+    {
+      "name": "valid_ready",
+      "pass": true
+    },
+    {
+      "name": "preflight_ready",
+      "pass": true
+    },
+    {
+      "name": "same_workspace_blocked",
+      "pass": true
+    },
+    {
+      "name": "nested_workspace_blocked",
+      "pass": true
+    },
+    {
+      "name": "duplicate_account_blocked",
+      "pass": true
+    },
+    {
+      "name": "repo_mismatch_blocked",
+      "pass": true
+    },
+    {
+      "name": "identity_blocked",
+      "pass": true
+    },
+    {
+      "name": "foreign_port_blocked",
+      "pass": true
+    },
+    {
+      "name": "partial_running",
+      "pass": true
+    },
+    {
+      "name": "epoch_changes_lease",
+      "pass": true
+    },
+    {
+      "name": "secret_field_rejected",
+      "pass": true
+    },
+    {
+      "name": "single_role_blocked",
+      "pass": true
+    }
+  ]
+}

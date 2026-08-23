@@ -1,0 +1,28 @@
+HMS AI Cockpit v25.41 — BUILD VALIDATION
+
+VERDICT: PASS_IMPLEMENTED_STATIC_SYNTHETIC
+RUNTIME VERIFIED (Windows Codex thật): DEFERRED_BY_OPERATOR
+SOAK VERIFIED: NOT_YET
+
+GATES
+- Python compileall / GUI py_compile: PASS
+- GUI startup smoke 7s under virtual display: PASS; stderr 0 bytes
+- Diagnostics page render smoke: PASS
+- Unified Diagnostics synthetic: PASS 11/11
+- Diagnostics Bundle redaction: PASS; 0 raw-secret hits; unified report included
+- PowerShell StaticLint: PASS; variables 214/214; missing 0; settings 338 referenced / 425 declared; missing 0; duplicate 0
+- PowerShell Coherence: PASS
+- Runtime Kit Validator: PASS 166/166
+- API Compatibility regression: PASS 12/12
+- API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- Self-Healing synthetic regression: PASS
+- Security Hardening synthetic regression: PASS
+
+V25.41 CONTRACT
+- Unified request/router/quota/circuit/self-healing/security timeline.
+- Correlation uses existing request_id/trace_id only; no fabricated correlation.
+- Metadata only: no prompt/request body/response body/tool arguments/raw OAuth/API key/cookie.
+- Read-only diagnostics aggregation; no process kill/config mutation/credential mutation from diagnostics page.
+- Stable endpoint, session affinity, Project Affinity, Identity Isolation and Security Hardening preserved.
+- Codex-only scope preserved.

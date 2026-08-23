@@ -1,0 +1,30 @@
+HMS AI Cockpit v25.47 BUILD VALIDATION
+
+VERDICT: PASS_FEATURE_PARITY_CANDIDATE_RELIABILITY_HARNESS
+PRODUCTION_CERTIFICATION: NOT_CLAIMED
+
+Regression Freeze: 15/15 suites PASS; 497/497 numeric assertions PASS
+Compatibility Freeze: 133/133 PASS
+Codex Client Compatibility/Migration: 27/27 PASS
+LAN Pool: 15/15 PASS
+LAN Failure Matrix: 20/20 PASS
+Reliability Soak Harness: 42/42 PASS
+Runtime Kit: 209/209 PASS
+Project Orchestrator: 9/9 PASS
+Unified Diagnostics Soak Surface: 5/5 PASS
+GUI startup smoke: PASS (7s alive; stderr 0 bytes)
+Python compileall: PASS
+Non-synthetic single-node production-shaped smoke: PASS
+
+Parity Auditor:
+- Feature evidence: 93.0%
+- Production evidence: 55.2%
+- Verdict: FEATURE_PARITY_CANDIDATE
+
+Deferred / not executed:
+- Windows PowerShell 5.1 + real Codex runtime
+- real multi-PC SMB/NAS
+- standard 6H soak
+- standard 24H soak
+
+No production/superset claim is permitted from this build alone.

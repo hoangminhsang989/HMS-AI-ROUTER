@@ -1,0 +1,7 @@
+{
+  "kid": "hms-update-2026-08-v1",
+  "alg": "RSA-PKCS1-v1_5-SHA256",
+  "e": 65537,
+  "n_hex": "d7079459d409f4e6c2ac8e97030835a6b948f01e247c8e0953ea0488c63874822f4d6c157be6521d72771404d3f9bc347d7d2fac13ecca64adc5fb0d749acd7a529a3bc8c1e033e02b804c48f50aedb3522a4048112a1d714c65cddfa349a1a4ecedd1cf4982cd34a1bdab225eb90e04cdd8130f221d505fce78fa9d18928e9b84bc17adf0e888c9aba94bc09dce5fd3af88f5eec9fae55bec3498d8c62f9ec35ddd11f9fd32f0294036d6308b7c82293ff58d042a32cd7486d66d4d8ffbbcb1ae82cac8fa10d970c4dc14f4a83411bd6818fe5e4f03ad5ce44666646a78691b9033a2bdb20320ce3e8f4cc4b411a3bcc81e927f4d06df8e328581f530d955ed",
+  "purpose": "Pinned public key for HMS signed update feed verification. Private key is not distributed in the package."
+}

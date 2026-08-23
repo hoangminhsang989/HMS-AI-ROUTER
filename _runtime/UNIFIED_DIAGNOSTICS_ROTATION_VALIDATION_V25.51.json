@@ -1,0 +1,17 @@
+{
+  "version": "25.51",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "total": 6
+  },
+  "checks": {
+    "version_25_51": true,
+    "rotation_layer_ok": true,
+    "rotation_source_present": true,
+    "metadata_only": true,
+    "no_prompt": true,
+    "no_raw_secret": true
+  }
+}

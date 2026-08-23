@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.39 — CODEX SELF-HEALING BUILD VALIDATION
+Generated: 2026-08-21
+
+SCOPE
+- Codex-only product scope.
+- v25.39 tranche: Codex Self-Healing with evidence, readback, rollback, and process-ownership guard.
+- Real Windows Codex runtime remains DEFERRED_BY_OPERATOR by operator decision.
+
+GATES
+- Self-Healing synthetic validation: PASS 6/6.
+- Runtime Kit Validator: PASS 154/154.
+- Python compileall/source compile: PASS 51 .py/.pyw files, 0 errors.
+- Native GUI source compile: PASS.
+- Native GUI startup smoke: PASS; remained alive for 7 seconds under Xvfb, stderr 0 bytes.
+- PowerShell StaticLint: PASS; variables 204/204, missing 0; settings 325 referenced / 410 declared, missing 0, duplicates 0.
+- PowerShell Coherence Audit: PASS; high-confidence compact syntax findings 0.
+- API Compatibility v25.38 regression: PASS 12/12.
+- API Superset regression: PASS 13/13.
+- Protocol regression: PASS 10/10.
+
+SELF-HEALING SAFETY CONTRACT
+- Never kill a process unless HMS ownership is independently proven.
+- Foreign port conflicts are fail-closed/operator-required; no automatic kill action is generated.
+- Evidence is captured before mutation.
+- Readback verification is required after repair.
+- Repair failures trigger rollback where a repair changes persistent state.
+- Credential-pool resync is allowed only when the managed instance is fully stopped.
+- Self-healing snapshots/plans/history are metadata-only and reject secret-like fields.
+- Automatic safe repair is OFF by default; automatic audit is ON by default.
+- No destructive delete action is introduced.
+
+VERIFICATION STATE
+IMPLEMENTED=PASS
+STATIC_VERIFIED=PASS
+SYNTHETIC_VERIFIED=PASS
+RUNTIME_VERIFIED=DEFERRED_BY_OPERATOR
+SOAK_VERIFIED=NOT_YET

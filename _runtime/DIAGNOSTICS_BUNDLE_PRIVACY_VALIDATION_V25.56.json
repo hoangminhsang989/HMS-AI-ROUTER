@@ -1,0 +1,35 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.56",
+  "suite": "DIAGNOSTICS_BUNDLE_PROTOCOL_CHAOS_PRIVACY",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 21,
+    "fail": 0,
+    "total": 21
+  },
+  "checks": {
+    "bundle_ok": true,
+    "bundle_exists": true,
+    "bundle_file_count_matches_payload_entries": true,
+    "diagnostics_manifest_present": true,
+    "diagnostics_manifest_count_matches": true,
+    "protocol_chaos_data_included": true,
+    "protocol_chaos_validation_included": true,
+    "unified_validation_included": true,
+    "privacy_contains_raw_oauth_false": true,
+    "privacy_contains_request_body_false": true,
+    "privacy_contains_api_keys_false": true,
+    "privacy_contains_cookies_false": true,
+    "redaction_applied_true": true,
+    "no_access_token_bytes": true,
+    "no_api_key_bytes": true,
+    "no_bearer_bytes": true,
+    "no_prompt_bytes": true,
+    "no_request_body_bytes": true,
+    "no_response_body_bytes": true,
+    "no_cookie_bytes": true,
+    "zip_sha256_shape": true
+  },
+  "bundle_file_count": 107
+}

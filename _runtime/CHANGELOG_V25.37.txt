@@ -1,0 +1,36 @@
+HMS AI COCKPIT v25.37 — CHANGELOG
+Tranche: CODEX_MODEL_REASONING_MANAGER
+Baseline/Rollback: v25.36
+
+ADDED
+- HMS_Codex_ModelReasoningManager.py
+- Backend actions: get_model_manager, discover_models, save_model_policy, apply_model_policy.
+- Native GUI page: Models Codex.
+- Project-scoped Model / Reasoning / Profile policy.
+- Live /v1/models catalog aggregation from reachable HMS Router endpoints.
+- Conservative reasoning capability matrix.
+- Account Analytics model recommendation as advisory metadata.
+- Config backup before apply and contract/readback verification after apply.
+- Optional prelaunch policy apply when a valid policy exists.
+
+PRESERVED HARD INVARIANTS
+- model_provider = hms_instance_router
+- stable per-instance endpoint
+- Project Affinity
+- session affinity
+- Identity Isolation v25.36
+- Circuit Breaker
+- Predictive Quota
+- Account Analytics
+- Closed-loop Router
+
+FIXED
+- Removed an inherited undefined identity-map lookup from Start-CodexInstance.
+- Restored per-instance identity audit lookup in Get-HmsNativeCodexInstancesObject.
+
+SAFETY
+- No project/account/instance delete action added.
+- Model policy rejects secret-like fields.
+- Apply rejects config outside instance root and symlink config paths.
+- Failed contract validation does not mutate config.
+- Runtime Windows/Codex verification remains DEFERRED_BY_OPERATOR.

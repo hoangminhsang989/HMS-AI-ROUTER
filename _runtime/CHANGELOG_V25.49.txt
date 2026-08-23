@@ -1,0 +1,55 @@
+HMS AI Cockpit v25.49 — REAL CODEX CERTIFICATION
+Edition: CODEX_ONLY
+
+MỤC TIÊU
+- Biến khoảng trống "Codex thật / Windows thật" thành một certification gate có thể lặp lại, fail-closed và không tự nâng production score khi chưa chạy live.
+
+THAY ĐỔI CHÍNH
+1. HMS_Codex_RealCertification.py
+   - Nhận diện Codex theo capability, không hard-code allowlist phiên bản.
+   - Kiểm tra codex --version, --help, login status, doctor.
+   - Kiểm tra Windows PowerShell 5.1 + parser trước khi chứng nhận.
+   - Chỉ fingerprint auth.json bằng metadata/SHA-256; không đọc/persist token.
+   - Bắt buộc >=2 managed instance, project/CODEX_HOME/account/port tách biệt.
+   - Process-generation guard chống PID stale/foreign sau restart.
+   - GET /hms/health ở application level.
+   - Live request explicit opt-in, hard cap 8; GUI dùng đúng 1 request.
+   - Model TTFT chỉ được chứng nhận từ SSE response.output_text.delta; không suy diễn từ HTTP header/first SSE.
+
+2. HMS_Codex_RealCertificationBridge.ps1
+   - Windows PowerShell 5.1 bridge.
+   - Đọc Router API key từ Windows Credential Manager.
+   - Secret chỉ tồn tại trong process environment và được clear trong finally.
+   - Không đưa secret vào command line/evidence.
+
+3. HMS GUI
+   - LAN Pool có REAL CODEX CERTIFICATION v25.49.
+   - KIỂM TRA: preflight, không gửi model request, không tiêu quota.
+   - LIVE 1: yêu cầu model + xác nhận người dùng, gửi tối đa đúng 1 request thật.
+
+4. Diagnostics / privacy
+   - Unified Diagnostics có metadata-only REAL_CODEX_CERT_RUN.
+   - Diagnostics Bundle hỗ trợ evidence v25.49.
+   - Defense-in-depth redaction thêm prompt/request_body/response_body/input/output fields.
+
+5. Contract / compatibility
+   - Public BackendAction giữ nguyên chính xác 90.
+   - Không thêm auth mutation, account switching mutation hoặc credential deletion.
+
+BUILD-EVIDENCE
+- Real Codex synthetic validator: 65/65 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Codex Client Compatibility/Migration: 27/27 PASS.
+- Runtime Kit: 229/229 PASS.
+- Regression Freeze: 17/17 suites, 617/617 numeric assertions PASS.
+- Unified Diagnostics privacy: 6/6 PASS.
+- Diagnostics Bundle privacy: 5/5 PASS.
+- PowerShell static lint/coherence: PASS.
+- Python compileall: PASS.
+- GUI Linux/Xvfb 7-second startup smoke: PASS, stderr=0.
+
+CLAIM BOUNDARY
+- Build environment là Linux, không có Windows PowerShell 5.1, Codex CLI thật hoặc topology >=2 managed Codex instances.
+- Host preflight verdict: HARNESS_READY_RUNTIME_DEFERRED.
+- production_certification: NOT_CLAIMED.
+- PASS_REAL_CODEX_CERTIFIED chỉ hợp lệ khi target Windows chạy LIVE 1 thành công với topology thật.

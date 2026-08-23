@@ -1,0 +1,44 @@
+{
+  "version": "25.42",
+  "suite": "PROJECT_ORCHESTRATOR",
+  "passed": 9,
+  "total": 9,
+  "tests": [
+    {
+      "name": "ready_project_one_click",
+      "pass": true
+    },
+    {
+      "name": "running_project_focus_only",
+      "pass": true
+    },
+    {
+      "name": "identity_is_hard_gate",
+      "pass": true
+    },
+    {
+      "name": "security_is_hard_gate",
+      "pass": true
+    },
+    {
+      "name": "foreign_port_fail_closed",
+      "pass": true
+    },
+    {
+      "name": "missing_project_blocked",
+      "pass": true
+    },
+    {
+      "name": "model_policy_optional_not_fake",
+      "pass": true
+    },
+    {
+      "name": "project_selection_exact_path",
+      "pass": true
+    },
+    {
+      "name": "secret_field_rejected",
+      "pass": true
+    }
+  ]
+}

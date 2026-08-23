@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.41",
+    "verdict": "PASS",
+    "generated_utc": "2026-08-21T05:48:44.744411+00:00",
+    "summary": {
+      "raw_secret_hits": 0,
+      "unified_report_in_bundle": true,
+      "prompt_body_policy": "METADATA_ONLY"
+    },
+    "checks": [
+      {
+        "name": "bundle.redacts_bearer_and_api_key",
+        "status": "PASS"
+      },
+      {
+        "name": "bundle.includes_unified_diagnostics",
+        "status": "PASS"
+      },
+      {
+        "name": "unified.no_prompt_request_body_secret",
+        "status": "PASS"
+      }
+    ]
+  }
+}

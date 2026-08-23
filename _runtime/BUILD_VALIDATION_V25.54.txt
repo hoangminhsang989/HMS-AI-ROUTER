@@ -1,0 +1,23 @@
+HMS AI Cockpit v25.54 — BUILD VALIDATION
+STATUS: PASS_RELEASE_FREEZE_AND_CLEAN_EXTRACT
+
+Core gates observed before packaging:
+- Production Simulation: PASS, 8 seeds / 2400 cycles / 15 fault classes / 0 invariant failures.
+- Production Simulation Validator: 40/40 PASS.
+- Quota state-space: 132/132 PASS.
+- Deterministic replay: 2/2 PASS.
+- Runtime Kit: 266/266 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Regression Freeze: 22/22 suites / 910/910 numeric assertions PASS.
+- Unified Diagnostics / Bundle privacy: 18/18 PASS.
+- GUI startup: 5/5 PASS, stderr 0.
+- Static lint: PASS.
+- PowerShell coherence: PASS.
+- Python compileall: PASS.
+- Parity: feature 93.0%, production 55.2%, no production score increase from simulation.
+
+Production claim boundary:
+- NOT_CLAIMED_SIMULATION_ONLY.
+- v25.53 target-machine production certificate remains a separate optional final gate.
+
+Clean-extract candidate verification: manifest 491/491; Simulation 40/40; Compatibility 133/133; Runtime 266/266; Regression 22/22 / 910/910; unsafe/symlink 0/0.

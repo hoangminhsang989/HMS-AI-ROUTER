@@ -1,0 +1,33 @@
+HMS AI Cockpit v25.57 — Recovery Planner & Self-Healing Decision Proof
+
+NEW
+- Cause-aware deterministic Recovery Planner for quota/429, network, process crash, config drift, auth/identity, LAN lease, stale PID and unknown faults.
+- Bounded recovery circuit: attempts_in_window >= 3 opens recovery circuit and escalates instead of thrashing.
+- Config repair requires atomic mutation + readback + rollback backup; no backup means no auto mutation.
+- Signed lease recovery policy: no takeover before expiry; reelection only for signed expired leases.
+- 9,216-state bounded model checker with invariant proof and deterministic plan_id.
+- Counterexample minimizer proves unsafe restart-on-429 mutant can be reduced to one event.
+- Native GUI + PowerShell operator surfaces for PROOF / MODEL CHECK.
+- Unified Diagnostics + Diagnostics Bundle metadata-only integration.
+
+SAFETY LOCKS
+- 429/quota never restart process.
+- Existing session is not rotated because quota became ineligible for NEW sessions.
+- Unowned/foreign process is never restarted/killed.
+- Auth/identity drift fail-closed to operator; no raw auth mutation.
+- Client abort never triggers upstream recovery.
+- Recovery loop is bounded and escalated.
+- Synthetic evidence cannot mint production certification.
+
+VALIDATION
+- Recovery proof core: 17/17 PASS.
+- Recovery release validator: 12/12 PASS.
+- Model checker: 9,216/9,216 states, 0 safety violations.
+- Compatibility Freeze: 133/133 PASS.
+- Runtime Kit: 289/289 PASS.
+- Full isolated regression aggregation: 25/25 suites, 1,066/1,066 numeric assertions PASS.
+- Unified Diagnostics privacy: 10/10 PASS.
+- Diagnostics Bundle privacy: 9/9 PASS.
+- GUI headless startup: 5/5 PASS.
+- Python compileall, PowerShell static lint and coherence: PASS.
+- Parity remains 93.0% feature / 55.2% production; FEATURE_PARITY_CANDIDATE.

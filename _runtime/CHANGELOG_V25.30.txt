@@ -1,0 +1,14 @@
+HMS AI Cockpit v25.30 — Seamless Codex Router
+
+- Added stable per-instance Codex endpoint metadata.
+- Added primary + fallback credential pool reconciliation behind each isolated Router.
+- Added router-pool-v2530.json metadata-only manifest.
+- Added binding-v2530 migration while retaining previous binding files.
+- Added SHA-256 credential snapshot verification and stale credential archiving.
+- Added session-affinity/TTL/max-retry-credentials controls for managed instance Router config.
+- Added SEAMLESS_FALLBACK_READY project state.
+- Added GUI Router endpoint/pool visibility and SYNC ROUTER action.
+- Added backend sync_project_router action.
+- Added HMS_Codex_SeamlessRouterValidator.py.
+- Preserved foreign PID ownership guards and no-destructive-delete policy.
+- Real Windows seamless failover remains DEFERRED_BY_OPERATOR.

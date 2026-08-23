@@ -1,0 +1,79 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "RELIABILITY_LIVE_SHAPED_SMOKE",
+  "verdict": "PASS",
+  "mode": "NON_SYNTHETIC_SINGLE_NODE_SHORT_DURATION",
+  "application_health_contract": "GET /hms/health -> HTTP 200 + JSON ok=true",
+  "topology": {
+    "router_http": 1,
+    "instance_http": 2,
+    "shared_filesystem": true
+  },
+  "result": {
+    "product": "HMS AI Cockpit",
+    "version": "25.47",
+    "suite": "RELIABILITY_SOAK",
+    "run_id": "live-shaped-http",
+    "generated_utc": "2026-08-22T01:13:42.508654+00:00",
+    "profile": "custom",
+    "target_duration_sec": 0.62,
+    "active_elapsed_sec": 0.62,
+    "progress_pct": 100.0,
+    "session_count": 1,
+    "cycle_count": 8,
+    "verdict": "PASS",
+    "duration_complete": true,
+    "coverage_complete": true,
+    "missing_coverage": [],
+    "coverage": {
+      "router_probe_ok": 8,
+      "router_probe_fail": 0,
+      "instance_probe_ok": 16,
+      "instance_probe_fail": 0,
+      "distinct_instance_targets": 2,
+      "shared_roundtrip_ok": 8,
+      "shared_roundtrip_fail": 0,
+      "lan_heartbeat_ok": 8,
+      "lease_owner_ok": 8,
+      "foreign_lease_blocked": 0,
+      "node_disconnect_detected": 0,
+      "node_rejoin_ok": 0,
+      "transient_fault_recovered": 0,
+      "recovery_exhausted": 0,
+      "lease_churn_ok": 0
+    },
+    "health": {
+      "consecutive_failures": 0,
+      "max_consecutive_failures": 0,
+      "unresolved_outage_since_utc": null,
+      "last_error": "",
+      "fatal_error_count": 0,
+      "current_outage_active_sec": 0.0,
+      "max_outage_active_sec": 0.0,
+      "recovery_budget_violation_count": 0
+    },
+    "privacy": {
+      "pairing_key_persisted": false,
+      "pairing_code_persisted": false,
+      "oauth_persisted": false,
+      "api_key_persisted": false,
+      "request_body_persisted": false,
+      "shared_path_hash": "193d7d83dac333245754c846e86770876d97e31828b3b7ff9f6ce1de4aaaca19",
+      "lan_key_mode": "DERIVED_SOAK_NAMESPACE_ONLY"
+    },
+    "resume_semantics": "ACTIVE_PROCESS_TIME_ONLY_DOWNTIME_NOT_COUNTED",
+    "production_certification": "NOT_CLAIMED",
+    "soak_certificate_scope": "SINGLE_NODE_DURATION_AND_TARGET_PROBES",
+    "real_multi_pc_smb_nas": "NOT_PROVEN_BY_SINGLE_NODE_HARNESS",
+    "checkpoint": "/tmp/hms-v2547-live-shaped-v0j7n4qb/state/soak-checkpoint-v2547-live-shaped-http.json",
+    "events": "/tmp/hms-v2547-live-shaped-v0j7n4qb/state/soak-events-v2547-live-shaped-http.jsonl"
+  },
+  "limitations": {
+    "standard_6h_executed": false,
+    "standard_24h_executed": false,
+    "real_codex_clients": false,
+    "real_multi_pc_smb_nas": false,
+    "production_certification": "NOT_CLAIMED"
+  }
+}

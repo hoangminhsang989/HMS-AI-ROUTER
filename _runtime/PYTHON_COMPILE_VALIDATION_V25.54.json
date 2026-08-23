@@ -1,0 +1,18 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.54",
+  "suite": "PYTHON_COMPILE_VALIDATION",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "total": 1
+  },
+  "tests": [
+    {
+      "name": "compileall_runtime",
+      "status": "PASS",
+      "detail": "python -m compileall -q ."
+    }
+  ]
+}

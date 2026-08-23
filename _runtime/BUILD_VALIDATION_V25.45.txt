@@ -1,0 +1,39 @@
+HMS AI Cockpit v25.45 — BUILD VALIDATION
+
+TRANCHE: CROSS-PC / LAN CODEX POOL
+STATUS: IMPLEMENTED / STATIC VERIFIED / SYNTHETIC VERIFIED
+WINDOWS MULTI-PC CODEX RUNTIME: DEFERRED_BY_OPERATOR
+SOAK: NOT_YET
+
+CURRENT VERIFIED GATES
+- Python compileall: PASS.
+- Native GUI startup smoke under xvfb-run, 7 seconds: process remained alive until timeout; stderr 0 bytes.
+- LAN Pool GUI synthetic render: PASS; stderr 0 bytes.
+- LAN Pool synthetic validator: PASS 15/15.
+- Runtime Kit Validator: PASS 191/191.
+- PowerShell StaticLint v25.45: PASS; variables 230/230; settings referenced 370 / declared 459; missing 0; duplicates 0; glue findings 0.
+- PowerShell Coherence Audit: PASS; high-confidence compact syntax findings 0.
+- Smart Model Router regression: PASS 16/16.
+- API Compatibility regression: PASS 12/12.
+- API Superset regression: PASS 13/13.
+- Protocol regression: PASS 10/10.
+- Self-Healing regression: PASS 6/6.
+- Security Hardening regression: PASS 9/9.
+- Project Orchestrator regression: PASS 9/9.
+
+LAN SAFETY INVARIANTS
+- Active lease owned by another signed node => launch BLOCKED.
+- Invalid signature => FAIL CLOSED.
+- Expired lease takeover => newer epoch + fresh nonce.
+- Shared path contains metadata/account hashes only; no raw Codex credentials.
+- Pairing key stays in Windows Credential Manager / CurrentUser DPAPI fallback.
+- Project fingerprint is cross-PC only when Git origin/logical ID is available; otherwise LOCAL_PATH_FALLBACK is explicit.
+- HMS never kills a process on another machine to resolve a lease conflict.
+
+FINAL PACKAGING
+- Release manifest source inventory: PASS 303/303 SHA-256 (excluding current manifest itself).
+- ZIP expected file count: 304 (303 managed files + RELEASE_MANIFEST_V25_45.json).
+- Clean-extract manifest re-verification: PASS 303/303.
+- Unsafe ZIP path: 0.
+- Symlink payload: 0.
+- Final ZIP SHA-256 published beside package.

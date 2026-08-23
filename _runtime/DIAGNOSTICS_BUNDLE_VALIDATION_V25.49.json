@@ -1,0 +1,34 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.49",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY",
+  "generated_utc": "2026-08-22T01:53:35.882313+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "tests": [
+    {
+      "id": "api_key_absent",
+      "status": "PASS"
+    },
+    {
+      "id": "prompt_absent",
+      "status": "PASS"
+    },
+    {
+      "id": "redaction_present",
+      "status": "PASS"
+    },
+    {
+      "id": "real_cert_included",
+      "status": "PASS"
+    },
+    {
+      "id": "manifest_version_2549",
+      "status": "PASS"
+    }
+  ]
+}

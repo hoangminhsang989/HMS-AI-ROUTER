@@ -1,0 +1,63 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.66",
+  "suite": "WINDOWS_ATTESTATION_SIGNER_VALIDATION",
+  "generated_utc": "2026-08-23T00:32:09.337421+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "total": 8
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "proof_9",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "dpapi_machine_scope",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "certificate_store_structured_argv",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "signature_exact_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "private_material_not_exported",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "trusted_classes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "nonwindows_no_target_signing",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_eligible": false
+}

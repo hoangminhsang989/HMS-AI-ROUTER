@@ -1,0 +1,40 @@
+HMS AI Cockpit v25.65 — CHANGELOG
+Generated UTC: 2026-08-22T20:14:51.844956+00:00
+
+1. WINDOWS TARGET ADAPTER PACK
+- Added safe adapter contracts for OFFICIAL_AUTH_REWRITE, CONTROLLED_CODEX_RESTART, ROUTER_STATE_TRANSITION and LAN_LEASE_HANDOFF.
+- File auth observation exports raw-byte digest only. Keyring/auto requires digest-only provider; no raw credential crosses the observer boundary.
+- Windows process observation is limited to PID/name/start-generation; command line/environment are not collected.
+- Adapter manifest is DISARMED by default, structured argv only, no shell.
+
+2. ATTESTED EVIDENCE PROMOTION GATE
+- Added run_id + nonce anti-replay, package manifest SHA-256 binding, signer class, freshness, event hash-chain and exact package-version checks.
+- Promotion requires both WINDOWS_TARGET_OBSERVER and REAL_CODEX_EFFECT evidence plus the complete 4-effect x 3-crash-window matrix.
+- Mixed-version, stale, replayed, untrusted or incomplete target evidence fails closed.
+- Synthetic fixture can validate gate logic but is never bundled as production evidence.
+
+3. CENTRALIZED PRODUCTION-SCORE AUTHORITY
+- RealEffectCrashCertification now only emits attestation_candidate; production_score_eligible is always false.
+- TargetRecoveryEvidenceBundle is also non-promoting by itself.
+- Only AttestedEvidencePromotionGate can emit production_score_promotion_eligible=true after attested target evidence passes.
+
+4. RECOVERY OPERATOR TIMELINE
+- Added Vietnamese timeline: CHUẨN BỊ / QUAN SÁT TRẠNG THÁI / ÁP DỤNG THAY ĐỔI / ĐÃ GHI BỀN / XÁC MINH / HOÀN TẤT / CẦN NGƯỜI VẬN HÀNH.
+- Timeline exposes metadata/source/freshness/safe fingerprint prefix/remediation only and redacts bearer-shaped secrets.
+
+5. STARTUP / GUI / DIAGNOSTICS
+- Startup mutation gate prefers WindowsTargetAdapterPack v25.65.
+- GUI adds ADAPTER / PROMOTION / TIMELINE proof surfaces with NO AUTO PROMOTION messaging; no arming action was added.
+- Unified Diagnostics and Diagnostics Bundle expose aggregate v25.65 attestation/timeline metadata only.
+
+6. BACKWARD COMPATIBILITY
+- Updated historical v25.62-v25.64 validators to accept v25.65 current-version/path evolution while preserving behavioral/safety assertions.
+- Public BackendAction remains exactly 90.
+
+7. VALIDATION
+- Core v25.65 gates PASS.
+- Runtime Kit 382/382 PASS.
+- Compatibility 133/133 PASS.
+- Regression 48/48 suites; 1568/1568 assertions PASS.
+- GUI 5/5 PASS; static lint/coherence/compileall PASS.
+- Parity remains 93.0% feature / 55.2% production, FEATURE_PARITY_CANDIDATE.

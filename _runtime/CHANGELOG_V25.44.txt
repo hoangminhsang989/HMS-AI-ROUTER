@@ -1,0 +1,32 @@
+HMS AI Cockpit v25.44 — SMART MODEL ROUTER
+
+ADDED
+- Dedicated native GUI page: Smart Router.
+- HMS_Codex_SmartModelRouter.py for Project + Team Role + workload-aware model/reasoning/account recommendations.
+- Scope-aware routing for SOLO / CODER / REVIEWER / TESTER with BALANCED / FAST / DEEP / REVIEW / TEST profiles.
+- Live model catalog hard gate with conservative coding-capability filtering.
+- Account recommendation consumes Account Analytics while respecting Predictive Quota and Circuit Breaker hard exclusions.
+- STICKY_GUARD blocks model/reasoning mutation while a managed Codex client is running.
+- OBSERVE default; GUARDED_AUTO required for background application.
+- Bounded Smart Model account affinity: default ±6, hard cap ±8 inside Closed-loop Router.
+- Manual evaluate / apply / rollback flow with evidence and config/model-policy rollback.
+- Unified Diagnostics MODEL_ROUTER_DECISION events and Diagnostics Bundle Smart Model evidence.
+
+PRESERVED
+- Stable HMS endpoint and session affinity.
+- Multi-Codex Team v25.43 topology and ownership rules.
+- Project Orchestrator v25.42.
+- Identity Isolation and Security Hardening hard gates.
+- Self-Healing, API Compatibility, Model/Reasoning Manager, Account Analytics, Predictive Quota, Circuit Breaker, Closed-loop Router and Seamless Router.
+- Codex-only product scope; Antigravity is not reintroduced.
+
+FIXED
+- Main PowerShell action ValidateSet now includes the v25.43 Multi-Codex Team actions that were already present in the dispatcher.
+- Runtime Kit final fail-count calculation moved after all late-stage checks so late failures cannot be ignored.
+
+SAFETY
+- Smart Model Router does not hot-switch an active sticky session.
+- It does not rewrite OAuth credentials or directly manipulate auth priority/weight files.
+- Circuit OPEN, Predictive EMERGENCY, identity/security failures and unavailable model capability remain authoritative hard gates.
+- No prompt/request-body/tool-argument/secret logging is introduced.
+- Real Windows Codex runtime verification remains DEFERRED_BY_OPERATOR.

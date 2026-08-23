@@ -1,0 +1,209 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.53",
+  "suite": "TARGET_MACHINE_CERTIFICATION_VALIDATOR",
+  "generated_utc": "2026-08-22T04:04:06.994015+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 39,
+    "fail": 0,
+    "total": 39
+  },
+  "tests": [
+    {
+      "name": "full_real_evidence_pass",
+      "status": "PASS",
+      "detail": "PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED"
+    },
+    {
+      "name": "all_7_stages_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "production_scope_exact",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "preflight_no_quota",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "runner_never_mutates_auth",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "explicit_live_bridge_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "explicit_failover_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no_secret_persistence",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quota_two_real_sources",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quota_accounts_hashed",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lan_requires_two_online",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "shared_roundtrip_pass",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "shared_path_redacted",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "failover_different_account",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "failover_restore_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "soak6_exact_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "soak24_exact_real",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "downtime_not_counted",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "report_no_email",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "report_no_token_fields",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stale_quota_blocks_production",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "single_lan_node_blocks",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "failover_restore_failure_blocks",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "synthetic_24h_never_certifies",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "live_codex_request_required",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "synthetic_quota_never_certifies",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stale_failover_evidence_blocks",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lan_credential_sharing_blocks",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "soak_duration_cannot_be_shortened",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "claim_boundary_present",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "real_codex_module_reused",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "live_quota_module_reused",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "seven_stage_names",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "main_version_25_53",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "public_backend_action_not_extended",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "target_center_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "preflight_button_visible",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "failover_center_reused",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "soak_center_reused",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

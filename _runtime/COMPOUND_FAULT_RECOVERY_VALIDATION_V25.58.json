@@ -1,0 +1,101 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.58",
+  "suite": "COMPOUND_FAULT_RECOVERY_CONVERGENCE_VALIDATOR",
+  "generated_utc": "2026-08-22T06:47:40.151086+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "total": 15,
+    "model_states": 72960
+  },
+  "checks": [
+    {
+      "name": "proof_process_exit_zero",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "proof_verdict_pass",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "proof_assertions_at_least_23",
+      "ok": true,
+      "detail": {
+        "pass": 23,
+        "fail": 0,
+        "total": 23,
+        "model_states": 72960,
+        "scenarios": 7
+      }
+    },
+    {
+      "name": "model_checker_at_least_70000_states",
+      "ok": true,
+      "detail": 72960
+    },
+    {
+      "name": "zero_model_safety_violations",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "terminal_states_all_covered",
+      "ok": true,
+      "detail": {
+        "HEALTHY": 2360,
+        "DEGRADED_SAFE": 9564,
+        "OPERATOR_REQUIRED": 61036
+      }
+    },
+    {
+      "name": "critical_compound_contract",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "recovery_dag_contract",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "global_budget_contract",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "convergence_contract",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "production_never_claimed",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "runtime_contract_present",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "native_gui_surface",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "powershell_surface",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "main_version_at_least_25_58",
+      "ok": true,
+      "detail": "25.58"
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_COMPOUND_FAULT_CONVERGENCE_SYNTHETIC_ONLY"
+}

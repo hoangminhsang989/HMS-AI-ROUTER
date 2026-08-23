@@ -1,0 +1,275 @@
+{
+  "version": "25.50",
+  "generated_utc": "2026-08-23T07:45:26.788385+00:00",
+  "total": 52,
+  "passed": 52,
+  "failed": 0,
+  "verdict": "PASS_LIVE_QUOTA_INTELLIGENCE_V25_50",
+  "summary": {
+    "pass": 52,
+    "fail": 0,
+    "total": 52
+  },
+  "checks": [
+    {
+      "name": "version_25_50",
+      "ok": true,
+      "detail": "25.50"
+    },
+    {
+      "name": "schema_v1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "default_fail_closed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "free_reserve_25",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "plus_reserve_15",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "pro_reserve_10",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "business_reserve_10",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unknown_default_15",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "fresh_state",
+      "ok": true,
+      "detail": "{'account': 'p@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "fresh_route_ok",
+      "ok": true,
+      "detail": "{'account': 'p@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "plus_usable_55",
+      "ok": true,
+      "detail": "{'account': 'p@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "session_affinity_kept",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no_secret_output",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "aging_state",
+      "ok": true,
+      "detail": "{'account': 'a@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'AGING', 'age_seconds': 900.0, 'last_success_utc': '2026-08-22T01:45:00+00:00', 'last_attempt_utc': '2026-08-22T01:45:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "aging_can_route_when_above_reserve",
+      "ok": true,
+      "detail": "{'account': 'a@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'AGING', 'age_seconds': 900.0, 'last_success_utc': '2026-08-22T01:45:00+00:00', 'last_attempt_utc': '2026-08-22T01:45:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "aging_reason",
+      "ok": true,
+      "detail": "{'account': 'a@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'AGING', 'age_seconds': 900.0, 'last_success_utc': '2026-08-22T01:45:00+00:00', 'last_attempt_utc': '2026-08-22T01:45:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "stale_state",
+      "ok": true,
+      "detail": "{'account': 's@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'STALE', 'age_seconds': 1800.0, 'last_success_utc': '2026-08-22T01:30:00+00:00', 'last_attempt_utc': '2026-08-22T01:30:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 1"
+    },
+    {
+      "name": "stale_fail_closed",
+      "ok": true,
+      "detail": "{'account': 's@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'STALE', 'age_seconds': 1800.0, 'last_success_utc': '2026-08-22T01:30:00+00:00', 'last_attempt_utc': '2026-08-22T01:30:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 1"
+    },
+    {
+      "name": "stale_reason",
+      "ok": true,
+      "detail": "{'account': 's@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'STALE', 'age_seconds': 1800.0, 'last_success_utc': '2026-08-22T01:30:00+00:00', 'last_attempt_utc': '2026-08-22T01:30:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 1"
+    },
+    {
+      "name": "unknown_state",
+      "ok": true,
+      "detail": "{'account': 'u@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'UNKNOWN', 'age_seconds': None, 'last_success_utc': None, 'last_attempt_utc': None, 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15.0, 'usable_remaining_pct': 55.0, 'routing_el"
+    },
+    {
+      "name": "unknown_fail_closed",
+      "ok": true,
+      "detail": "{'account': 'u@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'UNKNOWN', 'age_seconds': None, 'last_success_utc': None, 'last_attempt_utc': None, 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 15.0, 'usable_remaining_pct': 55.0, 'routing_el"
+    },
+    {
+      "name": "reserve_blocks_new_session",
+      "ok": true,
+      "detail": "{'account': 'r@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 14.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 40.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 14.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "reserve_reason",
+      "ok": true,
+      "detail": "{'account': 'r@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 14.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 40.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 14.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "reserve_usable_zero",
+      "ok": true,
+      "detail": "{'account': 'r@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 14.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 40.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 14.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "near_reserve_allows_but_warns",
+      "ok": true,
+      "detail": "{'account': 'n@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 18.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 40.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 18.0, 'reserve_pct': 15"
+    },
+    {
+      "name": "missing_window_fail_closed",
+      "ok": true,
+      "detail": "{'account': 'm@example', 'plan': 'PRO', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': False}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 10"
+    },
+    {
+      "name": "missing_window_reason",
+      "ok": true,
+      "detail": "{'account': 'm@example', 'plan': 'PRO', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': False}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 10"
+    },
+    {
+      "name": "last_refresh_failure_not_auto_block_if_last_good_fresh",
+      "ok": true,
+      "detail": "{'account': 'e@example', 'plan': 'PRO', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'ERROR', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 10."
+    },
+    {
+      "name": "last_refresh_failure_visible",
+      "ok": true,
+      "detail": "{'account': 'e@example', 'plan': 'PRO', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'ERROR', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': 10."
+    },
+    {
+      "name": "disabled_blocked",
+      "ok": true,
+      "detail": "{'account': 'd@example', 'plan': 'PRO', 'status': 'DISABLED', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 80.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 70.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 70.0, 'reserve_pct': "
+    },
+    {
+      "name": "fresh_ranked_before_stale",
+      "ok": true,
+      "detail": "[{'account': 'fresh@example', 'plan': 'PLUS', 'status': 'READY', 'freshness_state': 'FRESH', 'age_seconds': 120.0, 'last_success_utc': '2026-08-22T01:58:00+00:00', 'last_attempt_utc': '2026-08-22T01:58:00+00:00', 'source_state': 'FRESH', 'five_hour': {'name': '5h', 'remaining_pct': 50.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'weekly': {'name': 'weekly', 'remaining_pct': 50.0, 'reset_utc': None, 'window_minutes': None, 'present': True}, 'quota_floor_pct': 50.0, 'reserve_pct"
+    },
+    {
+      "name": "summary_eligible_one",
+      "ok": true,
+      "detail": "{'accounts': 2, 'routing_eligible': 1, 'stale': 1, 'unknown': 0, 'all_fail_closed': False}"
+    },
+    {
+      "name": "summary_stale_one",
+      "ok": true,
+      "detail": "{'accounts': 2, 'routing_eligible': 1, 'stale': 1, 'unknown': 0, 'all_fail_closed': False}"
+    },
+    {
+      "name": "adaptive_stale_ineligible",
+      "ok": true,
+      "detail": "{'fresh@example': {'account': 'fresh@example', 'alias': '', 'role': 'auto', 'status': 'READY', 'quota_floor_pct': 60.0, 'quota_reserve_pct': 15.0, 'quota_freshness': 'FRESH', 'live_quota_eligible': True, 'pool_score': 70.0, 'history_score': 50.0, 'effective_score': 64.4, 'samples_7d': 0, 'confidence': 'NO_HISTORY', 'eligible': True, 'blocks': [], 'recent_route': False, 'current_priority': 0, 'current_weight': 1}, 'stale@example': {'account': 'stale@example', 'alias': '', 'role': 'auto', 'status'"
+    },
+    {
+      "name": "adaptive_stale_reason",
+      "ok": true,
+      "detail": "{'fresh@example': {'account': 'fresh@example', 'alias': '', 'role': 'auto', 'status': 'READY', 'quota_floor_pct': 60.0, 'quota_reserve_pct': 15.0, 'quota_freshness': 'FRESH', 'live_quota_eligible': True, 'pool_score': 70.0, 'history_score': 50.0, 'effective_score': 64.4, 'samples_7d': 0, 'confidence': 'NO_HISTORY', 'eligible': True, 'blocks': [], 'recent_route': False, 'current_priority': 0, 'current_weight': 1}, 'stale@example': {'account': 'stale@example', 'alias': '', 'role': 'auto', 'status'"
+    },
+    {
+      "name": "adaptive_fresh_eligible",
+      "ok": true,
+      "detail": "{'fresh@example': {'account': 'fresh@example', 'alias': '', 'role': 'auto', 'status': 'READY', 'quota_floor_pct': 60.0, 'quota_reserve_pct': 15.0, 'quota_freshness': 'FRESH', 'live_quota_eligible': True, 'pool_score': 70.0, 'history_score': 50.0, 'effective_score': 64.4, 'samples_7d': 0, 'confidence': 'NO_HISTORY', 'eligible': True, 'blocks': [], 'recent_route': False, 'current_priority': 0, 'current_weight': 1}, 'stale@example': {'account': 'stale@example', 'alias': '', 'role': 'auto', 'status'"
+    },
+    {
+      "name": "adaptive_recommends_fresh",
+      "ok": true,
+      "detail": "{'schema_version': 1, 'generated_utc': '2026-08-23T07:45:26.784969+00:00', 'enabled': True, 'mode': 'OBSERVE', 'current_account': 'fresh@example', 'recommended_account': 'fresh@example', 'recommended_score': 64.4, 'current_score': 64.4, 'score_delta': 0.0, 'switch_needed': False, 'can_switch': False, 'apply_allowed': False, 'reason_codes': ['KEEP_CURRENT'], 'current_critical': False, 'hold_until_utc': None, 'cooldown_until_utc': None, 'ranking': [{'account': 'fresh@example', 'alias': '', 'role':"
+    },
+    {
+      "name": "adaptive_safety_fail_closed",
+      "ok": true,
+      "detail": "{'session_affinity_untouched': True, 'oauth_tokens_untouched': True, 'auth_files_deleted': False, 'auto_requires_mode': 'GUARDED_AUTO', 'hysteresis': True, 'live_quota_fail_closed': True, 'stale_quota_never_promotes_new_session': True, 'ineligible_active_account_rotates_new_sessions': True}"
+    },
+    {
+      "name": "adaptive_session_affinity_untouched",
+      "ok": true,
+      "detail": "{'session_affinity_untouched': True, 'oauth_tokens_untouched': True, 'auth_files_deleted': False, 'auto_requires_mode': 'GUARDED_AUTO', 'hysteresis': True, 'live_quota_fail_closed': True, 'stale_quota_never_promotes_new_session': True, 'ineligible_active_account_rotates_new_sessions': True}"
+    },
+    {
+      "name": "ps_main_version_at_least_25_50",
+      "ok": true,
+      "detail": "(25, 74)"
+    },
+    {
+      "name": "ps_last_good_comment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_failure_does_not_advance_refreshed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_success_has_last_success",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_window_presence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_freshness_helper",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_reserve_helper",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_routing_eligible_exposed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ps_error_is_generic",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_main_version_at_least_25_50",
+      "ok": true,
+      "detail": "(25, 74)"
+    },
+    {
+      "name": "gui_live_quota_surface_preserved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_freshness_reserve",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gui_explains_fail_closed",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+HMS AI Cockpit v25.71 — BUILD VALIDATION
+Generated UTC: 2026-08-23T04:54:48.421288+00:00
+
+VERDICT: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE_CANDIDATE
+Cockpit baseline: v1.3.27
+
+CORE GATES
+- Cockpit v1.3.27 parity reset: 22/22 PASS
+- Cockpit source integration: 29/29 PASS
+- Cockpit parity GUI safety: 9/9 PASS
+- Windows runtime certification contract: 10/10 PASS
+- Production Evidence Promotion Auditor: 10/10 PASS
+- Unified Diagnostics parity runtime: 7/7 PASS
+- v25.71 GUI safety: 9/9 PASS
+- Runtime Kit: 447/447 PASS
+- Compatibility Freeze: 133/133 PASS
+- Full Regression Freeze: 76/76 suites, 1899/1899 assertions PASS
+- GUI live startup: PASS, 8 seconds, stderr=0
+- PowerShell static lint/coherence: PASS
+- Python compileall: PASS
+- Claim Boundary: 24/24 PASS
+
+CLAIM BOUNDARY
+- feature evidence: 93.0%
+- production evidence: 55.2%
+- windows_runtime_certified=false
+- external_windows_target_evidence_imported=false
+- real_codex_effects_executed=false
+- windows_signing_executed=false
+- automatic_production_certification=false
+- production_score_promotion_eligible=false
+
+NOTE
+The seven v1.3.27 runtime certification cases and promotion auditor are implemented and validated as control-plane contracts. No real Windows/Codex target evidence was used to certify this build.

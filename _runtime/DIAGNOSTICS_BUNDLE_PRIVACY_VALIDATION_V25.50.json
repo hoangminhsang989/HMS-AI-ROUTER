@@ -1,0 +1,33 @@
+{
+  "version": "25.50",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "name": "bundle_created",
+      "ok": true
+    },
+    {
+      "name": "access_token_redacted",
+      "ok": true
+    },
+    {
+      "name": "prompt_redacted",
+      "ok": true
+    },
+    {
+      "name": "request_body_redacted",
+      "ok": true
+    },
+    {
+      "name": "manifest_privacy_flags",
+      "ok": true
+    }
+  ],
+  "bundle_sha256": "b70663f85595e6d15a79270cdbacc387764adb748c8b03471a2858b761e72db8",
+  "bundle_file_count": 49
+}

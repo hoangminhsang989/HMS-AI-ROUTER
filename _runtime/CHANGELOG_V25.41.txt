@@ -1,0 +1,10 @@
+HMS AI Cockpit v25.41 — Unified Diagnostics
+
+- Added metadata-only Unified Diagnostics engine and GUI page.
+- Added request/router/quota/circuit/self-healing/security timeline aggregation.
+- Added request_id/trace_id correlation without fabricated links.
+- Added account and layer health summaries.
+- Added background refresh via maintenance tick.
+- Extended redacted Diagnostics Bundle with v25.41 report/evidence.
+- Preserved Codex-only scope, stable endpoint, Project Affinity, Identity Isolation, Security Hardening and session affinity.
+- Real Windows Codex runtime remains DEFERRED_BY_OPERATOR.

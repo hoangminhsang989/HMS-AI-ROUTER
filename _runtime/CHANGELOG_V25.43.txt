@@ -1,0 +1,29 @@
+HMS AI Cockpit v25.43 — MULTI-CODEX TEAM
+
+ADDED
+- Dedicated native GUI page: Đội Codex.
+- HMS_Codex_MultiTeam.py deterministic topology/status/preflight engine.
+- Backend actions: get_multi_codex_team, save_multi_codex_team, preflight_multi_codex_team, launch_multi_codex_team.
+- Coder / Reviewer / Tester role topology using existing isolated managed Codex instances.
+- Distinct account + distinct workspace hard gates.
+- Same Git repository validation when Git metadata is available.
+- Explicit topology epoch + deterministic topology_hash / plan_hash / per-role ownership lease.
+- HMS_CODEX_TEAM_ID / HMS_CODEX_TEAM_ROLE / HMS_CODEX_TEAM_EPOCH process environment metadata.
+- Transactional team save rollback when post-save topology validation fails.
+- Transactional launch rollback limited to instances HMS started in the current team launch.
+- Diagnostics Bundle allowlist includes Multi-Codex Team store/latest/history metadata.
+
+PRESERVED
+- Project Orchestrator v25.42 one-click environment flow.
+- Identity Isolation and Security Hardening hard gates.
+- Stable endpoint, session affinity, Project Affinity, Model/Reasoning Manager.
+- Seamless Router, Closed-loop Router, Circuit Breaker, Predictive Quota, Quota Center and Account Analytics.
+- Codex-only scope; Antigravity is not reintroduced.
+
+SAFETY
+- Shared/nested workspace collision is blocked.
+- Role rebinding while affected instances are running is blocked.
+- No unowned process kill.
+- No automatic worktree/project/account/instance deletion.
+- No prompt/request body/secret logging.
+- Runtime Windows Codex verification remains DEFERRED_BY_OPERATOR.

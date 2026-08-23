@@ -1,0 +1,13 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.49",
+  "suite": "GUI_HEADLESS_STARTUP",
+  "generated_utc": "2026-08-22T01:53:21.299828+00:00",
+  "verdict": "PASS",
+  "compileall_exit": 0,
+  "alive_sec": 7,
+  "expected_timeout_exit": 124,
+  "stderr_bytes": 0,
+  "stdout_bytes": 0,
+  "environment": "Linux xvfb synthetic startup; Windows runtime remains deferred"
+}

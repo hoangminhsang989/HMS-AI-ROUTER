@@ -1,0 +1,316 @@
+{
+  "product": "HMS AI Cockpit",
+  "edition": "CODEX_ONLY",
+  "version": "25.46",
+  "contract_baseline": "25.45",
+  "contract_policy": "EXACT_BACKEND_ACTION_SET_NO_BREAKING_CHANGE",
+  "backend_actions": [
+    "ui",
+    "status",
+    "enable",
+    "disable",
+    "open_codex",
+    "get_settings",
+    "save_settings",
+    "get_accounts",
+    "refresh_quota",
+    "set_account_disabled",
+    "set_account_meta",
+    "add_codex",
+    "get_logs",
+    "get_service",
+    "create_client_key",
+    "set_request_log",
+    "restart_router",
+    "test_api",
+    "run_failover",
+    "maintenance_tick",
+    "get_usage",
+    "sync_usage",
+    "diagnostics_bundle",
+    "get_release",
+    "release_install",
+    "release_rollback",
+    "get_adaptive_router",
+    "evaluate_adaptive_router",
+    "apply_adaptive_router",
+    "rollback_adaptive_router",
+    "get_closed_loop_router",
+    "evaluate_closed_loop_router",
+    "apply_closed_loop_router",
+    "rollback_closed_loop_router",
+    "get_circuit_breaker",
+    "evaluate_circuit_breaker",
+    "apply_circuit_breaker",
+    "reset_circuit_breaker",
+    "get_predictive_quota",
+    "evaluate_predictive_quota",
+    "get_quota_center",
+    "sync_quota_center",
+    "get_account_analytics",
+    "sync_account_analytics",
+    "update_status",
+    "update_check",
+    "update_stage",
+    "update_activate",
+    "get_instances",
+    "create_instance",
+    "start_instance",
+    "stop_instance",
+    "restart_instance",
+    "focus_instance",
+    "audit_identity",
+    "get_project_affinity",
+    "save_project_affinity",
+    "launch_project_affinity",
+    "sync_project_router",
+    "get_model_manager",
+    "discover_models",
+    "save_model_policy",
+    "apply_model_policy",
+    "get_api_compatibility",
+    "run_api_compatibility",
+    "get_self_healing",
+    "audit_self_healing",
+    "repair_self_healing",
+    "get_security",
+    "audit_security",
+    "harden_security",
+    "seal_security",
+    "get_unified_diagnostics",
+    "refresh_unified_diagnostics",
+    "get_project_orchestrator",
+    "preflight_project_orchestrator",
+    "launch_project_orchestrator",
+    "get_multi_codex_team",
+    "save_multi_codex_team",
+    "preflight_multi_codex_team",
+    "launch_multi_codex_team",
+    "get_smart_model_router",
+    "evaluate_smart_model_router",
+    "apply_smart_model_router",
+    "rollback_smart_model_router",
+    "get_lan_pool",
+    "pair_lan_pool",
+    "heartbeat_lan_pool",
+    "acquire_lan_project",
+    "release_lan_project"
+  ],
+  "stable_runtime_contract": {
+    "global_provider": "hms_api_router",
+    "instance_provider": "hms_instance_router",
+    "wire_api": "responses",
+    "default_proxy_port": 8317,
+    "settings_path_name": "settings-v2523_1.json",
+    "state_path_name": "state-v2523_1.json",
+    "lan_node_state_name": "local-node-v2545.json",
+    "lan_latest_name": "lan-pool-latest-v2545.json",
+    "lan_history_name": "lan-pool-history-v2545.jsonl",
+    "lan_pairing_credential_target": "HMS_AI_Cockpit:LanPoolPairingKey:v25.45",
+    "lan_pairing_kdf_salt": "HMS-AI-Cockpit-LAN-Pool-v25.45",
+    "security_router_key_target": "HMS_AI_Cockpit:RouterKey:global:v25.40",
+    "security_seal_key_target": "HMS_AI_Cockpit:IntegritySealKey:v25.40"
+  },
+  "codex_only_public_surface": {
+    "forbid_backend_action_substrings": [
+      "antigravity",
+      "ag_"
+    ],
+    "required_defaults": [
+      "CodexOnlyEdition = $true",
+      "CodexShowAntigravityPanel = $false",
+      "OpenAntigravityOnEnable = $false"
+    ]
+  },
+  "milestones": {
+    "25.28": {
+      "files": [
+        "HMS_Codex_IdentityIsolation.py"
+      ],
+      "tokens": [
+        "CodexInstanceEnforceIsolation",
+        "CodexInstanceRequireUniqueProject",
+        "CodexInstanceRequireDedicatedAccount"
+      ]
+    },
+    "25.29": {
+      "files": [
+        "HMS_Codex_ProjectAffinityValidator.py"
+      ],
+      "actions": [
+        "get_project_affinity",
+        "save_project_affinity",
+        "launch_project_affinity",
+        "sync_project_router"
+      ]
+    },
+    "25.30": {
+      "files": [
+        "HMS_Codex_SeamlessRouterValidator.py"
+      ],
+      "tokens": [
+        "CodexSeamlessRouterEnabled",
+        "CodexSeamlessSessionAffinity",
+        "CodexSeamlessRequireManifest"
+      ]
+    },
+    "25.31": {
+      "files": [
+        "HMS_Codex_ClosedLoopRouter.py"
+      ],
+      "actions": [
+        "get_closed_loop_router",
+        "evaluate_closed_loop_router",
+        "apply_closed_loop_router",
+        "rollback_closed_loop_router"
+      ]
+    },
+    "25.32": {
+      "files": [
+        "HMS_Codex_CircuitBreaker.py"
+      ],
+      "actions": [
+        "get_circuit_breaker",
+        "evaluate_circuit_breaker",
+        "apply_circuit_breaker",
+        "reset_circuit_breaker"
+      ]
+    },
+    "25.33": {
+      "files": [
+        "HMS_Codex_PredictiveQuota.py"
+      ],
+      "actions": [
+        "get_predictive_quota",
+        "evaluate_predictive_quota"
+      ]
+    },
+    "25.34": {
+      "files": [
+        "HMS_Codex_QuotaCenter.py"
+      ],
+      "actions": [
+        "get_quota_center",
+        "sync_quota_center"
+      ]
+    },
+    "25.35": {
+      "files": [
+        "HMS_Codex_AccountAnalytics.py"
+      ],
+      "actions": [
+        "get_account_analytics",
+        "sync_account_analytics"
+      ]
+    },
+    "25.36": {
+      "files": [
+        "HMS_Codex_IdentityIsolation.py"
+      ],
+      "actions": [
+        "audit_identity"
+      ],
+      "tokens": [
+        "CodexIdentityIsolationEnabled",
+        "CodexIdentityFingerprintStrict"
+      ]
+    },
+    "25.37": {
+      "files": [
+        "HMS_Codex_ModelReasoningManager.py"
+      ],
+      "actions": [
+        "get_model_manager",
+        "discover_models",
+        "save_model_policy",
+        "apply_model_policy"
+      ]
+    },
+    "25.38": {
+      "files": [
+        "HMS_Codex_ApiCompatibility.py"
+      ],
+      "actions": [
+        "get_api_compatibility",
+        "run_api_compatibility"
+      ]
+    },
+    "25.39": {
+      "files": [
+        "HMS_Codex_SelfHealing.py"
+      ],
+      "actions": [
+        "get_self_healing",
+        "audit_self_healing",
+        "repair_self_healing"
+      ]
+    },
+    "25.40": {
+      "files": [
+        "HMS_Codex_SecurityHardening.py"
+      ],
+      "actions": [
+        "get_security",
+        "audit_security",
+        "harden_security",
+        "seal_security"
+      ]
+    },
+    "25.41": {
+      "files": [
+        "HMS_Codex_UnifiedDiagnostics.py"
+      ],
+      "actions": [
+        "get_unified_diagnostics",
+        "refresh_unified_diagnostics"
+      ]
+    },
+    "25.42": {
+      "files": [
+        "HMS_Codex_ProjectOrchestrator.py",
+        "HMS_Codex_ProjectOrchestratorValidator.py"
+      ],
+      "actions": [
+        "get_project_orchestrator",
+        "preflight_project_orchestrator",
+        "launch_project_orchestrator"
+      ]
+    },
+    "25.43": {
+      "files": [
+        "HMS_Codex_MultiTeam.py"
+      ],
+      "actions": [
+        "get_multi_codex_team",
+        "save_multi_codex_team",
+        "preflight_multi_codex_team",
+        "launch_multi_codex_team"
+      ]
+    },
+    "25.44": {
+      "files": [
+        "HMS_Codex_SmartModelRouter.py",
+        "HMS_Codex_SmartModelRouterValidator.py"
+      ],
+      "actions": [
+        "get_smart_model_router",
+        "evaluate_smart_model_router",
+        "apply_smart_model_router",
+        "rollback_smart_model_router"
+      ]
+    },
+    "25.45": {
+      "files": [
+        "HMS_Codex_LanPool.py",
+        "HMS_Codex_LanPoolValidator.py"
+      ],
+      "actions": [
+        "get_lan_pool",
+        "pair_lan_pool",
+        "heartbeat_lan_pool",
+        "acquire_lan_project",
+        "release_lan_project"
+      ]
+    }
+  }
+}

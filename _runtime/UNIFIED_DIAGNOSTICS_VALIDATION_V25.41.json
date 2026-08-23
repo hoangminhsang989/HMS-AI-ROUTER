@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "data": {
+    "version": "25.41",
+    "verdict": "PASS",
+    "generated_utc": "2026-08-21T05:47:39.239225+00:00",
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "total": 11
+    },
+    "checks": [
+      {
+        "name": "request_events",
+        "status": "PASS",
+        "detail": 2
+      },
+      {
+        "name": "router_decision",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "failover_count",
+        "status": "PASS",
+        "detail": 1
+      },
+      {
+        "name": "circuit_open",
+        "status": "PASS",
+        "detail": 1
+      },
+      {
+        "name": "self_healing_events",
+        "status": "PASS",
+        "detail": 2
+      },
+      {
+        "name": "privacy_prompt_false",
+        "status": "PASS",
+        "detail": {
+          "contains_prompt": false,
+          "contains_request_body": false,
+          "contains_raw_secret": false,
+          "metadata_only": true
+        }
+      },
+      {
+        "name": "privacy_body_false",
+        "status": "PASS",
+        "detail": {
+          "contains_prompt": false,
+          "contains_request_body": false,
+          "contains_raw_secret": false,
+          "metadata_only": true
+        }
+      },
+      {
+        "name": "privacy_secret_false",
+        "status": "PASS",
+        "detail": {
+          "contains_prompt": false,
+          "contains_request_body": false,
+          "contains_raw_secret": false,
+          "metadata_only": true
+        }
+      },
+      {
+        "name": "metadata_only",
+        "status": "PASS",
+        "detail": {
+          "contains_prompt": false,
+          "contains_request_body": false,
+          "contains_raw_secret": false,
+          "metadata_only": true
+        }
+      },
+      {
+        "name": "secret_redaction",
+        "status": "PASS",
+        "detail": null
+      },
+      {
+        "name": "no_fabricated_request_id",
+        "status": "PASS",
+        "detail": null
+      }
+    ]
+  }
+}

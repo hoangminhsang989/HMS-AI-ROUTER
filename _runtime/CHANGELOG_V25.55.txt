@@ -1,0 +1,47 @@
+HMS AI Cockpit v25.55 — Autonomous Router Digital Twin + State-Machine Model Checking
+
+SCOPE
+- Codex-only continuation without requiring a real Windows/Codex/LAN target machine.
+- v25.53 target-machine production certification remains the only authority for a real production label.
+
+NEW
+1. HMS_Codex_AutonomousRouterDigitalTwin.py
+   - deterministic large-pool twin: 32 accounts / 12 instances / 24 projects by default;
+   - dynamic routing weights derived from quota headroom, reliability, latency and observed selection load;
+   - quota drain/stale/refresh, 429/recovery, instance crash/restart, burst/project surge, LAN partition/rejoin and clock advance;
+   - project-instance locality + existing-session continuity; recovery never snaps an existing session back merely because priority improves;
+   - bounded instance capacity/backpressure and weighted fairness/starvation accounting.
+2. Bounded state-machine model checker
+   - exhaustively explores 3,072 compact states across two accounts, freshness/reserve/health, two instance health bits, affinity owner and event class;
+   - checks NEW-session fail-closed eligibility, sticky non-hard transitions, hard-failure eligible failover and no-eligible rejection.
+3. Counterexample / trace minimization
+   - deliberate unsafe recovery-pullback mutant is detected;
+   - ddmin reduces the 7-event failing scenario to the minimal FAIL -> RECOVER sequence;
+   - only minimized event trace + SHA-256 is persisted; never credentials/request bodies.
+4. Adversarial ordering proof
+   - account fail/recover and instance fail/restart do not pull failed-over sessions back;
+   - stale account with 100% apparent quota remains weight 0 / ineligible for NEW sessions.
+5. Native GUI + PowerShell operator surfaces
+   - LAN Pool: TWIN RUN / MODEL CHECK;
+   - Target-Machine window links ROUTER TWIN;
+   - no new public BackendAction; frozen public contract remains 90 actions.
+6. Unified Diagnostics + Diagnostics Bundle
+   - metadata-only Router Twin event/layer;
+   - Router Twin evidence allowlisted with defensive redaction for token/key/prompt/request/response fields.
+7. Regression Freeze
+   - v25.55 adds Autonomous Router Digital Twin as suite #23;
+   - benchmark/timing-heavy Performance, Production Simulation and Router Twin suites execute exclusively; other suites retain bounded parallelism.
+
+RELEASE EVIDENCE
+- Autonomous Router Digital Twin validator: 57/57 PASS.
+- Large-pool run: 6 seeds / 1,800 cycles / 32 accounts / 12 instances / 24 projects / 15 of 15 event classes.
+- Bounded model check: 3,072/3,072 states checked, 0 safety failures.
+- Counterexample minimization: 7 events -> 2 events (A_FAIL -> A_RECOVER), deterministic trace hash.
+- Full Regression Freeze: 23/23 suites / 974/974 numeric assertions PASS.
+- Runtime Kit: 273/273 PASS.
+- Unified Diagnostics + Diagnostics Bundle privacy: 12/12 PASS.
+- Parity score intentionally unchanged: feature 93.0%, production 55.2%.
+
+CLAIM BOUNDARY
+PASS_AUTONOMOUS_ROUTER_DIGITAL_TWIN_V25_55 is synthetic/model-check evidence only.
+It cannot emit or substitute PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.

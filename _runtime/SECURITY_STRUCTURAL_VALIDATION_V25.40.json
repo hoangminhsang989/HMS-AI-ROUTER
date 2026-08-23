@@ -1,0 +1,89 @@
+{
+  "version": "25.40",
+  "verdict": "PASS",
+  "pass": 20,
+  "total": 20,
+  "failed": [],
+  "checks": [
+    {
+      "name": "backend_version_25_40",
+      "ok": true
+    },
+    {
+      "name": "gui_version_25_40",
+      "ok": true
+    },
+    {
+      "name": "credential_manager_primary",
+      "ok": true
+    },
+    {
+      "name": "dpapi_current_user_fallback",
+      "ok": true
+    },
+    {
+      "name": "settings_plain_key_cleared",
+      "ok": true
+    },
+    {
+      "name": "instance_key_ref",
+      "ok": true
+    },
+    {
+      "name": "early_acl_hardening",
+      "ok": true
+    },
+    {
+      "name": "instance_acl_hardening",
+      "ok": true
+    },
+    {
+      "name": "reparse_guard",
+      "ok": true
+    },
+    {
+      "name": "hmac_integrity",
+      "ok": true
+    },
+    {
+      "name": "prelaunch_security_gate",
+      "ok": true
+    },
+    {
+      "name": "sensitive_selfheal_dpapi_backup",
+      "ok": true
+    },
+    {
+      "name": "credential_pool_evidence_metadata_only",
+      "ok": true
+    },
+    {
+      "name": "unified_redaction",
+      "ok": true
+    },
+    {
+      "name": "diagnostics_strict_redaction",
+      "ok": true
+    },
+    {
+      "name": "security_gui",
+      "ok": true
+    },
+    {
+      "name": "backend_security_actions",
+      "ok": true
+    },
+    {
+      "name": "no_auto_reseal_mismatch",
+      "ok": true
+    },
+    {
+      "name": "runtime_materialization_honest_audit",
+      "ok": true
+    },
+    {
+      "name": "codex_only_new_scope",
+      "ok": true
+    }
+  ]
+}

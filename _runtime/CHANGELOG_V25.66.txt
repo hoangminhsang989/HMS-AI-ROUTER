@@ -1,0 +1,48 @@
+HMS AI Cockpit v25.66 — CHANGELOG
+Generated UTC: 2026-08-23T00:47:22.439877+00:00
+
+1. LIVE WINDOWS ATTESTATION SIGNER
+- Added Windows-local attestation signer with WINDOWS_LOCAL_MACHINE_DPAPI_HMAC and WINDOWS_CERTIFICATE_SIGNATURE signer classes.
+- Signature binds exact package version, release-manifest digest, run_id, nonce and evidence digest.
+- Certificate mode uses the Windows LocalMachine certificate store and exports only public certificate metadata/signature; private key material never crosses the signer boundary.
+- DPAPI mode keeps HMAC material machine-bound and refuses target signing on non-Windows hosts.
+- Tampered signed payloads and untrusted certificate fingerprints fail verification.
+
+2. CONTROLLED ONE-SHOT TARGET CERTIFICATION RUNBOOK
+- Added dry-run / preflight / one-shot arm / execute / recovery verify / attest / auto-disarm / promotion-decision phases.
+- Arming requires Windows host, HMS_V2566_ENABLE_TARGET_CERT=1, exact arm token and exact Vietnamese operator confirmation phrase.
+- External commands are structured argv with shell=False.
+- Auto-disarm executes in finally, including signer/promotion failure paths.
+- Target execution remains integration-gated; the release does not invent or execute real target commands.
+
+3. CRYPTOGRAPHIC PROMOTION AUTHORITY
+- Retains exact run_id/nonce/package/manifest/freshness/hash-chain and complete 4-effect x 3-crash-window evidence requirements.
+- Adds mandatory cryptographic attestation verification against externally trusted signer context.
+- Merely labeling evidence as WINDOWS_CERTIFICATE_SIGNATURE is insufficient.
+- Synthetic cryptographic fixtures validate the contract but cannot certify production.
+
+4. ATTESTATION EXCHANGE + VIETNAMESE DECISION EXPLANATION
+- Added privacy-safe export/import bundle with deterministic bundle SHA-256 validation.
+- Secret-shaped keys, Bearer tokens, raw identity, hostname, command line, environment and private signing material are rejected/redacted.
+- Promotion reasons are mapped to operator-facing Vietnamese explanations; automatic_production_certification remains false.
+
+5. GUI / DIAGNOSTICS
+- Added SIGNED TARGET CERT v25.66 proof surface with SIGNER / RUNBOOK / EVIDENCE controls.
+- Controls run proof/preflight only; no GUI action can arm a real target certification run.
+- Unified Diagnostics and Diagnostics Bundle expose aggregate signer/runbook/exchange states only.
+
+6. BACKWARD COMPATIBILITY
+- Forward-fixed historical v25.62-v25.65 version assertions while preserving behavior and safety invariants.
+- Public BackendAction remains exactly 90.
+- PowerShell/GUI/README version surfaces are synchronized at 25.66.
+
+7. VALIDATION
+- Signer 8/8 PASS; cryptographic proof 9/9.
+- Runbook 8/8 PASS; one-shot/auto-disarm proof 10/10.
+- Exchange 6/6 PASS; proof 6/6.
+- Promotion Gate 10/10 PASS; cryptographic proof 9/9.
+- Runtime Kit 396/396 PASS.
+- Compatibility 133/133 PASS.
+- Regression 54/54 suites; 1628/1628 assertions PASS after final hygiene fix.
+- GUI 5/5 PASS; static lint/coherence/compileall PASS.
+- Parity remains 93.0% feature / 55.2% production, FEATURE_PARITY_CANDIDATE.

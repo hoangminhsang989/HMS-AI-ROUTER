@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.45 — CROSS-PC / LAN CODEX POOL
+
+NEW
+- Cross-PC / LAN Codex Pool page in the native GUI.
+- Signed node heartbeat registry stored on an operator-selected SMB/NAS shared path.
+- Project ownership leases with epoch + nonce + TTL and fail-closed signature verification.
+- Cross-PC project fingerprint uses normalized Git remote.origin.url when available, so different local drive paths still map to one ownership domain.
+- Prelaunch hard gate blocks a managed Codex instance when the same project lease is active on another node.
+- Expired leases may be taken over with a strictly newer epoch; active leases cannot be silently stolen.
+- Failover candidate metadata ranks fresh READY nodes without moving credentials.
+- Pairing key is stored locally through Windows Credential Manager / CurrentUser DPAPI fallback and is not written to the shared path.
+- Shared registry publishes only metadata and account hashes; raw OAuth tokens, API keys, cookies and Codex credential files remain node-local.
+- Maintenance tick can heartbeat and renew leases for projects with managed Codex clients actually running on the local node.
+- Unified Diagnostics and Diagnostics Bundle include LAN node/lease metadata under the existing redaction policy.
+
+SAFETY
+- LAN Pool is disabled by default until the operator pairs a shared path.
+- Invalid HMAC signatures fail closed.
+- A foreign node's active project lease blocks launch; HMS never kills the other machine/process.
+- Local-path fingerprint is explicitly marked LOCAL_PATH_FALLBACK when no Git origin/logical ID is available; it is not claimed as cross-PC authoritative.
+- No destructive delete action was added.
+
+VALIDATION
+- LAN Pool synthetic: PASS 15/15.
+- Runtime Kit: PASS 191/191.
+- Smart Model Router regression: PASS 16/16.
+- API Compatibility: PASS 12/12.
+- API Superset: PASS 13/13.
+- Protocol: PASS 10/10.
+- Self-Healing: PASS 6/6.
+- Security Hardening: PASS 9/9.
+- Project Orchestrator regression: PASS 9/9.
+- PowerShell StaticLint / Coherence: PASS.
+- Native GUI startup smoke: alive for 7s under xvfb-run, stderr 0 bytes.
+- LAN Pool page synthetic render: PASS, stderr 0 bytes.
+- Real Windows multi-PC + SMB/NAS + Codex runtime: DEFERRED_BY_OPERATOR.
+- SOAK: NOT_YET.

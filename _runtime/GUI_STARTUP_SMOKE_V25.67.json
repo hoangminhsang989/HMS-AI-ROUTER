@@ -1,0 +1,51 @@
+{
+  "version": "25.67",
+  "verdict": "PASS",
+  "pass": 6,
+  "total": 6,
+  "checks": [
+    {
+      "name": "gui_alive_until_timeout",
+      "status": "PASS",
+      "detail": {
+        "exit_code": 124
+      }
+    },
+    {
+      "name": "stderr_empty",
+      "status": "PASS",
+      "detail": {
+        "stderr_bytes": 0
+      }
+    },
+    {
+      "name": "gui_version_v2567",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "trust_campaign_surface",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "real_effect_card_has_preflight_lab_only",
+      "status": "PASS",
+      "detail": {
+        "labels": [
+          "PREFLIGHT",
+          "LAB CRASH"
+        ],
+        "commands": [
+          "self.start_real_effect_preflight_async",
+          "self.start_target_crash_harness_async"
+        ]
+      }
+    },
+    {
+      "name": "no_auto_production_promotion_surface",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

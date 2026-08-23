@@ -1,0 +1,34 @@
+HMS AI Cockpit v25.44 — BUILD VALIDATION
+
+STATUS
+- IMPLEMENTED: PASS
+- STATIC VERIFIED: PASS
+- SYNTHETIC VERIFIED: PASS
+- RUNTIME VERIFIED (real Windows Codex): DEFERRED_BY_OPERATOR
+- SOAK: NOT_YET
+
+GATES RECORDED BEFORE FINAL PACKAGING
+- Python source compile: PASS 58/58 .py/.pyw
+- Native GUI startup smoke 7s: PASS, stderr 0
+- Native GUI Smart Router synthetic render: PASS, stderr 0
+- Smart Model Router synthetic validator: PASS 16/16
+- Runtime Kit Validator: PASS 183/183
+- PowerShell StaticLint: PASS 225/225 variables, 0 missing; 363 referenced settings / 450 declared, 0 missing/duplicate
+- PowerShell Coherence: PASS
+- API Compatibility regression: PASS 12/12
+- API Superset regression: PASS 13/13
+- Protocol regression: PASS 10/10
+- Self-Healing synthetic regression: PASS 6/6
+- Security Hardening synthetic regression: PASS 9/9
+- Diagnostics Bundle redaction: PASS, 0 raw-secret hits in synthetic bundle
+
+SMART MODEL ROUTER ASSERTIONS
+- Project/team-role scopes: SOLO / CODER / REVIEWER / TESTER.
+- Active managed client is STICKY_GUARD; no hot model/account switch.
+- Stopped managed instance can apply model/reasoning policy through Model/Reasoning Manager.
+- Live model and coding-capability gates are enforced.
+- Circuit OPEN and Predictive EMERGENCY accounts are excluded.
+- Account-affinity influence is bounded to ±8; configured default is ±6.
+- Closed-loop Router remains the final account-routing authority.
+- Stable endpoint/provider, identity isolation, security and project binding are preserved.
+- Apply supports rollback of policy/config; prompt/request body/OAuth/API key/cookie are not consumed or logged.

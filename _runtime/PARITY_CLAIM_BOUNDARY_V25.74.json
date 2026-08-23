@@ -1,0 +1,316 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.74",
+  "suite": "PARITY_CLAIM_BOUNDARY_V25.74",
+  "generated_utc": "2026-08-23T07:28:08.628014+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 45,
+    "fail": 0,
+    "total": 45
+  },
+  "checks": [
+    {
+      "name": "version_current",
+      "status": "PASS",
+      "detail": "25.74"
+    },
+    {
+      "name": "cockpit_baseline_1327",
+      "status": "PASS",
+      "detail": "Cockpit current release v1.3.27"
+    },
+    {
+      "name": "public_baseline_watch_observed_current",
+      "status": "PASS",
+      "detail": {
+        "version": "25.74",
+        "generated_utc": "2026-08-23T07:28:08.628014+00:00",
+        "repository": "jlcodes99/cockpit-tools",
+        "ref": "main",
+        "package_version": "1.3.27",
+        "package_blob_sha": "6cc1d64ad6a02eb8de7672a7d5974ff2a9337e6f",
+        "baseline": "1.3.27",
+        "state": "CURRENT",
+        "promotion_frozen": false,
+        "codex_only": true
+      }
+    },
+    {
+      "name": "feature_score_locked",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_locked",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "verdict_feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "review_packet_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "baseline_drift_reconciliation_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "unified_diagnostics_review_packet_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "privacy_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 14,
+        "fail": 0,
+        "total": 14
+      }
+    },
+    {
+      "name": "gui_structural_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "official_auth_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 67,
+        "fail": 0,
+        "total": 67
+      }
+    },
+    {
+      "name": "runtime_kit_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 464,
+        "fail": 0,
+        "total": 464
+      }
+    },
+    {
+      "name": "compatibility_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      }
+    },
+    {
+      "name": "public_backend_actions_exact_90",
+      "status": "PASS",
+      "detail": 90
+    },
+    {
+      "name": "regression_91_of_91",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 91,
+        "suite_fail": 0,
+        "suite_total": 91,
+        "numeric_assertions_pass": 2068,
+        "numeric_assertions_total": 2068
+      }
+    },
+    {
+      "name": "regression_2068_of_2068",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 91,
+        "suite_fail": 0,
+        "suite_total": 91,
+        "numeric_assertions_pass": 2068,
+        "numeric_assertions_total": 2068
+      }
+    },
+    {
+      "name": "gui_live_smoke_clean",
+      "status": "PASS",
+      "detail": {
+        "version": "25.74",
+        "generated_utc": "2026-08-23T07:27:52.535832+00:00",
+        "gui_exit_code": 124,
+        "gui_expected_timeout_alive": true,
+        "stdout_bytes": 0,
+        "stderr_bytes": 0,
+        "verdict": "PASS"
+      }
+    },
+    {
+      "name": "powershell_static_lint",
+      "status": "PASS",
+      "detail": "Static lexical gate only. A real Windows PowerShell 5.1 parse/runtime remains authoritative."
+    },
+    {
+      "name": "powershell_coherence",
+      "status": "PASS",
+      "detail": "Compact-syntax findings are advisory unless they match high-confidence command/operator glue. A real Windows PowerShell parser/runtime remains the final authority."
+    },
+    {
+      "name": "python_compileall",
+      "status": "PASS",
+      "detail": {
+        "compileall_exit": 0
+      }
+    },
+    {
+      "name": "raw_evidence_immutable_digest_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "review_packet_hash_chain_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "reviewer_refs_pseudonymous_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "review_packet_two_baseline_checkpoints",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "capability_binding_present",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "review_packet_privacy_export_boundary",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "review_packet_no_auto_score_or_cert",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "review_packet_codex_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "newer_baseline_freezes_packet",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "superseding_invalidation_entries_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "append_only_ledger_reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "delta_audit_codex_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "drift_reuse_capability_binding_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "no_silent_grandfathering",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "automatic_upstream_merge_disabled",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "reconciliation_no_score_mutation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "real_codex_effects_not_executed",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "windows_signing_not_executed",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "production_score_not_eligible",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "external_windows_target_evidence_not_imported",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "automatic_production_certification_disabled",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "new_dual_review_epoch_required_after_drift",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "codex_only_scope_preserved",
+      "status": "PASS",
+      "detail": true
+    }
+  ],
+  "cockpit_baseline": "1.3.27",
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "external_windows_target_evidence_imported": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false,
+  "automatic_upstream_merge": false,
+  "public_backend_actions": 90,
+  "claim_note": "v25.74 adds immutable external-Windows evidence review packets and baseline-drift reconciliation with superseding INVALIDATE epochs. Synthetic/control-plane only; no imported Windows evidence, no Windows certification, and no production-score mutation."
+}

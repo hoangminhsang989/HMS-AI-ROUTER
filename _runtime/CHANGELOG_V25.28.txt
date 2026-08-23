@@ -1,0 +1,14 @@
+HMS AI Cockpit v25.28 — CODEX MULTI-INSTANCE + PROJECT ISOLATION
+
+- Product scope chuyển sang CODEX-ONLY.
+- Gỡ Antigravity khỏi native GUI, backend action surface và package payload bridge.
+- Native GUI mới: Codex Instances.
+- Tạo/start/stop/restart/focus managed Codex instance.
+- 1 Project + 1 Account + 1 CODEX_HOME + 1 app-data + 1 dedicated Router/port cho mỗi instance.
+- Project path canonicalization, duplicate project guard, duplicate account guard.
+- binding-v2528.json không chứa secret; audit mismatch fail-closed trước start.
+- HMS_ROUTER_API_KEY được inject trực tiếp vào process environment của từng instance.
+- Credential snapshot refresh trước start khi fully stopped; SHA-256 verify, auth cũ được archive chứ không xóa.
+- Backend get_instances không expose apiKey/token.
+- No destructive instance-delete action in this tranche.
+- Real Windows Codex multi-instance runtime verification: DEFERRED_BY_OPERATOR.

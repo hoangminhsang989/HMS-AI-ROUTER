@@ -1,0 +1,34 @@
+{
+  "version": "25.37",
+  "engine": "ModelReasoningManager",
+  "passed": 6,
+  "total": 6,
+  "verdict": "PASS",
+  "tests": [
+    {
+      "test": "set_policy_valid",
+      "pass": true
+    },
+    {
+      "test": "apply_preserves_contract",
+      "pass": true
+    },
+    {
+      "test": "unsupported_reasoning_rejected",
+      "pass": true
+    },
+    {
+      "test": "secret_field_rejected",
+      "pass": true
+    },
+    {
+      "test": "stable_endpoint_mismatch_fail_closed",
+      "pass": true
+    },
+    {
+      "test": "non_live_model_rejected",
+      "pass": true
+    }
+  ],
+  "runtime_windows_codex": "DEFERRED_BY_OPERATOR"
+}

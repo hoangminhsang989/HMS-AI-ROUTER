@@ -1,0 +1,55 @@
+HMS AI Cockpit v25.63 — STARTUP RECOVERY RECONCILER & TARGET-MACHINE CRASH INJECTION HARNESS
+Date: 2026-08-22
+Scope: Codex-only
+
+1. STARTUP RECOVERY RECONCILER
+- Added HMS_Codex_StartupRecoveryReconciler.py.
+- Cold start discovers unresolved v25.60/v25.62 recovery journals before conflicting mutations.
+- Journal hash-chain and per-transaction sequence are validated before any recovery decision.
+- Startup gate converges to HEALTHY / DEGRADED_SAFE / OPERATOR_REQUIRED and is written atomically with fsync where available.
+- Unknown, concurrently changed or unowned external state fails closed to OPERATOR_REQUIRED.
+
+2. READ-ONLY EXTERNAL OBSERVERS
+- File auth observer uses raw-byte SHA-256 only; credential content is never emitted.
+- Keyring/auto modes require a digest provider and fail closed when no safe digest path exists.
+- Codex process observation uses PID/image digest only and does not inspect command-line secrets.
+- Router generation/state and LAN lease metadata are reduced to safe digests; lease owner identity is hashed.
+- Durable effects resume through VERIFY_ONLY_NO_REPEAT rather than blind re-execution.
+
+3. MUTATION PREFLIGHT ENFORCEMENT
+- PowerShell direct BackendAction dispatch invokes startup recovery preflight for conflicting mutating actions.
+- Private Official Auth switch invokes the same preflight, preventing a GUI/private path from bypassing recovery gating.
+- Public BackendAction contract remains exactly 90; no v25.63 action was added.
+
+4. OS-LEVEL CRASH INJECTION HARNESS FOUNDATION
+- Added HMS_Codex_TargetCrashHarness.py.
+- Uses real subprocess termination and a distinct cold-start recovery PID.
+- Exercises 12 crash cases across auth/restart/router/lease lab effects and three crash windows:
+  AFTER_PREPARE_BEFORE_EFFECT, AFTER_EFFECT_BEFORE_DURABLE, AFTER_DURABLE_BEFORE_VERIFY.
+- Every synthetic/lab case proves side-effect execution count == 1, valid journal chain and safe convergence.
+- Current build-host evidence is POSIX/Linux lab evidence; Windows target evidence is false and real Codex effects are not executed.
+
+5. OPERATOR UX / DIAGNOSTICS
+- Native GUI adds STARTUP RECOVERY v25.63 with RECONCILE and CRASH LAB controls.
+- Startup automatically schedules a recovery reconcile and exposes HEALTHY / DEGRADED_SAFE / OPERATOR_REQUIRED status.
+- Unified Diagnostics exports only aggregate startup/crash counts and state classes; no transaction/effect/account identity is exported.
+- Diagnostics Bundle accepts only aggregate v25.63 evidence and retains secret-shape/Bearer redaction.
+
+6. VALIDATION / REGRESSION FREEZE
+- Startup Recovery Reconciler: 26/26 PASS.
+- Target Crash Harness: 18/18 PASS; 12/12 crash cases safe.
+- Unified Diagnostics Startup Recovery: 13/13 PASS.
+- Diagnostics Bundle Privacy v25.63: 12/12 PASS.
+- Runtime Kit: 347/347 PASS.
+- Compatibility Freeze: 133/133 PASS; public BackendAction remains 90.
+- Full regression freeze: 38/38 suites; 1408/1408 numeric assertions PASS.
+- Regression used checkpoint-isolated file-backed suite execution to avoid inherited-handle supervisor stalls; the exact suite commands/assertions were preserved.
+- GUI startup smoke: 5/5 PASS (headless xvfb-run; target Windows proof not claimed).
+- PowerShell static lint/coherence and Python compileall PASS.
+
+7. PARITY / CLAIM BOUNDARY
+- Cockpit benchmark baseline remains v1.3.24.
+- Feature evidence score remains 93.0%; production evidence score remains 55.2%.
+- v25.61/v25.62/v25.63 are non-benchmark synthetic/control-plane evidence and do not raise production score.
+- Real Windows PowerShell/runtime, real Codex Desktop/CLI effects, safe keyring/auto observation, live quota fidelity, LAN/NAS failover and 6h/24h soak remain required target-machine gates.
+- PRODUCTION CERTIFICATION IS NOT CLAIMED.

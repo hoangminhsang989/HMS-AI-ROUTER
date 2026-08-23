@@ -1,0 +1,297 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.73",
+  "suite": "PARITY_CLAIM_BOUNDARY_V25.73",
+  "generated_utc": "2026-08-23T06:19:01.246138+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 37,
+    "fail": 0,
+    "total": 37
+  },
+  "checks": [
+    {
+      "name": "version_current",
+      "status": "PASS",
+      "detail": "25.73"
+    },
+    {
+      "name": "cockpit_baseline_1327",
+      "status": "PASS",
+      "detail": "Cockpit current release v1.3.27"
+    },
+    {
+      "name": "public_baseline_watch_observed_current",
+      "status": "PASS",
+      "detail": {
+        "version": "25.73",
+        "generated_utc": "2026-08-23T06:16:30.128828+00:00",
+        "repository": "jlcodes99/cockpit-tools",
+        "ref": "main",
+        "package_version": "1.3.27",
+        "package_blob_sha": "6cc1d64ad6a02eb8de7672a7d5974ff2a9337e6f",
+        "baseline": "1.3.27",
+        "state": "CURRENT",
+        "promotion_frozen": false,
+        "codex_only": true
+      }
+    },
+    {
+      "name": "feature_score_locked",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_locked",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "verdict_feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "import_review_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "baseline_delta_watch_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "unified_diagnostics_import_review_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 7,
+        "fail": 0,
+        "total": 7
+      }
+    },
+    {
+      "name": "privacy_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      }
+    },
+    {
+      "name": "gui_structural_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "parity_reset_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 22,
+        "fail": 0,
+        "total": 22
+      }
+    },
+    {
+      "name": "source_integration_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 29,
+        "fail": 0,
+        "total": 29
+      }
+    },
+    {
+      "name": "windows_cert_contract_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "promotion_auditor_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "official_auth_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 67,
+        "fail": 0,
+        "total": 67
+      }
+    },
+    {
+      "name": "runtime_kit_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 458,
+        "fail": 0,
+        "total": 458
+      }
+    },
+    {
+      "name": "compatibility_validation",
+      "status": "PASS",
+      "detail": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      }
+    },
+    {
+      "name": "public_backend_actions_exact_90",
+      "status": "PASS",
+      "detail": 90
+    },
+    {
+      "name": "regression_86_of_86",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 86,
+        "suite_fail": 0,
+        "suite_total": 86,
+        "numeric_assertions_pass": 2006,
+        "numeric_assertions_total": 2006
+      }
+    },
+    {
+      "name": "regression_2006_of_2006",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 86,
+        "suite_fail": 0,
+        "suite_total": 86,
+        "numeric_assertions_pass": 2006,
+        "numeric_assertions_total": 2006
+      }
+    },
+    {
+      "name": "gui_live_smoke_clean",
+      "status": "PASS",
+      "detail": {
+        "version": "25.73",
+        "generated_utc": "2026-08-23T06:15:53.841619+00:00",
+        "gui_exit_code": 124,
+        "gui_expected_timeout_alive": true,
+        "stdout_bytes": 0,
+        "stderr_bytes": 0,
+        "verdict": "PASS"
+      }
+    },
+    {
+      "name": "powershell_static_lint",
+      "status": "PASS",
+      "detail": "Static lexical gate only. A real Windows PowerShell 5.1 parse/runtime remains authoritative."
+    },
+    {
+      "name": "powershell_coherence",
+      "status": "PASS",
+      "detail": "Compact-syntax findings are advisory unless they match high-confidence command/operator glue. A real Windows PowerShell parser/runtime remains the final authority."
+    },
+    {
+      "name": "python_compileall",
+      "status": "PASS",
+      "detail": {
+        "compileall_exit": 0
+      }
+    },
+    {
+      "name": "seven_case_schema_preserved",
+      "status": "PASS",
+      "detail": {
+        "runtime_cases": 7,
+        "crash_matrix_schema_not_repurposed": true
+      }
+    },
+    {
+      "name": "two_baseline_checkpoints_required",
+      "status": "PASS",
+      "detail": [
+        "BEFORE_IMPORT",
+        "BEFORE_PROMOTION_REVIEW"
+      ]
+    },
+    {
+      "name": "invalid_evidence_quarantined_read_only",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "dual_review_append_only_ledger_required",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "real_codex_effects_not_executed",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "windows_signing_not_executed",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "production_score_not_eligible",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "external_windows_target_evidence_not_imported",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "automatic_production_certification_disabled",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "automatic_upstream_merge_disabled",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "codex_only_scope_preserved",
+      "status": "PASS",
+      "detail": true
+    }
+  ],
+  "cockpit_baseline": "1.3.27",
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "external_windows_target_evidence_imported": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false,
+  "public_backend_actions": 90,
+  "claim_note": "v25.73 adds privacy-safe seven-case Windows evidence import review and two-checkpoint Cockpit baseline delta watch. Synthetic/control-plane only; no Windows certification or production-score mutation."
+}

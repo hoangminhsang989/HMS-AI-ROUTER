@@ -1,0 +1,107 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.65",
+  "suite": "DIAGNOSTICS_BUNDLE_PRIVACY_ATTESTED_RECOVERY",
+  "generated_utc": "2026-08-22T20:15:11.665329+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "total": 15
+  },
+  "tests": [
+    {
+      "name": "allow_windows-target-adapter-latest-v2565.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_attested-evidence-promotion-latest-v2565.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_recovery-operator-timeline-latest-v2565.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "allow_real-effect-preflight-latest-v2565.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "deny_auth_path",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bundle_command_pass",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "bundle_exists",
+      "status": "PASS",
+      "detail": "/tmp/hms-v2565-bundle-nyjhp3gy/out/HMS_DIAGNOSTICS_20260822T201507Z.zip"
+    },
+    {
+      "name": "four_state_files",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2565/windows-target-adapter-latest-v2565.json",
+        "data/startup-recovery-v2565/recovery-operator-timeline-latest-v2565.json",
+        "data/startup-recovery-v2565/attested-evidence-promotion-latest-v2565.json",
+        "data/startup-recovery-v2565/real-effect-preflight-latest-v2565.json",
+        "runtime/WINDOWS_TARGET_ADAPTER_PACK_VALIDATION_V25.65.json",
+        "runtime/ATTESTED_EVIDENCE_PROMOTION_GATE_VALIDATION_V25.65.json",
+        "runtime/RECOVERY_OPERATOR_TIMELINE_VALIDATION_V25.65.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "runtime_validators",
+      "status": "PASS",
+      "detail": [
+        "data/startup-recovery-v2565/windows-target-adapter-latest-v2565.json",
+        "data/startup-recovery-v2565/recovery-operator-timeline-latest-v2565.json",
+        "data/startup-recovery-v2565/attested-evidence-promotion-latest-v2565.json",
+        "data/startup-recovery-v2565/real-effect-preflight-latest-v2565.json",
+        "runtime/WINDOWS_TARGET_ADAPTER_PACK_VALIDATION_V25.65.json",
+        "runtime/ATTESTED_EVIDENCE_PROMOTION_GATE_VALIDATION_V25.65.json",
+        "runtime/RECOVERY_OPERATOR_TIMELINE_VALIDATION_V25.65.json",
+        "DIAGNOSTICS_MANIFEST.json"
+      ]
+    },
+    {
+      "name": "manifest_version",
+      "status": "PASS",
+      "detail": "25.65"
+    },
+    {
+      "name": "access_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "bearer_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "prompt_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "account_redacted",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "hostname_redacted",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

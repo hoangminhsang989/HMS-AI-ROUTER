@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "data": {
+    "verdict": "PASS",
+    "version": "25.41",
+    "version_ok": true,
+    "manifest_ok": true,
+    "script_variables": {
+      "referenced": 214,
+      "assigned": 214,
+      "missing": []
+    },
+    "settings": {
+      "referenced": 338,
+      "declared": 425,
+      "missing": []
+    },
+    "high_confidence_compact_syntax_findings": [],
+    "note": "Compact-syntax findings are advisory unless they match high-confidence command/operator glue. A real Windows PowerShell parser/runtime remains the final authority."
+  }
+}

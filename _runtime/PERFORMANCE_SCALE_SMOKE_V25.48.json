@@ -1,0 +1,555 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.48",
+  "schema_version": 1,
+  "suite": "PERFORMANCE_SCALE",
+  "generated_utc": "2026-08-22T01:32:40.000355+00:00",
+  "run_id": "production-shaped-smoke",
+  "verdict": "PASS",
+  "production_certification": "NOT_CLAIMED",
+  "metric_scope": {
+    "control_plane_ttfb": "GET /hms/health response-header latency; NOT model token TTFT",
+    "model_ttft": "NOT_MEASURED_NO_QUOTA_CONSUMPTION",
+    "payload_capture": false,
+    "authorization_capture": false
+  },
+  "topology": {
+    "target_count": 3,
+    "router_configured": true,
+    "instance_target_count": 2,
+    "target_roles": [
+      "router",
+      "instance-1",
+      "instance-2"
+    ],
+    "target_hashes": [
+      "55725bfbc9aa9f0c",
+      "c9658185a6cd28bb",
+      "f5353638e74f9cba"
+    ],
+    "shared_path_hash": "a8aea32331fd11216a71c61cab6c271eec98fd1a0e4ac5942d63e25c82913c03"
+  },
+  "summary": {
+    "request_success": 80,
+    "request_total": 80,
+    "max_latency_p95_ms": 4.372,
+    "max_control_plane_ttfb_p95_ms": 3.892,
+    "max_throughput_rps": 3305.325,
+    "multi_instance_exercised": true,
+    "shared_contention_exercised": true,
+    "backpressure_observed": true,
+    "reconnect_storm_requests": 48
+  },
+  "concurrency_profiles": [
+    {
+      "concurrency": 1,
+      "requests": 20,
+      "success": 20,
+      "fail": 0,
+      "error_rate": 0.0,
+      "elapsed_sec": 0.0122,
+      "throughput_rps": 1632.842,
+      "latency_ms": {
+        "count": 20,
+        "min": 0.35,
+        "max": 1.414,
+        "avg": 0.541,
+        "p50": 0.426,
+        "p95": 1.215,
+        "p99": 1.374
+      },
+      "control_plane_ttfb_ms": {
+        "count": 20,
+        "min": 0.328,
+        "max": 1.392,
+        "avg": 0.514,
+        "p50": 0.405,
+        "p95": 1.188,
+        "p99": 1.351
+      },
+      "per_target": {
+        "0": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 0.377,
+            "max": 1.204,
+            "avg": 0.546,
+            "p50": 0.432,
+            "p95": 1.007,
+            "p99": 1.165
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.355,
+            "max": 1.177,
+            "avg": 0.519,
+            "p50": 0.408,
+            "p95": 0.977,
+            "p99": 1.137
+          }
+        },
+        "1": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 0.35,
+            "max": 0.613,
+            "avg": 0.433,
+            "p50": 0.411,
+            "p95": 0.563,
+            "p99": 0.603
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.328,
+            "max": 0.59,
+            "avg": 0.409,
+            "p50": 0.388,
+            "p95": 0.54,
+            "p99": 0.58
+          }
+        },
+        "2": {
+          "requests": 6,
+          "success": 6,
+          "latency_ms": {
+            "count": 6,
+            "min": 0.384,
+            "max": 1.414,
+            "avg": 0.66,
+            "p50": 0.514,
+            "p95": 1.243,
+            "p99": 1.38
+          },
+          "control_plane_ttfb_ms": {
+            "count": 6,
+            "min": 0.368,
+            "max": 1.392,
+            "avg": 0.632,
+            "p50": 0.493,
+            "p95": 1.209,
+            "p99": 1.355
+          }
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "requests": 20,
+      "success": 20,
+      "fail": 0,
+      "error_rate": 0.0,
+      "elapsed_sec": 0.0061,
+      "throughput_rps": 3305.325,
+      "latency_ms": {
+        "count": 20,
+        "min": 0.441,
+        "max": 1.825,
+        "avg": 0.987,
+        "p50": 0.937,
+        "p95": 1.718,
+        "p99": 1.804
+      },
+      "control_plane_ttfb_ms": {
+        "count": 20,
+        "min": 0.416,
+        "max": 1.588,
+        "avg": 0.849,
+        "p50": 0.829,
+        "p95": 1.479,
+        "p99": 1.566
+      },
+      "per_target": {
+        "0": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 0.441,
+            "max": 1.214,
+            "avg": 0.908,
+            "p50": 1.01,
+            "p95": 1.183,
+            "p99": 1.208
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.416,
+            "max": 1.166,
+            "avg": 0.825,
+            "p50": 0.866,
+            "p95": 1.113,
+            "p99": 1.155
+          }
+        },
+        "1": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 0.507,
+            "max": 1.712,
+            "avg": 0.897,
+            "p50": 0.76,
+            "p95": 1.554,
+            "p99": 1.68
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.486,
+            "max": 1.145,
+            "avg": 0.705,
+            "p50": 0.625,
+            "p95": 1.056,
+            "p99": 1.127
+          }
+        },
+        "2": {
+          "requests": 6,
+          "success": 6,
+          "latency_ms": {
+            "count": 6,
+            "min": 0.754,
+            "max": 1.825,
+            "avg": 1.185,
+            "p50": 1.129,
+            "p95": 1.744,
+            "p99": 1.809
+          },
+          "control_plane_ttfb_ms": {
+            "count": 6,
+            "min": 0.67,
+            "max": 1.588,
+            "avg": 1.045,
+            "p50": 0.918,
+            "p95": 1.559,
+            "p99": 1.582
+          }
+        }
+      }
+    },
+    {
+      "concurrency": 8,
+      "requests": 20,
+      "success": 20,
+      "fail": 0,
+      "error_rate": 0.0,
+      "elapsed_sec": 0.0082,
+      "throughput_rps": 2451.534,
+      "latency_ms": {
+        "count": 20,
+        "min": 1.182,
+        "max": 4.495,
+        "avg": 2.365,
+        "p50": 2.362,
+        "p95": 4.372,
+        "p99": 4.47
+      },
+      "control_plane_ttfb_ms": {
+        "count": 20,
+        "min": 0.758,
+        "max": 4.251,
+        "avg": 2.109,
+        "p50": 1.95,
+        "p95": 3.892,
+        "p99": 4.179
+      },
+      "per_target": {
+        "0": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 1.182,
+            "max": 3.185,
+            "avg": 2.009,
+            "p50": 1.737,
+            "p95": 3.006,
+            "p99": 3.149
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.758,
+            "max": 2.928,
+            "avg": 1.713,
+            "p50": 1.55,
+            "p95": 2.762,
+            "p99": 2.895
+          }
+        },
+        "1": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 1.419,
+            "max": 4.495,
+            "avg": 2.404,
+            "p50": 2.315,
+            "p95": 3.875,
+            "p99": 4.371
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 1.225,
+            "max": 3.873,
+            "avg": 2.191,
+            "p50": 2.107,
+            "p95": 3.409,
+            "p99": 3.78
+          }
+        },
+        "2": {
+          "requests": 6,
+          "success": 6,
+          "latency_ms": {
+            "count": 6,
+            "min": 1.409,
+            "max": 4.366,
+            "avg": 2.733,
+            "p50": 2.496,
+            "p95": 4.089,
+            "p99": 4.311
+          },
+          "control_plane_ttfb_ms": {
+            "count": 6,
+            "min": 1.225,
+            "max": 4.251,
+            "avg": 2.474,
+            "p50": 2.345,
+            "p95": 3.913,
+            "p99": 4.183
+          }
+        }
+      }
+    },
+    {
+      "concurrency": 16,
+      "requests": 20,
+      "success": 20,
+      "fail": 0,
+      "error_rate": 0.0,
+      "elapsed_sec": 0.0076,
+      "throughput_rps": 2640.258,
+      "latency_ms": {
+        "count": 20,
+        "min": 0.934,
+        "max": 4.465,
+        "avg": 2.427,
+        "p50": 2.122,
+        "p95": 4.045,
+        "p99": 4.381
+      },
+      "control_plane_ttfb_ms": {
+        "count": 20,
+        "min": 0.908,
+        "max": 4.438,
+        "avg": 2.029,
+        "p50": 1.856,
+        "p95": 3.821,
+        "p99": 4.315
+      },
+      "per_target": {
+        "0": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 0.934,
+            "max": 4.023,
+            "avg": 2.023,
+            "p50": 1.6,
+            "p95": 3.568,
+            "p99": 3.932
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.908,
+            "max": 3.789,
+            "avg": 1.798,
+            "p50": 1.578,
+            "p95": 3.277,
+            "p99": 3.687
+          }
+        },
+        "1": {
+          "requests": 7,
+          "success": 7,
+          "latency_ms": {
+            "count": 7,
+            "min": 1.27,
+            "max": 3.848,
+            "avg": 2.537,
+            "p50": 2.555,
+            "p95": 3.792,
+            "p99": 3.837
+          },
+          "control_plane_ttfb_ms": {
+            "count": 7,
+            "min": 0.999,
+            "max": 3.18,
+            "avg": 2.046,
+            "p50": 1.865,
+            "p95": 3.109,
+            "p99": 3.166
+          }
+        },
+        "2": {
+          "requests": 6,
+          "success": 6,
+          "latency_ms": {
+            "count": 6,
+            "min": 1.534,
+            "max": 4.465,
+            "avg": 2.772,
+            "p50": 2.529,
+            "p95": 4.267,
+            "p99": 4.425
+          },
+          "control_plane_ttfb_ms": {
+            "count": 6,
+            "min": 1.416,
+            "max": 4.438,
+            "avg": 2.277,
+            "p50": 1.986,
+            "p95": 3.929,
+            "p99": 4.336
+          }
+        }
+      }
+    }
+  ],
+  "backpressure": {
+    "workers": 2,
+    "queue_capacity": 4,
+    "burst": 48,
+    "accepted": 4,
+    "rejected": 44,
+    "completed": 4,
+    "max_queue_depth": 4,
+    "bounded": true,
+    "no_silent_drop": true,
+    "backpressure_observed": true
+  },
+  "reconnect_storm": {
+    "concurrency": 16,
+    "requests": 48,
+    "success": 48,
+    "fail": 0,
+    "error_rate": 0.0,
+    "elapsed_sec": 0.0188,
+    "throughput_rps": 2554.555,
+    "latency_ms": {
+      "count": 48,
+      "min": 0.716,
+      "max": 7.179,
+      "avg": 3.289,
+      "p50": 3.353,
+      "p95": 5.434,
+      "p99": 6.417
+    },
+    "control_plane_ttfb_ms": {
+      "count": 48,
+      "min": 0.619,
+      "max": 6.223,
+      "avg": 2.75,
+      "p50": 2.39,
+      "p95": 5.195,
+      "p99": 5.841
+    },
+    "per_target": {
+      "0": {
+        "requests": 16,
+        "success": 16,
+        "latency_ms": {
+          "count": 16,
+          "min": 0.716,
+          "max": 5.431,
+          "avg": 2.575,
+          "p50": 2.355,
+          "p95": 4.638,
+          "p99": 5.272
+        },
+        "control_plane_ttfb_ms": {
+          "count": 16,
+          "min": 0.619,
+          "max": 5.411,
+          "avg": 2.256,
+          "p50": 2.011,
+          "p95": 4.59,
+          "p99": 5.247
+        }
+      },
+      "1": {
+        "requests": 16,
+        "success": 16,
+        "latency_ms": {
+          "count": 16,
+          "min": 1.649,
+          "max": 7.179,
+          "avg": 3.704,
+          "p50": 3.819,
+          "p95": 5.871,
+          "p99": 6.917
+        },
+        "control_plane_ttfb_ms": {
+          "count": 16,
+          "min": 1.422,
+          "max": 6.223,
+          "avg": 3.138,
+          "p50": 3.055,
+          "p95": 5.074,
+          "p99": 5.993
+        }
+      },
+      "2": {
+        "requests": 16,
+        "success": 16,
+        "latency_ms": {
+          "count": 16,
+          "min": 1.463,
+          "max": 5.557,
+          "avg": 3.59,
+          "p50": 3.522,
+          "p95": 5.368,
+          "p99": 5.519
+        },
+        "control_plane_ttfb_ms": {
+          "count": 16,
+          "min": 0.891,
+          "max": 5.222,
+          "avg": 2.857,
+          "p50": 2.75,
+          "p95": 5.164,
+          "p99": 5.21
+        }
+      }
+    }
+  },
+  "shared_contention": {
+    "workers": 6,
+    "ops_per_worker": 8,
+    "ops": 48,
+    "success": 48,
+    "fail": 0,
+    "error_rate": 0.0,
+    "throughput_ops_sec": 1574.284,
+    "latency_ms": {
+      "count": 48,
+      "min": 1.24,
+      "max": 10.485,
+      "avg": 3.216,
+      "p50": 2.414,
+      "p95": 6.922,
+      "p99": 10.439
+    },
+    "namespace": ".hms_perf/<run_id>",
+    "errors": []
+  },
+  "failures": [],
+  "warnings": [],
+  "next_certification": "v25.49 real Windows/Codex model TTFT and quota-backed request path"
+}

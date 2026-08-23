@@ -1,0 +1,92 @@
+{
+  "product": "HMS AI Cockpit",
+  "edition": "CODEX_ONLY",
+  "version": "25.49",
+  "schema_version": 1,
+  "suite": "REAL_CODEX_CERTIFICATION",
+  "generated_utc": "2026-08-22T01:50:51.763784+00:00",
+  "verdict": "HARNESS_READY_RUNTIME_DEFERRED",
+  "production_certification": "NOT_CLAIMED",
+  "host": {
+    "windows": false,
+    "platform": "Linux",
+    "platform_release": "6.18.35",
+    "python": "3.13.5"
+  },
+  "powershell_5_1": {
+    "available": false,
+    "runtime_ok": false,
+    "parser_ok": false,
+    "version": "",
+    "parse_error_count": null
+  },
+  "codex_cli": {
+    "available": false,
+    "version_ok": false,
+    "version": "",
+    "login_status_supported": false,
+    "doctor_supported": false,
+    "app_command_supported": false
+  },
+  "desktop": {
+    "capability_detected_via_cli_app_command": false,
+    "classic_exe_probe": "CAPABILITY_ONLY_NO_VERSION_ALLOWLIST"
+  },
+  "topology": {
+    "instance_count": 0,
+    "at_least_two_instances": false,
+    "unique_projects": false,
+    "unique_codex_homes": false,
+    "dedicated_accounts": false,
+    "unique_ports": false,
+    "instances": []
+  },
+  "instance_runtime": [],
+  "live_request_policy": {
+    "explicit_opt_in": false,
+    "budget_cap": 0,
+    "hard_max_cap": 8,
+    "model_hash": "",
+    "prompt": "FIXED_MINIMAL_PROMPT_NOT_PERSISTED",
+    "request_body_logged": false,
+    "response_body_logged": false,
+    "api_key_logged": false,
+    "quota_consumption_possible": false
+  },
+  "live_requests": [],
+  "summary": {
+    "managed_instances": 0,
+    "healthy_instance_endpoints": 0,
+    "generation_guard_pass": 0,
+    "live_requests_executed": 0,
+    "live_requests_pass": 0,
+    "exact_output_text_delta_ttft_observed": 0,
+    "real_codex_certified": false
+  },
+  "blockers": [
+    "WINDOWS_TARGET_REQUIRED_FOR_REAL_CERTIFICATION",
+    "WINDOWS_POWERSHELL_5_1_GATE_NOT_PASS",
+    "CODEX_CLI_NOT_DETECTED_OR_VERSION_UNREADABLE",
+    "TWO_MANAGED_INSTANCES_REQUIRED"
+  ],
+  "warnings": [
+    "LIVE_QUOTA_BACKED_REQUEST_NOT_EXECUTED"
+  ],
+  "contract_guards": {
+    "hard_coded_codex_version_allowlist": false,
+    "backend_action_added": false,
+    "public_backend_action_exact_90_preserved": true,
+    "auth_json_content_logged": false,
+    "token_or_api_key_logged": false,
+    "raw_prompt_or_response_logged": false,
+    "auth_mutation": false,
+    "account_switch_mutation": false,
+    "credential_delete": false
+  },
+  "metric_boundary": {
+    "control_plane_ttfb": "GET /hms/health header latency",
+    "model_stream_first_event": "first SSE data event from real /v1/responses stream",
+    "model_token_ttft": "first response.output_text.delta event only; never inferred from first SSE/header"
+  },
+  "next_stage": "v25.50 LIVE_QUOTA_INTELLIGENCE after real target-machine certification evidence"
+}

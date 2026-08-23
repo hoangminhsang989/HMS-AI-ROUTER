@@ -1,0 +1,54 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.69",
+  "suite": "GUI_STARTUP_SMOKE",
+  "generated_utc": "2026-08-23T02:23:07.524898+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "total": 6
+  },
+  "tests": [
+    {
+      "name": "process_alive_8s",
+      "status": "PASS",
+      "detail": {
+        "exit_code": 124
+      }
+    },
+    {
+      "name": "stderr_zero",
+      "status": "PASS",
+      "detail": {
+        "stderr_bytes": 0
+      }
+    },
+    {
+      "name": "app_version_25_69",
+      "status": "PASS",
+      "detail": "APP_VERSION=25.69"
+    },
+    {
+      "name": "evidence_inbox_structural_gate",
+      "status": "PASS",
+      "detail": {
+        "pass": 7,
+        "fail": 0,
+        "total": 7
+      }
+    },
+    {
+      "name": "real_effect_card_preflight_lab_only",
+      "status": "PASS",
+      "detail": {
+        "arm_label_present": false
+      }
+    },
+    {
+      "name": "public_backend_actions_90",
+      "status": "PASS",
+      "detail": 90
+    }
+  ]
+}

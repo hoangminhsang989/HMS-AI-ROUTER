@@ -1,0 +1,36 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.44",
+  "tranche": "SMART_MODEL_ROUTER",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "total": 16
+  },
+  "checks": {
+    "plan_valid": true,
+    "three_role_scopes": true,
+    "running_coder_sticky_guard": true,
+    "stopped_reviewer_apply_ready": true,
+    "best_model_is_live_coding_model": true,
+    "best_account_uses_analytics": true,
+    "open_emergency_account_excluded": true,
+    "noncoding_model_excluded": true,
+    "account_signal_bounded": true,
+    "privacy_contract": true,
+    "apply_preserves_stable_endpoint_and_provider": true,
+    "running_coder_untouched_on_apply": true,
+    "rollback_restores_policy_and_config": true,
+    "hard_cap_eight_even_if_config_higher": true,
+    "closed_loop_consumes_bounded_signal": true,
+    "circuit_open_still_authoritative": true
+  },
+  "synthetic": {
+    "reviewer_model": "gpt-5.6-codex",
+    "reviewer_account": "b@example.com",
+    "coder_status": "STICKY_GUARD",
+    "max_account_adjustment": 6.0
+  },
+  "runtime_windows_codex": "DEFERRED_BY_OPERATOR"
+}

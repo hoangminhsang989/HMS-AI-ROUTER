@@ -1,0 +1,37 @@
+HMS AI Cockpit v25.67 — BUILD VALIDATION
+Generated UTC: 2026-08-23T01:04:35.177040+00:00
+
+VERDICT: PASS_SYNTHETIC_CONTROL_PLANE_RELEASE_FREEZE
+Track: Codex-only
+
+CORE v25.67
+- Attestation Trust Store: PASS · proof 9/9 · validator 8/8.
+- Offline Attestation Verifier: PASS · proof 7/7 · validator 7/7.
+- Resumable Target Certification Campaign: PASS · proof 13/13 · validator 9/9.
+- Unified Diagnostics Trust Campaign: 6/6 PASS.
+- Diagnostics Bundle Privacy v25.67: 9/9 PASS.
+
+CARRIED CRYPTO / TARGET CONTROLS
+- Windows Attestation Signer: 8/8 PASS; cryptographic proof remains synthetic on this host.
+- One-shot Target Certification Runbook: 8/8 PASS; target effects remain DISARMED.
+- Attested Evidence Promotion Gate: 10/10 PASS.
+
+FREEZE
+- Runtime Kit: 408/408 PASS.
+- Compatibility Freeze: 133/133 PASS.
+- Full Regression Freeze: 59/59 suites · 1,679/1,679 numeric assertions PASS.
+- GUI startup smoke: 6/6 PASS · stderr 0.
+- PowerShell static lint/coherence: PASS.
+- Python compileall: PASS.
+- Parity Claim Boundary: 9/9 PASS.
+
+CLAIM BOUNDARY
+- Feature evidence score: 93.0%.
+- Production evidence score: 55.2%.
+- windows_runtime_certified=false.
+- real_codex_effects_executed=false.
+- windows_signing_executed=false.
+- automatic_production_certification=false.
+- public BackendAction count remains 90.
+
+Production score is intentionally NOT increased by trust-store, offline-verifier or resumable-campaign synthetic/control-plane evidence.

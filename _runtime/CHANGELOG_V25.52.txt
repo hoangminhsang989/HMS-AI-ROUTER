@@ -1,0 +1,15 @@
+HMS AI Cockpit v25.52 — UX / COCKPIT PARITY+
+
+- Consolidate operator signals across Account Center, Live Quota, Router, Rotation and Unified UX without expanding the frozen public BackendAction contract.
+- Native Account Center now shows TOTAL / READY / ROUTE OK / HOLD / STALE / FAVORITE at a glance.
+- Add local operator filters: ALL / ROUTE OK / HOLD / STALE / FAVORITE plus search and active-route banner.
+- Account cards now expose route eligibility, freshness, reserve/usable quota and WHY HOLD reason codes.
+- Distinguish NEW-session routing eligibility from existing sticky-session affinity so operators can see why a running session stays bound while new work routes elsewhere.
+- Unified web UX adds route-eligible/hold/stale cards, operator-attention alerts and account filters.
+- Unified web remains loopback-only + read-only; POST mutation is rejected with HTTP 405 and operator changes remain in the native HMS console.
+- Preserve v25.51 anti-ping-pong rotation and Smart Gateway affinity invariants.
+- Add v25.52 UX Parity+ validator and make it a mandatory Regression Freeze suite.
+- Harden historical validators to assert semantic contracts instead of exact legacy UI wording.
+- Diagnostics Bundle now includes v25.52 release/UX evidence as redacted metadata-only artifacts.
+
+Production boundary remains unchanged: target Windows/Codex/live quota/multi-PC SMB/NAS/6h+24h evidence is still required before any production-superset claim.

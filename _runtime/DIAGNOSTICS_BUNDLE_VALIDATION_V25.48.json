@@ -1,0 +1,38 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.48",
+  "suite": "DIAGNOSTICS_BUNDLE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "name": "bundle_created",
+      "ok": true,
+      "detail": "/tmp/hms_bundle48/HMS_DIAGNOSTICS_20260822T013258Z.zip"
+    },
+    {
+      "name": "performance_latest_included",
+      "ok": true,
+      "detail": "['data/unified-diagnostics-latest-v2541.json', 'data/performance-scale-v2548/performance-scale-latest-v2548.json', 'runtime/PERFORMANCE_SCALE_VALIDATION_V25.48.json', 'runtime/REGRESSION_FREEZE_VALIDATION_V25.48.json', 'runtime/RUNTIME_KIT_VALIDATION_V25.48.json', 'runtime/BUILD_VALIDATION_V25.47.txt', 'runtime/CHANGELOG_V25.47.txt', 'runtime/ROADMAP_V25.47_CONTINUATION.md', 'runtime/RELIABILITY_SOAK_VALIDATION_V25.47.json', 'runtime/REGRESSION_FREEZE_VALIDATION_V25.47.json', 'runtime/COMPATIBIL"
+    },
+    {
+      "name": "performance_validation_included",
+      "ok": true,
+      "detail": "['data/unified-diagnostics-latest-v2541.json', 'data/performance-scale-v2548/performance-scale-latest-v2548.json', 'runtime/PERFORMANCE_SCALE_VALIDATION_V25.48.json', 'runtime/REGRESSION_FREEZE_VALIDATION_V25.48.json', 'runtime/RUNTIME_KIT_VALIDATION_V25.48.json', 'runtime/BUILD_VALIDATION_V25.47.txt', 'runtime/CHANGELOG_V25.47.txt', 'runtime/ROADMAP_V25.47_CONTINUATION.md', 'runtime/RELIABILITY_SOAK_VALIDATION_V25.47.json', 'runtime/REGRESSION_FREEZE_VALIDATION_V25.47.json', 'runtime/COMPATIBIL"
+    },
+    {
+      "name": "no_raw_shared_path",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no_raw_bearer",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

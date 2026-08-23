@@ -1,0 +1,24 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.35",
+  "tranche": "ACCOUNT_ANALYTICS",
+  "synthetic": {
+    "accounts": 3,
+    "requests_7d": 66,
+    "best_account": "b@example.com",
+    "best_score": 94.7,
+    "circuit_open_account_score": 0.0,
+    "model_profiles": 4,
+    "closed_loop_recommended_account": "b@example.com",
+    "analytics_adjustment_cap": 8.0,
+    "open_account_eligible": false
+  },
+  "privacy": {
+    "prompt_stored": false,
+    "request_body_stored": false,
+    "oauth_token_stored": false,
+    "api_key_stored": false,
+    "cookie_stored": false
+  },
+  "runtime_windows_codex": "DEFERRED_BY_OPERATOR"
+}

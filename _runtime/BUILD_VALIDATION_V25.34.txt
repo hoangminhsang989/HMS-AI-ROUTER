@@ -1,0 +1,38 @@
+HMS AI Cockpit v25.34 — BUILD VALIDATION
+
+Baseline: v25.33 Predictive Quota Engine
+Tranche: ADVANCED_QUOTA_CENTER
+Edition: CODEX_ONLY
+
+GATES
+- Python compileall (46 .py/.pyw files): PASS.
+- Native GUI startup smoke under isolated display: PASS 7 seconds, stderr 0.
+- Native GUI Quota page synthetic-data render smoke: PASS.
+- Quota Center synthetic SQLite/history/freshness/reset/accuracy test: PASS.
+- Quota Center CLI sync + validate + additional-window preservation: PASS.
+- PowerShell StaticLint v25.34: PASS.
+  * script variables referenced/assigned: 189/189; missing 0.
+  * settings referenced/declared: 301/386; missing 0; duplicates 0.
+  * high-confidence glue findings: 0.
+- PowerShell CoherenceAudit v25.34: PASS.
+- Runtime Kit Validator v25.34: PASS 132/132.
+- Active native GUI Antigravity page: absent.
+- Antigravity bridge payload: absent.
+
+QUOTA CENTER CONTRACT
+- SQLite quota history: PASS.
+- Legacy JSONL quota history import: PASS.
+- FRESH/AGING/STALE/UNKNOWN source semantics: PASS.
+- 5h/7d reset timeline: PASS.
+- Fixed 0..100 chart scale: PASS.
+- Forecast checkpoint + later-observation resolution: PASS.
+- Forecast MAE/bias report: PASS.
+- Additional/model-specific quota window preservation: PASS.
+- Live quota remains authoritative: PASS.
+- Prompt/request body/OAuth token/cookie/API key excluded from Quota Center: PASS.
+- Stable endpoint/session affinity/project binding unchanged: PASS.
+
+DEFERRED BY OPERATOR
+- Real Windows Codex quota-source runtime verification.
+- Real reset-cycle forecast calibration.
+- Real multi-account 24h/72h soak.

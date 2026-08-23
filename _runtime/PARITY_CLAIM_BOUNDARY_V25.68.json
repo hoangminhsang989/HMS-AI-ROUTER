@@ -1,0 +1,98 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.68",
+  "suite": "PARITY_CLAIM_BOUNDARY",
+  "generated_utc": "2026-08-23T01:24:55.539700+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "total": 12
+  },
+  "tests": [
+    {
+      "name": "version_25_68",
+      "status": "PASS",
+      "detail": "25.68"
+    },
+    {
+      "name": "feature_parity_candidate",
+      "status": "PASS",
+      "detail": "FEATURE_PARITY_CANDIDATE"
+    },
+    {
+      "name": "feature_score_frozen",
+      "status": "PASS",
+      "detail": 93.0
+    },
+    {
+      "name": "production_score_frozen",
+      "status": "PASS",
+      "detail": 55.2
+    },
+    {
+      "name": "windows_runtime_not_certified",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "executor_nonproduction",
+      "status": "PASS",
+      "detail": false
+    },
+    {
+      "name": "review_no_auto_cert",
+      "status": "PASS",
+      "detail": {
+        "auto": false,
+        "score": false
+      }
+    },
+    {
+      "name": "regression_freeze_64",
+      "status": "PASS",
+      "detail": {
+        "suite_pass": 64,
+        "suite_fail": 0,
+        "suite_total": 64,
+        "numeric_assertions_pass": 1732,
+        "numeric_assertions_total": 1732
+      }
+    },
+    {
+      "name": "runtime_420",
+      "status": "PASS",
+      "detail": {
+        "pass": 420,
+        "fail": 0,
+        "total": 420
+      }
+    },
+    {
+      "name": "compatibility_133",
+      "status": "PASS",
+      "detail": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      }
+    },
+    {
+      "name": "public_backend_actions_90",
+      "status": "PASS",
+      "detail": 90
+    },
+    {
+      "name": "no_automatic_production_certification",
+      "status": "PASS",
+      "detail": false
+    }
+  ],
+  "feature_evidence_score_pct": 93.0,
+  "production_evidence_score_pct": 55.2,
+  "windows_runtime_certified": false,
+  "real_codex_effects_executed": false,
+  "windows_signing_executed": false,
+  "automatic_production_certification": false,
+  "production_score_promotion_eligible": false
+}

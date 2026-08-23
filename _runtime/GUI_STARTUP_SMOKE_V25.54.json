@@ -1,0 +1,40 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.54",
+  "suite": "GUI_STARTUP_SMOKE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 5,
+    "fail": 0,
+    "total": 5
+  },
+  "tests": [
+    {
+      "name": "gui_alive_or_clean",
+      "status": "PASS",
+      "detail": "exit=124"
+    },
+    {
+      "name": "stderr_empty",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "app_version",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "simulation_card",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "simulation_async",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "gui_exit": 124,
+  "stderr_tail": ""
+}

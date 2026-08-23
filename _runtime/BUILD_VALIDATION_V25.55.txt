@@ -1,0 +1,24 @@
+HMS AI Cockpit v25.55 — RELEASE FREEZE
+VERDICT: PASS_AUTONOMOUS_ROUTER_DIGITAL_TWIN_V25_55_RELEASE_CANDIDATE
+
+Core evidence:
+- Autonomous Router Digital Twin: 57/57 PASS
+- Large-pool digital twin: 32 accounts / 12 instances / 24 projects; 6 seeds / 1,800 cycles; 15/15 event classes
+- Bounded state-machine checker: 3,072 states / 0 safety failures
+- Counterexample minimization: 7 events -> 2 events (A_FAIL -> A_RECOVER)
+- Compatibility Freeze: 133/133 PASS
+- Runtime Kit: 273/273 PASS
+- Regression Freeze: 23/23 suites / 974/974 numeric assertions PASS
+- Unified Diagnostics + Diagnostics Bundle privacy: 12/12 PASS
+- GUI headless startup: 5/5 PASS, 7-second survival, stderr=0
+- PowerShell static lint: PASS
+- PowerShell coherence: PASS
+- Python compileall: PASS
+- Parity: feature 93.0%, production 55.2%, FEATURE_PARITY_CANDIDATE
+
+Claim boundary:
+- Synthetic/model-check evidence only.
+- Does not emit or substitute PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED.
+- Real machine is not required to continue development.
+
+Next stage: v25.56 Protocol Chaos / API Compatibility Fuzzer.

@@ -1,0 +1,73 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.65",
+  "suite": "ATTESTED_EVIDENCE_PROMOTION_GATE_VALIDATION",
+  "generated_utc": "2026-08-22T20:08:34.482484+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "total": 10
+  },
+  "tests": [
+    {
+      "name": "proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "proof_9",
+      "status": "PASS",
+      "detail": {
+        "pass": 9,
+        "fail": 0,
+        "total": 9
+      }
+    },
+    {
+      "name": "nonce_run_id",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "manifest_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "event_hash_chain",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "mixed_version_reject",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "trusted_signer_required",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "only_target_classes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "complete_4x3_matrix",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "separate_promotion_gate",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "production_score_promotion_eligible": false
+}

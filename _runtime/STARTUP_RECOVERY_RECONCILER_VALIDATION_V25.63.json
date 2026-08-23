@@ -1,0 +1,153 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.63",
+  "suite": "STARTUP_RECOVERY_RECONCILER_VALIDATION",
+  "generated_utc": "2026-08-22T14:30:20.735563+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 26,
+    "fail": 0,
+    "total": 26
+  },
+  "tests": [
+    {
+      "name": "synthetic_proof_pass",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "proof_12_checks",
+      "status": "PASS",
+      "detail": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      }
+    },
+    {
+      "name": "four_observer_effects",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "convergence_vocab",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "conflicting_action_guard_broad",
+      "status": "PASS",
+      "detail": 23
+    },
+    {
+      "name": "read_action_not_conflicting",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "auth_file_hash_only",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "keyring_secret_read_forbidden",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "process_no_cmdline",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "lan_owner_hashed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "v2560_discovery",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "v2562_discovery",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "hash_chain_validation",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "external_change_fail_closed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "durable_no_repeat",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "atomic_gate_fsync",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "raw_identity_hashed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "production_claim_blocked",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_version_25_63",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_version_25_63",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_direct_backend_guard",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_private_auth_guard",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "powershell_fail_closed_errors",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_startup_auto_reconcile",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "gui_operator_banner",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "public_actions_still_90",
+      "status": "PASS",
+      "detail": 90
+    }
+  ],
+  "production_certification": "NOT_CLAIMED_STARTUP_RECONCILER_TARGET_MACHINE_LIVE_REQUIRED"
+}

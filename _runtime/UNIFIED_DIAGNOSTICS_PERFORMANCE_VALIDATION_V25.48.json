@@ -1,0 +1,43 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.48",
+  "suite": "UNIFIED_DIAGNOSTICS_PERFORMANCE",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "total": 6
+  },
+  "checks": [
+    {
+      "name": "performance_layer_present",
+      "ok": true,
+      "detail": "{'request': 'NO_DATA', 'routing': 'NO_DATA', 'circuit': 'NO_DATA', 'self_healing': 'NO_DATA', 'security': 'NO_DATA', 'lan_pool': 'NO_DATA', 'reliability_soak': 'NO_DATA', 'performance_scale': 'OK'}"
+    },
+    {
+      "name": "performance_source_present",
+      "ok": true,
+      "detail": "{'performance-scale': 1}"
+    },
+    {
+      "name": "performance_event_present",
+      "ok": true,
+      "detail": "[{'time_utc': '2026-08-22T01:32:40.000355+00:00', 'source': 'performance-scale', 'kind': 'PERFORMANCE_SCALE_RUN', 'severity': 'INFO', 'request_id': '', 'instance_id': '', 'project': '', 'account': '', 'model': '', 'status': 'PASS', 'latency_ms': None, 'message': 'Performance scale PASS: targets=3 p95=4.372ms throughput=3305.325rps', 'details': {'status': 'PASS', 'target_count': 3, 'instance_target_count': 2, 'request_success': 80, 'request_total': 80, 'max_latency_p95_ms': 4.372, 'max_control_pl"
+    },
+    {
+      "name": "metadata_only",
+      "ok": true,
+      "detail": "{'contains_prompt': False, 'contains_request_body': False, 'contains_raw_secret': False, 'metadata_only': True}"
+    },
+    {
+      "name": "no_raw_shared_path",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no_secret_material",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

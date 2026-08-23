@@ -1,0 +1,165 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.47",
+  "suite": "V25_28_TO_V25_47_REGRESSION_FREEZE",
+  "generated_utc": "2026-08-22T01:17:05.750242+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "suite_pass": 15,
+    "suite_fail": 0,
+    "suite_total": 15,
+    "numeric_assertions_pass": 497,
+    "numeric_assertions_total": 497
+  },
+  "suites": [
+    {
+      "suite": "compatibility_freeze",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 133,
+        "fail": 0,
+        "total": 133
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "client_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 27,
+        "fail": 0,
+        "total": 27
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "lan_pool",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "total": 15
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "lan_failure_matrix",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 20,
+        "fail": 0,
+        "total": 20
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "reliability_soak_harness",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 42,
+        "fail": 0,
+        "total": 42
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "runtime_kit",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 209,
+        "fail": 0,
+        "total": 209
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "smart_model_router",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 16,
+        "fail": 0,
+        "total": 16
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "api_compatibility",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "total": 12
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "api_superset",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 13,
+        "fail": 0,
+        "total": 13
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "protocol",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {
+        "pass": 10,
+        "fail": 0,
+        "total": 10
+      },
+      "stderr": ""
+    },
+    {
+      "suite": "self_healing",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "suite": "security_hardening",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "suite": "project_orchestrator",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "suite": "powershell_static_lint",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": ""
+    },
+    {
+      "suite": "powershell_coherence",
+      "ok": true,
+      "exit_code": 0,
+      "summary": {},
+      "stderr": ""
+    }
+  ],
+  "windows_powershell_5_1": "DEFERRED_BY_OPERATOR",
+  "real_codex_cli_desktop": "DEFERRED_BY_OPERATOR",
+  "real_multi_pc_smb_nas": "DEFERRED_BY_OPERATOR",
+  "soak": "HARNESS_READY_6H_24H_NOT_EXECUTED"
+}

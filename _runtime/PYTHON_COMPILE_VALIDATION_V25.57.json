@@ -1,0 +1,15 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.57",
+  "suite": "PYTHON_COMPILEALL",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 1,
+    "fail": 0,
+    "total": 1
+  },
+  "checks": {
+    "compileall_runtime": true
+  },
+  "generated_utc": "2026-08-22T06:15:50.134637+00:00"
+}

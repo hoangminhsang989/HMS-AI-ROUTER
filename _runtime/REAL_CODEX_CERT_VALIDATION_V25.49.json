@@ -1,0 +1,340 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.49",
+  "suite": "REAL_CODEX_CERTIFICATION_VALIDATOR",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 65,
+    "fail": 0,
+    "total": 65
+  },
+  "checks": [
+    {
+      "name": "version_is_25_49",
+      "ok": true,
+      "detail": "25.49"
+    },
+    {
+      "name": "schema_v1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "hard_live_cap_8",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "fixed_safe_prompt",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version_parser_0.147.0",
+      "ok": true,
+      "detail": "{'ok': True, 'raw': 'codex-cli 0.147.0', 'version': '0.147.0', 'major': 0, 'minor': 147, 'patch': 0}"
+    },
+    {
+      "name": "version_parser_1.2.3",
+      "ok": true,
+      "detail": "{'ok': True, 'raw': 'OpenAI Codex v1.2.3', 'version': '1.2.3', 'major': 1, 'minor': 2, 'patch': 3}"
+    },
+    {
+      "name": "version_parser_99.0.1",
+      "ok": true,
+      "detail": "{'ok': True, 'raw': 'codex 99.0.1-alpha.4', 'version': '99.0.1', 'major': 99, 'minor': 0, 'patch': 1}"
+    },
+    {
+      "name": "version_parser_rejects_noise",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "redact_bearer",
+      "ok": true,
+      "detail": "Authorization: Bearer *** OPENAI_API_KEY=*** access_token=*** refresh_token=***"
+    },
+    {
+      "name": "redact_openai_key",
+      "ok": true,
+      "detail": "Authorization: Bearer *** OPENAI_API_KEY=*** access_token=*** refresh_token=***"
+    },
+    {
+      "name": "redact_access_token",
+      "ok": true,
+      "detail": "Authorization: Bearer *** OPENAI_API_KEY=*** access_token=*** refresh_token=***"
+    },
+    {
+      "name": "redact_refresh_token",
+      "ok": true,
+      "detail": "Authorization: Bearer *** OPENAI_API_KEY=*** access_token=*** refresh_token=***"
+    },
+    {
+      "name": "fake_cli_detected",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_cli_version",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_cli_login_capability",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_cli_doctor_capability",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_cli_exec_capability",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_cli_app_capability",
+      "ok": true,
+      "detail": "{'available': True, 'path_hash': 'a542b4259df33255', 'version_ok': True, 'version': '0.147.0', 'version_raw': 'codex-cli 0.147.0', 'version_command_ms': 503.802, 'login_status_supported': True, 'doctor_supported': True, 'app_command_supported': True, 'exec_supported': True, 'help_exit_code': 0}"
+    },
+    {
+      "name": "fake_ps_runtime",
+      "ok": true,
+      "detail": "{'available': True, 'runtime_ok': True, 'version': '5.1.19041.5607', 'is_windows_powershell_5_1': True, 'parser_ok': True, 'parse_error_count': 0, 'version_command_ms': 487.24, 'parser_command_ms': 502.703, 'stderr': ''}"
+    },
+    {
+      "name": "fake_ps_51",
+      "ok": true,
+      "detail": "{'available': True, 'runtime_ok': True, 'version': '5.1.19041.5607', 'is_windows_powershell_5_1': True, 'parser_ok': True, 'parse_error_count': 0, 'version_command_ms': 487.24, 'parser_command_ms': 502.703, 'stderr': ''}"
+    },
+    {
+      "name": "fake_ps_parser",
+      "ok": true,
+      "detail": "{'available': True, 'runtime_ok': True, 'version': '5.1.19041.5607', 'is_windows_powershell_5_1': True, 'parser_ok': True, 'parse_error_count': 0, 'version_command_ms': 487.24, 'parser_command_ms': 502.703, 'stderr': ''}"
+    },
+    {
+      "name": "login_status_chatgpt",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'auth_mode': 'CHATGPT', 'elapsed_ms': 505.561, 'auth_file_before': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_after': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_changed_during_status': False, 'status_summary': 'Logged in using ChatGPT'}"
+    },
+    {
+      "name": "login_does_not_mutate_auth",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'auth_mode': 'CHATGPT', 'elapsed_ms': 505.561, 'auth_file_before': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_after': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_changed_during_status': False, 'status_summary': 'Logged in using ChatGPT'}"
+    },
+    {
+      "name": "login_auth_hash_present_not_content",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'auth_mode': 'CHATGPT', 'elapsed_ms': 505.561, 'auth_file_before': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_after': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_changed_during_status': False, 'status_summary': 'Logged in using ChatGPT'}"
+    },
+    {
+      "name": "login_summary_no_token_payload",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'auth_mode': 'CHATGPT', 'elapsed_ms': 505.561, 'auth_file_before': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_after': {'present': True, 'size': 45, 'sha256': '0635d58d852586022b52216e9cfdc35588e8c41c7ca0ce375053afa476e2de39', 'mtime_ns': 1787363452267386562}, 'auth_file_changed_during_status': False, 'status_summary': 'Logged in using ChatGPT'}"
+    },
+    {
+      "name": "doctor_ok",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'elapsed_ms': 498.796, 'auth_configured_signal': True, 'codex_home_signal': True, 'summary': 'overallStatus: ok\\nauth.credentials status: ok\\nauth is configured\\nconfig.load status: ok\\nCODEX_HOME: /tmp/hms-realcert-val-5khy2k65/home1'}"
+    },
+    {
+      "name": "doctor_home_signal",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'elapsed_ms': 498.796, 'auth_configured_signal': True, 'codex_home_signal': True, 'summary': 'overallStatus: ok\\nauth.credentials status: ok\\nauth is configured\\nconfig.load status: ok\\nCODEX_HOME: /tmp/hms-realcert-val-5khy2k65/home1'}"
+    },
+    {
+      "name": "doctor_auth_signal",
+      "ok": true,
+      "detail": "{'ok': True, 'exit_code': 0, 'elapsed_ms': 498.796, 'auth_configured_signal': True, 'codex_home_signal': True, 'summary': 'overallStatus: ok\\nauth.credentials status: ok\\nauth is configured\\nconfig.load status: ok\\nCODEX_HOME: /tmp/hms-realcert-val-5khy2k65/home1'}"
+    },
+    {
+      "name": "store_two_instances",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "topology_two",
+      "ok": true,
+      "detail": "{'instance_count': 2, 'at_least_two_instances': True, 'unique_projects': True, 'unique_codex_homes': True, 'dedicated_accounts': True, 'unique_ports': True, 'instances': [{'instance_id': 'i-one', 'instance_id_hash': '238ed5f8ed627791', 'name': 'one', 'project_hash': 'c4c22f7abb33b718', 'codex_home_hash': '1635c27f3714ff30', 'account_hash': 'fe4d5e247f8a3215', 'root_hash': '6a2a429c5ede3f55', 'port': 41227, 'launch_mode': 'cli', 'project_exists': True, 'codex_home_exists': True, 'binding_present': True, 'client_pid': 0, 'router_pid': 0, 'client_process_path_hash': '', 'client_start_utc': ''}, {"
+    },
+    {
+      "name": "topology_unique_projects",
+      "ok": true,
+      "detail": "{'instance_count': 2, 'at_least_two_instances': True, 'unique_projects': True, 'unique_codex_homes': True, 'dedicated_accounts': True, 'unique_ports': True, 'instances': [{'instance_id': 'i-one', 'instance_id_hash': '238ed5f8ed627791', 'name': 'one', 'project_hash': 'c4c22f7abb33b718', 'codex_home_hash': '1635c27f3714ff30', 'account_hash': 'fe4d5e247f8a3215', 'root_hash': '6a2a429c5ede3f55', 'port': 41227, 'launch_mode': 'cli', 'project_exists': True, 'codex_home_exists': True, 'binding_present': True, 'client_pid': 0, 'router_pid': 0, 'client_process_path_hash': '', 'client_start_utc': ''}, {"
+    },
+    {
+      "name": "topology_unique_homes",
+      "ok": true,
+      "detail": "{'instance_count': 2, 'at_least_two_instances': True, 'unique_projects': True, 'unique_codex_homes': True, 'dedicated_accounts': True, 'unique_ports': True, 'instances': [{'instance_id': 'i-one', 'instance_id_hash': '238ed5f8ed627791', 'name': 'one', 'project_hash': 'c4c22f7abb33b718', 'codex_home_hash': '1635c27f3714ff30', 'account_hash': 'fe4d5e247f8a3215', 'root_hash': '6a2a429c5ede3f55', 'port': 41227, 'launch_mode': 'cli', 'project_exists': True, 'codex_home_exists': True, 'binding_present': True, 'client_pid': 0, 'router_pid': 0, 'client_process_path_hash': '', 'client_start_utc': ''}, {"
+    },
+    {
+      "name": "topology_dedicated_accounts",
+      "ok": true,
+      "detail": "{'instance_count': 2, 'at_least_two_instances': True, 'unique_projects': True, 'unique_codex_homes': True, 'dedicated_accounts': True, 'unique_ports': True, 'instances': [{'instance_id': 'i-one', 'instance_id_hash': '238ed5f8ed627791', 'name': 'one', 'project_hash': 'c4c22f7abb33b718', 'codex_home_hash': '1635c27f3714ff30', 'account_hash': 'fe4d5e247f8a3215', 'root_hash': '6a2a429c5ede3f55', 'port': 41227, 'launch_mode': 'cli', 'project_exists': True, 'codex_home_exists': True, 'binding_present': True, 'client_pid': 0, 'router_pid': 0, 'client_process_path_hash': '', 'client_start_utc': ''}, {"
+    },
+    {
+      "name": "topology_unique_ports",
+      "ok": true,
+      "detail": "{'instance_count': 2, 'at_least_two_instances': True, 'unique_projects': True, 'unique_codex_homes': True, 'dedicated_accounts': True, 'unique_ports': True, 'instances': [{'instance_id': 'i-one', 'instance_id_hash': '238ed5f8ed627791', 'name': 'one', 'project_hash': 'c4c22f7abb33b718', 'codex_home_hash': '1635c27f3714ff30', 'account_hash': 'fe4d5e247f8a3215', 'root_hash': '6a2a429c5ede3f55', 'port': 41227, 'launch_mode': 'cli', 'project_exists': True, 'codex_home_exists': True, 'binding_present': True, 'client_pid': 0, 'router_pid': 0, 'client_process_path_hash': '', 'client_start_utc': ''}, {"
+    },
+    {
+      "name": "topology_redacts_raw_project",
+      "ok": true,
+      "detail": "{\"instance_count\": 2, \"at_least_two_instances\": true, \"unique_projects\": true, \"unique_codex_homes\": true, \"dedicated_accounts\": true, \"unique_ports\": true, \"instances\": [{\"instance_id\": \"i-one\", \"instance_id_hash\": \"238ed5f8ed627791\", \"name\": \"one\", \"project_hash\": \"c4c22f7abb33b718\", \"codex_home_hash\": \"1635c27f3714ff30\", \"account_hash\": \"fe4d5e247f8a3215\", \"root_hash\": \"6a2a429c5ede3f55\", \"port\": 41227, \"launch_mode\": \"cli\", \"project_exists\": true, \"codex_home_exists\": true, \"binding_present\": true, \"client_pid\": 0, \"router_pid\": 0, \"client_process_path_hash\": \"\", \"client_start_utc\": \"\"}, {"
+    },
+    {
+      "name": "topology_redacts_account",
+      "ok": true,
+      "detail": "{\"instance_count\": 2, \"at_least_two_instances\": true, \"unique_projects\": true, \"unique_codex_homes\": true, \"dedicated_accounts\": true, \"unique_ports\": true, \"instances\": [{\"instance_id\": \"i-one\", \"instance_id_hash\": \"238ed5f8ed627791\", \"name\": \"one\", \"project_hash\": \"c4c22f7abb33b718\", \"codex_home_hash\": \"1635c27f3714ff30\", \"account_hash\": \"fe4d5e247f8a3215\", \"root_hash\": \"6a2a429c5ede3f55\", \"port\": 41227, \"launch_mode\": \"cli\", \"project_exists\": true, \"codex_home_exists\": true, \"binding_present\": true, \"client_pid\": 0, \"router_pid\": 0, \"client_process_path_hash\": \"\", \"client_start_utc\": \"\"}, {"
+    },
+    {
+      "name": "health_application_contract",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'ttfb_ms': 0.762, 'latency_ms': 0.817}"
+    },
+    {
+      "name": "live_stream_pass",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_header_ttfb",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_first_sse",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_exact_text_delta_ttft",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_completion_signal",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_no_body_logging",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_no_key_logging",
+      "ok": true,
+      "detail": "{'ok': True, 'status': 200, 'header_ttfb_ms': 0.517, 'first_sse_event_ms': 0.532, 'first_output_text_delta_ms': 0.544, 'total_ms': 0.567, 'first_token_ttft_certified': True, 'stream_completed_signal': True, 'event_types': ['response.created', 'response.output_text.delta', 'response.completed'], 'response_body_logged': False, 'prompt_logged': False, 'api_key_logged': False}"
+    },
+    {
+      "name": "live_bad_key_fails_closed",
+      "ok": true,
+      "detail": "{'ok': False, 'status': 401, 'header_ttfb_ms': 0.424, 'error': 'HTTP_401', 'body_summary': '{\"error\":{\"message\":\"bad key\"}}'}"
+    },
+    {
+      "name": "live_model_required",
+      "ok": true,
+      "detail": "{'ok': False, 'error': 'LIVE_MODEL_REQUIRED'}"
+    },
+    {
+      "name": "secret_env_name_deterministic",
+      "ok": true,
+      "detail": "HMS_CERT_KEY_I_ONE"
+    },
+    {
+      "name": "nonwindows_harness_runtime_deferred",
+      "ok": true,
+      "detail": "HARNESS_READY_RUNTIME_DEFERRED"
+    },
+    {
+      "name": "nonwindows_no_production_claim",
+      "ok": true,
+      "detail": "NOT_CLAIMED"
+    },
+    {
+      "name": "contract_backend_90_guard",
+      "ok": true,
+      "detail": "{'hard_coded_codex_version_allowlist': False, 'backend_action_added': False, 'public_backend_action_exact_90_preserved': True, 'auth_json_content_logged': False, 'token_or_api_key_logged': False, 'raw_prompt_or_response_logged': False, 'auth_mutation': False, 'account_switch_mutation': False, 'credential_delete': False}"
+    },
+    {
+      "name": "contract_no_auth_mutation",
+      "ok": true,
+      "detail": "{'hard_coded_codex_version_allowlist': False, 'backend_action_added': False, 'public_backend_action_exact_90_preserved': True, 'auth_json_content_logged': False, 'token_or_api_key_logged': False, 'raw_prompt_or_response_logged': False, 'auth_mutation': False, 'account_switch_mutation': False, 'credential_delete': False}"
+    },
+    {
+      "name": "metric_boundary_no_ttft_inference",
+      "ok": true,
+      "detail": "{'control_plane_ttfb': 'GET /hms/health header latency', 'model_stream_first_event': 'first SSE data event from real /v1/responses stream', 'model_token_ttft': 'first response.output_text.delta event only; never inferred from first SSE/header'}"
+    },
+    {
+      "name": "live_budget_exact_one",
+      "ok": true,
+      "detail": "{'managed_instances': 2, 'healthy_instance_endpoints': 2, 'generation_guard_pass': 2, 'live_requests_executed': 1, 'live_requests_pass': 1, 'exact_output_text_delta_ttft_observed': 1, 'real_codex_certified': False}"
+    },
+    {
+      "name": "live_request_pass_recorded",
+      "ok": true,
+      "detail": "{'managed_instances': 2, 'healthy_instance_endpoints': 2, 'generation_guard_pass': 2, 'live_requests_executed': 1, 'live_requests_pass': 1, 'exact_output_text_delta_ttft_observed': 1, 'real_codex_certified': False}"
+    },
+    {
+      "name": "live_output_no_secret",
+      "ok": true,
+      "detail": "secret absent"
+    },
+    {
+      "name": "live_hard_cap_rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "live_requires_explicit_allow",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "live_requires_model",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_no_version_allowlist",
+      "ok": true,
+      "detail": "capability based"
+    },
+    {
+      "name": "source_login_status",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_doctor_probe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_responses_stream",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_output_text_delta",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_no_auth_delete",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "source_no_account_switch",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "real_windows_codex_runtime": "NOT_EXECUTED_BY_SYNTHETIC_VALIDATOR",
+  "production_certification": "NOT_CLAIMED"
+}

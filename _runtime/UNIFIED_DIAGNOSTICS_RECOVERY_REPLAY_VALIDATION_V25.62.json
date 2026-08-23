@@ -1,0 +1,79 @@
+{
+  "product": "HMS AI Cockpit",
+  "version": "25.62",
+  "suite": "UNIFIED_DIAGNOSTICS_RECOVERY_REPLAY_VALIDATION",
+  "generated_utc": "2026-08-22T11:36:19.900468+00:00",
+  "verdict": "PASS",
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "total": 13
+  },
+  "tests": [
+    {
+      "name": "one_aggregate_event",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "source_recovery_replay",
+      "status": "PASS",
+      "detail": "recovery-replay"
+    },
+    {
+      "name": "kind_replay_proof",
+      "status": "PASS",
+      "detail": "MULTI_SUBSYSTEM_REPLAY_PROOF"
+    },
+    {
+      "name": "raw_txn_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "account_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "token_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "prompt_not_projected",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "aggregate_crash_count",
+      "status": "PASS",
+      "detail": "Recovery Replay PASS: 18/18 crash_cases=30 at_most_once=True ownership_proof=True"
+    },
+    {
+      "name": "at_most_once_aggregate",
+      "status": "PASS",
+      "detail": "Recovery Replay PASS: 18/18 crash_cases=30 at_most_once=True ownership_proof=True"
+    },
+    {
+      "name": "ownership_aggregate",
+      "status": "PASS",
+      "detail": "Recovery Replay PASS: 18/18 crash_cases=30 at_most_once=True ownership_proof=True"
+    },
+    {
+      "name": "report_version_25_62",
+      "status": "PASS",
+      "detail": "25.62"
+    },
+    {
+      "name": "layer_ok",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "name": "report_metadata_only",
+      "status": "PASS",
+      "detail": null
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+HMS AI Cockpit v25.26 BUILD VALIDATION
+======================================
+
+POLICY
+- Real Codex / Antigravity / failover / quota Windows runtime: DEFERRED_BY_OPERATOR.
+- No real Windows runtime PASS claim is made by this file.
+
+STATIC / BUILD CHECKS
+- Python py_compile for all 38 .py/.pyw files: PASS
+- Usage Ledger synthetic functional smoke (dedupe/upsert/stats/advisory): PASS
+- Diagnostics redaction functional smoke (API key/token/Bearer redacted): PASS
+- PowerShell static lexical/settings gate: PASS (0 glue, 0 missing script vars, 0 missing settings)
+- Release Manager manifest/preflight/install/rollback local smoke: PASS
+- Release manifest full hash verification: PASS
+- ZIP integrity: PASS_FINAL_PACKAGE
+
+SAFETY ASSERTIONS
+- Usage ledger metadata-only: PASS_BY_DESIGN_AND_SMOKE
+- Adaptive pool mode: ADVISORY_ONLY
+- Diagnostics contains raw OAuth/request body/API key/cookie: FALSE by design
+- Release activation: verify-before-pointer-swap
+- Rollback deletion: NONE
+
+ENVIRONMENT LIMITATION
+- Build container has no Windows PowerShell executable; real PowerShell 5.1 parse/runtime remains deferred with operator runtime testing.
