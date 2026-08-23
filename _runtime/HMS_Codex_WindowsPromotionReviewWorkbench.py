@@ -19,6 +19,11 @@ def build_state(*,ingest_report,ledger_records,package_version,manifest_sha256,b
     if ingest_report.get("case_matrix_complete") is not True: reasons.append("RUNTIME_CASE_MATRIX_INCOMPLETE")
     if ingest_report.get("raw_evidence_rewritten") is not False: reasons.append("RAW_EVIDENCE_IMMUTABILITY_VIOLATION")
     provenance=ingest_report.get("provenance") if isinstance(ingest_report.get("provenance"),dict) else {}
+    signer_trust=ingest_report.get("signer_trust") if isinstance(ingest_report.get("signer_trust"),dict) else {}
+    crypto_ok=signer_trust.get("valid") is True
+    anchor_ok=ingest_report.get("trust_anchor_match") is True
+    if ingest_report.get("real_packet_verified") is True and not crypto_ok: reasons.append("CRYPTOGRAPHIC_SIGNER_TRUST_REQUIRED")
+    if ingest_report.get("real_packet_verified") is True and not anchor_ok: reasons.append("INDEPENDENT_TRUST_ANCHOR_REQUIRED")
     evidence=str(provenance.get("raw_packet_sha256") or "").lower()
     baseline_ok=baseline_at_open==COCKPIT_BASELINE and baseline_before_final_review==COCKPIT_BASELINE and ingest_report.get("cockpit_baseline")==COCKPIT_BASELINE
     if not baseline_ok: reasons.append("FROZEN_BASELINE_DRIFT")
@@ -37,8 +42,8 @@ def build_state(*,ingest_report,ledger_records,package_version,manifest_sha256,b
         status="ELIGIBLE_FOR_HUMAN_PROMOTION_PROPOSAL"; text="Đủ gate để auditor tạo đề xuất cho con người; hệ thống không tự tăng điểm hay tự chứng nhận."
     ingest_reasons=ingest_report.get("reasons") or []
     gates={"evidence":ingest_report.get("real_packet_verified") is True,
-           "signature":"SIGNER_VALIDATION_REQUIRED" not in ingest_reasons,
-           "trust":not any(x in ingest_reasons for x in ("TRUST_SNAPSHOT_NOT_CURRENT","SIGNER_TRUST_REF_MISMATCH")),
+           "signature":crypto_ok,
+           "trust":crypto_ok and anchor_ok,
            "freshness":not any(x in ingest_reasons for x in ("EVIDENCE_STALE","CAPTURE_UTC_INVALID","CAPTURE_TIME_IN_FUTURE")),
            "idempotency":not any(str(x).endswith("_REPLAY") or x=="DUPLICATE_PACKET_DIGEST" for x in ingest_reasons),
            "reviewer_a_b":review["dual_review_complete"] is True,"baseline":baseline_ok}
@@ -68,16 +73,22 @@ def sensitive_paths(v):
 
 def synthetic_proof():
     ing={"real_packet_verified":True,"case_matrix_complete":True,"raw_evidence_rewritten":False,
-         "cockpit_baseline":COCKPIT_BASELINE,"reasons":[],"provenance":{"raw_packet_sha256":"a"*64,
-         "package_zip_sha256":"c"*64,"release_manifest_sha256":"b"*64,"reviewer_identity":"secret-name"},
-         "import_digest":"d"*64}
+         "cockpit_baseline":COCKPIT_BASELINE,"reasons":[],"trust_anchor_match":True,"signer_trust":{"valid":True},
+         "provenance":{"raw_packet_sha256":"a"*64,"package_zip_sha256":"c"*64,"release_manifest_sha256":"b"*64,
+         "reviewer_identity":"secret-name"},"import_digest":"d"*64}
     state=build_state(ingest_report=ing,ledger_records=[],package_version=VERSION,manifest_sha256="b"*64,
                       baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review=COCKPIT_BASELINE)
     drift=build_state(ingest_report=ing,ledger_records=[],package_version=VERSION,manifest_sha256="b"*64,
                       baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review="1.3.29")
+    no_anchor=json.loads(json.dumps(ing)); no_anchor["trust_anchor_match"]=False
+    anchor_state=build_state(ingest_report=no_anchor,ledger_records=[],package_version=VERSION,manifest_sha256="b"*64,
+                             baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review=COCKPIT_BASELINE)
     checks={"zero_reviewer_never_promotes":not state["production_score_promotion_eligible"],
             "baseline_drift_freezes":drift["status"]=="FROZEN_BASELINE_DRIFT" and drift["requires_new_review_epoch"],
             "metadata_only_export":not sensitive_paths(state),
+            "crypto_signature_gate_authoritative":state["gates"]["signature"] is True,
+            "independent_trust_anchor_gate":state["gates"]["trust"] is True and anchor_state["gates"]["trust"] is False,
+            "anchor_missing_never_promotes":not anchor_state["production_score_promotion_eligible"],
             "no_auto_authority":not state["automatic_production_certification"] and not state["production_score_mutation_authorized"],
             "vietnamese_guidance":any(x in state["summary_vi"].lower() for x in ("chưa","không","đủ"))}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
