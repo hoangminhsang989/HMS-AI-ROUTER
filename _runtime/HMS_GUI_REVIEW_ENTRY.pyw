@@ -33,6 +33,7 @@ from HMS_Codex_PromotionGUIActionContract import confirmation_text, evaluate_gui
 _ORIGINAL_UPDATE_BUTTONS = legacy.HmsApp._update_promotion_action_buttons
 _ORIGINAL_SUBMIT = legacy.HmsApp.submit_promotion_review
 _ORIGINAL_APPLY_LIVE = legacy.HmsApp._apply_promotion_live_result
+_ORIGINAL_REFRESH_GATES = legacy.HmsApp._refresh_promotion_gate_matrix
 
 
 def _current_contract(self):
@@ -43,6 +44,16 @@ def _current_contract(self):
     lane = self.promotion_lane.get() if hasattr(self, "promotion_lane") else ""
     busy = bool(getattr(self, "_promotion_action_busy", False) or getattr(self, "_promotion_live_check_busy", False))
     return evaluate_gui_action_contract(report, live, reviewer_identity=identity, reviewer_salt=salt, lane=lane, busy=busy)
+
+
+def _crypto_refresh_promotion_gate_matrix(self):
+    _ORIGINAL_REFRESH_GATES(self)
+    report = getattr(self, "_promotion_report", {}) or {}
+    signer_trust = report.get("signer_trust") if isinstance(report.get("signer_trust"), dict) else {}
+    crypto_ok = report.get("real_packet_verified") is True and signer_trust.get("valid") is True
+    anchor_ok = crypto_ok and report.get("trust_anchor_match") is True
+    self._set_promotion_gate("signature", crypto_ok, "CRYPTO PASS" if crypto_ok else "CRYPTO BLOCK")
+    self._set_promotion_gate("trust", anchor_ok, "ANCHOR MATCH" if anchor_ok else "ANCHOR BLOCK")
 
 
 def _policy_update_promotion_action_buttons(self):
@@ -81,6 +92,7 @@ def _policy_apply_promotion_live_result(self, observation=None, error=None):
     self._update_promotion_action_buttons()
 
 
+legacy.HmsApp._refresh_promotion_gate_matrix = _crypto_refresh_promotion_gate_matrix
 legacy.HmsApp._update_promotion_action_buttons = _policy_update_promotion_action_buttons
 legacy.HmsApp.submit_promotion_review = _confirmed_submit_promotion_review
 legacy.HmsApp._apply_promotion_live_result = _policy_apply_promotion_live_result
@@ -100,6 +112,9 @@ def extension_proof():
     no_anchor = evaluate_gui_action_contract(dict(report, trust_anchor_match=False), match, **form)
     checks = {
         "base_entry_loaded": getattr(base, "APP_VERSION", None) == APP_VERSION,
+        "visual_crypto_gate_override_installed": legacy.HmsApp._refresh_promotion_gate_matrix is _crypto_refresh_promotion_gate_matrix,
+        "visual_gate_reads_crypto_result": "signer_trust" in _crypto_refresh_promotion_gate_matrix.__code__.co_names,
+        "visual_gate_reads_independent_anchor": "trust_anchor_match" in _crypto_refresh_promotion_gate_matrix.__code__.co_consts,
         "policy_is_button_authority": legacy.HmsApp._update_promotion_action_buttons is _policy_update_promotion_action_buttons,
         "confirmation_wrapper_installed": legacy.HmsApp.submit_promotion_review is _confirmed_submit_promotion_review,
         "match_contract": all(good["buttons"].values()),
