@@ -9,6 +9,7 @@ on:
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
+      - '_runtime/HMS_Codex_WindowsPromotionE2EFixtures.py'
       - '_runtime/HMS_GUI_ENTRY.pyw'
       - 'HMS_AI_ROUTER.vbs'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
@@ -37,6 +38,7 @@ jobs:
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
+            _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw
       - name: Trusted live baseline provider proof
         shell: pwsh
@@ -50,6 +52,9 @@ jobs:
       - name: Controller live-baseline proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+      - name: Promotion E2E negative fixtures
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py
       - name: Guarded GUI entry proof
         shell: pwsh
         run: python _runtime/HMS_GUI_ENTRY.pyw --proof
