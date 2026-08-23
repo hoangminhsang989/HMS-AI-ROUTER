@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse, hashlib, json, re
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+VERSION="25.75"; COCKPIT_BASELINE="1.3.28"
+SOURCE_CLASSIFICATION="REAL_EXTERNAL_WINDOWS_CODEX"; REQUIRED_CASE_COUNT=7
+HEX64=re.compile(r"^[0-9a-f]{64}$")
+
+def _hex(v): return HEX64.fullmatch(str(v or "").lower()) is not None
+def _sha(b): return hashlib.sha256(b).hexdigest()
+def _stable(v): return json.dumps(v,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()
+def _dt(v):
+    try:
+        x=datetime.fromisoformat(str(v).replace("Z","+00:00"))
+        return x.astimezone(timezone.utc) if x.tzinfo else None
+    except (TypeError,ValueError): return None
+
+def verify_packet(packet,*,raw_packet_sha256,expected_package_sha256,expected_manifest_sha256,
+                  current_cockpit_baseline=COCKPIT_BASELINE,seen=None,now=None,freshness_hours=72):
+    reasons=[]; seen=seen or {}; now=(now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    raw=str(raw_packet_sha256).lower(); pkg=str(packet.get("package_zip_sha256") or "").lower()
+    man=str(packet.get("release_manifest_sha256") or "").lower()
+    if not _hex(raw): reasons.append("RAW_PACKET_DIGEST_INVALID")
+    if raw in {str(x).lower() for x in seen.get("packet_digests",[])}: reasons.append("DUPLICATE_PACKET_DIGEST")
+    if packet.get("source_classification")!=SOURCE_CLASSIFICATION: reasons.append("REAL_EXTERNAL_WINDOWS_CODEX_SOURCE_REQUIRED")
+    if packet.get("synthetic") is not False: reasons.append("SYNTHETIC_EVIDENCE_REJECTED")
+    if packet.get("local_only") is not False: reasons.append("LOCAL_ONLY_EVIDENCE_REJECTED")
+    if str(packet.get("target_os") or "").lower()!="windows": reasons.append("WINDOWS_TARGET_REQUIRED")
+    if packet.get("codex_target") is not True: reasons.append("CODEX_TARGET_REQUIRED")
+    if not _hex(expected_package_sha256) or pkg!=str(expected_package_sha256).lower(): reasons.append("PACKAGE_ZIP_SHA256_MISMATCH")
+    if not _hex(expected_manifest_sha256) or man!=str(expected_manifest_sha256).lower(): reasons.append("RELEASE_MANIFEST_SHA256_MISMATCH")
+    if packet.get("cockpit_baseline")!=current_cockpit_baseline: reasons.append("COCKPIT_BASELINE_CHANGED_OR_STALE")
+    captured=_dt(packet.get("capture_utc"))
+    if not captured: reasons.append("CAPTURE_UTC_INVALID")
+    else:
+        if captured>now+timedelta(minutes=5): reasons.append("CAPTURE_TIME_IN_FUTURE")
+        if now-captured>timedelta(hours=max(1,int(freshness_hours))): reasons.append("EVIDENCE_STALE")
+    for field,label in (("nonce","NONCE"),("run_id","RUN_ID"),("report_id","REPORT_ID")):
+        value=str(packet.get(field) or "")
+        if len(value)<8 or len(value)>256: reasons.append(label+"_INVALID")
+        if value in set(seen.get(field+"s",[])): reasons.append(label+"_REPLAY")
+    signer=packet.get("signer") if isinstance(packet.get("signer"),dict) else {}
+    trust=packet.get("trust_snapshot") if isinstance(packet.get("trust_snapshot"),dict) else {}
+    if signer.get("status")!="VALID" or len(str(signer.get("signer_ref") or ""))<12: reasons.append("SIGNER_VALIDATION_REQUIRED")
+    if not _hex(signer.get("signature_sha256")): reasons.append("SIGNATURE_DIGEST_INVALID")
+    if trust.get("trusted") is not True or trust.get("status")!="CURRENT": reasons.append("TRUST_SNAPSHOT_NOT_CURRENT")
+    if not _hex(trust.get("snapshot_sha256")): reasons.append("TRUST_SNAPSHOT_DIGEST_INVALID")
+    if trust.get("signer_ref")!=signer.get("signer_ref"): reasons.append("SIGNER_TRUST_REF_MISMATCH")
+    cases=packet.get("case_results") if isinstance(packet.get("case_results"),list) else []
+    if len(cases)!=REQUIRED_CASE_COUNT: reasons.append("RUNTIME_CASE_MATRIX_NOT_7")
+    ids=[]; digests=[]
+    for i,c in enumerate(cases):
+        if not isinstance(c,dict): reasons.append(f"CASE_{i}_INVALID"); continue
+        cid=str(c.get("case_id") or ""); dg=str(c.get("report_sha256") or "").lower()
+        ids.append(cid)
+        if c.get("status")!="PASS": reasons.append(f"CASE_{i}_NOT_PASS")
+        if not cid or len(cid)>128: reasons.append(f"CASE_{i}_ID_INVALID")
+        if not _hex(dg): reasons.append(f"CASE_{i}_REPORT_DIGEST_INVALID")
+        else: digests.append(dg)
+    if len(set(ids))!=len(ids): reasons.append("DUPLICATE_RUNTIME_CASE_ID")
+    if len(set(digests))!=len(digests): reasons.append("DUPLICATE_RUNTIME_REPORT_DIGEST")
+    ok=not reasons
+    provenance={"raw_packet_sha256":raw,"package_zip_sha256":pkg,"release_manifest_sha256":man,
+                "trust_snapshot_sha256":str(trust.get("snapshot_sha256") or "").lower(),
+                "signature_sha256":str(signer.get("signature_sha256") or "").lower(),
+                "signer_ref":signer.get("signer_ref"),"case_report_sha256":sorted(digests)}
+    digest=_sha(_stable({"baseline":current_cockpit_baseline,"verified":ok,"provenance":provenance,"reasons":sorted(set(reasons))}))
+    return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST",
+            "real_packet_verified":ok,"ingest_status":"VERIFIED_REAL_PACKET" if ok else "QUARANTINE",
+            "reasons":sorted(set(reasons)),"cockpit_baseline":current_cockpit_baseline,
+            "case_matrix_complete":ok and len(digests)==7,"case_count":len(cases),"provenance":provenance,
+            "import_digest":digest,"windows_runtime_certified":False,
+            "external_windows_target_evidence_imported":False,"production_score_promotion_eligible":False,
+            "automatic_production_certification":False,"production_score_mutation_authorized":False,
+            "raw_evidence_rewritten":False}
+
+def synthetic_proof():
+    now=datetime.now(timezone.utc); h=lambda s:hashlib.sha256(s.encode()).hexdigest()
+    p={"source_classification":SOURCE_CLASSIFICATION,"synthetic":False,"local_only":False,"target_os":"Windows",
+       "codex_target":True,"package_zip_sha256":"a"*64,"release_manifest_sha256":"b"*64,
+       "cockpit_baseline":COCKPIT_BASELINE,"capture_utc":now.isoformat(),"nonce":"nonce-012345",
+       "run_id":"run-01234567","report_id":"report-012345","signer":{"status":"VALID","signer_ref":"signer-pseudo-001",
+       "signature_sha256":"c"*64},"trust_snapshot":{"trusted":True,"status":"CURRENT","signer_ref":"signer-pseudo-001",
+       "snapshot_sha256":"d"*64},"case_results":[{"case_id":f"case-{i}","status":"PASS","report_sha256":h(str(i))} for i in range(7)]}
+    kw=dict(raw_packet_sha256="e"*64,expected_package_sha256="a"*64,expected_manifest_sha256="b"*64,now=now)
+    good=verify_packet(p,**kw); bad=dict(p); bad["synthetic"]=True; syn=verify_packet(bad,**kw)
+    old=dict(p); old["cockpit_baseline"]="1.3.27"; drift=verify_packet(old,**kw)
+    replay=verify_packet(p,seen={"packet_digests":["e"*64]},**kw)
+    checks={"real_7_of_7_verified":good["real_packet_verified"],"ingest_never_certifies":not good["windows_runtime_certified"],
+            "ingest_never_promotes":not good["production_score_promotion_eligible"],
+            "synthetic_rejected":"SYNTHETIC_EVIDENCE_REJECTED" in syn["reasons"],
+            "baseline_drift_rejected":"COCKPIT_BASELINE_CHANGED_OR_STALE" in drift["reasons"],
+            "replay_rejected":"DUPLICATE_PACKET_DIGEST" in replay["reasons"]}
+    tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]
+    n=sum(x["status"]=="PASS" for x in tests)
+    return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST_PROOF",
+            "verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},
+            "tests":tests,"windows_runtime_certified":False,"production_score_promotion_eligible":False}
+
+def main():
+    ap=argparse.ArgumentParser(); ap.add_argument("--proof",action="store_true"); ap.add_argument("--packet")
+    ap.add_argument("--expected-package-sha256"); ap.add_argument("--expected-manifest-sha256")
+    ap.add_argument("--cockpit-baseline",default=COCKPIT_BASELINE); ap.add_argument("--output"); a=ap.parse_args()
+    if a.proof: out=synthetic_proof()
+    else:
+        if not(a.packet and a.expected_package_sha256 and a.expected_manifest_sha256): ap.error("packet and expected digests required")
+        path=Path(a.packet); raw=path.read_bytes(); packet=json.loads(raw.decode("utf-8-sig"))
+        out=verify_packet(packet,raw_packet_sha256=_sha(raw),expected_package_sha256=a.expected_package_sha256,
+                          expected_manifest_sha256=a.expected_manifest_sha256,current_cockpit_baseline=a.cockpit_baseline)
+    text=json.dumps(out,ensure_ascii=False,indent=2)
+    if a.output: Path(a.output).write_text(text+"\n",encoding="utf-8")
+    print(text); return 0 if (out.get("verdict")=="PASS" if a.proof else out["real_packet_verified"]) else 2
+if __name__=="__main__": raise SystemExit(main())
