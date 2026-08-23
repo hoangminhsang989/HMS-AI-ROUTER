@@ -1,0 +1,20 @@
+# HMS-AI-ROUTER
+__pycache__/
+*.py[cod]
+*.pyo
+*.log
+*.tmp
+*.temp
+*.trace
+*.stdout
+*.stderr
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+_runtime/_cert_runs/
+_runtime/_target_evidence/
+_runtime/_diagnostics/
+_runtime/*.runtime.json
+.env
+.env.*
