@@ -57,7 +57,33 @@ class PromotionWorkbenchController:
             reason_codes=reason_codes,note_vi=note_vi)
         append_decision(self.ledger_path,record)
         return {"reviewer_ref":ref,"decision_sha256":record["decision_sha256"],"epoch":record["epoch"],
-                "decision":record["decision"],"lane":record["lane"],"raw_reviewer_identity_stored":False}
+                "decision":record["decision"],"lane":record["lane"],"observed_cockpit_baseline":record["cockpit_baseline"],
+                "raw_reviewer_identity_stored":False}
+
+    def record_review_action(self,*,decision,reviewer_identity,reviewer_salt,lane,package_version,
+                             live_baseline_provider,reason_codes=None,note_vi=""):
+        """Reviewer-facing gate: re-read the baseline immediately before ledger publication.
+
+        A drifted live baseline can never publish APPROVE/REJECT under the frozen
+        authority. The same explicit reviewer action is converted to INVALIDATE,
+        preserving an auditable epoch freeze without granting automatic promotion
+        or certification authority to this controller.
+        """
+        if not callable(live_baseline_provider): raise ValueError("live baseline provider required")
+        live_baseline=str(live_baseline_provider() or "").strip()
+        if not live_baseline: raise ValueError("live baseline recheck returned empty value")
+        requested=str(decision or "").upper()
+        drift=live_baseline!=COCKPIT_BASELINE
+        effective="INVALIDATE" if drift and requested!="INVALIDATE" else requested
+        reasons=list(reason_codes or [])
+        if drift and "BASELINE_DRIFT_LIVE_RECHECK" not in reasons: reasons.append("BASELINE_DRIFT_LIVE_RECHECK")
+        result=self.record_decision(decision=effective,reviewer_identity=reviewer_identity,reviewer_salt=reviewer_salt,
+            lane=lane,package_version=package_version,observed_cockpit_baseline=live_baseline,
+            reason_codes=reasons,note_vi=note_vi)
+        result.update({"requested_decision":requested,"baseline_recheck_performed":True,
+            "baseline_recheck_passed":not drift,"action_blocked_by_baseline_drift":drift and effective=="INVALIDATE",
+            "automatic_production_certification":False,"production_score_mutation_authorized":False})
+        return result
 
     def state(self,*,package_version,manifest_sha256,baseline_at_open,baseline_before_final_review,optional_gpu_required=False):
         report=self._load_json(self.report_path,{})
@@ -80,17 +106,24 @@ def synthetic_proof():
         original=hashlib.sha256(raw).hexdigest(); ctl=PromotionWorkbenchController(state_dir)
         first=ctl.ingest(packet_path,expected_package_sha256="a"*64,expected_manifest_sha256="b"*64)
         second=ctl.ingest(packet_path,expected_package_sha256="a"*64,expected_manifest_sha256="b"*64)
+        provider_calls=[]
+        def frozen_provider(): provider_calls.append("frozen"); return COCKPIT_BASELINE
         for lane in ("TERMINAL_PTY","PROJECT_RESUME"):
             for identity in ("reviewer-a","reviewer-b"):
-                ctl.record_decision(decision="APPROVE",reviewer_identity=identity,reviewer_salt="controller-proof-salt-01",
-                    lane=lane,package_version=VERSION)
+                ctl.record_review_action(decision="APPROVE",reviewer_identity=identity,reviewer_salt="controller-proof-salt-01",
+                    lane=lane,package_version=VERSION,live_baseline_provider=frozen_provider)
         state=ctl.state(package_version=VERSION,manifest_sha256="b"*64,baseline_at_open=COCKPIT_BASELINE,
                         baseline_before_final_review=COCKPIT_BASELINE)
+        drift=ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-a",reviewer_salt="controller-proof-salt-01",
+            lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=lambda:"1.3.29")
         checks={"verified_packet_persisted_metadata_only":first["real_packet_verified"] and ctl.report_path.exists(),
                 "raw_packet_unchanged":hashlib.sha256(packet_path.read_bytes()).hexdigest()==original,
                 "replay_rejected":"DUPLICATE_PACKET_DIGEST" in second["reasons"],
                 "two_reviewer_two_lane_state_eligible":state["production_score_promotion_eligible"],
-                "controller_never_certifies":state["automatic_production_certification"] is False,
+                "live_baseline_rechecked_for_each_review":len(provider_calls)==4,
+                "drift_blocks_requested_approve":drift["requested_decision"]=="APPROVE" and drift["decision"]=="INVALIDATE" and drift["action_blocked_by_baseline_drift"],
+                "drift_records_observed_baseline":drift["observed_cockpit_baseline"]=="1.3.29",
+                "controller_never_certifies":state["automatic_production_certification"] is False and drift["automatic_production_certification"] is False,
                 "raw_reviewer_identity_not_in_ledger":"reviewer-a" not in ctl.ledger_path.read_text("utf-8") and "reviewer-b" not in ctl.ledger_path.read_text("utf-8"),
                 "no_raw_packet_copy_in_state_dir":all(p.name!="external-review.json" for p in state_dir.iterdir())}
         tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
