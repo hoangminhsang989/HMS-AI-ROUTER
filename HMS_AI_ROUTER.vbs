@@ -1,10 +1,15 @@
 Option Explicit
-Dim shell, fso, base, gui, q, cmd
+Dim shell, fso, base, gui, legacyGui, q, cmd
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 base = fso.GetParentFolderName(WScript.ScriptFullName)
 q = Chr(34)
-gui = base & "\_runtime\HMS_GUI.pyw"
+gui = base & "\_runtime\HMS_GUI_ENTRY.pyw"
+legacyGui = base & "\_runtime\HMS_GUI.pyw"
+
+' v25.75 uses the guarded entry wrapper for current branding and Promotion Review.
+' Fail back to the legacy GUI only if the wrapper is physically unavailable.
+If Not fso.FileExists(gui) Then gui = legacyGui
 
 On Error Resume Next
 
