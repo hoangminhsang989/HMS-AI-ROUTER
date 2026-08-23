@@ -7,6 +7,7 @@ from pathlib import Path
 
 import HMS_Codex_AttestationTrustStore as trust_store
 import HMS_Codex_WindowsAttestationSigner as attestation_signer
+import HMS_Codex_ExternalWindowsCertificateSigner as external_certificate_signer
 from HMS_Codex_ExternalWindowsSignerTrustContract import signing_payload, validate_trust_snapshot
 from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS, validate_case_ids
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, SOURCE_CLASSIFICATION, verify_packet
@@ -138,7 +139,7 @@ def build_packet(args):
             "report_id":"report-"+secrets.token_hex(16),"trust_snapshot":snapshot,
             "case_results":[{"case_id":x["case_id"],"status":"PASS","report_sha256":x["report_sha256"]} for x in case_results]}
     script=Path(args.certificate_sign_script) if args.certificate_sign_script else DEFAULT_SIGN_SCRIPT
-    packet["signer"]=attestation_signer.certificate_sign(signing_payload(packet),_normalize_thumbprint(args.certificate_thumbprint),script)
+    packet["signer"]=external_certificate_signer.certificate_sign(signing_payload(packet),_normalize_thumbprint(args.certificate_thumbprint),script)
     raw=_stable_bytes(packet)
     check=verify_packet(packet,raw_packet_sha256=hashlib.sha256(raw).hexdigest(),
         expected_package_sha256=packet["package_zip_sha256"],expected_manifest_sha256=packet["release_manifest_sha256"],
