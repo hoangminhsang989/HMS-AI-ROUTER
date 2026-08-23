@@ -1,0 +1,44 @@
+name: v25.75 Windows Promotion Safety
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
+      - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
+      - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
+      - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
+      - '.github/workflows/v2575-promotion-safety-windows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  promotion-safety:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile promotion modules
+        shell: pwsh
+        run: |
+          python -m py_compile `
+            _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
+            _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
+            _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
+            _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+      - name: Decision ledger proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
+      - name: Review workbench proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py proof
+      - name: Controller live-baseline proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
