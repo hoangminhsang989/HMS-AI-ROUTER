@@ -110,11 +110,12 @@ def extension_proof():
     bad_salt = evaluate_gui_action_contract(report, match, reviewer_identity="reviewer-a", reviewer_salt="short", lane="TERMINAL_PTY")
     no_crypto = evaluate_gui_action_contract(dict(report, signer_trust={"valid": False}), match, **form)
     no_anchor = evaluate_gui_action_contract(dict(report, trust_anchor_match=False), match, **form)
+    gate_consts = set(_crypto_refresh_promotion_gate_matrix.__code__.co_consts)
     checks = {
         "base_entry_loaded": getattr(base, "APP_VERSION", None) == APP_VERSION,
         "visual_crypto_gate_override_installed": legacy.HmsApp._refresh_promotion_gate_matrix is _crypto_refresh_promotion_gate_matrix,
-        "visual_gate_reads_crypto_result": "signer_trust" in _crypto_refresh_promotion_gate_matrix.__code__.co_names,
-        "visual_gate_reads_independent_anchor": "trust_anchor_match" in _crypto_refresh_promotion_gate_matrix.__code__.co_consts,
+        "visual_gate_reads_crypto_result": "signer_trust" in gate_consts,
+        "visual_gate_reads_independent_anchor": "trust_anchor_match" in gate_consts,
         "policy_is_button_authority": legacy.HmsApp._update_promotion_action_buttons is _policy_update_promotion_action_buttons,
         "confirmation_wrapper_installed": legacy.HmsApp.submit_promotion_review is _confirmed_submit_promotion_review,
         "match_contract": all(good["buttons"].values()),
