@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '_runtime/HMS_Codex_WindowsRuntimeCaseContract.py'
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
@@ -37,6 +38,7 @@ jobs:
         shell: pwsh
         run: |
           python -m py_compile `
+            _runtime/HMS_Codex_WindowsRuntimeCaseContract.py `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
@@ -48,6 +50,12 @@ jobs:
             _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw `
             _runtime/HMS_GUI_REVIEW_ENTRY.pyw
+      - name: Canonical seven-case contract proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsRuntimeCaseContract.py
+      - name: External Windows packet exact-matrix proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py --proof
       - name: Trusted live baseline provider proof
         shell: pwsh
         run: python _runtime/HMS_Codex_CockpitLiveBaselineProvider.py
