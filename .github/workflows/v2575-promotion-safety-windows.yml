@@ -6,6 +6,7 @@ on:
     paths:
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
+      - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
@@ -35,6 +36,7 @@ jobs:
           python -m py_compile `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
+            _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
@@ -43,6 +45,9 @@ jobs:
       - name: Trusted live baseline provider proof
         shell: pwsh
         run: python _runtime/HMS_Codex_CockpitLiveBaselineProvider.py
+      - name: Reviewer action policy proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_PromotionReviewerActionPolicy.py
       - name: Decision ledger proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
