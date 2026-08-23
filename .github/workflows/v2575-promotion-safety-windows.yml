@@ -6,6 +6,7 @@ on:
     paths:
       - '_runtime/HMS_Codex_WindowsRuntimeCaseContract.py'
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
+      - '_runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_PromotionGUIActionContract.py'
@@ -40,6 +41,7 @@ jobs:
           python -m py_compile `
             _runtime/HMS_Codex_WindowsRuntimeCaseContract.py `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
+            _runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
