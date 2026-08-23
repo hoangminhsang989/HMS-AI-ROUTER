@@ -42,14 +42,7 @@ def _current_contract(self):
     salt = self.promotion_reviewer_salt.get() if hasattr(self, "promotion_reviewer_salt") else ""
     lane = self.promotion_lane.get() if hasattr(self, "promotion_lane") else ""
     busy = bool(getattr(self, "_promotion_action_busy", False) or getattr(self, "_promotion_live_check_busy", False))
-    return evaluate_gui_action_contract(
-        report,
-        live,
-        reviewer_identity=identity,
-        reviewer_salt=salt,
-        lane=lane,
-        busy=busy,
-    )
+    return evaluate_gui_action_contract(report, live, reviewer_identity=identity, reviewer_salt=salt, lane=lane, busy=busy)
 
 
 def _policy_update_promotion_action_buttons(self):
@@ -72,24 +65,15 @@ def _confirmed_submit_promotion_review(self, decision):
             return
         observed = contract["policy"].get("observed_baseline") or "—"
         lane = self.promotion_lane.get().strip().upper()
-        if not legacy.messagebox.askyesno(
-            "Xác nhận Promotion Review",
-            confirmation_text(decision, lane, observed),
-            parent=self.root,
-        ):
+        if not legacy.messagebox.askyesno("Xác nhận Promotion Review", confirmation_text(decision, lane, observed), parent=self.root):
             self.toast("Đã hủy reviewer action; chưa ghi ledger.", "warning")
             return
         _ORIGINAL_SUBMIT(self, decision)
     finally:
-        # Salt is ephemeral even for validation failures or cancelled confirmation.
-        try:
-            self.promotion_reviewer_salt.set("")
-        except Exception:
-            pass
-        try:
-            self._update_promotion_action_buttons()
-        except Exception:
-            pass
+        try: self.promotion_reviewer_salt.set("")
+        except Exception: pass
+        try: self._update_promotion_action_buttons()
+        except Exception: pass
 
 
 def _policy_apply_promotion_live_result(self, observation=None, error=None):
@@ -103,22 +87,17 @@ legacy.HmsApp._apply_promotion_live_result = _policy_apply_promotion_live_result
 
 
 def extension_proof():
-    report = {
-        "real_packet_verified": True,
-        "reasons": [],
-        "provenance": {"raw_packet_sha256": "a" * 64, "release_manifest_sha256": "b" * 64},
-    }
-    match = {
-        "source": "GITHUB_RELEASES_LATEST",
-        "upstream_repository": "jlcodes99/cockpit-tools",
-        "release_id": 1328,
-        "checked_utc": "2026-08-23T00:00:00+00:00",
-        "baseline": "1.3.28",
-    }
-    good = evaluate_gui_action_contract(report, match, reviewer_identity="reviewer-a", reviewer_salt="0123456789abcdef", lane="TERMINAL_PTY")
-    drift = evaluate_gui_action_contract(report, dict(match, baseline="1.3.29", release_id=1329), reviewer_identity="reviewer-a", reviewer_salt="0123456789abcdef", lane="TERMINAL_PTY")
-    provider_error = evaluate_gui_action_contract(report, None, reviewer_identity="reviewer-a", reviewer_salt="0123456789abcdef", lane="TERMINAL_PTY")
+    report = {"real_packet_verified": True, "reasons": [], "signer_trust": {"valid": True}, "trust_anchor_match": True,
+        "provenance": {"raw_packet_sha256": "a" * 64, "release_manifest_sha256": "b" * 64, "trust_snapshot_sha256": "c" * 64}}
+    match = {"source": "GITHUB_RELEASES_LATEST", "upstream_repository": "jlcodes99/cockpit-tools", "release_id": 1328,
+        "checked_utc": "2026-08-23T00:00:00+00:00", "baseline": "1.3.28"}
+    form=dict(reviewer_identity="reviewer-a", reviewer_salt="0123456789abcdef", lane="TERMINAL_PTY")
+    good = evaluate_gui_action_contract(report, match, **form)
+    drift = evaluate_gui_action_contract(report, dict(match, baseline="1.3.29", release_id=1329), **form)
+    provider_error = evaluate_gui_action_contract(report, None, **form)
     bad_salt = evaluate_gui_action_contract(report, match, reviewer_identity="reviewer-a", reviewer_salt="short", lane="TERMINAL_PTY")
+    no_crypto = evaluate_gui_action_contract(dict(report, signer_trust={"valid": False}), match, **form)
+    no_anchor = evaluate_gui_action_contract(dict(report, trust_anchor_match=False), match, **form)
     checks = {
         "base_entry_loaded": getattr(base, "APP_VERSION", None) == APP_VERSION,
         "policy_is_button_authority": legacy.HmsApp._update_promotion_action_buttons is _policy_update_promotion_action_buttons,
@@ -127,31 +106,23 @@ def extension_proof():
         "drift_contract": drift["buttons"] == {"APPROVE": False, "REJECT": False, "INVALIDATE": True},
         "provider_error_contract": not any(provider_error["buttons"].values()),
         "salt_invalid_contract": not any(bad_salt["buttons"].values()),
+        "crypto_failure_contract": not any(no_crypto["buttons"].values()),
+        "trust_anchor_failure_contract": not any(no_anchor["buttons"].values()),
         "confirmation_required": good["confirmation_required"] is True,
         "salt_clear_required": good["salt_clear_required_after_attempt"] is True and "promotion_reviewer_salt" in _confirmed_submit_promotion_review.__code__.co_names,
         "no_auto_authority": not good["automatic_production_certification"] and not good["production_score_mutation_authorized"],
     }
     tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
-    return {
-        "product": "HMS-AI-ROUTER",
-        "version": APP_VERSION,
-        "suite": "GUI_REVIEW_POLICY_WRAPPER_PROOF",
-        "verdict": "PASS" if passed == len(tests) else "FAIL",
-        "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
-        "tests": tests,
-        "automatic_production_certification": False,
-        "production_score_mutation_authorized": False,
-    }
+    return {"product": "HMS-AI-ROUTER", "version": APP_VERSION, "suite": "GUI_REVIEW_POLICY_WRAPPER_PROOF",
+        "verdict": "PASS" if passed == len(tests) else "FAIL", "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
+        "tests": tests, "automatic_production_certification": False, "production_score_mutation_authorized": False}
 
 
 def main():
     if "--proof" in sys.argv[1:]:
-        out = extension_proof()
-        print(json.dumps(out, ensure_ascii=False, indent=2))
-        return 0 if out["verdict"] == "PASS" else 2
-    legacy.HmsApp().run()
-    return 0
+        out = extension_proof(); print(json.dumps(out, ensure_ascii=False, indent=2)); return 0 if out["verdict"] == "PASS" else 2
+    legacy.HmsApp().run(); return 0
 
 
 if __name__ == "__main__":
