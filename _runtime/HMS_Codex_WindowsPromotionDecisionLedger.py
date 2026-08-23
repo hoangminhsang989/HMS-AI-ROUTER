@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, hashlib, json, os, re
+import argparse, hashlib, json, os, re, tempfile, threading, time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
 VERSION="25.75"; COCKPIT_BASELINE="1.3.28"; GENESIS="0"*64
 HEX64=re.compile(r"^[0-9a-f]{64}$"); DECISIONS={"APPROVE","REJECT","INVALIDATE"}
 LANES={"TERMINAL_PTY","PROJECT_RESUME","OPTIONAL_GPU"}
+LOCK_WAIT_SECONDS=2.0; LOCK_POLL_SECONDS=0.02
 
 def _stable(v): return json.dumps(v,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()
 def _sha(v): return hashlib.sha256(v).hexdigest()
@@ -17,6 +19,7 @@ def reviewer_ref(identity,salt):
 def _hash(r): return _sha(_stable({k:v for k,v in r.items() if k!="decision_sha256"}))
 
 def read_ledger(path):
+    path=Path(path)
     if not path.exists(): return []
     out=[]
     for i,line in enumerate(path.read_text("utf-8").splitlines(),1):
@@ -63,16 +66,46 @@ def build_decision(records,*,decision,reviewer_ref,evidence_sha256,manifest_sha2
        "automatic_upstream_merge_authorized":False,"automatic_real_effect_rearm_authorized":False}
     r["decision_sha256"]=_hash(r); return r
 
-def append_decision(path,record):
-    records=read_ledger(path); valid=validate_ledger(records)
-    if not valid["valid"] or record.get("index")!=len(records)+1: raise ValueError("append precondition failed")
-    if record.get("previous_decision_sha256")!=(records[-1]["decision_sha256"] if records else GENESIS): raise ValueError("tail changed")
-    if record.get("decision_sha256")!=_hash(record): raise ValueError("record digest invalid")
-    path.parent.mkdir(parents=True,exist_ok=True); flags=os.O_APPEND|os.O_CREAT|os.O_WRONLY
+@contextmanager
+def _exclusive_ledger_lock(path,timeout_seconds=LOCK_WAIT_SECONDS):
+    """Serialize append validation + write. Lock contention is fail-closed.
+
+    The lock file is intentionally never auto-stolen: after a process crash an
+    operator must inspect/remove a stale lock instead of HMS guessing ownership.
+    """
+    path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
+    lock_path=Path(str(path)+".lock"); deadline=time.monotonic()+max(0.1,float(timeout_seconds)); fd=None
+    flags=os.O_CREAT|os.O_EXCL|os.O_WRONLY
     if hasattr(os,"O_BINARY"): flags|=os.O_BINARY
-    fd=os.open(path,flags,0o600)
-    try: os.write(fd,_stable(record)+b"\n"); os.fsync(fd)
-    finally: os.close(fd)
+    while fd is None:
+        try:
+            fd=os.open(lock_path,flags,0o600)
+        except FileExistsError:
+            if time.monotonic()>=deadline: raise ValueError("ledger lock busy; append aborted fail-closed")
+            time.sleep(LOCK_POLL_SECONDS)
+    try:
+        payload=json.dumps({"pid":os.getpid(),"created_utc":datetime.now(timezone.utc).isoformat()},sort_keys=True).encode()+b"\n"
+        os.write(fd,payload); os.fsync(fd); os.close(fd); fd=None
+        yield lock_path
+    finally:
+        if fd is not None:
+            try: os.close(fd)
+            except OSError: pass
+        try: lock_path.unlink()
+        except FileNotFoundError: pass
+
+def append_decision(path,record,*,lock_timeout_seconds=LOCK_WAIT_SECONDS):
+    path=Path(path)
+    with _exclusive_ledger_lock(path,timeout_seconds=lock_timeout_seconds):
+        records=read_ledger(path); valid=validate_ledger(records)
+        if not valid["valid"] or record.get("index")!=len(records)+1: raise ValueError("append precondition failed; rebuild against current ledger")
+        if record.get("previous_decision_sha256")!=(records[-1]["decision_sha256"] if records else GENESIS): raise ValueError("tail changed; rebuild decision")
+        if record.get("decision_sha256")!=_hash(record): raise ValueError("record digest invalid")
+        path.parent.mkdir(parents=True,exist_ok=True); flags=os.O_APPEND|os.O_CREAT|os.O_WRONLY
+        if hasattr(os,"O_BINARY"): flags|=os.O_BINARY
+        fd=os.open(path,flags,0o600)
+        try: os.write(fd,_stable(record)+b"\n"); os.fsync(fd)
+        finally: os.close(fd)
 
 def evaluate(records,*,evidence_sha256,manifest_sha256,package_version,current_cockpit_baseline=COCKPIT_BASELINE,optional_gpu_required=False):
     valid=validate_ledger(records); reasons=list(valid["reasons"])
@@ -100,6 +133,27 @@ def evaluate(records,*,evidence_sha256,manifest_sha256,package_version,current_c
             "production_score_mutation_authorized":False,"automatic_upstream_merge_authorized":False,
             "automatic_real_effect_rearm_authorized":False}
 
+def _concurrency_proof(ev,man,rvw):
+    with tempfile.TemporaryDirectory() as d:
+        path=Path(d)/"ledger.jsonl"; base=[]
+        stale=build_decision(base,decision="APPROVE",reviewer_ref=rvw,evidence_sha256=ev,manifest_sha256=man,
+            package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY")
+        results=[]; barrier=threading.Barrier(2)
+        def worker():
+            try:
+                barrier.wait(timeout=2); append_decision(path,dict(stale)); results.append("OK")
+            except Exception: results.append("BLOCKED")
+        threads=[threading.Thread(target=worker) for _ in range(2)]
+        [t.start() for t in threads]; [t.join(timeout=4) for t in threads]
+        records=read_ledger(path); valid=validate_ledger(records)
+        rebuilt=build_decision(records,decision="APPROVE",reviewer_ref=rvw,evidence_sha256=ev,manifest_sha256=man,
+            package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="PROJECT_RESUME")
+        append_decision(path,rebuilt); final=validate_ledger(read_ledger(path))
+        return {"one_stale_writer_wins":results.count("OK")==1 and results.count("BLOCKED")==1,
+                "concurrent_append_keeps_chain_valid":valid["valid"] and valid["record_count"]==1,
+                "rebuild_after_tail_change_succeeds":final["valid"] and final["record_count"]==2,
+                "lock_file_released":not Path(str(path)+".lock").exists()}
+
 def synthetic_proof():
     ev="a"*64; man="b"*64; rs=[]; a=reviewer_ref("reviewer-a","proof-salt-00000001"); b=reviewer_ref("reviewer-b","proof-salt-00000001")
     for lane in ("TERMINAL_PTY","PROJECT_RESUME"):
@@ -113,7 +167,9 @@ def synthetic_proof():
         package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY")
     checks={"hash_chain_valid":validate_ledger(rs)["valid"],"dual_review_two_lanes_complete":state["promotion_eligible"],
             "two_distinct_reviewers":state["distinct_reviewer_count"]==2,"invalidate_freezes_epoch":not frozen["promotion_eligible"],
-            "drift_invalidation_records_observed_baseline":inv["cockpit_baseline"]=="1.3.29","new_epoch_after_invalidate":nxt["epoch"]==2,"no_automatic_authority":not state["production_score_mutation_authorized"]}
+            "drift_invalidation_records_observed_baseline":inv["cockpit_baseline"]=="1.3.29","new_epoch_after_invalidate":nxt["epoch"]==2,
+            "no_automatic_authority":not state["production_score_mutation_authorized"]}
+    checks.update(_concurrency_proof(ev,man,a))
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"WINDOWS_PROMOTION_DECISION_LEDGER_PROOF",
             "verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},
