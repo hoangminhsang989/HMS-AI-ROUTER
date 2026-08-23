@@ -13,12 +13,7 @@ HEX64=re.compile(r"^[0-9a-f]{64}$")
 
 
 def _verified_report_gate(report):
-    """Require the full persisted ingest contract before any ledger mutation.
-
-    This is intentionally duplicated below the GUI/policy layer so a direct
-    controller caller cannot gain review authority by setting only
-    real_packet_verified=true in local metadata.
-    """
+    """Require the full persisted ingest contract before any ledger mutation."""
     report=report if isinstance(report,dict) else {}; reasons=[]
     provenance=report.get("provenance") if isinstance(report.get("provenance"),dict) else {}
     signer_trust=report.get("signer_trust") if isinstance(report.get("signer_trust"),dict) else {}
@@ -29,23 +24,24 @@ def _verified_report_gate(report):
     if report.get("raw_evidence_rewritten") is not False: reasons.append("RAW_EVIDENCE_IMMUTABILITY_REQUIRED")
     if report.get("cockpit_baseline")!=COCKPIT_BASELINE: reasons.append("FROZEN_BASELINE_REQUIRED")
     if report.get("reasons") not in ([],None): reasons.append("INGEST_REASONS_MUST_BE_EMPTY")
+    if HEX64.fullmatch(str(report.get("import_digest") or "").lower()) is None: reasons.append("IMPORT_DIGEST_REQUIRED")
     if signer_trust.get("valid") is not True: reasons.append("CRYPTOGRAPHIC_SIGNER_TRUST_REQUIRED")
     if report.get("trust_anchor_match") is not True: reasons.append("INDEPENDENT_TRUST_ANCHOR_REQUIRED")
     required_digests=("raw_packet_sha256","package_zip_sha256","release_manifest_sha256","trust_snapshot_sha256",
                       "expected_trust_snapshot_sha256","signature_sha256","certificate_sha256","signed_payload_sha256")
     for field in required_digests:
-        value=str(provenance.get(field) or "").lower()
-        if HEX64.fullmatch(value) is None: reasons.append("PROVENANCE_DIGEST_INVALID:"+field)
+        if HEX64.fullmatch(str(provenance.get(field) or "").lower()) is None: reasons.append("PROVENANCE_DIGEST_INVALID:"+field)
     if str(provenance.get("trust_snapshot_sha256") or "").lower()!=str(provenance.get("expected_trust_snapshot_sha256") or "").lower():
         reasons.append("PROVENANCE_TRUST_ANCHOR_MISMATCH")
-    if str(signer_trust.get("trust_snapshot_sha256") or "").lower()!=str(provenance.get("trust_snapshot_sha256") or "").lower():
-        reasons.append("SIGNER_TRUST_PROVENANCE_MISMATCH")
-    if str(signer_trust.get("certificate_sha256") or "").lower()!=str(provenance.get("certificate_sha256") or "").lower():
-        reasons.append("CERTIFICATE_PROVENANCE_MISMATCH")
-    if str(signer_trust.get("signature_sha256") or "").lower()!=str(provenance.get("signature_sha256") or "").lower():
-        reasons.append("SIGNATURE_PROVENANCE_MISMATCH")
-    if not isinstance(provenance.get("required_case_ids"),list) or tuple(provenance.get("required_case_ids"))!=tuple(REQUIRED_RUNTIME_CASE_IDS):
-        reasons.append("PROVENANCE_CASE_CONTRACT_MISMATCH")
+    for field in ("trust_snapshot_sha256","certificate_sha256","signature_sha256","signed_payload_sha256"):
+        if str(signer_trust.get(field) or "").lower()!=str(provenance.get(field) or "").lower(): reasons.append("SIGNER_PROVENANCE_MISMATCH:"+field)
+    if str(signer_trust.get("signer_key_id_ref") or "")!=str(provenance.get("signer_key_id_ref") or ""):
+        reasons.append("SIGNER_REF_PROVENANCE_MISMATCH")
+    required_ids=provenance.get("required_case_ids")
+    if not isinstance(required_ids,list) or tuple(required_ids)!=tuple(REQUIRED_RUNTIME_CASE_IDS): reasons.append("PROVENANCE_CASE_CONTRACT_MISMATCH")
+    case_digests=provenance.get("case_report_sha256")
+    if not isinstance(case_digests,list) or len(case_digests)!=len(REQUIRED_RUNTIME_CASE_IDS) or len(set(case_digests))!=len(case_digests) or any(HEX64.fullmatch(str(x).lower()) is None for x in case_digests):
+        reasons.append("PROVENANCE_CASE_DIGESTS_INVALID")
     return {"valid":not reasons,"reasons":sorted(set(reasons)),"provenance":provenance}
 
 
@@ -88,8 +84,7 @@ class PromotionWorkbenchController:
 
     def record_decision(self,*,decision,reviewer_identity,reviewer_salt,lane,package_version,
                         observed_cockpit_baseline=COCKPIT_BASELINE,reason_codes=None,note_vi=""):
-        report=self._load_json(self.report_path,{})
-        gate=_verified_report_gate(report)
+        report=self._load_json(self.report_path,{}); gate=_verified_report_gate(report)
         if not gate["valid"]: raise ValueError("verified ingest metadata required before review:"+",".join(gate["reasons"]))
         provenance=gate["provenance"]; records=read_ledger(self.ledger_path); ref=reviewer_ref(reviewer_identity,reviewer_salt)
         record=build_decision(records,decision=decision,reviewer_ref=ref,evidence_sha256=provenance.get("raw_packet_sha256",""),
@@ -137,14 +132,11 @@ def synthetic_proof():
         rogue_path.write_text(json.dumps(rogue,ensure_ascii=False,sort_keys=True)+"\n",encoding="utf-8")
         rogue_report=PromotionWorkbenchController(root/"rogue-state").ingest(rogue_path,expected_package_sha256="a"*64,
             expected_manifest_sha256="b"*64,expected_trust_snapshot_sha256=anchor)
-        fake_ctl=PromotionWorkbenchController(root/"fake-state")
-        fake_ctl._atomic_json(fake_ctl.report_path,{"real_packet_verified":True})
-        fake_blocked=False
+        fake_ctl=PromotionWorkbenchController(root/"fake-state"); fake_ctl._atomic_json(fake_ctl.report_path,{"real_packet_verified":True}); fake_blocked=False
         try:
             fake_ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-x",reviewer_salt="controller-proof-salt-01",
                 lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=lambda:COCKPIT_BASELINE)
-        except ValueError:
-            fake_blocked=True
+        except ValueError: fake_blocked=True
         provider_calls=[]
         def frozen_provider(): provider_calls.append("frozen"); return COCKPIT_BASELINE
         for lane in ("TERMINAL_PTY","PROJECT_RESUME"):
