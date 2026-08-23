@@ -6,6 +6,7 @@ import importlib.util
 import json
 import os
 import sys
+import threading
 from pathlib import Path
 
 RUNTIME_DIR = Path(__file__).resolve().parent
@@ -29,6 +30,7 @@ def _load_legacy_gui():
 
 legacy = _load_legacy_gui()
 
+from HMS_Codex_CockpitLiveBaselineProvider import CockpitLiveBaselineProvider, LiveBaselineError
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE
 from HMS_Codex_WindowsPromotionWorkbenchController import PromotionWorkbenchController
 
@@ -116,6 +118,8 @@ def _extended_build_pages(self):
 
     self.promotion_baseline_label = tk.Label(card, bg=C["surface"], fg=C["text"], font=("Segoe UI Semibold", 9), anchor="w")
     self.promotion_baseline_label.pack(fill="x", padx=16, pady=(5, 2))
+    self.promotion_live_label = tk.Label(card, bg=C["surface"], fg=C["muted"], font=("Segoe UI Semibold", 8), anchor="w")
+    self.promotion_live_label.pack(fill="x", padx=16, pady=2)
     self.promotion_packet_label = tk.Label(card, bg=C["surface"], fg=C["text2"], font=("Segoe UI", 8), anchor="w")
     self.promotion_packet_label.pack(fill="x", padx=16, pady=2)
     self.promotion_ledger_label = tk.Label(card, bg=C["surface"], fg=C["text2"], font=("Segoe UI", 8), anchor="w")
@@ -141,8 +145,8 @@ def _extended_build_pages(self):
     tk.Label(
         body,
         text=(
-            "APPROVE / REJECT / INVALIDATE chưa được mở trên GUI này cho tới khi có live-baseline provider "
-            "được chứng thực. Không dùng baseline constant làm dữ liệu live."
+            "APPROVE / REJECT / INVALIDATE vẫn khóa ở bước này. Trusted live baseline đã có, nhưng GUI chỉ mở reviewer action "
+            "sau khi form evidence + reviewer identity/salt + lane được ràng buộc đầy đủ."
         ),
         bg=C["bg"],
         fg=C["muted"],
@@ -152,7 +156,62 @@ def _extended_build_pages(self):
     ).pack(anchor="w", pady=(12, 0))
 
     self._promotion_controller = PromotionWorkbenchController(_promotion_state_dir())
+    self._promotion_live_provider = CockpitLiveBaselineProvider()
+    self._promotion_live_observation = None
+    self._promotion_live_check_busy = False
     self.refresh_promotion_review()
+
+
+def _apply_promotion_live_result(self, observation=None, error=None):
+    C = legacy.C
+    self._promotion_live_check_busy = False
+    if error is not None:
+        self._promotion_live_observation = None
+        self.promotion_live_label.configure(text=f"Live baseline: ERROR · {error}", fg=C["danger"])
+        self.promotion_gate_label.configure(
+            text="LIVE BASELINE GATE: không xác minh được upstream → reviewer action bị khóa (fail-closed).",
+            fg=C["danger"],
+        )
+        return
+    self._promotion_live_observation = observation
+    live = str((observation or {}).get("baseline") or "")
+    checked = str((observation or {}).get("checked_utc") or "")
+    matched = live == COCKPIT_BASELINE
+    self.promotion_live_label.configure(
+        text=f"Live baseline: {live or '—'} · {'MATCH' if matched else 'DRIFT'} · checked {checked}",
+        fg=C["success"] if matched else C["danger"],
+    )
+    if matched:
+        self.promotion_gate_label.configure(
+            text="LIVE BASELINE GATE: MATCH. Reviewer actions vẫn khóa cho tới khi evidence/reviewer/lane form được ràng buộc đầy đủ.",
+            fg=C["success"],
+        )
+    else:
+        self.promotion_gate_label.configure(
+            text=f"LIVE BASELINE GATE: DRIFT {COCKPIT_BASELINE} → {live or 'unknown'} · mọi substantive reviewer action phải fail-closed.",
+            fg=C["danger"],
+        )
+
+
+def _start_promotion_live_check(self):
+    if getattr(self, "_promotion_live_check_busy", False):
+        return
+    provider = getattr(self, "_promotion_live_provider", None)
+    if provider is None:
+        return
+    self._promotion_live_check_busy = True
+    self.promotion_live_label.configure(text="Live baseline: đang kiểm tra GitHub Releases…", fg=legacy.C["muted"])
+
+    def worker():
+        try:
+            observation = provider.observe()
+            self.root.after(0, lambda: self._apply_promotion_live_result(observation=observation))
+        except LiveBaselineError as exc:
+            self.root.after(0, lambda e=str(exc): self._apply_promotion_live_result(error=e))
+        except Exception as exc:
+            self.root.after(0, lambda e=f"unexpected provider error: {exc}": self._apply_promotion_live_result(error=e))
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 def _refresh_promotion_review(self):
@@ -176,9 +235,10 @@ def _refresh_promotion_review(self):
     )
     self.promotion_ledger_label.configure(text=f"Decision ledger: {len(ledger)} record(s) · raw reviewer identity không được lưu")
     self.promotion_gate_label.configure(
-        text="LIVE BASELINE GATE: chưa có trusted provider trong GUI → reviewer action bị khóa (fail-closed).",
+        text="LIVE BASELINE GATE: đang xác minh upstream; reviewer action khóa cho tới khi có kết quả.",
         fg=C["warning"],
     )
+    self._start_promotion_live_check()
 
 
 def _extended_show_page(self, name, animate=True):
@@ -194,7 +254,7 @@ def _extended_show_page(self, name, animate=True):
     for key, item in self.nav.items():
         item.set_active(key == name)
     self.page_title.configure(text="Promotion review")
-    self.page_subtitle.configure(text="Windows evidence · two-reviewer ledger · live-baseline fail-closed gate")
+    self.page_subtitle.configure(text="Windows evidence · two-reviewer ledger · trusted live-baseline fail-closed gate")
     if old and old.winfo_ismapped():
         old.place_forget()
     self.current_page = name
@@ -220,6 +280,8 @@ legacy.HmsApp._build_shell = _extended_build_shell
 legacy.HmsApp._build_pages = _extended_build_pages
 legacy.HmsApp.show_page = _extended_show_page
 legacy.HmsApp.refresh_promotion_review = _refresh_promotion_review
+legacy.HmsApp._start_promotion_live_check = _start_promotion_live_check
+legacy.HmsApp._apply_promotion_live_result = _apply_promotion_live_result
 
 
 def extension_proof():
@@ -228,7 +290,8 @@ def extension_proof():
         "promotion_page_hook_installed": legacy.HmsApp._build_pages is _extended_build_pages,
         "promotion_navigation_hook_installed": legacy.HmsApp.show_page is _extended_show_page,
         "controller_live_recheck_gate_available": hasattr(PromotionWorkbenchController, "record_review_action"),
-        "review_actions_not_exposed_without_trusted_live_provider": "APPROVE" not in _extended_build_pages.__code__.co_consts,
+        "trusted_live_provider_available": hasattr(CockpitLiveBaselineProvider, "get_live_baseline"),
+        "review_actions_still_not_exposed": "record_review_action" not in _extended_build_pages.__code__.co_names,
     }
     tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
