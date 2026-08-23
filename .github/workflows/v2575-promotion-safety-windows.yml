@@ -8,6 +8,7 @@ on:
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_PromotionGUIActionContract.py'
+      - '_runtime/HMS_Codex_PromotionLauncherRaceProof.py'
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
@@ -40,6 +41,7 @@ jobs:
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
+            _runtime/HMS_Codex_PromotionLauncherRaceProof.py `
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
@@ -55,9 +57,12 @@ jobs:
       - name: Promotion GUI action contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_PromotionGUIActionContract.py
-      - name: Decision ledger proof
+      - name: Decision ledger concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
+      - name: Launcher chain and click-time baseline race proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_PromotionLauncherRaceProof.py
       - name: Review workbench proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py proof
