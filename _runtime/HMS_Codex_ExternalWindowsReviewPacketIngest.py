@@ -4,9 +4,10 @@ import argparse, hashlib, json, re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from HMS_Codex_WindowsRuntimeCaseContract import (
-    REQUIRED_RUNTIME_CASE_IDS,
-    validate_case_ids,
+from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS, validate_case_ids
+from HMS_Codex_ExternalWindowsSignerTrustContract import (
+    synthetic_signed_packet,
+    verify_external_signer_trust,
 )
 
 VERSION="25.75"; COCKPIT_BASELINE="1.3.28"
@@ -46,13 +47,12 @@ def verify_packet(packet,*,raw_packet_sha256,expected_package_sha256,expected_ma
         value=str(packet.get(field) or "")
         if len(value)<8 or len(value)>256: reasons.append(label+"_INVALID")
         if value in set(seen.get(field+"s",[])): reasons.append(label+"_REPLAY")
-    signer=packet.get("signer") if isinstance(packet.get("signer"),dict) else {}
-    trust=packet.get("trust_snapshot") if isinstance(packet.get("trust_snapshot"),dict) else {}
-    if signer.get("status")!="VALID" or len(str(signer.get("signer_ref") or ""))<12: reasons.append("SIGNER_VALIDATION_REQUIRED")
-    if not _hex(signer.get("signature_sha256")): reasons.append("SIGNATURE_DIGEST_INVALID")
-    if trust.get("trusted") is not True or trust.get("status")!="CURRENT": reasons.append("TRUST_SNAPSHOT_NOT_CURRENT")
-    if not _hex(trust.get("snapshot_sha256")): reasons.append("TRUST_SNAPSHOT_DIGEST_INVALID")
-    if trust.get("signer_ref")!=signer.get("signer_ref"): reasons.append("SIGNER_TRUST_REF_MISMATCH")
+
+    signer_trust=verify_external_signer_trust(packet)
+    if not signer_trust["valid"]:
+        reasons.append("CRYPTOGRAPHIC_SIGNER_TRUST_REQUIRED")
+        reasons.extend(signer_trust["reasons"])
+
     cases=packet.get("case_results") if isinstance(packet.get("case_results"),list) else []
     if len(cases)!=REQUIRED_CASE_COUNT: reasons.append("RUNTIME_CASE_MATRIX_NOT_7")
     ids=[]; digests=[]
@@ -70,32 +70,33 @@ def verify_packet(packet,*,raw_packet_sha256,expected_package_sha256,expected_ma
     if matrix["unexpected"]: reasons.append("RUNTIME_CASE_MATRIX_UNEXPECTED_ID")
     if not matrix["valid"]: reasons.append("RUNTIME_CASE_MATRIX_EXACT_SET_REQUIRED")
     if len(set(digests))!=len(digests): reasons.append("DUPLICATE_RUNTIME_REPORT_DIGEST")
-    ok=not reasons
+    reasons=sorted(set(reasons)); ok=not reasons
     provenance={"raw_packet_sha256":raw,"package_zip_sha256":pkg,"release_manifest_sha256":man,
-                "trust_snapshot_sha256":str(trust.get("snapshot_sha256") or "").lower(),
-                "signature_sha256":str(signer.get("signature_sha256") or "").lower(),
-                "signer_ref":signer.get("signer_ref"),"case_report_sha256":sorted(digests),
-                "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS)}
-    digest=_sha(_stable({"baseline":current_cockpit_baseline,"verified":ok,"provenance":provenance,"reasons":sorted(set(reasons))}))
+                "trust_snapshot_sha256":signer_trust.get("trust_snapshot_sha256",""),
+                "signature_sha256":signer_trust.get("signature_sha256",""),
+                "certificate_sha256":signer_trust.get("certificate_sha256",""),
+                "signer_key_id_ref":signer_trust.get("signer_key_id_ref",""),
+                "signed_payload_sha256":signer_trust.get("signed_payload_sha256",""),
+                "case_report_sha256":sorted(digests),"required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS)}
+    digest=_sha(_stable({"baseline":current_cockpit_baseline,"verified":ok,"provenance":provenance,"reasons":reasons}))
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST",
             "real_packet_verified":ok,"ingest_status":"VERIFIED_REAL_PACKET" if ok else "QUARANTINE",
-            "reasons":sorted(set(reasons)),"cockpit_baseline":current_cockpit_baseline,
+            "reasons":reasons,"cockpit_baseline":current_cockpit_baseline,
             "case_matrix_complete":ok and len(digests)==REQUIRED_CASE_COUNT,
             "case_count":len(cases),"required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS),
-            "case_matrix":matrix,"provenance":provenance,
+            "case_matrix":matrix,"signer_trust":signer_trust,"provenance":provenance,
             "import_digest":digest,"windows_runtime_certified":False,
             "external_windows_target_evidence_imported":False,"production_score_promotion_eligible":False,
             "automatic_production_certification":False,"production_score_mutation_authorized":False,
             "raw_evidence_rewritten":False}
 
 def _proof_packet(now,h,ids):
-    return {"source_classification":SOURCE_CLASSIFICATION,"synthetic":False,"local_only":False,"target_os":"Windows",
+    base={"source_classification":SOURCE_CLASSIFICATION,"synthetic":False,"local_only":False,"target_os":"Windows",
        "codex_target":True,"package_zip_sha256":"a"*64,"release_manifest_sha256":"b"*64,
        "cockpit_baseline":COCKPIT_BASELINE,"capture_utc":now.isoformat(),"nonce":"nonce-012345",
-       "run_id":"run-01234567","report_id":"report-012345","signer":{"status":"VALID","signer_ref":"signer-pseudo-001",
-       "signature_sha256":"c"*64},"trust_snapshot":{"trusted":True,"status":"CURRENT","signer_ref":"signer-pseudo-001",
-       "snapshot_sha256":"d"*64},"case_results":[{"case_id":cid,"status":"PASS","report_sha256":h(str(i))}
-       for i,cid in enumerate(ids)]}
+       "run_id":"run-01234567","report_id":"report-012345",
+       "case_results":[{"case_id":cid,"status":"PASS","report_sha256":h(str(i))} for i,cid in enumerate(ids)]}
+    return synthetic_signed_packet(base)
 
 def synthetic_proof():
     now=datetime.now(timezone.utc); h=lambda s:hashlib.sha256(s.encode()).hexdigest()
@@ -103,10 +104,17 @@ def synthetic_proof():
     kw=dict(raw_packet_sha256="e"*64,expected_package_sha256="a"*64,expected_manifest_sha256="b"*64,now=now)
     good=verify_packet(p,**kw)
     fake=_proof_packet(now,h,[f"case-{i}" for i in range(7)]); fake_result=verify_packet(fake,**kw)
-    bad=dict(p); bad["synthetic"]=True; syn=verify_packet(bad,**kw)
-    old=dict(p); old["cockpit_baseline"]="1.3.27"; drift=verify_packet(old,**kw)
+    unsigned=json.loads(json.dumps(p)); unsigned["signer"]={"status":"VALID","signer_ref":"fake-self-declared","signature_sha256":"c"*64}
+    unsigned_result=verify_packet(unsigned,**kw)
+    tampered=json.loads(json.dumps(p)); tampered["package_zip_sha256"]="f"*64
+    tampered_result=verify_packet(tampered,raw_packet_sha256="1"*64,expected_package_sha256="f"*64,expected_manifest_sha256="b"*64,now=now)
+    bad=json.loads(json.dumps(p)); bad["synthetic"]=True; syn=verify_packet(bad,**kw)
+    old=json.loads(json.dumps(p)); old["cockpit_baseline"]="1.3.27"; drift=verify_packet(old,**kw)
     replay=verify_packet(p,seen={"packet_digests":["e"*64]},**kw)
     checks={"real_exact_7_of_7_verified":good["real_packet_verified"],
+            "cryptographic_signer_trust_verified":good["signer_trust"]["valid"],
+            "self_declared_signer_rejected":"CRYPTOGRAPHIC_SIGNER_TRUST_REQUIRED" in unsigned_result["reasons"],
+            "signed_payload_tamper_rejected":"CRYPTOGRAPHIC_SIGNER_TRUST_REQUIRED" in tampered_result["reasons"],
             "arbitrary_7_ids_rejected":"RUNTIME_CASE_MATRIX_EXACT_SET_REQUIRED" in fake_result["reasons"],
             "missing_required_ids_reported":"RUNTIME_CASE_MATRIX_MISSING_REQUIRED" in fake_result["reasons"],
             "unexpected_ids_reported":"RUNTIME_CASE_MATRIX_UNEXPECTED_ID" in fake_result["reasons"],
@@ -120,7 +128,7 @@ def synthetic_proof():
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST_PROOF",
             "verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},
             "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS),"tests":tests,
-            "windows_runtime_certified":False,"production_score_promotion_eligible":False}
+            "synthetic_fixture_only":True,"windows_runtime_certified":False,"production_score_promotion_eligible":False}
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--proof",action="store_true"); ap.add_argument("--packet")
