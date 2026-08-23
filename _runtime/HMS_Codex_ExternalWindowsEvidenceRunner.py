@@ -14,6 +14,22 @@ from HMS_Codex_ExternalWindowsReviewPacketIngest import (
 
 VERSION = "25.75"
 
+REASON_VI = {
+    "WINDOWS_TARGET_REQUIRED": "Phải chạy trên máy Windows đích.",
+    "CODEX_CLI_NOT_FOUND": "Không tìm thấy Codex CLI trên PATH hoặc đường dẫn --codex.",
+    "CODEX_VERSION_FAILED": "Codex CLI có tồn tại nhưng lệnh --version không chạy thành công.",
+    "PACKAGE_ZIP_MISSING": "Thiếu file ZIP gói phát hành cần đối chiếu SHA-256.",
+    "RELEASE_MANIFEST_MISSING": "Thiếu release manifest cần đối chiếu SHA-256.",
+    "EXACT_SEVEN_CASE_REPORTS_REQUIRED": "Phải cung cấp đúng 7 báo cáo: host, codex, quota, failover, lan, soak_6h, soak_24h.",
+    "CASE_REPORT_FILES_MISSING": "Có báo cáo case được khai báo nhưng file không tồn tại.",
+    "SIGNER_JSON_MISSING": "Thiếu signer JSON do hệ thống ký tin cậy bên ngoài cung cấp.",
+    "TRUST_JSON_MISSING": "Thiếu trust snapshot JSON hiện hành.",
+}
+
+def _reason_vi(reason: str) -> str:
+    key=str(reason).split(":",1)[0]
+    return REASON_VI.get(key, reason)
+
 def _sha_file(path: Path) -> str:
     h=hashlib.sha256()
     with path.open("rb") as fh:
@@ -69,7 +85,7 @@ def preflight(args):
     if not signer or not signer.is_file(): reasons.append("SIGNER_JSON_MISSING")
     if not trust or not trust.is_file(): reasons.append("TRUST_JSON_MISSING")
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_EVIDENCE_RUNNER_PREFLIGHT",
-            "ready":not reasons,"reasons":reasons,"windows":is_windows,"codex":codex,
+            "ready":not reasons,"reasons":reasons,"reasons_vi":[_reason_vi(x) for x in reasons],"windows":is_windows,"codex":codex,
             "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS),"case_matrix":matrix,
             "missing_case_files":missing_files,"creates_synthetic_evidence":False,
             "windows_runtime_certified":False,"production_score_promotion_eligible":False}
