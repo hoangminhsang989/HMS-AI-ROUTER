@@ -23,6 +23,7 @@ def _launcher_chain_checks():
     safe = (RUNTIME_DIR / "HMS_GUI_SAFE_FALLBACK.pyw").read_text("utf-8")
     guarded = (RUNTIME_DIR / "HMS_GUI_ENTRY.pyw").read_text("utf-8")
     recovery_impl = recovery[:recovery.find("def extension_proof")]
+    safe_impl = safe[:safe.find("def source_proof")]
 
     recovery_pos = vbs.find('HMS_GUI_RECOVERY_ENTRY.pyw')
     review_pos = vbs.find('HMS_GUI_REVIEW_ENTRY.pyw')
@@ -52,8 +53,8 @@ def _launcher_chain_checks():
         "review_wrapper_installs_confirmation": "askyesno" in review and "_confirmed_submit_promotion_review" in review,
         "review_wrapper_uses_contract": "evaluate_gui_action_contract" in review,
         "guarded_entry_click_uses_controller_recheck": "record_review_action" in guarded and "get_live_baseline" in guarded,
-        "safe_fallback_loads_legacy_core_directly": 'LEGACY_GUI = RUNTIME_DIR / "HMS_GUI.pyw"' in safe,
-        "safe_fallback_has_no_promotion_controller": "PromotionWorkbenchController" not in safe and "submit_promotion_review" not in safe,
+        "safe_fallback_loads_legacy_core_directly": 'LEGACY_GUI = RUNTIME_DIR / "HMS_GUI.pyw"' in safe_impl,
+        "safe_fallback_has_no_promotion_controller": "PromotionWorkbenchController" not in safe_impl and "submit_promotion_review" not in safe_impl,
         "legacy_only_final_fallback": review_assign in vbs and safe_assign in vbs and legacy_assign in vbs and vbs.count('gui = legacyGui') == 1,
     }
 
