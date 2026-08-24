@@ -7,7 +7,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $RuntimeDir = Split-Path -Parent $PSCommandPath
+$RepoRoot = Split-Path -Parent $RuntimeDir
 $BundleScript = Join-Path $RuntimeDir "HMS_Codex_WindowsUACValidationBundle.py"
+$LauncherPath = Join-Path $RepoRoot "HMS_VALIDATE_UAC_RECOVERY.cmd"
 $ExpectedCancel = "PASS_CANCEL_AND_REPLAY_BLOCK"
 $ExpectedClose = "PASS_CLOSE_AND_REPLAY_BLOCK"
 $ExpectedPair = "PASS_BOUNDED_UAC_RECOVERY_PAIR"
@@ -165,9 +167,13 @@ function Invoke-SourceProof {
             Where-Object { $_ }
     )
     $source = Get-Content -LiteralPath $PSCommandPath -Raw -Encoding UTF8
+    $launcherSource = $(if (Test-Path -LiteralPath $LauncherPath -PathType Leaf) {
+        Get-Content -LiteralPath $LauncherPath -Raw -Encoding UTF8
+    } else { "" })
     $checks = [ordered]@{
         parse_clean = @($parseErrors).Count -eq 0
         bundle_exists = Test-Path -LiteralPath $BundleScript -PathType Leaf
+        launcher_exists = Test-Path -LiteralPath $LauncherPath -PathType Leaf
         calls_init = $source.Contains('"init", "--output"')
         calls_cancel = $source.Contains('"run-cancel"')
         calls_close = $source.Contains('"run-close"')
@@ -178,6 +184,9 @@ function Invoke-SourceProof {
         no_direct_process_launcher = $commands -notcontains "Start-Process"
         no_direct_taskkill = $commands -notcontains "taskkill"
         no_keyboard_automation = $commands -notcontains "SendKeys"
+        launcher_calls_runner = $launcherSource.Contains('_runtime\HMS_Run_UAC_Validation.ps1')
+        launcher_has_no_runas = -not $launcherSource.ToLowerInvariant().Contains("runas")
+        launcher_has_no_execution_policy_bypass = -not $launcherSource.ToLowerInvariant().Contains("executionpolicy bypass")
         pair_boundary_required = $source.Contains("PAIR_BOUNDARY_VIOLATION")
     }
     $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })
