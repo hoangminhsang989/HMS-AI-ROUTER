@@ -22,6 +22,7 @@ on:
       - '_runtime/HMS_Codex_WindowsOneShotElevation.py'
       - '_runtime/HMS_Codex_WindowsUACRecoveryValidation.py'
       - '_runtime/HMS_Codex_WindowsUACValidationBundle.py'
+      - '_runtime/HMS_Run_UAC_Validation.ps1'
       - '_runtime/HMS_Sign_Digest_With_Certificate.ps1'
       - '_runtime/HMS_Inspect_Evidence_Certificate.ps1'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
@@ -37,6 +38,7 @@ on:
       - '_runtime/HMS_GUI_RECOVERY_ENTRY.pyw'
       - '_runtime/HMS_GUI_SAFE_FALLBACK.pyw'
       - 'HMS_AI_ROUTER.vbs'
+      - 'HMS_VALIDATE_UAC_RECOVERY.cmd'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
   pull_request:
     branches: [main]
@@ -59,10 +61,10 @@ jobs:
       - name: Install crypto verifier dependency
         shell: pwsh
         run: python -m pip install --disable-pip-version-check cryptography
-      - name: Parse certificate PowerShell helpers
+      - name: Parse certificate and operator PowerShell helpers
         shell: pwsh
         run: |
-          foreach ($path in @('_runtime/HMS_Sign_Digest_With_Certificate.ps1','_runtime/HMS_Inspect_Evidence_Certificate.ps1')) {
+          foreach ($path in @('_runtime/HMS_Sign_Digest_With_Certificate.ps1','_runtime/HMS_Inspect_Evidence_Certificate.ps1','_runtime/HMS_Run_UAC_Validation.ps1')) {
             $tokens = $null
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path), [ref]$tokens, [ref]$errors) | Out-Null
@@ -141,6 +143,9 @@ jobs:
       - name: Session-bound UAC validation bundle proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsUACValidationBundle.py proof
+      - name: Windows PowerShell 5.1 UAC operator runner proof
+        shell: powershell
+        run: .\_runtime\HMS_Run_UAC_Validation.ps1 -Proof
       - name: Recovery-first GUI wrapper proof
         shell: pwsh
         run: python _runtime/HMS_GUI_RECOVERY_ENTRY.pyw --proof
