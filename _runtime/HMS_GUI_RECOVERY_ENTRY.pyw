@@ -5,6 +5,7 @@ import importlib.machinery
 import importlib.util
 import json
 import re
+import secrets
 import sys
 import threading
 from pathlib import Path
@@ -30,6 +31,7 @@ def _load_review_entry():
 review = _load_review_entry()
 legacy = review.legacy
 
+import HMS_Codex_WindowsOneShotElevation as one_shot_elevation
 import HMS_Codex_WindowsRecoveryContract as recovery_contract
 import HMS_Codex_WindowsRecoveryDialog as recovery_dialog
 
@@ -164,7 +166,23 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
 
 def _official_switch_with_recovery_tracking(self, email):
     self._hms_recovery_last_official_switch_email = str(email or "")
+    self._hms_recovery_uac_operation_token = secrets.token_urlsafe(24)
+    self._hms_recovery_uac_consumed = False
     return _ORIGINAL_OFFICIAL_SWITCH(self, email)
+
+
+def _discover_switch_client_pids() -> list[int]:
+    try:
+        return one_shot_elevation.discover_supported_client_pids()
+    except Exception:
+        return []
+
+
+def _retry_official_switch(self):
+    email = str(getattr(self, "_hms_recovery_last_official_switch_email", "") or "")
+    if email:
+        return _ORIGINAL_OFFICIAL_SWITCH(self, email)
+    return None
 
 
 def _finish_official_switch_with_recovery(self, data):
@@ -172,13 +190,14 @@ def _finish_official_switch_with_recovery(self, data):
         return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
 
     detail = _error_detail(data)
+    pids = _discover_switch_client_pids()
+    uac_consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
     plan = recovery_contract.build_recovery_plan(
         detail,
         operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
         target_path=_target_path(data),
         background_probe=False,
-        # UAC is intentionally not offered until a dedicated signed-client launcher owns elevation.
-        supported_client=False,
+        supported_client=bool(pids) and not uac_consumed,
     )
     if plan.get("recoverable") is not True:
         return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
@@ -186,9 +205,32 @@ def _finish_official_switch_with_recovery(self, data):
     self.busy = False
     choice = _show_dialog_threadsafe(self, plan)
     if choice in {recovery_contract.ACTION_RETRY, recovery_contract.ACTION_MANUAL_RETRY}:
-        email = str(getattr(self, "_hms_recovery_last_official_switch_email", "") or "")
-        if email:
-            return _ORIGINAL_OFFICIAL_SWITCH(self, email)
+        retried = _retry_official_switch(self)
+        if retried is not None:
+            return retried
+    elif choice == recovery_contract.ACTION_REQUEST_UAC_ONCE:
+        token = str(getattr(self, "_hms_recovery_uac_operation_token", "") or "")
+        gate = recovery_contract.evaluate_uac_once(plan, operation_token=token, already_consumed=uac_consumed)
+        if gate.get("allowed") is not True:
+            blocked = dict(data) if isinstance(data, dict) else {"ok": False}
+            blocked["error"] = "Windows one-shot authorization bị chặn: " + ",".join(gate.get("reasons") or [])
+            return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, blocked)
+
+        # Mark consumed before the UAC helper. Cancellation/failure is still one-shot for this switch epoch.
+        self._hms_recovery_uac_consumed = True
+        try:
+            elevated = one_shot_elevation.elevated_close_supported_processes(pids, operation_token=token)
+        except Exception as exc:
+            blocked = dict(data) if isinstance(data, dict) else {"ok": False}
+            blocked["error"] = recovery_contract.sanitize_detail(exc)
+            blocked["recovery_action"] = "UAC_ONE_SHOT_FAILED"
+            blocked["recovery_detail_sanitized"] = True
+            return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, blocked)
+        if elevated.get("ok") is True:
+            retried = _retry_official_switch(self)
+            if retried is not None:
+                return retried
+
     return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
 
 
@@ -200,7 +242,7 @@ legacy.HmsApp._finish_official_auth_switch = _finish_official_switch_with_recove
 def extension_proof():
     access = recovery_contract.build_recovery_plan(
         "Access denied (os error 5)", operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
-        supported_client=False,
+        supported_client=True,
     )
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
@@ -218,7 +260,10 @@ def extension_proof():
         "threadsafe_ui_bridge": "root.after" in impl_src and "threading.Event" in impl_src,
         "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
         "official_switch_recovery_supported": "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE" in impl_src,
-        "uac_not_executed_by_gui_wrapper": access["uac_eligible"] is False and "ShellExecute" not in impl_src and '"runas"' not in impl_src.lower(),
+        "uac_only_offered_after_supported_pid_discovery": access["uac_eligible"] is True and "discover_supported_client_pids" in impl_src and "supported_client=bool(pids) and not uac_consumed" in impl_src,
+        "uac_epoch_token_is_generated_per_user_switch": "secrets.token_urlsafe(24)" in impl_src and "_hms_recovery_uac_consumed = False" in impl_src,
+        "uac_consumed_before_helper": impl_src.find("self._hms_recovery_uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
+        "uac_helper_has_no_caller_executable": "executable_path" not in impl_src and "taskkill.exe" not in impl_src,
         "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
         "no_production_authority": "production_score_mutation" not in impl_src and "windows_runtime_certified = True" not in impl_src,
     }
@@ -226,7 +271,8 @@ def extension_proof():
     passed = sum(test["status"] == "PASS" for test in tests)
     contract_proof = recovery_contract.synthetic_proof()
     dialog_proof = recovery_dialog.source_proof()
-    children_pass = contract_proof.get("verdict") == "PASS" and dialog_proof.get("verdict") == "PASS"
+    elevation_proof = one_shot_elevation.synthetic_proof()
+    children_pass = all(x.get("verdict") == "PASS" for x in (contract_proof, dialog_proof, elevation_proof))
     verdict = "PASS" if passed == len(tests) and children_pass else "FAIL"
     return {
         "product": "HMS-AI-ROUTER", "version": APP_VERSION, "suite": "GUI_WINDOWS_RECOVERY_WRAPPER_PROOF",
@@ -235,8 +281,9 @@ def extension_proof():
         "tests": tests,
         "contract_proof": contract_proof.get("summary"),
         "dialog_proof": dialog_proof.get("summary"),
+        "elevation_proof": elevation_proof.get("summary"),
         "real_windows_recovery_executed": False,
-        "uac_executed": False,
+        "real_uac_prompt_executed": False,
         "automatic_production_certification": False,
         "production_score_mutation_authorized": False,
     }
