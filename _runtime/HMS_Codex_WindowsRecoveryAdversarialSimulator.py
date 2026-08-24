@@ -63,8 +63,13 @@ def _pid_space(count: int = 64) -> list[int]:
     return list(range(base, base + count))
 
 
-def _identity(pid: int, name: str, creation: int) -> dict[str, Any]:
-    return {"pid": int(pid), "name": str(name).lower(), "creation_time_100ns": int(creation)}
+def _identity(pid: int, name: str, creation: int, session_id: int = 7) -> dict[str, Any]:
+    return {
+        "pid": int(pid),
+        "name": str(name).lower(),
+        "creation_time_100ns": int(creation),
+        "session_id": int(session_id),
+    }
 
 
 def _recovery_plan_cases() -> list[dict[str, Any]]:
@@ -143,20 +148,26 @@ def _pid_and_identity_cases() -> list[dict[str, Any]]:
     same = _identity(p1, "Codex.exe", 1001)
     reused_same_name = _identity(p1, "codex.exe", 2002)
     replaced = _identity(p1, "notepad.exe", 1001)
-    malformed = {p1: {"pid": p1, "name": "codex.exe", "creation_time_100ns": 0}}
+    cross_session = _identity(p1, "codex.exe", 1001, session_id=8)
+    malformed = {p1: {"pid": p1, "name": "codex.exe", "creation_time_100ns": 0, "session_id": 7}}
+    missing_session = {p1: {"pid": p1, "name": "codex.exe", "creation_time_100ns": 1001}}
     tests.extend([
         _case("same_process_incarnation_matches", elevation._identity_matches(old, same), group="pid-identity"),
         _case("same_name_pid_reuse_is_rejected", not elevation._identity_matches(old, reused_same_name), group="pid-identity"),
         _case("different_image_is_rejected", not elevation._identity_matches(old, replaced), group="pid-identity"),
+        _case("cross_session_identity_is_rejected", not elevation._identity_matches(old, cross_session), group="pid-identity"),
         _case("identity_binding_exact_shape_accepted", elevation._normalize_expected_identities({p1: old})[p1] == old, group="pid-identity"),
         _case("missing_identity_binding_rejected", _expect_raises(ValueError, lambda: elevation._normalize_expected_identities(None), "IDENTITY_BINDING_REQUIRED"), group="pid-identity"),
         _case("malformed_identity_binding_rejected", _expect_raises(ValueError, lambda: elevation._normalize_expected_identities(malformed), "IDENTITY_BINDING_INVALID"), group="pid-identity"),
+        _case("missing_session_binding_rejected", _expect_raises(ValueError, lambda: elevation._normalize_expected_identities(missing_session), "IDENTITY_BINDING_INVALID"), group="pid-identity"),
     ])
     same_survivor = gui._identity_survivors({p1: old}, {p1: same})
     reused_survivor = gui._identity_survivors({p1: old}, {p1: reused_same_name})
+    cross_session_survivor = gui._identity_survivors({p1: old}, {p1: cross_session})
     tests.extend([
         _case("gui_same_incarnation_counts_as_survivor", sorted(same_survivor) == [p1], group="pid-identity"),
         _case("gui_same_name_reused_pid_is_new_process", reused_survivor == {}, group="pid-identity"),
+        _case("gui_cross_session_pid_is_not_original_client", cross_session_survivor == {}, group="pid-identity"),
     ])
     return tests
 
