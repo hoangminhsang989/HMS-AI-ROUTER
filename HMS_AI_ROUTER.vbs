@@ -1,15 +1,16 @@
 Option Explicit
-Dim shell, fso, base, gui, guardedGui, legacyGui, q, cmd
+Dim shell, fso, base, gui, safeGui, legacyGui, q, cmd
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 base = fso.GetParentFolderName(WScript.ScriptFullName)
 q = Chr(34)
 gui = base & "\_runtime\HMS_GUI_REVIEW_ENTRY.pyw"
-guardedGui = base & "\_runtime\HMS_GUI_ENTRY.pyw"
+safeGui = base & "\_runtime\HMS_GUI_SAFE_FALLBACK.pyw"
 legacyGui = base & "\_runtime\HMS_GUI.pyw"
 
-' v25.75 principal path: reviewer-policy wrapper -> guarded entry -> legacy GUI.
-If Not fso.FileExists(gui) Then gui = guardedGui
+' v25.75 fail-closed path: sealed reviewer wrapper -> promotion-disabled safe fallback -> legacy core.
+' Never fall directly to HMS_GUI_ENTRY.pyw because that extension can render Promotion Review without the principal sealed-loader wrapper.
+If Not fso.FileExists(gui) Then gui = safeGui
 If Not fso.FileExists(gui) Then gui = legacyGui
 
 On Error Resume Next
