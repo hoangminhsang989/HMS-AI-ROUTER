@@ -22,10 +22,9 @@ ACTION_COPY_ERROR = "COPY_ERROR"
 ACTION_REQUEST_UAC_ONCE = "REQUEST_UAC_ONCE"
 ACTION_CANCEL = "CANCEL"
 
-# Only narrowly-scoped client lifecycle operations may ever expose a UAC offer.
-# This module does not execute UAC; the caller must still enforce its own executable allowlist.
+# UAC is restricted to closing/restarting an already-running supported Codex client.
+# Starting an arbitrary executable is intentionally not eligible.
 ELEVATION_OPERATION_ALLOWLIST = frozenset({
-    "CODEX_CLIENT_START",
     "CODEX_CLIENT_STOP",
     "CODEX_CLIENT_RESTART",
     "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
@@ -166,6 +165,10 @@ def evaluate_uac_once(plan: dict[str, Any], *, operation_token: str, already_con
 
 def synthetic_proof() -> dict[str, Any]:
     access = build_recovery_plan(
+        "Access is denied. (os error 5)", operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
+        target_path=r"C:\Users\alice\AppData\Local\Codex\Codex.exe", supported_client=True,
+    )
+    start_denied = build_recovery_plan(
         "Access is denied. (os error 5)", operation="CODEX_CLIENT_START",
         target_path=r"C:\Users\alice\AppData\Local\Codex\Codex.exe", supported_client=True,
     )
@@ -200,6 +203,7 @@ def synthetic_proof() -> dict[str, Any]:
         "background_probe_is_quiet": quiet["surface_mode"] == "QUIET_BACKGROUND" and quiet["actions"] == [],
         "sensitive_detail_redacted": "abc123" not in sanitized and "tok123" not in sanitized and "supersecret" not in sanitized and "alice" not in sanitized and "u***@example.com" in sanitized,
         "uac_only_for_supported_allowlisted_client": access["uac_eligible"] is True and denied_nonclient["uac_eligible"] is False,
+        "uac_start_is_forbidden": start_denied["uac_eligible"] is False and ACTION_REQUEST_UAC_ONCE not in start_denied["actions"],
         "uac_never_automatic": access["uac_automatic"] is False and first_uac["auto_launch"] is False,
         "uac_one_shot_gate_first_allowed": first_uac["allowed"] is True and first_uac["consume_token_if_launched"] is True,
         "uac_one_shot_gate_replay_blocked": second_uac["allowed"] is False and "UAC_OPERATION_TOKEN_ALREADY_CONSUMED" in second_uac["reasons"],
