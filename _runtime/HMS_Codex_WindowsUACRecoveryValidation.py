@@ -268,11 +268,29 @@ def synthetic_proof() -> dict[str, Any]:
         "no_generic_elevation_command": '"runas"' not in impl_src and "ShellExecute" not in impl_src,
     }
     tests = [{"name": name, "status": "PASS" if ok else "FAIL"} for name, ok in checks.items()]
-    passed = sum(test["status"] == "PASS" for test in tests)
+    source_passed = sum(test["status"] == "PASS" for test in tests)
+
+    # Proof-only child suite. It imports no target process enumeration or UAC execution path.
+    import HMS_Codex_WindowsRecoveryAdversarialSimulator as adversarial
+    adversarial_result = adversarial.adversarial_proof()
+    child_summary = adversarial_result.get("summary") if isinstance(adversarial_result.get("summary"), dict) else {}
+    child_pass = int(child_summary.get("pass") or 0)
+    child_fail = int(child_summary.get("fail") or 0)
+    child_total = int(child_summary.get("total") or 0)
+    child_ok = adversarial_result.get("verdict") == "PASS" and child_fail == 0 and child_total > 0
+
+    source_fail = len(tests) - source_passed
     out = _base_report("SYNTHETIC_PROOF")
     out.update({
-        "verdict": "PASS" if passed == len(tests) else "FAIL",
-        "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
+        "verdict": "PASS" if source_fail == 0 and child_ok else "FAIL",
+        "summary": {
+            "pass": source_passed + child_pass,
+            "fail": source_fail + child_fail + (0 if child_ok else (1 if child_total == 0 else 0)),
+            "total": len(tests) + child_total + (1 if child_total == 0 else 0),
+        },
+        "source_proof_summary": {"pass": source_passed, "fail": source_fail, "total": len(tests)},
+        "adversarial_simulator_summary": child_summary,
+        "adversarial_simulator_groups": adversarial_result.get("groups") or {},
         "tests": tests,
         "real_windows_checked": False,
         "real_uac_prompt_executed": False,
