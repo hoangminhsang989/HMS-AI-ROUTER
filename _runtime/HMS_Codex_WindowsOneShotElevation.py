@@ -287,7 +287,8 @@ def _system_taskkill_path() -> Path:
 
 def _taskkill_arguments(pids: Iterable[int]) -> str:
     targets = _normalize_pids(pids)
-    return " ".join([*(f"/PID {pid}" for pid in targets), "/T", "/F"])
+    # Never use /T: elevation authority is limited to the exact identity-bound PIDs, not their child process trees.
+    return " ".join([*(f"/PID {pid}" for pid in targets), "/F"])
 
 
 def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_000) -> dict[str, Any]:
@@ -343,6 +344,7 @@ def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_0
         "taskkill_exit_code_zero": True,
         "identity_bound": True,
         "pid_reuse_blocked_by_open_handles": True,
+        "tree_kill_allowed": False,
         "fixed_system_binary": True,
         "arbitrary_executable_allowed": False,
         "arbitrary_arguments_allowed": False,
@@ -359,7 +361,7 @@ def elevated_close_supported_processes(
         return {
             "ok": True, "closed_pid_count": 0, "already_closed": True, "operation_token_consumed": True,
             "uac_prompt_started": False, "identity_bound": True, "pid_reuse_blocked_by_open_handles": True,
-            "arbitrary_executable_allowed": False, "production_effect_authorized": False,
+            "tree_kill_allowed": False, "arbitrary_executable_allowed": False, "production_effect_authorized": False,
             "windows_runtime_certified": False, "production_score_mutation_authorized": False,
         }
     try:
@@ -397,9 +399,10 @@ def synthetic_proof() -> dict[str, Any]:
         _consume_operation_token(token)
     except RuntimeError as exc:
         replay_rejected = "ALREADY_CONSUMED" in str(exc)
-    args = _taskkill_arguments([p2, p1]); expected_args = f"/PID {p1} /PID {p2} /T /F"
+    args = _taskkill_arguments([p2, p1]); expected_args = f"/PID {p1} /PID {p2} /F"
     src = Path(__file__).read_text("utf-8"); impl_src = src[:src.find("def synthetic_proof")]
     elevated_src = impl_src[impl_src.find("def elevated_close_supported_processes"):]
+    taskkill_src = impl_src[impl_src.find("def _taskkill_arguments"):impl_src.find("def _run_elevated_taskkill")]
     checks = {
         "codex_chatgpt_only_allowlist": SUPPORTED_CLIENT_NAMES == frozenset({"codex.exe", "chatgpt.exe"}),
         "allowed_targets_validate": allowed == [p1, p2],
@@ -407,6 +410,7 @@ def synthetic_proof() -> dict[str, Any]:
         "explorer_rejected": explorer_rejected,
         "pid_bound_is_bounded": MAX_TARGET_PIDS == 32,
         "taskkill_args_numeric_only": args == expected_args,
+        "taskkill_tree_kill_prohibited": '"/T"' not in taskkill_src and '"tree_kill_allowed": False' in elevated_src,
         "identity_binding_requires_supported_exact_shape": normalized_identity[p1] == expected,
         "same_process_incarnation_matches": _identity_matches(expected, same),
         "same_name_pid_reuse_rejected": not _identity_matches(expected, reused_same_name),
