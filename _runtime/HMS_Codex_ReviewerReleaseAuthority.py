@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import argparse, hashlib, json, os, re
+import argparse, hashlib, json, os, re, tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -20,6 +20,17 @@ def _parse_time(value):
     except Exception:return None
 def _authority_digest(body:dict[str,Any])->str:return _sha({k:v for k,v in body.items() if k!="authority_sha256"})
 
+def _atomic_json(path:Path,obj:Any)->None:
+    path.parent.mkdir(parents=True,exist_ok=True); fd,tmp=tempfile.mkstemp(prefix=path.name+".",suffix=".tmp",dir=path.parent)
+    try:
+        with os.fdopen(fd,"w",encoding="utf-8",newline="\n") as fh:
+            json.dump(obj,fh,ensure_ascii=False,sort_keys=True,indent=2); fh.write("\n"); fh.flush(); os.fsync(fh.fileno())
+        os.replace(tmp,path)
+    finally:
+        try:
+            if os.path.exists(tmp):os.unlink(tmp)
+        except OSError:pass
+
 def validate_authority_body(body:dict[str,Any],*,now:datetime|None=None,freshness_hours:int=168)->dict[str,Any]:
     reasons=[]; now=(now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     if body.get("schema_version")!=SCHEMA_VERSION:reasons.append("RELEASE_AUTHORITY_SCHEMA_INVALID")
@@ -29,6 +40,7 @@ def validate_authority_body(body:dict[str,Any],*,now:datetime|None=None,freshnes
     if body.get("packet_derived") is not False:reasons.append("RELEASE_AUTHORITY_MUST_NOT_BE_PACKET_DERIVED")
     if body.get("local_artifact_hashed_at_capture") is not False:reasons.append("RELEASE_AUTHORITY_MUST_NOT_SELF_HASH_LOCAL_ARTIFACT")
     if body.get("raw_packet_included") is not False:reasons.append("RELEASE_AUTHORITY_RAW_PACKET_FORBIDDEN")
+    if body.get("private_material_exported") is not False:reasons.append("RELEASE_AUTHORITY_PRIVATE_MATERIAL_FORBIDDEN")
     package=str(body.get("package_zip_sha256") or "").lower(); manifest=str(body.get("release_manifest_sha256") or "").lower()
     commit=str(body.get("source_commit_sha") or "").lower(); tree=str(body.get("source_tree_sha") or "").lower()
     if not HEX64.fullmatch(package):reasons.append("RELEASE_AUTHORITY_PACKAGE_SHA256_INVALID")
@@ -53,9 +65,7 @@ def capture_authority(*,package_zip_sha256:str,release_manifest_sha256:str,sourc
           "packet_derived":False,"local_artifact_hashed_at_capture":False,"raw_packet_included":False,"private_material_exported":False}
     body["authority_sha256"]=_authority_digest(body); check=validate_authority_body(body)
     if not check["valid"]:raise ValueError("RELEASE_AUTHORITY_BODY_INVALID:"+",".join(check["reasons"]))
-    seal=local_seal.seal_payload(body,purpose=SEAL_PURPOSE,key_path=key_path); document={"authority":body,"integrity_seal":seal}
-    output_path.parent.mkdir(parents=True,exist_ok=True); tmp=output_path.with_suffix(output_path.suffix+".tmp")
-    tmp.write_text(json.dumps(document,ensure_ascii=False,indent=2)+"\n","utf-8"); os.replace(tmp,output_path)
+    seal=local_seal.seal_payload(body,purpose=SEAL_PURPOSE,key_path=key_path); document={"authority":body,"integrity_seal":seal}; _atomic_json(output_path,document)
     return {"product":PRODUCT,"version":VERSION,"suite":"REVIEWER_RELEASE_AUTHORITY_CAPTURE","verdict":"RELEASE_AUTHORITY_CAPTURED",
             "authority_sha256":body["authority_sha256"],"package_zip_sha256":body["package_zip_sha256"],"release_manifest_sha256":body["release_manifest_sha256"],
             "source_commit_sha":body["source_commit_sha"],"source_tree_sha":body["source_tree_sha"],"input_mode":body["input_mode"],
@@ -81,10 +91,12 @@ def synthetic_proof()->dict[str,Any]:
     self_hashed=json.loads(json.dumps(body)); self_hashed["local_artifact_hashed_at_capture"]=True; self_hashed["authority_sha256"]=_authority_digest(self_hashed); self_check=validate_authority_body(self_hashed,now=now)
     stale=json.loads(json.dumps(body)); stale["created_utc"]=(now-timedelta(hours=169)).isoformat(); stale["authority_sha256"]=_authority_digest(stale); stale_check=validate_authority_body(stale,now=now)
     tampered=json.loads(json.dumps(body)); tampered["package_zip_sha256"]="e"*64; tampered_check=validate_authority_body(tampered,now=now)
+    leaked=json.loads(json.dumps(body)); leaked["private_material_exported"]=True; leaked["authority_sha256"]=_authority_digest(leaked); leaked_check=validate_authority_body(leaked,now=now)
     checks={"explicit_release_authority_valid":good["valid"],"packet_derived_authority_rejected":"RELEASE_AUTHORITY_MUST_NOT_BE_PACKET_DERIVED" in derived_check["reasons"],
             "local_self_hash_authority_rejected":"RELEASE_AUTHORITY_MUST_NOT_SELF_HASH_LOCAL_ARTIFACT" in self_check["reasons"],"stale_authority_rejected":"RELEASE_AUTHORITY_STALE" in stale_check["reasons"],
-            "digest_tamper_rejected":"RELEASE_AUTHORITY_DIGEST_MISMATCH" in tampered_check["reasons"],"production_capture_windows_only":os.name=="nt" or _nonwindows_rejected(),
-            "dpapi_local_seal_required":"local_seal.verify_payload" in Path(__file__).read_text("utf-8")}
+            "digest_tamper_rejected":"RELEASE_AUTHORITY_DIGEST_MISMATCH" in tampered_check["reasons"],"private_material_flag_rejected":"RELEASE_AUTHORITY_PRIVATE_MATERIAL_FORBIDDEN" in leaked_check["reasons"],
+            "production_capture_windows_only":os.name=="nt" or _nonwindows_rejected(),"dpapi_local_seal_required":"local_seal.verify_payload" in Path(__file__).read_text("utf-8"),
+            "atomic_unique_temp_persistence":"tempfile.mkstemp" in Path(__file__).read_text("utf-8") and "os.replace" in Path(__file__).read_text("utf-8")}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"REVIEWER_RELEASE_AUTHORITY_PROOF","verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},"tests":tests,
             "real_release_authority_captured":False,"packet_derived":False,"local_artifact_hashed_at_capture":False,"windows_runtime_certified":False,"production_score_promotion_eligible":False}
