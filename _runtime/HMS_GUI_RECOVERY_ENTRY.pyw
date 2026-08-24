@@ -205,6 +205,7 @@ def extension_proof():
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "set_request_log", "repair_profile", "backup_export"]
     src = Path(__file__).read_text("utf-8")
+    impl_src = src[:src.find("def extension_proof")]
     checks = {
         "review_wrapper_loaded": getattr(review, "APP_VERSION", None) == APP_VERSION,
         "sealed_review_wrapper_preserved": getattr(review, "legacy", None) is legacy,
@@ -213,12 +214,12 @@ def extension_proof():
         "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
         "background_actions_remain_quiet": all(not _is_interactive_backend_action(name) for name in quiet_names),
         "interactive_actions_surface_recovery": all(_is_interactive_backend_action(name) for name in interactive_names),
-        "threadsafe_ui_bridge": "root.after" in src and "threading.Event" in src,
-        "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in src,
-        "official_switch_recovery_supported": "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE" in src,
-        "uac_not_executed_by_gui_wrapper": access["uac_eligible"] is False and "ShellExecute" not in src and '"runas"' not in src.lower(),
-        "no_raw_error_persistence": "recovery_detail_sanitized" in src and "raw_error" not in src,
-        "no_production_authority": "production_score_mutation" not in src and "windows_runtime_certified = True" not in src,
+        "threadsafe_ui_bridge": "root.after" in impl_src and "threading.Event" in impl_src,
+        "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
+        "official_switch_recovery_supported": "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE" in impl_src,
+        "uac_not_executed_by_gui_wrapper": access["uac_eligible"] is False and "ShellExecute" not in impl_src and '"runas"' not in impl_src.lower(),
+        "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
+        "no_production_authority": "production_score_mutation" not in impl_src and "windows_runtime_certified = True" not in impl_src,
     }
     tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
