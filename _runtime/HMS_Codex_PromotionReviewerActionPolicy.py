@@ -16,15 +16,27 @@ def evaluate_action_policy(report, live_observation, *, busy=False):
     reasons = {str(x) for x in (report.get("reasons") or [])}
     provenance = report.get("provenance") if isinstance(report.get("provenance"), dict) else {}
     signer_trust = report.get("signer_trust") if isinstance(report.get("signer_trust"), dict) else {}
+    authority = report.get("reviewer_trust_authority") if isinstance(report.get("reviewer_trust_authority"), dict) else {}
 
     evidence_verified = report.get("real_packet_verified") is True
     evidence_digest = str(provenance.get("raw_packet_sha256") or "").lower()
     manifest_digest = str(provenance.get("release_manifest_sha256") or "").lower()
     trust_digest = str(provenance.get("trust_snapshot_sha256") or "").lower()
-    provenance_ok = bool(HEX64.fullmatch(evidence_digest) and HEX64.fullmatch(manifest_digest) and HEX64.fullmatch(trust_digest))
+    expected_trust = str(provenance.get("expected_trust_snapshot_sha256") or "").lower()
+    provenance_ok = bool(HEX64.fullmatch(evidence_digest) and HEX64.fullmatch(manifest_digest)
+                         and HEX64.fullmatch(trust_digest) and HEX64.fullmatch(expected_trust)
+                         and trust_digest == expected_trust)
 
     signature_ok = evidence_verified and signer_trust.get("valid") is True
-    trust_ok = signature_ok and report.get("trust_anchor_match") is True
+    authority_digest = str(authority.get("authority_sha256") or "").lower()
+    authority_ok = (
+        authority.get("valid") is True
+        and authority.get("local_integrity_seal_valid") is True
+        and authority.get("packet_derived") is False
+        and HEX64.fullmatch(authority_digest) is not None
+        and str(authority.get("trust_snapshot_sha256") or "").lower() == expected_trust
+    )
+    trust_ok = signature_ok and report.get("trust_anchor_match") is True and authority_ok
     freshness_ok = evidence_verified and not bool(reasons & {"EVIDENCE_STALE", "CAPTURE_UTC_INVALID", "CAPTURE_TIME_IN_FUTURE"})
     idempotency_ok = evidence_verified and "DUPLICATE_PACKET_DIGEST" not in reasons and not any(x.endswith("_REPLAY") for x in reasons)
 
@@ -44,6 +56,7 @@ def evaluate_action_policy(report, live_observation, *, busy=False):
     if not evidence_verified: reasons_out.append("VERIFIED_REAL_PACKET_REQUIRED")
     if not provenance_ok: reasons_out.append("EVIDENCE_PROVENANCE_REQUIRED")
     if not signature_ok: reasons_out.append("SIGNATURE_GATE_BLOCKED")
+    if not authority_ok: reasons_out.append("SEALED_REVIEWER_TRUST_AUTHORITY_REQUIRED")
     if not trust_ok: reasons_out.append("TRUST_GATE_BLOCKED")
     if not freshness_ok: reasons_out.append("FRESHNESS_GATE_BLOCKED")
     if not idempotency_ok: reasons_out.append("IDEMPOTENCY_GATE_BLOCKED")
@@ -53,15 +66,21 @@ def evaluate_action_policy(report, live_observation, *, busy=False):
 
     return {"product": "HMS-AI-ROUTER", "version": VERSION, "suite": "PROMOTION_REVIEWER_ACTION_POLICY",
         "permissions": permissions,
-        "gates": {"evidence": evidence_verified and provenance_ok, "signature": signature_ok, "trust": trust_ok,
-            "freshness": freshness_ok, "idempotency": idempotency_ok, "trusted_live_baseline": trusted_live, "baseline_match": baseline_match},
+        "gates": {"evidence": evidence_verified and provenance_ok, "signature": signature_ok,
+            "reviewer_trust_authority": authority_ok, "trust": trust_ok,
+            "freshness": freshness_ok, "idempotency": idempotency_ok,
+            "trusted_live_baseline": trusted_live, "baseline_match": baseline_match},
         "observed_baseline": observed_baseline, "reasons": sorted(set(reasons_out)),
         "automatic_production_certification": False, "production_score_mutation_authorized": False}
 
 
 def synthetic_proof():
-    report = {"real_packet_verified": True, "reasons": [], "trust_anchor_match": True, "signer_trust": {"valid": True},
-        "provenance": {"raw_packet_sha256": "a" * 64, "release_manifest_sha256": "b" * 64, "trust_snapshot_sha256": "c" * 64}}
+    authority = {"valid": True, "local_integrity_seal_valid": True, "packet_derived": False,
+                 "authority_sha256": "d" * 64, "trust_snapshot_sha256": "c" * 64}
+    report = {"real_packet_verified": True, "reasons": [], "trust_anchor_match": True,
+        "signer_trust": {"valid": True}, "reviewer_trust_authority": authority,
+        "provenance": {"raw_packet_sha256": "a" * 64, "release_manifest_sha256": "b" * 64,
+                       "trust_snapshot_sha256": "c" * 64, "expected_trust_snapshot_sha256": "c" * 64}}
     live = {"source": TRUSTED_SOURCE, "upstream_repository": "jlcodes99/cockpit-tools", "release_id": 1328,
         "checked_utc": "2026-08-23T00:00:00+00:00", "baseline": COCKPIT_BASELINE}
     good = evaluate_action_policy(report, live)
@@ -70,6 +89,9 @@ def synthetic_proof():
     no_evidence = evaluate_action_policy(dict(report, real_packet_verified=False), live)
     no_crypto = evaluate_action_policy(dict(report, signer_trust={"valid": False}), live)
     no_anchor = evaluate_action_policy(dict(report, trust_anchor_match=False), live)
+    no_authority = evaluate_action_policy(dict(report, reviewer_trust_authority={}), live)
+    unsealed_authority = evaluate_action_policy(dict(report, reviewer_trust_authority=dict(authority, local_integrity_seal_valid=False)), live)
+    packet_derived_authority = evaluate_action_policy(dict(report, reviewer_trust_authority=dict(authority, packet_derived=True)), live)
     busy = evaluate_action_policy(report, live, busy=True)
     checks = {
         "match_allows_approve_reject_invalidate": all(good["permissions"].values()),
@@ -78,6 +100,9 @@ def synthetic_proof():
         "missing_verified_evidence_blocks_all": not any(no_evidence["permissions"].values()),
         "crypto_failure_blocks_all": not any(no_crypto["permissions"].values()) and not no_crypto["gates"]["signature"],
         "independent_anchor_failure_blocks_all": not any(no_anchor["permissions"].values()) and not no_anchor["gates"]["trust"],
+        "missing_reviewer_authority_blocks_all": not any(no_authority["permissions"].values()),
+        "unsealed_reviewer_authority_blocks_all": not any(unsealed_authority["permissions"].values()),
+        "packet_derived_reviewer_authority_blocks_all": not any(packet_derived_authority["permissions"].values()),
         "busy_blocks_all": not any(busy["permissions"].values()),
         "never_auto_certifies": good["automatic_production_certification"] is False,
         "never_mutates_score": good["production_score_mutation_authorized"] is False,
