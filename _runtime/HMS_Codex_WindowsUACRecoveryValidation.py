@@ -106,7 +106,7 @@ def preflight_report() -> dict[str, Any]:
         return out
 
     try:
-        taskkill_path = str(elevation._system_taskkill_path())  # read-only verification of the fixed system target
+        taskkill_path = str(elevation._system_taskkill_path())
         taskkill_available = True
     except Exception as exc:
         taskkill_path = ""
@@ -187,7 +187,6 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
     except Exception as exc:
         first_outcome = _classify_interactive_exception(exc)
         first_detail = type(exc).__name__
-        # A cancellation is only possible after Windows started the elevation prompt.
         uac_prompt_executed = first_outcome in {"UAC_CANCELLED", "UAC_TIMEOUT"}
 
     replay_blocked = False
@@ -242,26 +241,31 @@ def _write_optional_report(report: dict[str, Any], output: str) -> None:
 
 def synthetic_proof() -> dict[str, Any]:
     src = Path(__file__).read_text("utf-8")
+    proof_pos = src.find("def synthetic_proof")
+    impl_src = src[:proof_pos]
     interactive_pos = src.find("def interactive_report")
-    helper_pos = src.find("elevation.elevated_close_supported_processes", interactive_pos)
-    ack_pos = src.find("acknowledgement != ACKNOWLEDGEMENT", interactive_pos)
+    writer_pos = src.find("def _write_optional_report")
+    helper_pos = src.find("elevation.elevated_close_supported_processes", interactive_pos, writer_pos)
+    ack_pos = src.find("acknowledgement != ACKNOWLEDGEMENT", interactive_pos, writer_pos)
     preflight_src = src[src.find("def preflight_report"):interactive_pos]
     policy_src = src[src.find("def _read_policy_via_backend"):src.find("def preflight_report")]
+    interactive_src = src[interactive_pos:writer_pos]
+    writer_src = src[writer_pos:proof_pos]
     checks = {
-        "interactive_requires_exact_acknowledgement": ACKNOWLEDGEMENT in src and 0 <= ack_pos < helper_pos,
+        "interactive_requires_exact_acknowledgement": ACKNOWLEDGEMENT in impl_src and 0 <= ack_pos < helper_pos,
         "preflight_never_calls_elevated_helper": "elevated_close_supported_processes" not in preflight_src,
         "preflight_only_uses_readonly_settings_action": '"-BackendAction", "get_settings"' in policy_src,
         "policy_report_whitelists_only_required_booleans": "CodexLaunchAfterAuthSwitch" in policy_src and "RestartCodexOnSwitch" in policy_src and '"settings": settings' not in policy_src,
-        "interactive_discovers_supported_clients_before_uac": src.find("discover_supported_client_pids()", interactive_pos) < helper_pos,
-        "interactive_uses_random_one_shot_token": "secrets.token_urlsafe(24)" in src[interactive_pos:],
-        "interactive_replays_same_token_for_block_proof": src[interactive_pos:].count("operation_token=token") >= 2,
-        "cancel_is_distinguished": "UAC_CANCELLED" in src[interactive_pos:] and "PASS_CANCEL_AND_REPLAY_BLOCK" in src,
-        "successful_close_requires_real_uac_and_positive_close_count": "uac_prompt_executed and closed_pid_count > 0" in src[interactive_pos:] and "PASS_CLOSE_AND_REPLAY_BLOCK" in src,
-        "already_closed_is_not_successful_close": "ALREADY_CLOSED_BEFORE_UAC" in src and 'first_outcome = "SUPPORTED_CLIENTS_CLOSED" if first.get("ok")' not in src,
-        "output_is_optional": 'if not target:' in src and "return" in src[src.find("def _write_optional_report"):src.find("def synthetic_proof")],
-        "report_never_claims_production_certification": '"windows_runtime_certified": False' in src and '"canonical_seven_case_certification": False' in src,
-        "no_automatic_score_mutation": '"production_score_mutation_authorized": False' in src,
-        "no_generic_elevation_command": '"runas"' not in src and "ShellExecute" not in src,
+        "interactive_discovers_supported_clients_before_uac": interactive_src.find("discover_supported_client_pids()") < interactive_src.find("elevation.elevated_close_supported_processes"),
+        "interactive_uses_random_one_shot_token": "secrets.token_urlsafe(24)" in interactive_src,
+        "interactive_replays_same_token_for_block_proof": interactive_src.count("operation_token=token") >= 2,
+        "cancel_is_distinguished": "UAC_CANCELLED" in interactive_src and "PASS_CANCEL_AND_REPLAY_BLOCK" in interactive_src,
+        "successful_close_requires_real_uac_and_positive_close_count": "uac_prompt_executed and closed_pid_count > 0" in interactive_src and "PASS_CLOSE_AND_REPLAY_BLOCK" in interactive_src,
+        "already_closed_is_not_successful_close": "ALREADY_CLOSED_BEFORE_UAC" in interactive_src and 'first_outcome = "SUPPORTED_CLIENTS_CLOSED" if first.get("ok")' not in interactive_src,
+        "output_is_optional": 'if not target:' in writer_src and "return" in writer_src,
+        "report_never_claims_production_certification": '"windows_runtime_certified": False' in impl_src and '"canonical_seven_case_certification": False' in impl_src,
+        "no_automatic_score_mutation": '"production_score_mutation_authorized": False' in impl_src,
+        "no_generic_elevation_command": '"runas"' not in impl_src and "ShellExecute" not in impl_src,
     }
     tests = [{"name": name, "status": "PASS" if ok else "FAIL"} for name, ok in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
