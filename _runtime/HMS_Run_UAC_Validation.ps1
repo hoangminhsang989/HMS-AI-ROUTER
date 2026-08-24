@@ -7,7 +7,6 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $RuntimeDir = Split-Path -Parent $PSCommandPath
-$RepoRoot = Split-Path -Parent $RuntimeDir
 $BundleScript = Join-Path $RuntimeDir "HMS_Codex_WindowsUACValidationBundle.py"
 $ExpectedCancel = "PASS_CANCEL_AND_REPLAY_BLOCK"
 $ExpectedClose = "PASS_CLOSE_AND_REPLAY_BLOCK"
@@ -71,7 +70,7 @@ function Assert-CaseReport {
 }
 
 function Invoke-OperatorRunner {
-    if (-not $IsWindows) {
+    if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
         throw "WINDOWS_REQUIRED"
     }
     if (-not (Test-Path -LiteralPath $BundleScript -PathType Leaf)) {
@@ -153,10 +152,12 @@ function Invoke-OperatorRunner {
 }
 
 function Invoke-SourceProof {
+    $tokens = $null
+    $parseErrors = $null
     $ast = [System.Management.Automation.Language.Parser]::ParseFile(
         $PSCommandPath,
-        [ref]$null,
-        [ref]$null
+        [ref]$tokens,
+        [ref]$parseErrors
     )
     $commands = @(
         $ast.FindAll({ param($node) $node -is [System.Management.Automation.Language.CommandAst] }, $true) |
@@ -165,6 +166,7 @@ function Invoke-SourceProof {
     )
     $source = Get-Content -LiteralPath $PSCommandPath -Raw -Encoding UTF8
     $checks = [ordered]@{
+        parse_clean = @($parseErrors).Count -eq 0
         bundle_exists = Test-Path -LiteralPath $BundleScript -PathType Leaf
         calls_init = $source.Contains('"init", "--output"')
         calls_cancel = $source.Contains('"run-cancel"')
@@ -172,6 +174,7 @@ function Invoke-SourceProof {
         calls_verify = $source.Contains('"verify"')
         exact_cancel_ack = $source.Contains('-cne "CANCEL"')
         exact_close_ack = $source.Contains('-cne "CLOSE"')
+        windows_ps_compatible_os_gate = $source.Contains('[Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT')
         no_direct_process_launcher = $commands -notcontains "Start-Process"
         no_direct_taskkill = $commands -notcontains "taskkill"
         no_keyboard_automation = $commands -notcontains "SendKeys"
