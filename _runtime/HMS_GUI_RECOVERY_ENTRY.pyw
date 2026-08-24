@@ -210,20 +210,39 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
         return data
 
 
-def _official_switch_policy_snapshot(self) -> dict:
-    settings = getattr(self, "settings_data", None)
-    loaded = bool(getattr(self, "settings_loaded", False))
-    if not loaded or not isinstance(settings, dict):
-        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+def _policy_from_settings(settings: object, *, source: str) -> dict:
+    if not isinstance(settings, dict):
+        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False, "source": source}
     launch = settings.get("CodexLaunchAfterAuthSwitch")
     restart = settings.get("RestartCodexOnSwitch")
     if not isinstance(launch, bool) or not isinstance(restart, bool):
-        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False, "source": source}
     return {
         "known": True,
         "launch_after_auth_switch": launch,
         "restart_codex_on_switch": restart,
+        "source": source,
     }
+
+
+def _official_switch_policy_snapshot(self) -> dict:
+    settings = getattr(self, "settings_data", None)
+    loaded = bool(getattr(self, "settings_loaded", False))
+    if loaded:
+        local = _policy_from_settings(settings, source="GUI_SETTINGS_DATA")
+        if local.get("known") is True:
+            return local
+
+    # Settings page is lazy-loaded. Read the canonical backend settings before the switch if the GUI cache is absent.
+    try:
+        data = _ORIGINAL_BACKEND(self, "get_settings", 30, None)
+        if isinstance(data, dict) and data.get("ok"):
+            backend = _policy_from_settings(data.get("settings"), source="BACKEND_GET_SETTINGS")
+            if backend.get("known") is True:
+                return backend
+    except Exception:
+        pass
+    return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False, "source": "UNAVAILABLE"}
 
 
 def _derive_official_client_lifecycle(
@@ -262,6 +281,7 @@ def _derive_official_client_lifecycle(
         "schema_version": 1,
         "code": code,
         "policy_known": known,
+        "policy_source": str(policy.get("source") or "UNKNOWN"),
         "launch_after_auth_switch": launch,
         "restart_codex_on_switch": restart,
         "initial_pid_count": len(initial),
@@ -418,10 +438,10 @@ def extension_proof():
     unrelated_access = recovery_contract.build_recovery_plan(
         "Access denied (os error 5)", operation="BACKUP_EXPORT", supported_client=True,
     )
-    policy_on = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": True}
-    policy_disabled = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": False}
-    policy_not_requested = {"known": True, "launch_after_auth_switch": False, "restart_codex_on_switch": True}
-    policy_unknown = {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+    policy_on = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": True, "source": "TEST"}
+    policy_disabled = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": False, "source": "TEST"}
+    policy_not_requested = {"known": True, "launch_after_auth_switch": False, "restart_codex_on_switch": True, "source": "TEST"}
+    policy_unknown = {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False, "source": "TEST"}
     life_blocked = _derive_official_client_lifecycle([101, 102], [102, 201], policy_on, uac_consumed=False)
     life_restarted = _derive_official_client_lifecycle([101, 102], [201, 202], policy_on, uac_consumed=False)
     life_disabled = _derive_official_client_lifecycle([101], [101], policy_disabled, uac_consumed=False)
@@ -444,7 +464,8 @@ def extension_proof():
         "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
         "pre_mutation_close_barrier_is_uac_eligible": close_blocked["uac_eligible"] is True and _uac_allowed_for_backend_failure("enable", "CODEX_RESTART_REQUIRED: x"),
         "unrelated_access_denied_cannot_elevate": unrelated_access["uac_eligible"] is False and not _uac_allowed_for_backend_failure("backup_export", "Access denied os error 5"),
-        "official_lifecycle_uses_structured_settings": "settings_data" in impl_src and "CodexLaunchAfterAuthSwitch" in impl_src and "RestartCodexOnSwitch" in impl_src,
+        "official_lifecycle_uses_structured_settings": "CodexLaunchAfterAuthSwitch" in impl_src and "RestartCodexOnSwitch" in impl_src,
+        "official_policy_has_readonly_backend_fallback": '_ORIGINAL_BACKEND(self, "get_settings", 30, None)' in impl_src and "BACKEND_GET_SETTINGS" in impl_src,
         "official_lifecycle_does_not_parse_human_message": life_blocked["human_message_parsed"] is False and "restart_message" not in impl_src,
         "official_old_pid_survival_blocks": life_blocked["code"] == "CODEX_RESTART_REQUIRED" and life_blocked["remaining_original_pids"] == [102] and life_blocked["can_elevate"] is True,
         "official_new_pid_after_restart_is_ok": life_restarted["code"] == "OK" and life_restarted["close_lifecycle_complete"] is True,
