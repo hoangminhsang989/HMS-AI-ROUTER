@@ -1,7 +1,7 @@
 # HMS-AI-ROUTER — Project State v25.75
 
 Date: 2026-08-24
-Status: ACTIVE DEVELOPMENT — WINDOWS CI PROOF GRAPH PASS + REAL WINDOWS/CURRENT-CODEX EVIDENCE GATE
+Status: ACTIVE DEVELOPMENT — WINDOWS CI PROOF GRAPH PASS + SESSION-BOUND REAL-WINDOWS UAC GATE
 Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 
 ## Baseline
@@ -68,7 +68,9 @@ The source-side Windows recovery tranche aligned to Cockpit Tools v1.3.28 includ
 - preservation of successful auth semantics when a post-commit UAC attempt is cancelled or fails;
 - bounded real-Windows UAC recovery validation harness with separate `proof`, read-only `preflight` and explicit-acknowledgement `interactive` modes;
 - same-process token replay validation after both UAC Cancel and successful supported-client close;
-- guard against falsely counting a client that exited before UAC as a successful close validation.
+- guard against falsely counting a client that exited before UAC as a successful close validation;
+- session-bound UAC validation bundle that binds Cancel and Accept+Close reports to one 4-hour session, hashed Windows host reference and exact source bundle digest;
+- pair verifier requiring Cancel→Close order, same host/source/session, UAC observation, replay rejection and positive close effect while retaining all non-production boundaries.
 
 Detailed P1 checkpoints:
 
@@ -76,14 +78,14 @@ Detailed P1 checkpoints:
 - `docs/V25.75_P1_UAC_RECOVERY_CHECKPOINT.md`
 - `docs/V25.75_P1_OFFICIAL_AUTH_LIFECYCLE_CHECKPOINT.md`
 - `docs/V25.75_P1_UAC_RUNTIME_VALIDATION_HARNESS_CHECKPOINT.md`
+- `docs/V25.75_P1_UAC_VALIDATION_BUNDLE_CHECKPOINT.md`
 
 ## Observed Windows CI proof graph
 
-The proof-only Windows workflow is now observable through both `push` and `pull_request` triggers.
+The proof-only Windows workflow is observable through both `push` and `pull_request` triggers.
 
-Observed PASS authority:
+Initial complete walking-gate PASS:
 
-- Workflow: `v25.75 Windows Promotion Safety`
 - Run number: `63`
 - Run ID: `32689734884`
 - Job ID: `97321160108`
@@ -91,13 +93,22 @@ Observed PASS authority:
 - Final conclusion: `success`
 - Runner: Microsoft Windows Server 2025 build `10.0.26100`, image `windows-2025-vs2026` version `20260818.207.1`
 - Python: `3.12.10`
-- Every configured proof step through `Promotion-disabled safe fallback proof` passed on this single run.
 
 Detailed CI checkpoint:
 
 `docs/V25.75_WINDOWS_CI_OBSERVED_PASS_CHECKPOINT.md`
 
-The walking-gate run also exposed several stale/self-matching source-proof predicates and one CI argument mismatch. They were corrected without weakening runtime safety. In particular, guarded GUI publication now proves the nested-worker call binds `live_baseline_provider=provider.get_live_baseline` at `record_review_action`, while safe fallback checks are scoped to implementation source.
+Latest graph PASS after adding the session-bound validation bundle:
+
+- Workflow: `v25.75 Windows Promotion Safety`
+- Run number: `65`
+- Run ID: `32690030343`
+- Job ID: `97321936602`
+- Tested head commit: `45075ab7e0b211703c636ecbef596d98f30119ae`
+- Final conclusion: `success`
+- All 35 configured proof steps, including `Session-bound UAC validation bundle proof`, completed successfully on the same Windows run.
+
+The walking-gate process exposed stale/self-matching source-proof predicates and one CI argument mismatch. They were corrected without weakening runtime safety. Guarded GUI publication proves the nested-worker call binds `live_baseline_provider=provider.get_live_baseline` at `record_review_action`; safe fallback and forbidden-operation proofs are scoped to their implementation regions.
 
 ### Meaning of the CI PASS
 
@@ -115,16 +126,15 @@ It does **not** mean:
 
 ## Remaining P1 operational gate
 
-What remains is **execution on an authorized real Windows target**:
+Source-side preparation is complete for the bounded UAC recovery validation. What remains is **execution on an authorized real Windows target** using the session-bound bundle:
 
-- run the UAC validation harness read-only `preflight`;
-- observe a real UAC Cancel and same-token replay block;
-- observe one real supported-client close and same-token replay block;
-- verify restart-disabled/not-requested policies never offer UAC;
-- verify unrelated processes remain non-elevatable;
-- verify official-auth post-commit UAC failure preserves the fact that auth already committed.
+1. `init` — read-only preflight + 4-hour session creation while a supported Codex/ChatGPT client is running.
+2. `run-cancel` — cancel the real UAC prompt; required verdict `PASS_CANCEL_AND_REPLAY_BLOCK`.
+3. `run-close` — accept the real UAC prompt; required verdict `PASS_CLOSE_AND_REPLAY_BLOCK` with positive closed PID count.
+4. `verify` — required final verdict `PASS_BOUNDED_UAC_RECOVERY_PAIR` for same host/source/session and valid time order.
+5. Separately verify restart-disabled/not-requested policies and unrelated processes remain non-elevatable, and verify official-auth post-commit UAC failure preserves the fact that auth already committed.
 
-These bounded recovery checks remain separate from the canonical seven-case production certification.
+These bounded recovery checks remain separate from the canonical seven-case production certification and their reports must stay outside production evidence storage.
 
 ## Reviewer authority operational rules
 
@@ -141,7 +151,8 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 - The one-shot elevation source proof validates the Codex/ChatGPT allowlist, generic-process rejection, fixed system taskkill resolution, numeric PID-only argument construction, token replay block, UAC cancel/timeout codes and absence of generic shell elevation.
 - The GUI recovery proof validates structured official-auth policy authority, backend read-only settings fallback, original-PID survival detection, new-PID success detection, restart-disabled/not-requested fail-closed behavior and preservation of committed-auth semantics after UAC failure.
 - The runtime validation harness proof validates that preflight cannot call the elevated helper, interactive mode requires the exact acknowledgement before the helper call, same-token replay is checked, and a successful close requires a real UAC start plus a positive closed-PID count.
-- GitHub Actions executes only the harness `proof`; CI never runs its `preflight` or `interactive` modes.
+- The session bundle proof validates same-session/host/source binding, case order, replay/effect requirements, short expiry and preserved non-production boundaries.
+- GitHub Actions executes only proof commands; CI never runs bundle `init`, `run-cancel`, `run-close` or target `verify` against a real client.
 - No recovery/UAC proof or GitHub-hosted Windows CI proof authorizes Windows production certification, external target-evidence import or production-score mutation.
 
 ## Change policy
@@ -156,9 +167,8 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 
 ## Immediate next action
 
-1. On the authorized Windows target, execute `HMS_Codex_WindowsUACRecoveryValidation.py preflight` in read-only mode.
-2. Execute the two bounded interactive UAC validation outcomes: Cancel + replay block, then accepted supported-client close + replay block.
-3. Verify restart-disabled/not-requested behavior and unrelated-process rejection on the target, keeping these recovery reports separate from production evidence.
-4. Execute the actual authorized Windows/current-Codex canonical seven-case target evidence only after the bounded recovery gate is understood.
-5. Import the resulting certificate-signed packet through sealed reviewer authority and complete dual human review plus live baseline reconciliation.
-6. Only then evaluate any human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
+1. On the authorized Windows target, execute the session-bound workflow in `docs/V25.75_P1_UAC_VALIDATION_BUNDLE_CHECKPOINT.md` and obtain `PASS_BOUNDED_UAC_RECOVERY_PAIR`.
+2. Verify restart-disabled/not-requested behavior, unrelated-process rejection and official-auth post-commit semantics on that target while keeping recovery reports outside production evidence.
+3. Execute the actual authorized Windows/current-Codex canonical seven-case target evidence only after the bounded recovery gate passes.
+4. Import the resulting certificate-signed production packet through sealed reviewer authority and complete dual human review plus live baseline reconciliation.
+5. Only then evaluate any human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
