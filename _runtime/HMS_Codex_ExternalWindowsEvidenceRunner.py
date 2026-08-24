@@ -9,6 +9,7 @@ import HMS_Codex_AttestationTrustStore as trust_store
 import HMS_Codex_WindowsAttestationSigner as attestation_signer
 import HMS_Codex_ExternalWindowsCertificateSigner as external_certificate_signer
 import HMS_Codex_ExternalWindowsCertificatePreflight as certificate_preflight
+import HMS_Codex_ExternalWindowsCaseReportExporter as case_exporter
 from HMS_Codex_ExternalWindowsSignerTrustContract import signing_payload, validate_trust_snapshot
 from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS, validate_case_ids
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, SOURCE_CLASSIFICATION, verify_packet
@@ -28,6 +29,8 @@ REASON_VI = {
     "CODEX_VERSION_FAILED": "Codex CLI có tồn tại nhưng lệnh --version không chạy thành công.",
     "PACKAGE_ZIP_MISSING": "Thiếu file ZIP gói phát hành cần đối chiếu SHA-256.",
     "RELEASE_MANIFEST_MISSING": "Thiếu release manifest cần đối chiếu SHA-256.",
+    "SOURCE_CERTIFICATION_REPORT_MISSING": "Thiếu target-machine certification report gốc dùng để bind provenance.",
+    "SOURCE_CERTIFICATION_REPORT_INVALID": "Target-machine certification report gốc không đạt exact 7/7 production contract.",
     "EXACT_SEVEN_CASE_REPORTS_REQUIRED": "Phải cung cấp đúng 7 báo cáo: host, codex, quota, failover, lan, soak_6h, soak_24h.",
     "CASE_REPORT_FILES_MISSING": "Có báo cáo case được khai báo nhưng file không tồn tại.",
     "TRUST_STORE_MISSING": "Thiếu trust store certificate của HMS-AI-ROUTER.",
@@ -98,6 +101,17 @@ def _normalize_thumbprint(value: str) -> str:
     return re.sub(r"[^0-9A-Fa-f]", "", str(value or "")).upper()
 
 
+def _validate_source_path(value: str):
+    source = Path(value) if value else None
+    if not source or not source.is_file():
+        return None, {}, "SOURCE_CERTIFICATION_REPORT_MISSING"
+    try:
+        validated = case_exporter.validate_source_report(source)
+        return source, validated, ""
+    except Exception as exc:
+        return source, {}, "SOURCE_CERTIFICATION_REPORT_INVALID:" + str(exc)
+
+
 def preflight(args):
     reasons = []; is_windows = platform.system().lower() == "windows"
     if not is_windows:
@@ -111,6 +125,11 @@ def preflight(args):
         reasons.append("PACKAGE_ZIP_MISSING")
     if not manifest or not manifest.is_file():
         reasons.append("RELEASE_MANIFEST_MISSING")
+
+    source_path, source_validation, source_error = _validate_source_path(args.source_certification_report)
+    if source_error:
+        reasons.append(source_error)
+
     try:
         specs = _parse_case_specs(args.case_report)
     except ValueError as exc:
@@ -168,6 +187,9 @@ def preflight(args):
         "windows": is_windows, "codex": codex,
         "required_case_ids": list(REQUIRED_RUNTIME_CASE_IDS), "case_matrix": matrix,
         "missing_case_files": missing_files,
+        "source_certification_report_present": source_path is not None,
+        "source_certification_report_sha256": source_validation.get("source_report_sha256", ""),
+        "source_capture_utc": source_validation.get("source_capture_utc", ""),
         "trust_snapshot_sha256": trust_snapshot.get("trust_snapshot_sha256", ""),
         "trusted_active_certificate_count": len(active_certificates),
         "selected_certificate_sha256": cert_check.get("certificate_sha256", ""),
@@ -218,6 +240,15 @@ def build_packet(args):
     pf = preflight(args)
     if not pf["ready"]:
         raise ValueError("preflight failed: " + ",".join(pf["reasons"]))
+
+    source_path, source_validation, source_error = _validate_source_path(args.source_certification_report)
+    if source_error or source_path is None:
+        raise ValueError(source_error or "SOURCE_CERTIFICATION_REPORT_MISSING")
+    source_report_sha256 = str(source_validation.get("source_report_sha256") or "").lower()
+    source_capture_utc = str(source_validation.get("source_capture_utc") or "")
+    if source_report_sha256 != str(pf.get("source_certification_report_sha256") or "").lower() or source_capture_utc != str(pf.get("source_capture_utc") or ""):
+        raise RuntimeError("SOURCE_CERTIFICATION_REPORT_CHANGED_AFTER_PREFLIGHT")
+
     specs = _parse_case_specs(args.case_report); case_results = []; bad = []
     for cid in REQUIRED_RUNTIME_CASE_IDS:
         row = _validate_case_report(cid, specs[cid]); case_results.append(row)
@@ -228,11 +259,10 @@ def build_packet(args):
 
     capture_values = {x["capture_utc"] for x in case_results}
     source_values = {x["source_report_sha256"] for x in case_results}
-    if len(capture_values) != 1:
+    if capture_values != {source_capture_utc}:
         raise ValueError("CASE_CAPTURE_UTC_MISMATCH")
-    if len(source_values) != 1:
+    if source_values != {source_report_sha256}:
         raise ValueError("CASE_SOURCE_REPORT_SHA256_MISMATCH")
-    source_capture_utc = next(iter(capture_values)); source_report_sha256 = next(iter(source_values))
 
     store = trust_store.load_store(Path(args.trust_store)); snapshot = trust_store.trust_snapshot(store)
     if snapshot.get("trust_snapshot_sha256") != pf.get("trust_snapshot_sha256"):
@@ -289,6 +319,7 @@ def main():
     ap = argparse.ArgumentParser(description="HMS v25.75 real Windows/current-Codex evidence packet runner")
     ap.add_argument("--preflight", action="store_true")
     ap.add_argument("--package-zip", default=""); ap.add_argument("--release-manifest", default="")
+    ap.add_argument("--source-certification-report", default="", help="Original exact 7/7 TARGET_MACHINE_CERTIFICATION JSON used by the case exporter")
     ap.add_argument("--case-report", action="append", default=[], help="CASE_ID=PATH; repeat exactly seven times")
     ap.add_argument("--trust-store", default=""); ap.add_argument("--certificate-thumbprint", default="")
     ap.add_argument("--certificate-sign-script", default=str(DEFAULT_SIGN_SCRIPT))
