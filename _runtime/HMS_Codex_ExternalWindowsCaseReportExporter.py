@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import argparse, hashlib, json
+import argparse, hashlib, json, tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -88,14 +88,21 @@ def synthetic_proof()->dict:
         if int(summary.get("stages_total") or 0)!=len(REQUIRED_RUNTIME_CASE_IDS): reasons.append("SOURCE_STAGE_TOTAL_NOT_7")
         if summary.get("production_certified") is not True: reasons.append("SOURCE_PRODUCTION_CERTIFIED_FLAG_NOT_TRUE")
         return reasons
+    with tempfile.TemporaryDirectory(prefix="hms-v2575-source-bind-") as temp:
+        path=Path(temp)/"source.json"; raw=json.dumps(good,ensure_ascii=False,sort_keys=True).encode("utf-8"); path.write_bytes(raw)
+        validated=validate_source_report(path)
+        source_digest_ok=validated["source_report_sha256"]==_sha(raw)
+        capture_ok=validated["source_capture_utc"]==_utc(good["generated_utc"])
+        authority_ok=validated["windows_runtime_certified"] is False and validated["production_score_promotion_eligible"] is False
     checks={"exact_stage_contract":validate_case_ids(stages.keys())["valid"],
             "partial_not_eligible":"SOURCE_NOT_FULLY_CERTIFIED" in source_reasons(partial),
             "canonical_ids_exact":tuple(stages.keys())==tuple(REQUIRED_RUNTIME_CASE_IDS),
             "contradictory_stage_total_rejected":"SOURCE_STAGE_TOTAL_NOT_7" in source_reasons(bad_total),
             "contradictory_production_flag_rejected":"SOURCE_PRODUCTION_CERTIFIED_FLAG_NOT_TRUE" in source_reasons(bad_flag),
             "invalid_source_capture_rejected":"SOURCE_GENERATED_UTC_INVALID" in source_reasons(bad_time),
-            "source_capture_is_not_refreshed":_utc(good["generated_utc"])==_utc(good["generated_utc"]),
-            "validator_exposes_digest_not_authority":'source_report_sha256' in validate_source_report.__annotations__.get('return',{}).__class__.__name__.lower() if False else True,
+            "source_validator_hashes_exact_bytes":source_digest_ok,
+            "source_validator_preserves_capture":capture_ok,
+            "source_validator_grants_no_authority":authority_ok,
             "no_auto_authority":True}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(t["status"]=="PASS" for t in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"EXTERNAL_WINDOWS_CASE_REPORT_EXPORTER_PROOF",
