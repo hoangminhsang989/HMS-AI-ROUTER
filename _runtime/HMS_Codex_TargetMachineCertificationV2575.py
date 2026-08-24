@@ -32,8 +32,10 @@ def _sha_file(path:Path)->str:
     return h.hexdigest()
 
 def _safe_rel(value:Any)->str:
-    text=str(value or "").replace("\\","/").lstrip("/"); p=PurePosixPath(text)
-    if not text or p.is_absolute() or any(part in {"",".",".."} for part in p.parts):return ""
+    raw=str(value or "").replace("\\","/")
+    if not raw or "\x00" in raw or raw.startswith("/") or ":" in raw:return ""
+    p=PurePosixPath(raw)
+    if p.is_absolute() or any(part in {"",".",".."} or part.endswith(".") or part.endswith(" ") for part in p.parts):return ""
     return p.as_posix()
 
 def _manifest_index(manifest:dict[str,Any])->tuple[dict[str,dict[str,Any]],list[str]]:
@@ -41,7 +43,7 @@ def _manifest_index(manifest:dict[str,Any])->tuple[dict[str,dict[str,Any]],list[
     if manifest.get("version")!=VERSION:reasons.append("ARTIFACT_MANIFEST_VERSION_MISMATCH")
     if str(manifest.get("product") or "")!=PRODUCT:reasons.append("ARTIFACT_MANIFEST_PRODUCT_MISMATCH")
     if int(manifest.get("file_count") or 0)!=len(rows) or not rows:reasons.append("ARTIFACT_MANIFEST_FILE_COUNT_INVALID")
-    index={}
+    index={}; windows_keys=set()
     for row in rows:
         if not isinstance(row,dict):reasons.append("ARTIFACT_MANIFEST_ROW_INVALID");continue
         path=_safe_rel(row.get("path")); digest=str(row.get("sha256") or "").lower()
@@ -49,28 +51,27 @@ def _manifest_index(manifest:dict[str,Any])->tuple[dict[str,dict[str,Any]],list[
         except (TypeError,ValueError):size=-1
         if not path or len(digest)!=64 or any(c not in "0123456789abcdef" for c in digest) or size<0:
             reasons.append("ARTIFACT_MANIFEST_ROW_INVALID");continue
-        if path in index:reasons.append("ARTIFACT_MANIFEST_DUPLICATE_PATH:"+path);continue
-        index[path]={"path":path,"sha256":digest,"size":size}
+        win_key=path.casefold()
+        if path in index or win_key in windows_keys:reasons.append("ARTIFACT_MANIFEST_DUPLICATE_WINDOWS_PATH:"+path);continue
+        windows_keys.add(win_key); index[path]={"path":path,"sha256":digest,"size":size}
     return index,sorted(set(reasons))
 
 def _normalize_zip_members(zf:zipfile.ZipFile,manifest_paths:set[str])->tuple[dict[str,zipfile.ZipInfo],list[str]]:
-    reasons=[]; files=[info for info in zf.infolist() if not info.is_dir()]
-    raw_names=[_safe_rel(info.filename) for info in files]
+    reasons=[]; files=[info for info in zf.infolist() if not info.is_dir()]; raw_names=[_safe_rel(info.filename) for info in files]
     if any(not name for name in raw_names):reasons.append("ARTIFACT_ZIP_UNSAFE_PATH")
     candidates=[]
-    for prefix_parts in range(0,5):
-        mapped={}; ok=True
+    for prefix_parts in (0,1):
+        mapped={}; win_keys=set(); ok=True
         for info,name in zip(files,raw_names):
             if not name:ok=False;break
             parts=PurePosixPath(name).parts
             if len(parts)<=prefix_parts:ok=False;break
-            rel=PurePosixPath(*parts[prefix_parts:]).as_posix()
-            if rel in mapped:ok=False;break
-            mapped[rel]=info
+            rel=PurePosixPath(*parts[prefix_parts:]).as_posix(); win_key=rel.casefold()
+            if rel in mapped or win_key in win_keys:ok=False;break
+            mapped[rel]=info; win_keys.add(win_key)
         if ok and set(mapped)==manifest_paths:candidates.append(mapped)
     if len(candidates)!=1:
-        reasons.append("ARTIFACT_ZIP_FILESET_NOT_EXACT_MANIFEST")
-        return {},sorted(set(reasons))
+        reasons.append("ARTIFACT_ZIP_FILESET_NOT_EXACT_MANIFEST"); return {},sorted(set(reasons))
     return candidates[0],sorted(set(reasons))
 
 def validate_artifact_binding(runtime_root:Path,release_manifest:Path,package_zip:Path)->dict[str,Any]:
@@ -86,7 +87,6 @@ def validate_artifact_binding(runtime_root:Path,release_manifest:Path,package_zi
     index,manifest_reasons=_manifest_index(manifest); reasons.extend(manifest_reasons); manifest_paths=set(index)
     for critical in CRITICAL_ARTIFACT_PATHS:
         if critical not in index:reasons.append("ARTIFACT_MANIFEST_CRITICAL_PATH_MISSING:"+critical)
-
     local_verified=[]
     for rel,row in index.items():
         local=artifact_root/Path(rel)
@@ -96,7 +96,6 @@ def validate_artifact_binding(runtime_root:Path,release_manifest:Path,package_zi
         if local.stat().st_size!=row["size"]:reasons.append("ARTIFACT_RUNTIME_SIZE_MISMATCH:"+rel)
         if _sha_file(local)!=row["sha256"]:reasons.append("ARTIFACT_RUNTIME_SHA256_MISMATCH:"+rel)
         else:local_verified.append(rel)
-
     zip_verified=[]; zip_members={}
     if package_zip.is_file():
         try:
@@ -128,7 +127,7 @@ def run(args:argparse.Namespace)->dict[str,Any]:
             "production_certification":SOURCE_CERTIFICATION if production_pass else "NOT_CLAIMED","summary":{"stages_pass":sum(1 for cid in engine.SAFE_STAGES if isinstance(stages.get(cid),dict) and stages[cid].get("pass") is True),"stages_total":len(engine.SAFE_STAGES),"production_certified":production_pass,"artifact_binding_pass":binding.get("pass") is True},
             "stages":stages,"artifact_binding":binding,"certification_engine":{"module":"HMS_Codex_TargetMachineCertification.py","engine_version":ENGINE_VERSION,"wrapper_version":VERSION,"legacy_engine_verdict":str(base.get("verdict") or "")},
             "blockers":sorted(set(str(x) for x in blockers if str(x))),"safety":dict(base.get("safety") or {}),
-            "claim_boundary":"v25.75 production PASS requires the seven real target-machine stages plus exact release identity: every manifest file must match the target filesystem and the ZIP by path, size and SHA-256; the ZIP file set must equal the manifest file set; package/manifest digests are then bound into downstream evidence. No v25.53 report is relabeled as v25.75."}
+            "claim_boundary":"v25.75 production PASS requires the seven real target-machine stages plus exact release identity: every manifest file must match the target filesystem and ZIP by Windows-safe relative path, size and SHA-256; ZIP file-set must equal manifest file-set with at most one enclosing package-root prefix; package/manifest digests are bound downstream. No v25.53 report is relabeled as v25.75."}
 
 def synthetic_proof()->dict[str,Any]:
     tests=[]
@@ -154,7 +153,12 @@ def synthetic_proof()->dict[str,Any]:
             for rel in CRITICAL_ARTIFACT_PATHS:zf.write(ARTIFACT_ROOT/rel,arcname="HMS-AI-ROUTER/"+rel)
             zf.writestr("HMS-AI-ROUTER/extra-unmanifested.txt",b"extra")
         extrar=validate_artifact_binding(RUNTIME_DIR,mp,extra); add("unmanifested_extra_zip_file_rejected","ARTIFACT_ZIP_FILESET_NOT_EXACT_MANIFEST" in extrar["reasons"])
-        unsafe=dict(manifest); unsafe["files"]=list(manifest["files"])+[{"path":"../escape.txt","size":1,"sha256":"a"*64}]; unsafe["file_count"]=len(unsafe["files"]); up=temp/"unsafe.json"; up.write_text(json.dumps(unsafe),"utf-8"); ur=validate_artifact_binding(RUNTIME_DIR,up,package); add("manifest_path_escape_rejected","ARTIFACT_MANIFEST_ROW_INVALID" in ur["reasons"])
+        def unsafe_manifest(path_value):
+            u=dict(manifest); u["files"]=list(manifest["files"])+[{"path":path_value,"size":1,"sha256":"a"*64}]; u["file_count"]=len(u["files"]); p=temp/(hashlib.sha256(path_value.encode()).hexdigest()[:8]+".json"); p.write_text(json.dumps(u),"utf-8"); return validate_artifact_binding(RUNTIME_DIR,p,package)
+        add("manifest_parent_escape_rejected","ARTIFACT_MANIFEST_ROW_INVALID" in unsafe_manifest("../escape.txt")["reasons"])
+        add("manifest_absolute_path_rejected","ARTIFACT_MANIFEST_ROW_INVALID" in unsafe_manifest("/absolute.txt")["reasons"])
+        add("manifest_drive_or_ads_path_rejected","ARTIFACT_MANIFEST_ROW_INVALID" in unsafe_manifest("C:/escape.txt")["reasons"] and "ARTIFACT_MANIFEST_ROW_INVALID" in unsafe_manifest("file.txt:ads")["reasons"])
+        collision=dict(manifest); first=dict(collision["files"][0]); first["path"]=str(first["path"]).swapcase(); collision["files"]=list(collision["files"])+[first]; collision["file_count"]=len(collision["files"]); cp=temp/"case-collision.json"; cp.write_text(json.dumps(collision),"utf-8"); cr=validate_artifact_binding(RUNTIME_DIR,cp,package); add("manifest_case_insensitive_collision_rejected",any(x.startswith("ARTIFACT_MANIFEST_DUPLICATE_WINDOWS_PATH:") for x in cr["reasons"]))
         add("proof_grants_no_production_authority",True)
     failed=[x for x in tests if x["status"]!="PASS"]; return {"product":PRODUCT,"version":VERSION,"suite":"TARGET_MACHINE_CERTIFICATION_V2575_ARTIFACT_BINDING_PROOF","verdict":"PASS" if not failed else "FAIL","summary":{"pass":len(tests)-len(failed),"fail":len(failed),"total":len(tests)},"tests":tests,"synthetic_fixture_only":True,"real_target_certification_executed":False,"windows_runtime_certified":False,"production_score_promotion_eligible":False}
 
