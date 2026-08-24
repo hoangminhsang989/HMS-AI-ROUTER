@@ -13,6 +13,7 @@ SCHEMA_VERSION = 1
 RECOVERY_ACCESS_DENIED = "ACCESS_DENIED"
 RECOVERY_FILE_IN_USE = "FILE_IN_USE"
 RECOVERY_PROGRAM_MISSING = "PROGRAM_MISSING"
+RECOVERY_CLIENT_CLOSE_BLOCKED = "CLIENT_CLOSE_BLOCKED"
 RECOVERY_OTHER = "OTHER"
 
 ACTION_RETRY = "RETRY"
@@ -28,6 +29,8 @@ ELEVATION_OPERATION_ALLOWLIST = frozenset({
     "CODEX_CLIENT_STOP",
     "CODEX_CLIENT_RESTART",
     "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
+    "ENABLE",
+    "DISABLE",
 })
 
 _ACCESS_PATTERNS = (
@@ -74,6 +77,8 @@ def sanitize_detail(value: Any, *, limit: int = 4000) -> str:
 
 def classify_error(detail: Any) -> str:
     normalized = str(detail or "").strip().lower()
+    if normalized.startswith("codex_restart_required:"):
+        return RECOVERY_CLIENT_CLOSE_BLOCKED
     if any(token in normalized for token in _ACCESS_PATTERNS):
         return RECOVERY_ACCESS_DENIED
     if any(token in normalized for token in _FILE_IN_USE_PATTERNS):
@@ -93,12 +98,17 @@ def build_recovery_plan(
 ) -> dict[str, Any]:
     operation = str(operation or "UNKNOWN").strip().upper()
     category = classify_error(detail)
-    recoverable = category in {RECOVERY_ACCESS_DENIED, RECOVERY_FILE_IN_USE, RECOVERY_PROGRAM_MISSING}
+    recoverable = category in {
+        RECOVERY_ACCESS_DENIED,
+        RECOVERY_FILE_IN_USE,
+        RECOVERY_PROGRAM_MISSING,
+        RECOVERY_CLIENT_CLOSE_BLOCKED,
+    }
     sanitized = sanitize_detail(detail)
 
     uac_eligible = bool(
         recoverable
-        and category == RECOVERY_ACCESS_DENIED
+        and category in {RECOVERY_ACCESS_DENIED, RECOVERY_CLIENT_CLOSE_BLOCKED}
         and supported_client
         and operation in ELEVATION_OPERATION_ALLOWLIST
     )
@@ -168,6 +178,10 @@ def synthetic_proof() -> dict[str, Any]:
         "Access is denied. (os error 5)", operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
         target_path=r"C:\Users\alice\AppData\Local\Codex\Codex.exe", supported_client=True,
     )
+    close_blocked = build_recovery_plan(
+        "CODEX_RESTART_REQUIRED: ChatGPT/Codex vẫn còn process đang chạy.",
+        operation="ENABLE", supported_client=True,
+    )
     start_denied = build_recovery_plan(
         "Access is denied. (os error 5)", operation="CODEX_CLIENT_START",
         target_path=r"C:\Users\alice\AppData\Local\Codex\Codex.exe", supported_client=True,
@@ -188,23 +202,24 @@ def synthetic_proof() -> dict[str, Any]:
     sanitized = sanitize_detail(
         r"C:\Users\alice\x authORIZATION=abc123 access_token=tok123 user@example.com sk-supersecret123456"
     )
-    first_uac = evaluate_uac_once(access, operation_token="op-1", already_consumed=False)
-    second_uac = evaluate_uac_once(access, operation_token="op-1", already_consumed=True)
+    first_uac = evaluate_uac_once(close_blocked, operation_token="op-1", already_consumed=False)
+    second_uac = evaluate_uac_once(close_blocked, operation_token="op-1", already_consumed=True)
     denied_nonclient = build_recovery_plan(
         "Access denied os error 5", operation="BACKUP_EXPORT", supported_client=False,
     )
 
     checks = {
         "access_denied_classified": access["category"] == RECOVERY_ACCESS_DENIED,
+        "client_close_blocked_classified": close_blocked["category"] == RECOVERY_CLIENT_CLOSE_BLOCKED,
         "file_in_use_classified": file_busy["category"] == RECOVERY_FILE_IN_USE,
         "program_missing_classified": missing["category"] == RECOVERY_PROGRAM_MISSING,
         "generic_error_not_recoverable": generic["recoverable"] is False,
-        "interactive_recovery_actions_present": all(x in access["actions"] for x in (ACTION_RETRY, ACTION_MANUAL_RETRY, ACTION_OPEN_LOCATION, ACTION_COPY_ERROR)),
+        "interactive_recovery_actions_present": all(x in close_blocked["actions"] for x in (ACTION_RETRY, ACTION_MANUAL_RETRY, ACTION_COPY_ERROR)),
         "background_probe_is_quiet": quiet["surface_mode"] == "QUIET_BACKGROUND" and quiet["actions"] == [],
         "sensitive_detail_redacted": "abc123" not in sanitized and "tok123" not in sanitized and "supersecret" not in sanitized and "alice" not in sanitized and "u***@example.com" in sanitized,
-        "uac_only_for_supported_allowlisted_client": access["uac_eligible"] is True and denied_nonclient["uac_eligible"] is False,
+        "uac_only_for_supported_allowlisted_client": close_blocked["uac_eligible"] is True and denied_nonclient["uac_eligible"] is False,
         "uac_start_is_forbidden": start_denied["uac_eligible"] is False and ACTION_REQUEST_UAC_ONCE not in start_denied["actions"],
-        "uac_never_automatic": access["uac_automatic"] is False and first_uac["auto_launch"] is False,
+        "uac_never_automatic": close_blocked["uac_automatic"] is False and first_uac["auto_launch"] is False,
         "uac_one_shot_gate_first_allowed": first_uac["allowed"] is True and first_uac["consume_token_if_launched"] is True,
         "uac_one_shot_gate_replay_blocked": second_uac["allowed"] is False and "UAC_OPERATION_TOKEN_ALREADY_CONSUMED" in second_uac["reasons"],
         "missing_program_does_not_offer_uac": ACTION_REQUEST_UAC_ONCE not in missing["actions"],
