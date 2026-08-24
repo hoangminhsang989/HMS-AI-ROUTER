@@ -17,6 +17,8 @@ on:
       - '_runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py'
       - '_runtime/HMS_Codex_ReviewerPacketImport.py'
       - '_runtime/HMS_Codex_WindowsEvidenceOrchestrator.py'
+      - '_runtime/HMS_Codex_WindowsRecoveryContract.py'
+      - '_runtime/HMS_Codex_WindowsRecoveryDialog.py'
       - '_runtime/HMS_Sign_Digest_With_Certificate.ps1'
       - '_runtime/HMS_Inspect_Evidence_Certificate.ps1'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
@@ -29,6 +31,7 @@ on:
       - '_runtime/HMS_Codex_WindowsPromotionE2EFixtures.py'
       - '_runtime/HMS_GUI_ENTRY.pyw'
       - '_runtime/HMS_GUI_REVIEW_ENTRY.pyw'
+      - '_runtime/HMS_GUI_RECOVERY_ENTRY.pyw'
       - '_runtime/HMS_GUI_SAFE_FALLBACK.pyw'
       - 'HMS_AI_ROUTER.vbs'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
@@ -77,6 +80,8 @@ jobs:
             _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py `
             _runtime/HMS_Codex_ReviewerPacketImport.py `
             _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py `
+            _runtime/HMS_Codex_WindowsRecoveryContract.py `
+            _runtime/HMS_Codex_WindowsRecoveryDialog.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
@@ -87,6 +92,7 @@ jobs:
             _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw `
             _runtime/HMS_GUI_REVIEW_ENTRY.pyw `
+            _runtime/HMS_GUI_RECOVERY_ENTRY.pyw `
             _runtime/HMS_GUI_SAFE_FALLBACK.pyw
       - name: Canonical seven-case contract proof
         shell: pwsh
@@ -112,6 +118,15 @@ jobs:
       - name: Bounded Windows evidence orchestrator proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py proof
+      - name: Windows recovery contract proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsRecoveryContract.py
+      - name: Windows recovery dialog source proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsRecoveryDialog.py
+      - name: Recovery-first GUI wrapper proof
+        shell: pwsh
+        run: python _runtime/HMS_GUI_RECOVERY_ENTRY.pyw --proof
       - name: External signer trust cryptographic contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py
