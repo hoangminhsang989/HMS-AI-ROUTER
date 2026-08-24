@@ -431,8 +431,9 @@ def adversarial_proof() -> dict[str, Any]:
             group="source-boundary",
         ),
         _case(
-            "simulator_has_no_production_score_writer",
-            "production_score" not in implementation.lower(),
+            "simulator_has_no_production_authority",
+            '"production_score_mutation_authorized": True' not in implementation
+            and '"windows_runtime_certified": True' not in implementation,
             group="source-boundary",
         ),
     ]
