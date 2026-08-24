@@ -130,6 +130,17 @@ def _filetime_u64(value: wintypes.FILETIME) -> int:
     return (int(value.dwHighDateTime) << 32) | int(value.dwLowDateTime)
 
 
+def _session_id_for_pid_windows(pid: int) -> int:
+    _windows_required()
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.ProcessIdToSessionId.argtypes = [wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
+    kernel32.ProcessIdToSessionId.restype = wintypes.BOOL
+    session_id = wintypes.DWORD(0)
+    if not kernel32.ProcessIdToSessionId(int(pid), ctypes.byref(session_id)):
+        raise OSError(ctypes.get_last_error(), f"WINDOWS_PROCESS_SESSION_UNAVAILABLE: pid={pid}")
+    return int(session_id.value)
+
+
 def _identity_from_handle_windows(pid: int, handle) -> dict[str, Any]:
     _windows_required()
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
@@ -146,9 +157,10 @@ def _identity_from_handle_windows(pid: int, handle) -> dict[str, Any]:
     image = str(buffer.value or "")
     name = image.replace("/", "\\").rsplit("\\", 1)[-1].strip().lower()
     creation = _filetime_u64(created)
-    if not name or creation <= 0:
+    session_id = _session_id_for_pid_windows(int(pid))
+    if not name or creation <= 0 or session_id < 0:
         raise RuntimeError("WINDOWS_PROCESS_IDENTITY_INVALID")
-    return {"pid": int(pid), "name": name, "creation_time_100ns": creation}
+    return {"pid": int(pid), "name": name, "creation_time_100ns": creation, "session_id": session_id}
 
 
 def _close_handle_windows(handle) -> None:
@@ -186,11 +198,16 @@ def _normalize_expected_identities(expected: Mapping[int, Mapping[str, Any]] | N
     for raw_pid, row in expected.items():
         if not isinstance(row, Mapping):
             raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_INVALID")
-        pid = int(raw_pid); row_pid = int(row.get("pid") or 0)
-        name = str(row.get("name") or "").strip().lower(); creation = int(row.get("creation_time_100ns") or 0)
-        if pid <= 0 or pid != row_pid or name not in SUPPORTED_CLIENT_NAMES or creation <= 0:
+        try:
+            pid = int(raw_pid); row_pid = int(row.get("pid") or 0)
+            name = str(row.get("name") or "").strip().lower()
+            creation = int(row.get("creation_time_100ns") or 0)
+            session_id = int(row["session_id"])
+        except Exception as exc:
+            raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_INVALID") from exc
+        if pid <= 0 or pid != row_pid or name not in SUPPORTED_CLIENT_NAMES or creation <= 0 or session_id < 0:
             raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_INVALID")
-        out[pid] = {"pid": pid, "name": name, "creation_time_100ns": creation}
+        out[pid] = {"pid": pid, "name": name, "creation_time_100ns": creation, "session_id": session_id}
     return out
 
 
@@ -200,6 +217,7 @@ def _identity_matches(expected: Mapping[str, Any], observed: Mapping[str, Any]) 
             int(expected.get("pid") or 0) == int(observed.get("pid") or 0)
             and str(expected.get("name") or "").strip().lower() == str(observed.get("name") or "").strip().lower()
             and int(expected.get("creation_time_100ns") or 0) == int(observed.get("creation_time_100ns") or 0)
+            and int(expected["session_id"]) == int(observed["session_id"])
         )
     except Exception:
         return False
@@ -207,6 +225,7 @@ def _identity_matches(expected: Mapping[str, Any], observed: Mapping[str, Any]) 
 
 def discover_supported_client_identities() -> dict[int, dict[str, Any]]:
     process_map = _enumerate_process_map_windows()
+    current_session = _session_id_for_pid_windows(os.getpid())
     candidate_pids = sorted(pid for pid, name in process_map.items() if pid > 0 and pid != os.getpid() and str(name).strip().lower() in SUPPORTED_CLIENT_NAMES)
     identities: dict[int, dict[str, Any]] = {}
     for pid in candidate_pids:
@@ -215,7 +234,7 @@ def discover_supported_client_identities() -> dict[int, dict[str, Any]]:
         except ProcessLookupError:
             continue
         try:
-            if identity["name"] in SUPPORTED_CLIENT_NAMES:
+            if identity["name"] in SUPPORTED_CLIENT_NAMES and int(identity["session_id"]) == current_session:
                 identities[pid] = identity
         finally:
             _close_handle_windows(handle)
@@ -230,6 +249,9 @@ def _lease_validated_targets(pids: Iterable[int], expected_identities: Mapping[i
     targets = _normalize_pids(pids); expected = _normalize_expected_identities(expected_identities)
     if set(targets) != set(expected):
         raise ValueError("WINDOWS_ELEVATION_IDENTITY_SET_MISMATCH")
+    current_session = _session_id_for_pid_windows(os.getpid())
+    if any(int(expected[pid]["session_id"]) != current_session for pid in targets):
+        raise ValueError("WINDOWS_ELEVATION_TARGET_SESSION_NOT_ALLOWED")
     leases: list[dict[str, Any]] = []
     try:
         for pid in targets:
@@ -237,6 +259,9 @@ def _lease_validated_targets(pids: Iterable[int], expected_identities: Mapping[i
                 handle, observed = _open_identity_handle_windows(pid)
             except ProcessLookupError:
                 continue
+            if int(observed["session_id"]) != current_session:
+                _close_handle_windows(handle)
+                raise ValueError(f"WINDOWS_ELEVATION_TARGET_SESSION_CHANGED: pid={pid}")
             if not _identity_matches(expected[pid], observed):
                 _close_handle_windows(handle)
                 raise ValueError(f"WINDOWS_ELEVATION_TARGET_IDENTITY_CHANGED: pid={pid}")
@@ -343,6 +368,7 @@ def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_0
         "taskkill_exit_code": taskkill_exit_code,
         "taskkill_exit_code_zero": True,
         "identity_bound": True,
+        "session_bound": True,
         "pid_reuse_blocked_by_open_handles": True,
         "tree_kill_allowed": False,
         "fixed_system_binary": True,
@@ -360,8 +386,9 @@ def elevated_close_supported_processes(
     if not leases:
         return {
             "ok": True, "closed_pid_count": 0, "already_closed": True, "operation_token_consumed": True,
-            "uac_prompt_started": False, "identity_bound": True, "pid_reuse_blocked_by_open_handles": True,
-            "tree_kill_allowed": False, "arbitrary_executable_allowed": False, "production_effect_authorized": False,
+            "uac_prompt_started": False, "identity_bound": True, "session_bound": True,
+            "pid_reuse_blocked_by_open_handles": True, "tree_kill_allowed": False,
+            "arbitrary_executable_allowed": False, "production_effect_authorized": False,
             "windows_runtime_certified": False, "production_score_mutation_authorized": False,
         }
     try:
@@ -389,10 +416,12 @@ def synthetic_proof() -> dict[str, Any]:
         _validate_target_map([p4], process_map)
     except ValueError as exc:
         explorer_rejected = "TARGET_NOT_ALLOWED" in str(exc)
-    expected = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111}
-    same = {"pid": p1, "name": "Codex.exe", "creation_time_100ns": 111}
-    reused_same_name = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 222}
-    replaced_name = {"pid": p1, "name": "notepad.exe", "creation_time_100ns": 111}
+    expected = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 7}
+    same = {"pid": p1, "name": "Codex.exe", "creation_time_100ns": 111, "session_id": 7}
+    reused_same_name = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 222, "session_id": 7}
+    replaced_name = {"pid": p1, "name": "notepad.exe", "creation_time_100ns": 111, "session_id": 7}
+    cross_session = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 8}
+    malformed_missing_session = {p1: {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111}}
     normalized_identity = _normalize_expected_identities({p1: expected})
     token = "proof-token-identity-123456"; _consume_operation_token(token); replay_rejected = False
     try:
@@ -403,6 +432,11 @@ def synthetic_proof() -> dict[str, Any]:
     src = Path(__file__).read_text("utf-8"); impl_src = src[:src.find("def synthetic_proof")]
     elevated_src = impl_src[impl_src.find("def elevated_close_supported_processes"):]
     taskkill_src = impl_src[impl_src.find("def _taskkill_arguments"):impl_src.find("def _run_elevated_taskkill")]
+    missing_session_rejected = False
+    try:
+        _normalize_expected_identities(malformed_missing_session)
+    except ValueError as exc:
+        missing_session_rejected = "IDENTITY_BINDING_INVALID" in str(exc)
     checks = {
         "codex_chatgpt_only_allowlist": SUPPORTED_CLIENT_NAMES == frozenset({"codex.exe", "chatgpt.exe"}),
         "allowed_targets_validate": allowed == [p1, p2],
@@ -412,11 +446,16 @@ def synthetic_proof() -> dict[str, Any]:
         "taskkill_args_numeric_only": args == expected_args,
         "taskkill_tree_kill_prohibited": '"/T"' not in taskkill_src and '"tree_kill_allowed": False' in elevated_src,
         "identity_binding_requires_supported_exact_shape": normalized_identity[p1] == expected,
+        "identity_binding_requires_session": missing_session_rejected,
         "same_process_incarnation_matches": _identity_matches(expected, same),
         "same_name_pid_reuse_rejected": not _identity_matches(expected, reused_same_name),
         "different_image_rejected_by_identity": not _identity_matches(expected, replaced_name),
+        "cross_session_identity_rejected": not _identity_matches(expected, cross_session),
         "identity_uses_creation_time": "GetProcessTimes" in impl_src and "creation_time_100ns" in impl_src,
         "identity_uses_opened_image": "QueryFullProcessImageNameW" in impl_src,
+        "identity_uses_windows_session": "ProcessIdToSessionId" in impl_src and "session_id" in impl_src,
+        "discovery_filters_current_session": "current_session = _session_id_for_pid_windows(os.getpid())" in impl_src and 'identity["session_id"]' in impl_src,
+        "lease_rejects_other_session": "WINDOWS_ELEVATION_TARGET_SESSION_NOT_ALLOWED" in impl_src and "WINDOWS_ELEVATION_TARGET_SESSION_CHANGED" in impl_src,
         "identity_lease_uses_query_and_synchronize": "PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE" in impl_src,
         "identity_handles_held_across_uac": "_run_elevated_taskkill(leases)" in elevated_src and "_close_leases(leases)" in elevated_src,
         "pid_reuse_claim_is_handle_scoped": '"pid_reuse_blocked_by_open_handles": True' in elevated_src,
