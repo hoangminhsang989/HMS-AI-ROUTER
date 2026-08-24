@@ -69,6 +69,12 @@ function Assert-CaseReport {
     if ($Report.interactive.identity_binding_used -ne $true) {
         throw "VALIDATION_IDENTITY_BINDING_MISSING"
     }
+    if ($Report.interactive.session_binding_used -ne $true) {
+        throw "VALIDATION_SESSION_BINDING_MISSING"
+    }
+    if ($ExpectedVerdict -ceq $ExpectedClose -and $Report.interactive.session_bound -ne $true) {
+        throw "VALIDATION_CLOSE_SESSION_BOUNDARY_MISSING"
+    }
     if ($ExpectedVerdict -ceq $ExpectedClose -and $Report.interactive.pid_reuse_blocked_by_open_handles -ne $true) {
         throw "VALIDATION_PID_REUSE_GUARD_MISSING"
     }
@@ -114,6 +120,9 @@ function Invoke-OperatorRunner {
     if ($session.preflight.identity_binding_ready -ne $true) {
         throw "SESSION_IDENTITY_BINDING_NOT_READY"
     }
+    if ($session.preflight.session_binding_ready -ne $true) {
+        throw "SESSION_WINDOWS_SESSION_BINDING_NOT_READY"
+    }
 
     Write-Host ""
     Write-Host "[2/4] CANCEL case" -ForegroundColor Yellow
@@ -125,12 +134,12 @@ function Invoke-OperatorRunner {
     Invoke-BundleCommand -Python $python -Arguments @("run-cancel", "--session", $sessionPath, "--output", $cancelPath)
     $cancel = Read-JsonFile -Path $cancelPath
     Assert-CaseReport -Report $cancel -ExpectedVerdict $ExpectedCancel
-    Write-Host "Cancel + identity binding + same-token replay block: PASS" -ForegroundColor Green
+    Write-Host "Cancel + current-session identity binding + same-token replay block: PASS" -ForegroundColor Green
 
     Write-Host ""
     Write-Host "[3/4] ACCEPT + CLOSE case" -ForegroundColor Yellow
-    Write-Host "Ensure Codex/ChatGPT is still running. The next UAC prompt must be ACCEPTED."
-    Write-Host "The bounded helper may close only the validated Codex.exe/ChatGPT.exe process incarnations."
+    Write-Host "Ensure Codex/ChatGPT is still running in this Windows session. The next UAC prompt must be ACCEPTED."
+    Write-Host "The bounded helper may close only the validated current-session Codex.exe/ChatGPT.exe process incarnations."
     $closeAck = Read-Host "Type CLOSE to continue"
     if ($closeAck -cne "CLOSE") {
         throw "OPERATOR_CLOSE_ACK_REQUIRED"
@@ -141,7 +150,7 @@ function Invoke-OperatorRunner {
     if ([int]$close.interactive.closed_pid_count -le 0) {
         throw "VALIDATION_CLOSE_EFFECT_MISSING"
     }
-    Write-Host "Accept + identity-bound close + PID-reuse guard + replay block: PASS" -ForegroundColor Green
+    Write-Host "Accept + session/identity-bound close + PID-reuse guard + replay block: PASS" -ForegroundColor Green
 
     Write-Host ""
     Write-Host "[4/4] Session pair verification..."
@@ -155,6 +164,9 @@ function Invoke-OperatorRunner {
     if ($pair.identity_binding_required -ne $true) {
         throw "PAIR_IDENTITY_BINDING_MISSING"
     }
+    if ($pair.session_binding_required -ne $true) {
+        throw "PAIR_SESSION_BINDING_MISSING"
+    }
     if ($pair.production_evidence_eligible -ne $false -or $pair.windows_runtime_certified -ne $false) {
         throw "PAIR_BOUNDARY_VIOLATION"
     }
@@ -162,7 +174,7 @@ function Invoke-OperatorRunner {
     Write-Host ""
     Write-Host "$ExpectedPair" -ForegroundColor Green
     Write-Host "Reports saved at: $resolvedOutput"
-    Write-Host "This is identity-bound recovery validation only; production evidence remains unchanged." -ForegroundColor Yellow
+    Write-Host "This is current-session identity-bound recovery validation only; production evidence remains unchanged." -ForegroundColor Yellow
 }
 
 function Invoke-SourceProof {
@@ -200,8 +212,11 @@ function Invoke-SourceProof {
         launcher_has_no_runas = -not $launcherSource.ToLowerInvariant().Contains("runas")
         launcher_has_no_execution_policy_bypass = -not $launcherSource.ToLowerInvariant().Contains("executionpolicy bypass")
         identity_binding_required = $source.Contains("VALIDATION_IDENTITY_BINDING_MISSING") -and $source.Contains("SESSION_IDENTITY_BINDING_NOT_READY")
+        session_binding_required = $source.Contains("VALIDATION_SESSION_BINDING_MISSING") -and $source.Contains("SESSION_WINDOWS_SESSION_BINDING_NOT_READY")
+        close_session_boundary_required = $source.Contains("VALIDATION_CLOSE_SESSION_BOUNDARY_MISSING")
         close_pid_reuse_guard_required = $source.Contains("VALIDATION_PID_REUSE_GUARD_MISSING")
         pair_identity_binding_required = $source.Contains("PAIR_IDENTITY_BINDING_MISSING")
+        pair_session_binding_required = $source.Contains("PAIR_SESSION_BINDING_MISSING")
         pair_boundary_required = $source.Contains("PAIR_BOUNDARY_VIOLATION")
     }
     $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })
