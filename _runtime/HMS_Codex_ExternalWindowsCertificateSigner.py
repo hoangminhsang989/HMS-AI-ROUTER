@@ -40,13 +40,14 @@ def certificate_sign(attestation: dict[str, Any], thumbprint: str, script_path: 
 
 def source_contract_proof() -> dict[str, Any]:
     source = Path(__file__).read_text("utf-8")
+    impl_source = source[:source.find("def source_contract_proof")]
     checks = {
-        "single_dash_thumbprint": '"-Thumbprint"' in source and '"--Thumbprint"' not in source,
-        "single_dash_digest_file": '"-DigestFile"' in source and '"--DigestFile"' not in source,
-        "single_dash_output": '"-Output"' in source and '"--Output"' not in source,
-        "shell_false": "shell=False" in source,
-        "self_verifies_certificate": "verify_certificate" in source,
-        "private_material_never_exported": '"private_material_exported": False' in source,
+        "single_dash_thumbprint": '"-Thumbprint"' in impl_source and '"--Thumbprint"' not in impl_source,
+        "single_dash_digest_file": '"-DigestFile"' in impl_source and '"--DigestFile"' not in impl_source,
+        "single_dash_output": '"-Output"' in impl_source and '"--Output"' not in impl_source,
+        "shell_false": "shell=False" in impl_source,
+        "self_verifies_certificate": "verify_certificate" in impl_source,
+        "private_material_never_exported": '"private_material_exported": False' in impl_source,
     }
     tests = [{"name": k, "status": "PASS" if v else "FAIL"} for k, v in checks.items()]
     passed = sum(t["status"] == "PASS" for t in tests)
