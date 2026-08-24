@@ -5,7 +5,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, VERSION
+from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, VERSION, ARTIFACT_BINDING_SCHEMA
 from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS
 from HMS_Codex_WindowsPromotionDecisionLedger import read_ledger
 from HMS_Codex_WindowsPromotionWorkbenchController import (
@@ -60,7 +60,7 @@ def _launcher_chain_checks():
 
 
 def _verified_fixture_report():
-    trust="d"*64; cert="e"*64; sig="f"*64; signed="1"*64
+    trust="d"*64; cert="e"*64; sig="f"*64; signed="1"*64; pkg="2"*64; man="b"*64; source="4"*64
     report={"real_packet_verified":True,"ingest_status":"VERIFIED_REAL_PACKET","case_matrix_complete":True,
         "case_matrix":{"valid":True,"missing":[],"unexpected":[],"duplicates":[]},"raw_evidence_rewritten":False,
         "cockpit_baseline":COCKPIT_BASELINE,"reasons":[],"trust_anchor_match":True,
@@ -68,10 +68,17 @@ def _verified_fixture_report():
                         "signed_payload_sha256":signed,"signer_key_id_ref":"ref-"+("9"*24)},
         "reviewer_trust_authority":{"valid":True,"authority_sha256":"3"*64,"trust_snapshot_sha256":trust,
                                      "active_pin_count":1,"local_integrity_seal_valid":True,"packet_derived":False},
-        "provenance":{"raw_packet_sha256":"a"*64,"package_zip_sha256":"2"*64,"release_manifest_sha256":"b"*64,
+        "reviewer_release_authority":{"valid":True,"authority_sha256":"5"*64,"package_zip_sha256":pkg,
+            "release_manifest_sha256":man,"source_commit_sha":"6"*40,"source_tree_sha":"7"*40,
+            "local_integrity_seal_valid":True,"packet_derived":False,"local_artifact_hashed_at_capture":False},
+        "provenance":{"raw_packet_sha256":"a"*64,"package_zip_sha256":pkg,"release_manifest_sha256":man,
+                      "source_certification_report_sha256":source,"source_artifact_binding_schema":ARTIFACT_BINDING_SCHEMA,
+                      "source_artifact_package_sha256":pkg,"source_artifact_manifest_sha256":man,
                       "trust_snapshot_sha256":trust,"expected_trust_snapshot_sha256":trust,"signature_sha256":sig,
                       "certificate_sha256":cert,"signed_payload_sha256":signed,"signer_key_id_ref":"ref-"+("9"*24),
-                      "case_report_sha256":[str(i)*64 for i in range(2,9)],"required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS)}}
+                      "case_report_sha256":[str(i)*64 for i in range(2,9)],
+                      "case_source_report_sha256":[source],"case_source_package_sha256":[pkg],"case_source_manifest_sha256":[man],
+                      "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS)}}
     report["import_digest"]=_expected_import_digest(report); return report
 
 
@@ -91,6 +98,14 @@ def _click_time_race_checks():
             forged_ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-z",reviewer_salt="race-proof-salt-0001",
                 lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=lambda:COCKPIT_BASELINE)
         except ValueError: forged_blocked=True
+        no_release=dict(report); no_release["reviewer_release_authority"]={}; no_release["import_digest"]=_expected_import_digest(no_release)
+        no_release_ctl=PromotionWorkbenchController(Path(d)/"no-release")
+        no_release_ctl._write_sealed_json(no_release_ctl.report_path,no_release_ctl.report_seal_path,no_release,REPORT_SEAL_PURPOSE)
+        no_release_blocked=False
+        try:
+            no_release_ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-z",reviewer_salt="race-proof-salt-0001",
+                lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=lambda:COCKPIT_BASELINE)
+        except ValueError:no_release_blocked=True
         return {
             "full_metadata_fixture_passes_controller_gate":_verified_report_gate(report)["valid"],
             "sealed_fixture_loads_through_controller":ctl.load_verified_report().get("real_packet_verified") is True,
@@ -101,6 +116,7 @@ def _click_time_race_checks():
             "observed_new_baseline_persisted":result["observed_cockpit_baseline"]=="1.3.29",
             "ledger_contains_only_invalidation":len(ledger)==1 and ledger[0]["decision"]=="INVALIDATE" and ledger[0]["cockpit_baseline"]=="1.3.29",
             "forged_minimal_ingest_metadata_blocked":forged_blocked and not forged_ctl.ledger_path.exists(),
+            "missing_release_authority_blocks_direct_review":no_release_blocked and not no_release_ctl.ledger_path.exists(),
             "no_auto_authority":result["automatic_production_certification"] is False and result["production_score_mutation_authorized"] is False,
         }
 

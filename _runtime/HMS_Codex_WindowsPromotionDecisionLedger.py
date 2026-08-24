@@ -34,6 +34,7 @@ def validate_ledger(records):
     for pos,r in enumerate(records,1):
         if r.get("index")!=pos: reasons.append(f"INDEX_SEQUENCE_INVALID:{pos}")
         if r.get("product")!="HMS-AI-ROUTER" or r.get("version")!=VERSION: reasons.append(f"AUTHORITY_INVALID:{pos}")
+        if str(r.get("package_version") or "")!=VERSION: reasons.append(f"PACKAGE_VERSION_AUTHORITY_INVALID:{pos}")
         if r.get("decision") not in DECISIONS or r.get("lane") not in LANES: reasons.append(f"DECISION_OR_LANE_INVALID:{pos}")
         if not re.fullmatch(r"rvw_[0-9a-f]{32}",str(r.get("reviewer_ref") or "")): reasons.append(f"REVIEWER_REF_INVALID:{pos}")
         if not _hex(r.get("evidence_sha256")) or not _hex(r.get("manifest_sha256")): reasons.append(f"DIGEST_INVALID:{pos}")
@@ -46,8 +47,9 @@ def validate_ledger(records):
 
 def build_decision(records,*,decision,reviewer_ref,evidence_sha256,manifest_sha256,package_version,
                    cockpit_baseline,lane,reason_codes=None,note_vi=""):
-    decision=decision.upper(); lane=lane.upper()
+    decision=decision.upper(); lane=lane.upper(); package_version=str(package_version or "")
     if decision not in DECISIONS or lane not in LANES: raise ValueError("decision/lane invalid")
+    if package_version!=VERSION: raise ValueError("package version authority mismatch")
     if not re.fullmatch(r"rvw_[0-9a-f]{32}",reviewer_ref): raise ValueError("pseudonymous reviewer_ref required")
     if not _hex(evidence_sha256) or not _hex(manifest_sha256): raise ValueError("sha256 required")
     if decision!="INVALIDATE" and cockpit_baseline!=COCKPIT_BASELINE: raise ValueError("baseline drift")
@@ -59,7 +61,7 @@ def build_decision(records,*,decision,reviewer_ref,evidence_sha256,manifest_sha2
     r={"product":"HMS-AI-ROUTER","version":VERSION,"index":len(records)+1,"epoch":current,
        "created_utc":datetime.now(timezone.utc).isoformat(),"decision":decision,"lane":lane,
        "reviewer_ref":reviewer_ref,"evidence_sha256":evidence_sha256.lower(),"manifest_sha256":manifest_sha256.lower(),
-       "package_version":str(package_version),"cockpit_baseline":cockpit_baseline,
+       "package_version":package_version,"cockpit_baseline":cockpit_baseline,
        "reason_codes":sorted({str(x) for x in (reason_codes or []) if str(x)}),"note_vi":str(note_vi)[:1000],
        "previous_decision_sha256":records[-1]["decision_sha256"] if records else GENESIS,
        "automatic_production_certification":False,"production_score_mutation_authorized":False,
@@ -101,6 +103,7 @@ def append_decision(path,record,*,lock_timeout_seconds=LOCK_WAIT_SECONDS):
         if not valid["valid"] or record.get("index")!=len(records)+1: raise ValueError("append precondition failed; rebuild against current ledger")
         if record.get("previous_decision_sha256")!=(records[-1]["decision_sha256"] if records else GENESIS): raise ValueError("tail changed; rebuild decision")
         if record.get("decision_sha256")!=_hash(record): raise ValueError("record digest invalid")
+        if str(record.get("package_version") or "")!=VERSION: raise ValueError("package version authority mismatch")
         path.parent.mkdir(parents=True,exist_ok=True); flags=os.O_APPEND|os.O_CREAT|os.O_WRONLY
         if hasattr(os,"O_BINARY"): flags|=os.O_BINARY
         fd=os.open(path,flags,0o600)
@@ -108,7 +111,8 @@ def append_decision(path,record,*,lock_timeout_seconds=LOCK_WAIT_SECONDS):
         finally: os.close(fd)
 
 def evaluate(records,*,evidence_sha256,manifest_sha256,package_version,current_cockpit_baseline=COCKPIT_BASELINE,optional_gpu_required=False):
-    valid=validate_ledger(records); reasons=list(valid["reasons"])
+    valid=validate_ledger(records); reasons=list(valid["reasons"]); package_version=str(package_version or "")
+    if package_version!=VERSION: reasons.append("PACKAGE_VERSION_AUTHORITY_MISMATCH")
     if current_cockpit_baseline!=COCKPIT_BASELINE: reasons.append("FROZEN_BASELINE_DRIFT")
     epoch=valid["current_epoch"]; current=[r for r in records if r.get("epoch")==epoch]
     if any(r.get("decision")=="INVALIDATE" for r in current): reasons.append("CURRENT_EPOCH_INVALIDATED")
@@ -160,15 +164,21 @@ def synthetic_proof():
         for rvw in (a,b): rs.append(build_decision(rs,decision="APPROVE",reviewer_ref=rvw,evidence_sha256=ev,
             manifest_sha256=man,package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane=lane))
     state=evaluate(rs,evidence_sha256=ev,manifest_sha256=man,package_version=VERSION)
+    wrong_version=evaluate(rs,evidence_sha256=ev,manifest_sha256=man,package_version="25.74")
+    build_wrong_blocked=False
+    try: build_decision(rs,decision="APPROVE",reviewer_ref=a,evidence_sha256=ev,manifest_sha256=man,package_version="25.74",cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY")
+    except ValueError: build_wrong_blocked=True
+    tampered=json.loads(json.dumps(rs)); tampered[0]["package_version"]="25.74"; tampered[0]["decision_sha256"]=_hash(tampered[0]); tampered_ledger=validate_ledger(tampered)
     inv=build_decision(rs,decision="INVALIDATE",reviewer_ref=a,evidence_sha256=ev,manifest_sha256=man,
         package_version=VERSION,cockpit_baseline="1.3.29",lane="TERMINAL_PTY",reason_codes=["BASELINE_DRIFT"]); rs.append(inv)
     frozen=evaluate(rs,evidence_sha256=ev,manifest_sha256=man,package_version=VERSION)
     nxt=build_decision(rs,decision="APPROVE",reviewer_ref=a,evidence_sha256=ev,manifest_sha256=man,
         package_version=VERSION,cockpit_baseline=COCKPIT_BASELINE,lane="TERMINAL_PTY")
     checks={"hash_chain_valid":validate_ledger(rs)["valid"],"dual_review_two_lanes_complete":state["promotion_eligible"],
-            "two_distinct_reviewers":state["distinct_reviewer_count"]==2,"invalidate_freezes_epoch":not frozen["promotion_eligible"],
-            "drift_invalidation_records_observed_baseline":inv["cockpit_baseline"]=="1.3.29","new_epoch_after_invalidate":nxt["epoch"]==2,
-            "no_automatic_authority":not state["production_score_mutation_authorized"]}
+            "two_distinct_reviewers":state["distinct_reviewer_count"]==2,"wrong_package_version_evaluation_blocked":"PACKAGE_VERSION_AUTHORITY_MISMATCH" in wrong_version["reasons"],
+            "wrong_package_version_build_blocked":build_wrong_blocked,"tampered_ledger_package_version_rejected":any(x.startswith("PACKAGE_VERSION_AUTHORITY_INVALID:") for x in tampered_ledger["reasons"]),
+            "invalidate_freezes_epoch":not frozen["promotion_eligible"],"drift_invalidation_records_observed_baseline":inv["cockpit_baseline"]=="1.3.29",
+            "new_epoch_after_invalidate":nxt["epoch"]==2,"no_automatic_authority":not state["production_score_mutation_authorized"]}
     checks.update(_concurrency_proof(ev,man,a))
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"WINDOWS_PROMOTION_DECISION_LEDGER_PROOF",

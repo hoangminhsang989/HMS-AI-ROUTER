@@ -30,9 +30,13 @@ def confirmation_text(decision, lane, observed_baseline):
 
 def synthetic_proof():
     authority={"valid":True,"local_integrity_seal_valid":True,"packet_derived":False,"authority_sha256":"d"*64,"trust_snapshot_sha256":"c"*64}
+    release={"valid":True,"local_integrity_seal_valid":True,"packet_derived":False,"local_artifact_hashed_at_capture":False,
+             "authority_sha256":"e"*64,"package_zip_sha256":"f"*64,"release_manifest_sha256":"b"*64,
+             "source_commit_sha":"1"*40,"source_tree_sha":"2"*40}
     report={"real_packet_verified":True,"reasons":[],"signer_trust":{"valid":True},"trust_anchor_match":True,
-        "reviewer_trust_authority":authority,
-        "provenance":{"raw_packet_sha256":"a"*64,"release_manifest_sha256":"b"*64,"trust_snapshot_sha256":"c"*64,"expected_trust_snapshot_sha256":"c"*64}}
+        "reviewer_trust_authority":authority,"reviewer_release_authority":release,
+        "provenance":{"raw_packet_sha256":"a"*64,"package_zip_sha256":"f"*64,"release_manifest_sha256":"b"*64,
+                       "trust_snapshot_sha256":"c"*64,"expected_trust_snapshot_sha256":"c"*64}}
     live_match={"source":"GITHUB_RELEASES_LATEST","upstream_repository":"jlcodes99/cockpit-tools","release_id":1328,
         "checked_utc":"2026-08-23T00:00:00+00:00","baseline":"1.3.28"}
     form=dict(reviewer_identity="reviewer-a",reviewer_salt="0123456789abcdef",lane="TERMINAL_PTY")
@@ -43,6 +47,8 @@ def synthetic_proof():
     no_crypto=evaluate_gui_action_contract(dict(report,signer_trust={"valid":False}),live_match,**form)
     no_anchor=evaluate_gui_action_contract(dict(report,trust_anchor_match=False),live_match,**form)
     no_authority=evaluate_gui_action_contract(dict(report,reviewer_trust_authority={}),live_match,**form)
+    no_release=evaluate_gui_action_contract(dict(report,reviewer_release_authority={}),live_match,**form)
+    wrong_release=evaluate_gui_action_contract(dict(report,reviewer_release_authority=dict(release,package_zip_sha256="9"*64)),live_match,**form)
     checks={"match_enables_three_actions":match["buttons"]=={"APPROVE":True,"REJECT":True,"INVALIDATE":True},
         "drift_enables_only_invalidate":drift["buttons"]=={"APPROVE":False,"REJECT":False,"INVALIDATE":True},
         "provider_error_blocks_all":not any(provider_error["buttons"].values()),
@@ -50,6 +56,8 @@ def synthetic_proof():
         "crypto_invalid_blocks_all":not any(no_crypto["buttons"].values()),
         "trust_anchor_invalid_blocks_all":not any(no_anchor["buttons"].values()),
         "reviewer_authority_invalid_blocks_all":not any(no_authority["buttons"].values()),
+        "reviewer_release_authority_missing_blocks_all":not any(no_release["buttons"].values()),
+        "reviewer_release_artifact_mismatch_blocks_all":not any(wrong_release["buttons"].values()),
         "confirmation_required_before_enabled_action":match["confirmation_required"] is True,
         "salt_clear_is_mandatory":match["salt_clear_required_after_attempt"] is True,
         "no_raw_identity_or_salt_persistence":not match["raw_identity_persistence_authorized"] and not match["raw_salt_persistence_authorized"],
