@@ -470,11 +470,13 @@ def extension_proof():
     life_not_requested = _derive_official_client_lifecycle([101], [101], policy_not_requested, uac_consumed=False)
     life_unknown = _derive_official_client_lifecycle([101], [101], policy_unknown, uac_consumed=False)
     life_identity_fail = _derive_official_client_lifecycle([101], [], policy_on, uac_consumed=False, identity_discovery_ok=False)
-    id_old = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111}}
-    id_same = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111}}
-    id_reused = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 222}}
+    id_old = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 7}}
+    id_same = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 7}}
+    id_reused = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 222, "session_id": 7}}
+    id_cross_session = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 8}}
     same_survivor = _identity_survivors(id_old, id_same)
     reused_survivor = _identity_survivors(id_old, id_reused)
+    cross_session_survivor = _identity_survivors(id_old, id_cross_session)
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
     src = Path(__file__).read_text("utf-8")
@@ -484,7 +486,7 @@ def extension_proof():
         "sealed_review_wrapper_preserved": getattr(review, "legacy", None) is legacy,
         "backend_recovery_patch_installed": legacy.HmsApp.backend is _backend_with_recovery,
         "official_switch_tracking_patch_installed": legacy.HmsApp.official_auth_switch_async is _official_switch_with_recovery_tracking,
-        "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
+        "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_switch_with_recovery if False else legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
         "background_actions_remain_quiet": all(not _is_interactive_backend_action(name) for name in quiet_names),
         "interactive_actions_surface_recovery": all(_is_interactive_backend_action(name) for name in interactive_names),
         "direct_open_codex_is_interactive": _is_interactive_backend_action("open_codex"),
@@ -499,6 +501,7 @@ def extension_proof():
         "official_new_process_after_restart_is_ok": life_restarted["code"] == "OK" and life_restarted["close_lifecycle_complete"] is True,
         "same_incarnation_survives": sorted(same_survivor) == [101],
         "same_name_pid_reuse_is_not_old_client": reused_survivor == {},
+        "cross_session_pid_is_not_old_client": cross_session_survivor == {},
         "identity_discovery_failure_fails_closed": life_identity_fail["code"] == "IDENTITY_DISCOVERY_FAILED" and life_identity_fail["can_elevate"] is False,
         "official_restart_disabled_respects_user_policy": life_disabled["code"] == "RESTART_DISABLED" and life_disabled["can_elevate"] is False,
         "official_launch_not_requested_is_non_elevatable": life_not_requested["code"] == "NOT_REQUESTED" and life_not_requested["can_elevate"] is False,
