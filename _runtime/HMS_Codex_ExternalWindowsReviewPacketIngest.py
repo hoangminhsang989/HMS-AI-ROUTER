@@ -101,6 +101,12 @@ def _proof_packet(now,h,ids):
        "case_results":[{"case_id":cid,"status":"PASS","report_sha256":h(str(i)),"source_report_sha256":source_ref} for i,cid in enumerate(ids)]}
     packet=synthetic_signed_packet(base); packet["signer"].pop("synthetic_fixture",None); return packet
 
+def _child_result(name, result):
+    summary=result.get("summary") if isinstance(result.get("summary"),dict) else {}
+    passed=int(summary.get("pass") or 0); failed=int(summary.get("fail") or 0); total=int(summary.get("total") or 0)
+    ok=result.get("verdict")=="PASS" and failed==0 and total>0
+    return {"name":name,"ok":ok,"pass":passed,"fail":failed,"total":total,"summary":summary,"groups":result.get("groups") or {}}
+
 def synthetic_proof():
     now=datetime.now(timezone.utc); h=lambda s:hashlib.sha256(s.encode()).hexdigest(); p=_proof_packet(now,h,REQUIRED_RUNTIME_CASE_IDS)
     anchor=p["trust_snapshot"]["trust_snapshot_sha256"]
@@ -140,18 +146,16 @@ def synthetic_proof():
             "baseline_drift_rejected":"COCKPIT_BASELINE_CHANGED_OR_STALE" in drift["reasons"],"replay_rejected":"DUPLICATE_PACKET_DIGEST" in replay["reasons"]}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
 
-    # Extended negative fixtures execute only in proof mode. Production verify_packet semantics remain fail-closed.
     from HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures import synthetic_proof as adversarial_fixture_proof
-    adversarial=adversarial_fixture_proof()
-    child_summary=adversarial.get("summary") if isinstance(adversarial.get("summary"),dict) else {}
-    child_pass=int(child_summary.get("pass") or 0); child_fail=int(child_summary.get("fail") or 0); child_total=int(child_summary.get("total") or 0)
-    child_ok=adversarial.get("verdict")=="PASS" and child_fail==0 and child_total>0
-    core_fail=len(tests)-n
+    from HMS_Codex_ExternalWindowsSourceBindingProof import synthetic_proof as source_binding_proof
+    children=[_child_result("adversarial",adversarial_fixture_proof()),_child_result("source_binding",source_binding_proof())]
+    core_fail=len(tests)-n; child_pass=sum(x["pass"] for x in children); child_fail=sum(x["fail"] for x in children)
+    missing_child=sum(1 for x in children if x["total"]<=0); all_children=all(x["ok"] for x in children)
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST_PROOF",
-            "verdict":"PASS" if core_fail==0 and child_ok else "FAIL",
-            "summary":{"pass":n+child_pass,"fail":core_fail+child_fail+(0 if child_total>0 else 1),"total":len(tests)+child_total+(0 if child_total>0 else 1)},
+            "verdict":"PASS" if core_fail==0 and all_children else "FAIL",
+            "summary":{"pass":n+child_pass,"fail":core_fail+child_fail+missing_child,"total":len(tests)+sum(x["total"] for x in children)+missing_child},
             "core_summary":{"pass":n,"fail":core_fail,"total":len(tests)},
-            "adversarial_fixture_summary":child_summary,"adversarial_fixture_groups":adversarial.get("groups") or {},
+            "child_proofs":{x["name"]:{"summary":x["summary"],"groups":x["groups"],"ok":x["ok"]} for x in children},
             "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS),"tests":tests,"synthetic_fixture_only":True,
             "windows_runtime_certified":False,"production_score_promotion_eligible":False}
 
