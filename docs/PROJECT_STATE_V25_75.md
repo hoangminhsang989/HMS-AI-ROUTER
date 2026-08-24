@@ -1,7 +1,7 @@
 # HMS-AI-ROUTER — Project State v25.75
 
 Date: 2026-08-24
-Status: ACTIVE DEVELOPMENT — WINDOWS CI PROOF GRAPH PASS + SESSION-BOUND REAL-WINDOWS UAC GATE
+Status: ACTIVE DEVELOPMENT — WINDOWS CI PROOF GRAPH PASS + GUIDED REAL-WINDOWS UAC EXECUTION GATE
 Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 
 ## Baseline
@@ -11,7 +11,7 @@ Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 - Product scope: Codex-only
 - Product branding: HMS-AI-ROUTER
 - Historical v25.74 evidence is immutable and may retain former product branding where it is part of frozen evidence.
-- Public Cockpit Tools `main` still reported v1.3.28 on 2026-08-24; ref `v1.3.29` was not available during the latest parity-drift check.
+- Public Cockpit Tools `main` still reports version `1.3.28` in `src-tauri/tauri.conf.json` on 2026-08-24; no newer baseline is adopted.
 
 ## Evidence boundary carried forward
 
@@ -70,7 +70,12 @@ The source-side Windows recovery tranche aligned to Cockpit Tools v1.3.28 includ
 - same-process token replay validation after both UAC Cancel and successful supported-client close;
 - guard against falsely counting a client that exited before UAC as a successful close validation;
 - session-bound UAC validation bundle that binds Cancel and Accept+Close reports to one 4-hour session, hashed Windows host reference and exact source bundle digest;
-- pair verifier requiring Cancel→Close order, same host/source/session, UAC observation, replay rejection and positive close effect while retaining all non-production boundaries.
+- pair verifier requiring Cancel→Close order, same host/source/session, UAC observation, replay rejection and positive close effect while retaining all non-production boundaries;
+- guided Windows operator runner that reduces the target flow to one launch while preserving explicit human consent;
+- top-level `HMS_VALIDATE_UAC_RECOVERY.cmd` double-click entrypoint using normal `powershell.exe -NoLogo -NoProfile -File`;
+- exact `CANCEL` and `CLOSE` operator acknowledgements before the two interactive cases;
+- no launcher `runas`, no `ExecutionPolicy Bypass`, no direct `Start-Process`, direct `taskkill`, or keyboard automation in the operator wrapper;
+- automatic final pair verification after the two human-consent UAC outcomes.
 
 Detailed P1 checkpoints:
 
@@ -79,6 +84,7 @@ Detailed P1 checkpoints:
 - `docs/V25.75_P1_OFFICIAL_AUTH_LIFECYCLE_CHECKPOINT.md`
 - `docs/V25.75_P1_UAC_RUNTIME_VALIDATION_HARNESS_CHECKPOINT.md`
 - `docs/V25.75_P1_UAC_VALIDATION_BUNDLE_CHECKPOINT.md`
+- `docs/V25.75_P1_UAC_OPERATOR_RUNNER_CHECKPOINT.md`
 
 ## Observed Windows CI proof graph
 
@@ -98,15 +104,26 @@ Detailed CI checkpoint:
 
 `docs/V25.75_WINDOWS_CI_OBSERVED_PASS_CHECKPOINT.md`
 
-Latest graph PASS after adding the session-bound validation bundle:
+Session-bound bundle PASS:
 
-- Workflow: `v25.75 Windows Promotion Safety`
 - Run number: `65`
 - Run ID: `32690030343`
 - Job ID: `97321936602`
 - Tested head commit: `45075ab7e0b211703c636ecbef596d98f30119ae`
 - Final conclusion: `success`
-- All 35 configured proof steps, including `Session-bound UAC validation bundle proof`, completed successfully on the same Windows run.
+- All 35 configured proof steps completed successfully on the same Windows run.
+
+Latest graph PASS after adding the guided operator runner:
+
+- Workflow: `v25.75 Windows Promotion Safety`
+- Run number: `67`
+- Run ID: `32691345325`
+- Job ID: `97325459363`
+- Tested head commit: `3c78208d5f0a894e11ea2e2ec804137888c1b5a3`
+- Final conclusion: `success`
+- `Windows PowerShell 5.1 UAC operator runner proof`: PASS
+- All 36 configured proof steps completed successfully on the same Windows job.
+- The tested head was fast-forwarded to `main` with `force=false`; PR #3 closed as merged at the same head SHA.
 
 The walking-gate process exposed stale/self-matching source-proof predicates and one CI argument mismatch. They were corrected without weakening runtime safety. Guarded GUI publication proves the nested-worker call binds `live_baseline_provider=provider.get_live_baseline` at `record_review_action`; safe fallback and forbidden-operation proofs are scoped to their implementation regions.
 
@@ -126,15 +143,23 @@ It does **not** mean:
 
 ## Remaining P1 operational gate
 
-Source-side preparation is complete for the bounded UAC recovery validation. What remains is **execution on an authorized real Windows target** using the session-bound bundle:
+Source-side preparation and the guided operator path are complete for the bounded UAC recovery validation. What remains is **execution on an authorized real Windows target**.
 
-1. `init` — read-only preflight + 4-hour session creation while a supported Codex/ChatGPT client is running.
-2. `run-cancel` — cancel the real UAC prompt; required verdict `PASS_CANCEL_AND_REPLAY_BLOCK`.
-3. `run-close` — accept the real UAC prompt; required verdict `PASS_CLOSE_AND_REPLAY_BLOCK` with positive closed PID count.
-4. `verify` — required final verdict `PASS_BOUNDED_UAC_RECOVERY_PAIR` for same host/source/session and valid time order.
-5. Separately verify restart-disabled/not-requested policies and unrelated processes remain non-elevatable, and verify official-auth post-commit UAC failure preserves the fact that auth already committed.
+Preferred target workflow:
 
-These bounded recovery checks remain separate from the canonical seven-case production certification and their reports must stay outside production evidence storage.
+1. Keep a supported Codex/ChatGPT client running.
+2. Double-click `HMS_VALIDATE_UAC_RECOVERY.cmd` from the HMS-AI-ROUTER repository.
+3. Type exact `CANCEL` when prompted by the HMS runner, then cancel the first real Windows UAC dialog.
+4. Require `PASS_CANCEL_AND_REPLAY_BLOCK`.
+5. Type exact `CLOSE`, then accept the second real Windows UAC dialog.
+6. Require `PASS_CLOSE_AND_REPLAY_BLOCK` with a positive supported-client close count.
+7. Allow the runner to execute pair verification automatically.
+8. Require final verdict `PASS_BOUNDED_UAC_RECOVERY_PAIR`.
+9. Separately verify restart-disabled/not-requested policies and unrelated processes remain non-elevatable, and verify official-auth post-commit UAC failure preserves the fact that auth already committed.
+
+Reports remain under `%LOCALAPPDATA%\HMS-AI-ROUTER\uac-validation-v2575\<timestamp>\` and must stay outside production evidence storage.
+
+These bounded recovery checks remain separate from the canonical seven-case production certification.
 
 ## Reviewer authority operational rules
 
@@ -152,6 +177,7 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 - The GUI recovery proof validates structured official-auth policy authority, backend read-only settings fallback, original-PID survival detection, new-PID success detection, restart-disabled/not-requested fail-closed behavior and preservation of committed-auth semantics after UAC failure.
 - The runtime validation harness proof validates that preflight cannot call the elevated helper, interactive mode requires the exact acknowledgement before the helper call, same-token replay is checked, and a successful close requires a real UAC start plus a positive closed-PID count.
 - The session bundle proof validates same-session/host/source binding, case order, replay/effect requirements, short expiry and preserved non-production boundaries.
+- The operator-runner proof executes under Windows PowerShell 5.1 and validates launcher/runner wiring while forbidding direct elevation/process-control shortcuts in the wrapper.
 - GitHub Actions executes only proof commands; CI never runs bundle `init`, `run-cancel`, `run-close` or target `verify` against a real client.
 - No recovery/UAC proof or GitHub-hosted Windows CI proof authorizes Windows production certification, external target-evidence import or production-score mutation.
 
@@ -167,8 +193,9 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 
 ## Immediate next action
 
-1. On the authorized Windows target, execute the session-bound workflow in `docs/V25.75_P1_UAC_VALIDATION_BUNDLE_CHECKPOINT.md` and obtain `PASS_BOUNDED_UAC_RECOVERY_PAIR`.
-2. Verify restart-disabled/not-requested behavior, unrelated-process rejection and official-auth post-commit semantics on that target while keeping recovery reports outside production evidence.
-3. Execute the actual authorized Windows/current-Codex canonical seven-case target evidence only after the bounded recovery gate passes.
-4. Import the resulting certificate-signed production packet through sealed reviewer authority and complete dual human review plus live baseline reconciliation.
-5. Only then evaluate any human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
+1. On the authorized Windows target, double-click `HMS_VALIDATE_UAC_RECOVERY.cmd` and obtain `PASS_BOUNDED_UAC_RECOVERY_PAIR`.
+2. Preserve `session.json`, `cancel.json`, `close.json` and `pair-verdict.json` from that timestamped report directory for bounded recovery review only.
+3. Verify restart-disabled/not-requested behavior, unrelated-process rejection and official-auth post-commit semantics on that target while keeping recovery reports outside production evidence.
+4. Execute the actual authorized Windows/current-Codex canonical seven-case target evidence only after the bounded recovery gate passes.
+5. Import the resulting certificate-signed production packet through sealed reviewer authority and complete dual human review plus live baseline reconciliation.
+6. Only then evaluate any human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
