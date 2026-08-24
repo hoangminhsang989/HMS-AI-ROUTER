@@ -275,45 +275,43 @@ def _update_promotion_action_buttons(self):
     report = getattr(self, "_promotion_report", {}) or {}
     live = getattr(self, "_promotion_live_observation", None)
     evidence_ok = report.get("real_packet_verified") is True
-    trusted_live = isinstance(live, dict) and live.get("source") == "GITHUB_RELEASES_LATEST" and bool(live.get("release_id"))
-    match = trusted_live and str(live.get("baseline") or "") == COCKPIT_BASELINE
-    self.promotion_approve_btn.set_enabled(not busy and evidence_ok and match)
-    self.promotion_reject_btn.set_enabled(not busy and evidence_ok and match)
-    self.promotion_invalidate_btn.set_enabled(not busy and evidence_ok and trusted_live)
+    trusted_live = isinstance(live, dict) and live.get("trusted") is True
+    matches = trusted_live and str(live.get("baseline") or "") == COCKPIT_BASELINE
+    self.promotion_approve_btn.set_enabled(bool(not busy and evidence_ok and matches))
+    self.promotion_reject_btn.set_enabled(bool(not busy and evidence_ok and matches))
+    self.promotion_invalidate_btn.set_enabled(bool(not busy and evidence_ok and trusted_live))
 
 
 def _apply_promotion_live_result(self, observation=None, error=None):
-    C = legacy.C
     self._promotion_live_check_busy = False
+    C = legacy.C
     if error is not None:
         self._promotion_live_observation = None
-        self.promotion_live_label.configure(text=f"Live baseline: ERROR · {error}", fg=C["danger"])
-        self.promotion_gate_label.configure(text="LIVE BASELINE GATE: không xác minh được upstream → reviewer action bị khóa (fail-closed).", fg=C["danger"])
+        self.promotion_live_label.configure(text=f"Live Cockpit baseline: UNTRUSTED · {error}", fg=C["danger"])
+        self.promotion_gate_label.configure(text="FAIL-CLOSED: không xác minh được Cockpit stable release; khóa toàn bộ reviewer action.", fg=C["danger"])
         self._refresh_promotion_gate_matrix()
         return
     self._promotion_live_observation = observation
-    live = str((observation or {}).get("baseline") or "")
-    checked = str((observation or {}).get("checked_utc") or "")
-    matched = live == COCKPIT_BASELINE
-    self.promotion_live_label.configure(text=f"Live baseline: {live or '—'} · {'MATCH' if matched else 'DRIFT'} · checked {checked}",
-                                        fg=C["success"] if matched else C["danger"])
+    observed = str((observation or {}).get("baseline") or "")
+    match = observed == COCKPIT_BASELINE
+    self.promotion_live_label.configure(text=f"Live Cockpit baseline: {observed or '—'} · {'MATCH' if match else 'DRIFT'}",
+                                        fg=C["success"] if match else C["danger"])
     self.promotion_gate_label.configure(
-        text=("LIVE BASELINE GATE: MATCH. DUYỆT/TỪ CHỐI được phép nếu evidence hợp lệ; baseline sẽ được recheck lại ngay trước khi ghi ledger."
-              if matched else f"LIVE BASELINE GATE: DRIFT {COCKPIT_BASELINE} → {live or 'unknown'} · chỉ INVALIDATE được mở."),
-        fg=C["success"] if matched else C["danger"])
+        text=("Baseline match; APPROVE/REJECT/INVALIDATE có thể mở nếu evidence gate hợp lệ."
+              if match else "BASELINE DRIFT: chỉ cho phép INVALIDATE; APPROVE/REJECT bị khóa."),
+        fg=C["success"] if match else C["danger"])
     self._refresh_promotion_gate_matrix()
 
 
 def _start_promotion_live_check(self):
     if getattr(self, "_promotion_live_check_busy", False):
         return
+    self._promotion_live_check_busy = True
+    self._update_promotion_action_buttons()
     provider = getattr(self, "_promotion_live_provider", None)
     if provider is None:
+        self._apply_promotion_live_result(error="trusted provider unavailable")
         return
-    self._promotion_live_check_busy = True
-    self._promotion_live_observation = None
-    self.promotion_live_label.configure(text="Live baseline: đang kiểm tra GitHub Releases…", fg=legacy.C["muted"])
-    self._update_promotion_action_buttons()
 
     def worker():
         try:
@@ -469,6 +467,10 @@ legacy.HmsApp._finish_promotion_review = _finish_promotion_review
 
 
 def extension_proof():
+    src = Path(__file__).read_text("utf-8")
+    submit_start = src.find("def _submit_promotion_review")
+    submit_end = src.find("def _finish_promotion_review", submit_start)
+    submit_src = src[submit_start:submit_end]
     checks = {
         "wrapper_version_25_75": legacy.APP_VERSION == APP_VERSION == "25.75",
         "promotion_page_hook_installed": legacy.HmsApp._build_pages is _extended_build_pages,
@@ -478,7 +480,11 @@ def extension_proof():
         "reviewer_action_hook_installed": legacy.HmsApp.submit_promotion_review is _submit_promotion_review,
         "raw_reviewer_identity_not_persisted_by_gui": "write_text" not in _submit_promotion_review.__code__.co_names,
         "salt_cleared_after_action": "promotion_reviewer_salt" in _finish_promotion_review.__code__.co_names,
-        "baseline_recheck_used_for_publication": "record_review_action" in _submit_promotion_review.__code__.co_names,
+        "baseline_recheck_used_for_publication": (
+            "ctl.record_review_action" in submit_src
+            and "live_baseline_provider=provider.get_live_baseline" in submit_src
+            and "threading.Thread" in submit_src
+        ),
     }
     tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
