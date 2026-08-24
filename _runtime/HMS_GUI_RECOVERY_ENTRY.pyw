@@ -210,14 +210,99 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
         return data
 
 
+def _official_switch_policy_snapshot(self) -> dict:
+    settings = getattr(self, "settings_data", None)
+    loaded = bool(getattr(self, "settings_loaded", False))
+    if not loaded or not isinstance(settings, dict):
+        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+    launch = settings.get("CodexLaunchAfterAuthSwitch")
+    restart = settings.get("RestartCodexOnSwitch")
+    if not isinstance(launch, bool) or not isinstance(restart, bool):
+        return {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+    return {
+        "known": True,
+        "launch_after_auth_switch": launch,
+        "restart_codex_on_switch": restart,
+    }
+
+
+def _derive_official_client_lifecycle(
+    initial_pids: list[int], current_pids: list[int], policy: dict, *, uac_consumed: bool,
+) -> dict:
+    initial = sorted({int(pid) for pid in initial_pids if int(pid) > 0})
+    current = sorted({int(pid) for pid in current_pids if int(pid) > 0})
+    initial_set = set(initial)
+    remaining = sorted(initial_set.intersection(current))
+    known = policy.get("known") is True
+    launch = policy.get("launch_after_auth_switch") is True
+    restart = policy.get("restart_codex_on_switch") is True
+
+    if not known:
+        code = "POLICY_UNKNOWN"
+        complete = False
+        can_elevate = False
+    elif not launch:
+        code = "NOT_REQUESTED"
+        complete = True
+        can_elevate = False
+    elif not restart:
+        code = "RESTART_DISABLED"
+        complete = False
+        can_elevate = False
+    elif remaining:
+        code = "CODEX_RESTART_REQUIRED"
+        complete = False
+        can_elevate = not uac_consumed
+    else:
+        code = "OK"
+        complete = True
+        can_elevate = False
+
+    return {
+        "schema_version": 1,
+        "code": code,
+        "policy_known": known,
+        "launch_after_auth_switch": launch,
+        "restart_codex_on_switch": restart,
+        "initial_pid_count": len(initial),
+        "remaining_original_pids": remaining,
+        "close_lifecycle_complete": complete,
+        "can_elevate": can_elevate,
+        "uac_consumed": bool(uac_consumed),
+        "derived_from_structured_settings_and_pid_identity": True,
+        "human_message_parsed": False,
+        "production_effect_authorized": False,
+        "windows_runtime_certified": False,
+        "production_score_mutation_authorized": False,
+    }
+
+
+def _decorate_official_switch_lifecycle(self, data: dict) -> dict:
+    decorated = dict(data)
+    initial = list(getattr(self, "_hms_recovery_official_initial_pids", []) or [])
+    policy = dict(getattr(self, "_hms_recovery_official_policy", {}) or {})
+    current = _discover_supported_client_pids()
+    consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
+    lifecycle = _derive_official_client_lifecycle(initial, current, policy, uac_consumed=consumed)
+    decorated["client_lifecycle"] = lifecycle
+    return decorated
+
+
 def _official_switch_with_recovery_tracking(self, email):
     self._hms_recovery_last_official_switch_email = str(email or "")
     self._hms_recovery_uac_operation_token = secrets.token_urlsafe(24)
     self._hms_recovery_uac_consumed = False
+    self._hms_recovery_official_retry_count = 0
+    self._hms_recovery_official_initial_pids = _discover_supported_client_pids()
+    self._hms_recovery_official_policy = _official_switch_policy_snapshot(self)
     return _ORIGINAL_OFFICIAL_SWITCH(self, email)
 
 
 def _retry_official_switch(self):
+    count = int(getattr(self, "_hms_recovery_official_retry_count", 0) or 0)
+    if count >= _MAX_RECOVERY_RETRIES:
+        return None
+    self._hms_recovery_official_retry_count = count + 1
     email = str(getattr(self, "_hms_recovery_last_official_switch_email", "") or "")
     if email:
         return _ORIGINAL_OFFICIAL_SWITCH(self, email)
@@ -226,7 +311,54 @@ def _retry_official_switch(self):
 
 def _finish_official_switch_with_recovery(self, data):
     if isinstance(data, dict) and data.get("ok"):
-        return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
+        decorated = _decorate_official_switch_lifecycle(self, data)
+        lifecycle = decorated.get("client_lifecycle") or {}
+        if lifecycle.get("code") != "CODEX_RESTART_REQUIRED":
+            return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
+
+        remaining = list(lifecycle.get("remaining_original_pids") or [])
+        uac_consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
+        detail = "CODEX_RESTART_REQUIRED: official auth đã chuyển nhưng client cũ vẫn còn chạy."
+        plan = recovery_contract.build_recovery_plan(
+            detail,
+            operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
+            background_probe=False,
+            supported_client=bool(remaining) and lifecycle.get("can_elevate") is True and not uac_consumed,
+        )
+
+        self.busy = False
+        choice = _show_dialog_threadsafe(self, plan)
+        if choice in {recovery_contract.ACTION_RETRY, recovery_contract.ACTION_MANUAL_RETRY}:
+            retried = _retry_official_switch(self)
+            if retried is not None:
+                return retried
+            decorated["message"] = str(decorated.get("message") or "") + " · Client restart vẫn chưa hoàn tất; đã đạt giới hạn retry."
+            return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
+
+        if choice == recovery_contract.ACTION_REQUEST_UAC_ONCE:
+            token = str(getattr(self, "_hms_recovery_uac_operation_token", "") or "")
+            gate = recovery_contract.evaluate_uac_once(plan, operation_token=token, already_consumed=uac_consumed)
+            if gate.get("allowed") is not True:
+                decorated["message"] = str(decorated.get("message") or "") + " · UAC one-shot bị chặn; auth đã chuyển nhưng cần đóng/mở Codex thủ công."
+                return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
+
+            # Consume before the helper/UAC. Auth has already committed; cancellation must not be reported as auth rollback.
+            self._hms_recovery_uac_consumed = True
+            try:
+                elevated = one_shot_elevation.elevated_close_supported_processes(remaining, operation_token=token)
+            except Exception as exc:
+                decorated["client_lifecycle"] = dict(lifecycle)
+                decorated["client_lifecycle"]["recovery_action"] = "UAC_ONE_SHOT_FAILED"
+                decorated["client_lifecycle"]["recovery_error"] = recovery_contract.sanitize_detail(exc)
+                decorated["message"] = str(decorated.get("message") or "") + " · Auth đã chuyển; UAC đóng client không hoàn tất, hãy đóng/mở Codex thủ công."
+                return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
+            if elevated.get("ok") is True:
+                retried = _retry_official_switch(self)
+                if retried is not None:
+                    return retried
+
+        decorated["message"] = str(decorated.get("message") or "") + " · Auth đã chuyển; client cũ vẫn chạy, hãy đóng/mở Codex để nạp auth mới."
+        return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
 
     detail = _error_detail(data)
     category = recovery_contract.classify_error(detail)
@@ -286,6 +418,15 @@ def extension_proof():
     unrelated_access = recovery_contract.build_recovery_plan(
         "Access denied (os error 5)", operation="BACKUP_EXPORT", supported_client=True,
     )
+    policy_on = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": True}
+    policy_disabled = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": False}
+    policy_not_requested = {"known": True, "launch_after_auth_switch": False, "restart_codex_on_switch": True}
+    policy_unknown = {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False}
+    life_blocked = _derive_official_client_lifecycle([101, 102], [102, 201], policy_on, uac_consumed=False)
+    life_restarted = _derive_official_client_lifecycle([101, 102], [201, 202], policy_on, uac_consumed=False)
+    life_disabled = _derive_official_client_lifecycle([101], [101], policy_disabled, uac_consumed=False)
+    life_not_requested = _derive_official_client_lifecycle([101], [101], policy_not_requested, uac_consumed=False)
+    life_unknown = _derive_official_client_lifecycle([101], [101], policy_unknown, uac_consumed=False)
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
     src = Path(__file__).read_text("utf-8")
@@ -303,10 +444,18 @@ def extension_proof():
         "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
         "pre_mutation_close_barrier_is_uac_eligible": close_blocked["uac_eligible"] is True and _uac_allowed_for_backend_failure("enable", "CODEX_RESTART_REQUIRED: x"),
         "unrelated_access_denied_cannot_elevate": unrelated_access["uac_eligible"] is False and not _uac_allowed_for_backend_failure("backup_export", "Access denied os error 5"),
+        "official_lifecycle_uses_structured_settings": "settings_data" in impl_src and "CodexLaunchAfterAuthSwitch" in impl_src and "RestartCodexOnSwitch" in impl_src,
+        "official_lifecycle_does_not_parse_human_message": life_blocked["human_message_parsed"] is False and "restart_message" not in impl_src,
+        "official_old_pid_survival_blocks": life_blocked["code"] == "CODEX_RESTART_REQUIRED" and life_blocked["remaining_original_pids"] == [102] and life_blocked["can_elevate"] is True,
+        "official_new_pid_after_restart_is_ok": life_restarted["code"] == "OK" and life_restarted["close_lifecycle_complete"] is True,
+        "official_restart_disabled_respects_user_policy": life_disabled["code"] == "RESTART_DISABLED" and life_disabled["can_elevate"] is False,
+        "official_launch_not_requested_is_non_elevatable": life_not_requested["code"] == "NOT_REQUESTED" and life_not_requested["can_elevate"] is False,
+        "official_unknown_policy_fails_closed": life_unknown["code"] == "POLICY_UNKNOWN" and life_unknown["can_elevate"] is False,
+        "official_uac_targets_only_remaining_original_pids": "remaining_original_pids" in impl_src and "elevated_close_supported_processes(remaining" in impl_src,
+        "official_auth_success_never_rewritten_as_failure_on_uac_error": "Auth đã chuyển; UAC đóng client không hoàn tất" in impl_src and "decorated[\"ok\"] = False" not in impl_src,
         "uac_only_after_supported_pid_discovery": "discover_supported_client_pids" in impl_src and "supported_client=bool(pids) and not uac_consumed" in impl_src,
         "uac_epoch_token_is_generated_per_operation": "secrets.token_urlsafe(24)" in impl_src,
         "uac_consumed_before_helper": impl_src.find("uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
-        "uac_retries_original_transaction": "continue" in impl_src and "close barrier has been resolved" in impl_src,
         "uac_helper_has_no_caller_executable": "executable_path" not in impl_src and "taskkill.exe" not in impl_src,
         "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
         "no_production_authority": "production_score_mutation" not in impl_src and "windows_runtime_certified = True" not in impl_src,
