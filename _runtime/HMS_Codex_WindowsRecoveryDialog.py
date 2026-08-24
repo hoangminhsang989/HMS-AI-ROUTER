@@ -140,21 +140,22 @@ def show_recovery_dialog(parent, plan: dict[str, Any]) -> str:
 
 def source_proof() -> dict[str, Any]:
     src = Path(__file__).read_text("utf-8")
+    impl_src = src[:src.find("def source_proof")]
     access = contract.build_recovery_plan("Access denied os error 5", operation="CODEX_CLIENT_START",
                                           target_path=r"C:\Program Files\Codex\Codex.exe", supported_client=True)
     quiet = contract.build_recovery_plan("Access denied os error 5", operation="BACKGROUND_PROBE",
                                          background_probe=True)
     checks = {
-        "quiet_probe_short_circuits_without_dialog": quiet["surface_mode"] == "QUIET_BACKGROUND" and 'return "QUIET"' in src,
-        "retry_action_wired": "ACTION_RETRY" in src,
-        "manual_retry_action_wired": "ACTION_MANUAL_RETRY" in src,
-        "open_location_action_wired": "ACTION_OPEN_LOCATION" in src and "os.startfile" in src,
-        "copy_error_action_wired": "ACTION_COPY_ERROR" in src and "clipboard_append" in src,
-        "uac_button_returns_request_only": "ACTION_REQUEST_UAC_ONCE" in src and "ShellExecute" not in src and '"runas"' not in src.lower(),
+        "quiet_probe_short_circuits_without_dialog": quiet["surface_mode"] == "QUIET_BACKGROUND" and 'return "QUIET"' in impl_src,
+        "retry_action_wired": "ACTION_RETRY" in impl_src,
+        "manual_retry_action_wired": "ACTION_MANUAL_RETRY" in impl_src,
+        "open_location_action_wired": "ACTION_OPEN_LOCATION" in impl_src and "os.startfile" in impl_src,
+        "copy_error_action_wired": "ACTION_COPY_ERROR" in impl_src and "clipboard_append" in impl_src,
+        "uac_button_returns_request_only": "ACTION_REQUEST_UAC_ONCE" in impl_src and "ShellExecute" not in impl_src and '"runas"' not in impl_src.lower(),
         "dialog_never_auto_elevates": access["uac_automatic"] is False,
-        "sanitized_detail_only": 'plan.get("sanitized_detail")' in src and "raw_detail" not in src,
-        "cancel_is_default": '"action": contract.ACTION_CANCEL' in src,
-        "no_production_mutation": "production_score" not in src and "windows_runtime_certified" not in src,
+        "sanitized_detail_only": 'plan.get("sanitized_detail")' in impl_src and "raw_detail" not in impl_src,
+        "cancel_is_default": '"action": contract.ACTION_CANCEL' in impl_src,
+        "no_production_mutation": "production_score" not in impl_src and "windows_runtime_certified" not in impl_src,
     }
     tests = [{"name": name, "status": "PASS" if ok else "FAIL"} for name, ok in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
