@@ -5,8 +5,11 @@ on:
     branches: [main]
     paths:
       - '_runtime/HMS_Codex_WindowsRuntimeCaseContract.py'
+      - '_runtime/HMS_Codex_TargetMachineCertificationV2575.py'
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py'
+      - '_runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py'
+      - '_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateSigner.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py'
@@ -75,8 +78,11 @@ jobs:
         run: |
           python -m py_compile `
             _runtime/HMS_Codex_WindowsRuntimeCaseContract.py `
+            _runtime/HMS_Codex_TargetMachineCertificationV2575.py `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py `
+            _runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py `
+            _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py `
             _runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py `
@@ -107,6 +113,9 @@ jobs:
       - name: Canonical seven-case contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsRuntimeCaseContract.py
+      - name: Target-machine v25.75 artifact binding proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_TargetMachineCertificationV2575.py --proof
       - name: External certificate signer source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py
@@ -158,6 +167,12 @@ jobs:
       - name: Seven-case exporter proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py --proof
+      - name: Seven-case source binding proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py
+      - name: Seven-case adversarial evidence fixtures
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py
       - name: External Windows packet exact-matrix crypto-anchor proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py --proof
