@@ -187,17 +187,21 @@ def _reviewer_import(args) -> dict:
 
 def source_proof() -> dict:
     src = Path(__file__).read_text("utf-8")
+    operator_src = src[src.find("def _operator_preflight"):src.find("def _parse_utc")]
+    status_src = src[src.find("def _reviewer_authority_status"):src.find("def _reviewer_import")]
+    import_src = src[src.find("def _reviewer_import"):src.find("def source_proof")]
     checks = {
         "windows_gate": 'os.name != "nt"' in src,
-        "operator_uses_runner_preflight_only": "evidence_runner.preflight" in src and "evidence_runner.build_packet" not in src,
-        "operator_never_executes_live_codex": '"real_codex_request_executed": False' in src,
-        "operator_never_signs_packet": '"production_packet_signed": False' in src,
-        "reviewer_authority_captured_before_import": src.find("trust_authority.capture_authority") < src.find("reviewer_import.import_for_review"),
-        "reviewer_authority_status_is_verify_only": "trust_authority.load_and_verify_authority" in src and '"authority_recaptured": False' in src,
-        "reviewer_authority_status_has_freshness_diagnostics": '"freshness_state"' in src and '"renewal_recommended"' in src and '"expires_utc"' in src,
-        "reviewer_uses_high_level_import": "reviewer_import.import_for_review" in src,
-        "reviewer_trust_store_not_mutated": '"reviewer_trust_store_mutated": False' in src,
-        "raw_packet_not_copied": '"raw_packet_copied_into_state_dir": False' in src,
+        "operator_uses_runner_preflight_only": "evidence_runner.preflight" in operator_src and "evidence_runner.build_packet" not in operator_src,
+        "operator_never_executes_live_codex": '"real_codex_request_executed": False' in operator_src,
+        "operator_never_signs_packet": '"production_packet_signed": False' in operator_src,
+        "reviewer_authority_captured_before_import": import_src.find("trust_authority.capture_authority") < import_src.find("reviewer_import.import_for_review"),
+        "reviewer_authority_status_is_verify_only": "trust_authority.load_and_verify_authority" in status_src and "capture_authority" not in status_src and "import_for_review" not in status_src,
+        "reviewer_authority_status_has_freshness_diagnostics": '"freshness_state"' in status_src and '"renewal_recommended"' in status_src and '"expires_utc"' in status_src,
+        "reviewer_authority_status_no_mutation": '"authority_recaptured": False' in status_src and '"reviewer_trust_store_mutated": False' in status_src,
+        "reviewer_uses_high_level_import": "reviewer_import.import_for_review" in import_src,
+        "reviewer_trust_store_not_mutated": '"reviewer_trust_store_mutated": False' in import_src,
+        "raw_packet_not_copied": '"raw_packet_copied_into_state_dir": False' in import_src,
         "no_auto_certification": '"automatic_production_certification": False' in src,
         "no_score_mutation": '"production_score_mutation_authorized": False' in src,
     }
