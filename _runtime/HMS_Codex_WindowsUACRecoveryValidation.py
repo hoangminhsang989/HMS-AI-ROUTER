@@ -119,6 +119,7 @@ def preflight_report() -> dict[str, Any]:
         "verdict": "READY" if taskkill_available else "BLOCKED",
         "supported_client_pids": pids,
         "supported_client_count": len(pids),
+        "interactive_prerequisite_met": bool(pids) and taskkill_available,
         "fixed_taskkill_available": taskkill_available,
         "fixed_taskkill_path": taskkill_path,
         "fixed_taskkill_error": taskkill_error,
@@ -177,7 +178,12 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
         first = elevation.elevated_close_supported_processes(pids, operation_token=token)
         uac_prompt_executed = bool(first.get("uac_prompt_started"))
         closed_pid_count = int(first.get("closed_pid_count") or 0)
-        first_outcome = "SUPPORTED_CLIENTS_CLOSED" if first.get("ok") else "FAILED"
+        if first.get("ok") and uac_prompt_executed and closed_pid_count > 0:
+            first_outcome = "SUPPORTED_CLIENTS_CLOSED"
+        elif first.get("ok") and first.get("already_closed"):
+            first_outcome = "ALREADY_CLOSED_BEFORE_UAC"
+        else:
+            first_outcome = "FAILED"
     except Exception as exc:
         first_outcome = _classify_interactive_exception(exc)
         first_detail = type(exc).__name__
@@ -197,15 +203,16 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
     except Exception:
         remaining = []
 
-    if first_outcome == "SUPPORTED_CLIENTS_CLOSED" and replay_blocked:
+    if first_outcome == "SUPPORTED_CLIENTS_CLOSED" and replay_blocked and uac_prompt_executed and closed_pid_count > 0:
         verdict = "PASS_CLOSE_AND_REPLAY_BLOCK"
-    elif first_outcome == "UAC_CANCELLED" and replay_blocked:
+    elif first_outcome == "UAC_CANCELLED" and replay_blocked and uac_prompt_executed:
         verdict = "PASS_CANCEL_AND_REPLAY_BLOCK"
     elif replay_blocked:
         verdict = "PARTIAL_REPLAY_BLOCKED"
     else:
         verdict = "FAIL"
 
+    effects_executed = bool(first_outcome == "SUPPORTED_CLIENTS_CLOSED" and uac_prompt_executed and closed_pid_count > 0)
     out.update({
         "verdict": verdict,
         "initial_supported_client_pids": pids,
@@ -216,7 +223,7 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
         "same_token_replay_blocked": replay_blocked,
         "replay_reason_code": "WINDOWS_ELEVATION_OPERATION_TOKEN_ALREADY_CONSUMED" if replay_blocked else "UNCONFIRMED",
         "remaining_supported_client_pids": remaining,
-        "effects_executed": first_outcome == "SUPPORTED_CLIENTS_CLOSED",
+        "effects_executed": effects_executed,
         "operator_note": "This report validates recovery mechanics only and cannot certify the canonical seven-case production gate.",
     })
     return out
@@ -249,7 +256,8 @@ def synthetic_proof() -> dict[str, Any]:
         "interactive_uses_random_one_shot_token": "secrets.token_urlsafe(24)" in src[interactive_pos:],
         "interactive_replays_same_token_for_block_proof": src[interactive_pos:].count("operation_token=token") >= 2,
         "cancel_is_distinguished": "UAC_CANCELLED" in src[interactive_pos:] and "PASS_CANCEL_AND_REPLAY_BLOCK" in src,
-        "successful_close_is_distinguished": "PASS_CLOSE_AND_REPLAY_BLOCK" in src,
+        "successful_close_requires_real_uac_and_positive_close_count": "uac_prompt_executed and closed_pid_count > 0" in src[interactive_pos:] and "PASS_CLOSE_AND_REPLAY_BLOCK" in src,
+        "already_closed_is_not_successful_close": "ALREADY_CLOSED_BEFORE_UAC" in src and 'first_outcome = "SUPPORTED_CLIENTS_CLOSED" if first.get("ok")' not in src,
         "output_is_optional": 'if not target:' in src and "return" in src[src.find("def _write_optional_report"):src.find("def synthetic_proof")],
         "report_never_claims_production_certification": '"windows_runtime_certified": False' in src and '"canonical_seven_case_certification": False' in src,
         "no_automatic_score_mutation": '"production_score_mutation_authorized": False' in src,
