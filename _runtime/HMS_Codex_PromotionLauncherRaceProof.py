@@ -8,7 +8,12 @@ from pathlib import Path
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, VERSION
 from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS
 from HMS_Codex_WindowsPromotionDecisionLedger import read_ledger
-from HMS_Codex_WindowsPromotionWorkbenchController import PromotionWorkbenchController, _verified_report_gate
+from HMS_Codex_WindowsPromotionWorkbenchController import (
+    PromotionWorkbenchController,
+    REPORT_SEAL_PURPOSE,
+    _expected_import_digest,
+    _verified_report_gate,
+)
 
 RUNTIME_DIR = Path(__file__).resolve().parent
 REPO_ROOT = RUNTIME_DIR.parent
@@ -35,38 +40,44 @@ def _launcher_chain_checks():
 
 
 def _verified_fixture_report():
-    trust="d"*64; cert="e"*64; sig="f"*64; signed="1"*64
-    return {"real_packet_verified":True,"ingest_status":"VERIFIED_REAL_PACKET","case_matrix_complete":True,
-        "case_matrix":{"valid":True,"missing":[],"unexpected":[],"duplicates":[]},"raw_evidence_rewritten":False,
-        "cockpit_baseline":COCKPIT_BASELINE,"reasons":[],"trust_anchor_match":True,
-        "signer_trust":{"valid":True,"trust_snapshot_sha256":trust,"certificate_sha256":cert,"signature_sha256":sig,
-                        "signed_payload_sha256":signed,"signer_key_id_ref":"ref-"+("9"*24)},
-        "provenance":{"raw_packet_sha256":"a"*64,"package_zip_sha256":"2"*64,"release_manifest_sha256":"b"*64,
-                      "trust_snapshot_sha256":trust,"expected_trust_snapshot_sha256":trust,"signature_sha256":sig,
-                      "certificate_sha256":cert,"signed_payload_sha256":signed,"signer_key_id_ref":"ref-"+("9"*24),
-                      "case_report_sha256":[str(i)*64 for i in range(2,9)],"required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS)},
-        "import_digest":"c"*64}
+    trust = "d" * 64; cert = "e" * 64; sig = "f" * 64; signed = "1" * 64
+    report = {"real_packet_verified": True, "ingest_status": "VERIFIED_REAL_PACKET", "case_matrix_complete": True,
+        "case_matrix": {"valid": True, "missing": [], "unexpected": [], "duplicates": []}, "raw_evidence_rewritten": False,
+        "cockpit_baseline": COCKPIT_BASELINE, "reasons": [], "trust_anchor_match": True,
+        "signer_trust": {"valid": True, "trust_snapshot_sha256": trust, "certificate_sha256": cert,
+                        "signature_sha256": sig, "signed_payload_sha256": signed, "signer_key_id_ref": "ref-" + ("9" * 24)},
+        "reviewer_trust_authority": {"valid": True, "authority_sha256": "3" * 64, "trust_snapshot_sha256": trust,
+                                     "active_pin_count": 1, "local_integrity_seal_valid": True, "packet_derived": False},
+        "provenance": {"raw_packet_sha256": "a" * 64, "package_zip_sha256": "2" * 64, "release_manifest_sha256": "b" * 64,
+                      "trust_snapshot_sha256": trust, "expected_trust_snapshot_sha256": trust, "signature_sha256": sig,
+                      "certificate_sha256": cert, "signed_payload_sha256": signed, "signer_key_id_ref": "ref-" + ("9" * 24),
+                      "case_report_sha256": [str(i) * 64 for i in range(2, 9)], "required_case_ids": list(REQUIRED_RUNTIME_CASE_IDS)}}
+    report["import_digest"] = _expected_import_digest(report)
+    return report
 
 
 def _click_time_race_checks():
     with tempfile.TemporaryDirectory() as d:
         ctl = PromotionWorkbenchController(Path(d) / "state")
-        report = _verified_fixture_report(); ctl._atomic_json(ctl.report_path, report)
+        report = _verified_fixture_report()
+        ctl._write_sealed_json(ctl.report_path, ctl.report_seal_path, report, REPORT_SEAL_PURPOSE)
         page_open_baseline = COCKPIT_BASELINE; calls = []
         def click_time_provider(): calls.append("click"); return "1.3.29"
-        result = ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-a",reviewer_salt="race-proof-salt-0001",
-            lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=click_time_provider,
+        result = ctl.record_review_action(decision="APPROVE", reviewer_identity="reviewer-a", reviewer_salt="race-proof-salt-0001",
+            lane="TERMINAL_PTY", package_version=VERSION, live_baseline_provider=click_time_provider,
             note_vi="page opened at frozen baseline; upstream drifted before click")
         ledger = read_ledger(ctl.ledger_path)
-        forged_ctl=PromotionWorkbenchController(Path(d)/"forged")
-        forged_ctl._atomic_json(forged_ctl.report_path,{"real_packet_verified":True})
-        forged_blocked=False
+        forged_ctl = PromotionWorkbenchController(Path(d) / "forged")
+        forged_ctl._atomic_json(forged_ctl.report_path, {"real_packet_verified": True})
+        forged_blocked = False
         try:
-            forged_ctl.record_review_action(decision="APPROVE",reviewer_identity="reviewer-z",reviewer_salt="race-proof-salt-0001",
-                lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=lambda:COCKPIT_BASELINE)
-        except ValueError: forged_blocked=True
+            forged_ctl.record_review_action(decision="APPROVE", reviewer_identity="reviewer-z", reviewer_salt="race-proof-salt-0001",
+                lane="TERMINAL_PTY", package_version=VERSION, live_baseline_provider=lambda: COCKPIT_BASELINE)
+        except ValueError:
+            forged_blocked = True
         return {
             "full_metadata_fixture_passes_controller_gate": _verified_report_gate(report)["valid"],
+            "sealed_fixture_loads_through_controller": ctl.load_verified_report().get("real_packet_verified") is True,
             "page_open_was_match": page_open_baseline == COCKPIT_BASELINE,
             "provider_called_at_click": calls == ["click"],
             "click_time_drift_blocks_approve": result["requested_decision"] == "APPROVE" and result["decision"] == "INVALIDATE",
@@ -82,10 +93,10 @@ def synthetic_proof():
     checks = {}; checks.update(_launcher_chain_checks()); checks.update(_click_time_race_checks())
     tests = [{"name": k, "status": "PASS" if v else "FAIL"} for k, v in checks.items()]
     passed = sum(x["status"] == "PASS" for x in tests)
-    return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"PROMOTION_LAUNCHER_CHAIN_AND_CLICK_TIME_RACE_PROOF",
-        "verdict":"PASS" if passed==len(tests) else "FAIL","summary":{"pass":passed,"fail":len(tests)-passed,"total":len(tests)},
-        "tests":tests,"synthetic_fixture_only":True,"windows_runtime_certified":False,
-        "production_score_promotion_eligible":False,"automatic_production_certification":False}
+    return {"product": "HMS-AI-ROUTER", "version": VERSION, "suite": "PROMOTION_LAUNCHER_CHAIN_AND_CLICK_TIME_RACE_PROOF",
+        "verdict": "PASS" if passed == len(tests) else "FAIL", "summary": {"pass": passed, "fail": len(tests)-passed, "total": len(tests)},
+        "tests": tests, "synthetic_fixture_only": True, "windows_runtime_certified": False,
+        "production_score_promotion_eligible": False, "automatic_production_certification": False}
 
 
 if __name__ == "__main__":
