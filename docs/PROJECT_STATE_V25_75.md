@@ -65,26 +65,30 @@ The source-side Windows recovery tranche aligned to Cockpit Tools v1.3.28 now in
 - official-auth UAC eligibility only when restart is requested/enabled and one or more original supported-client PIDs survive the successful auth transaction;
 - exact surviving-original-PID targeting so newly launched replacement client PIDs are not killed merely because they are running;
 - preservation of successful auth semantics when a post-commit UAC attempt is cancelled or fails;
-- Windows CI compile/proof coverage for recovery contract, dialog, elevation helper, wrapper and launcher chain.
+- bounded real-Windows UAC recovery validation harness with separate `proof`, read-only `preflight` and explicit-acknowledgement `interactive` modes;
+- same-process token replay validation after both UAC Cancel and successful supported-client close;
+- guard against falsely counting a client that exited before UAC as a successful close validation;
+- Windows CI compile/proof coverage for recovery contract, dialog, elevation helper, runtime validation harness, wrapper and launcher chain.
 
 Detailed P1 checkpoints:
 
 - `docs/V25.75_P1_WINDOWS_RECOVERY_CHECKPOINT.md`
 - `docs/V25.75_P1_UAC_RECOVERY_CHECKPOINT.md`
 - `docs/V25.75_P1_OFFICIAL_AUTH_LIFECYCLE_CHECKPOINT.md`
+- `docs/V25.75_P1_UAC_RUNTIME_VALIDATION_HARNESS_CHECKPOINT.md`
 
 ### Remaining P1 operational gate
 
-The source-side one-shot recovery paths are now present for pre-mutation router close barriers and structured post-commit official-auth client lifecycle recovery.
+The source-side one-shot recovery paths and the bounded runtime validation harness are now present.
 
-What remains is **real Windows validation**, not another source-only parity claim:
+What remains is **execution on an authorized real Windows target**, not another source-only parity claim:
 
-- UAC Cancel must leave the operation fail-closed and consume the one-shot prompt epoch;
-- one successful supported-client elevated close/retry must be observed;
-- token replay must be rejected;
-- restart-disabled and not-requested policies must never offer UAC;
-- unrelated processes must remain non-elevatable;
-- official-auth post-commit UAC failure must preserve the fact that auth already committed.
+- run read-only `preflight`;
+- observe a real UAC Cancel and same-token replay block;
+- observe one real supported-client close and same-token replay block;
+- verify restart-disabled/not-requested policies never offer UAC;
+- verify unrelated processes remain non-elevatable;
+- verify official-auth post-commit UAC failure preserves the fact that auth already committed.
 
 These bounded recovery checks remain separate from the canonical seven-case production certification.
 
@@ -101,9 +105,11 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 - Source/synthetic proof infrastructure is not real Windows/current-Codex production evidence.
 - Recovery forbidden-operation checks are scoped to implementation source so their proof expressions cannot self-match forbidden literals.
 - The one-shot elevation source proof validates the Codex/ChatGPT allowlist, generic-process rejection, fixed system taskkill resolution, numeric PID-only argument construction, token replay block, UAC cancel/timeout codes and absence of generic shell elevation.
-- The GUI recovery proof now also validates structured official-auth policy authority, backend read-only settings fallback, original-PID survival detection, new-PID success detection, restart-disabled/not-requested fail-closed behavior and preservation of committed-auth semantics after UAC failure.
-- The Windows Actions graph includes recovery/UAC compilation and proofs, but a run must be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
-- No recovery/UAC source proof authorizes Windows certification, external target-evidence import or production-score mutation.
+- The GUI recovery proof validates structured official-auth policy authority, backend read-only settings fallback, original-PID survival detection, new-PID success detection, restart-disabled/not-requested fail-closed behavior and preservation of committed-auth semantics after UAC failure.
+- The runtime validation harness proof validates that preflight cannot call the elevated helper, interactive mode requires the exact acknowledgement before the helper call, same-token replay is checked, and a successful close requires a real UAC start plus a positive closed-PID count.
+- GitHub Actions executes only the harness `proof`; CI never runs its `preflight` or `interactive` modes.
+- The Windows Actions graph must still be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
+- No recovery/UAC proof or bounded runtime validation authorizes Windows production certification, external target-evidence import or production-score mutation.
 
 ## Change policy
 
@@ -117,9 +123,9 @@ These bounded recovery checks remain separate from the canonical seven-case prod
 
 ## Immediate next action
 
-1. Integrate the structured official-auth lifecycle recovery tranche to `main` by fast-forward only if branch ancestry remains linear.
+1. Integrate the bounded UAC runtime validation harness to `main` by fast-forward only if branch ancestry remains linear.
 2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes the integrated push run.
-3. Perform bounded real-Windows recovery validation for UAC Cancel, successful supported-client close/retry, token replay rejection, restart-disabled/not-requested behavior, unrelated-process rejection and official-auth post-commit semantics.
-4. Keep that recovery validation separate from the canonical seven-case production certification.
-5. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
+3. Execute the harness `preflight` and the two bounded interactive UAC validation outcomes on the authorized Windows target; keep their reports separate from production evidence.
+4. Verify restart-disabled/not-requested and unrelated-process rejection behavior on the target.
+5. Execute the actual authorized Windows/current-Codex canonical seven-case target evidence only after the bounded recovery gate is understood.
 6. Import the resulting certificate-signed packet through sealed reviewer authority, complete dual human review and baseline reconciliation, then and only then evaluate any human-authorized production-evidence promotion proposal.
