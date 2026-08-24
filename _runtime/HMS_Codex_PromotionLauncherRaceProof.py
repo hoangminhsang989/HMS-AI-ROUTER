@@ -18,26 +18,43 @@ REPO_ROOT = RUNTIME_DIR.parent
 
 def _launcher_chain_checks():
     vbs = (REPO_ROOT / "HMS_AI_ROUTER.vbs").read_text("utf-8")
+    recovery = (RUNTIME_DIR / "HMS_GUI_RECOVERY_ENTRY.pyw").read_text("utf-8")
     review = (RUNTIME_DIR / "HMS_GUI_REVIEW_ENTRY.pyw").read_text("utf-8")
     safe = (RUNTIME_DIR / "HMS_GUI_SAFE_FALLBACK.pyw").read_text("utf-8")
     guarded = (RUNTIME_DIR / "HMS_GUI_ENTRY.pyw").read_text("utf-8")
-    review_pos = vbs.find('HMS_GUI_REVIEW_ENTRY.pyw'); safe_pos = vbs.find('HMS_GUI_SAFE_FALLBACK.pyw'); legacy_pos = vbs.find('HMS_GUI.pyw')
-    review_assign = 'gui = base & "\\_runtime\\HMS_GUI_REVIEW_ENTRY.pyw"'
+    recovery_impl = recovery[:recovery.find("def extension_proof")]
+
+    recovery_pos = vbs.find('HMS_GUI_RECOVERY_ENTRY.pyw')
+    review_pos = vbs.find('HMS_GUI_REVIEW_ENTRY.pyw')
+    safe_pos = vbs.find('HMS_GUI_SAFE_FALLBACK.pyw')
+    legacy_pos = vbs.find('HMS_GUI.pyw')
+
+    recovery_assign = 'gui = base & "\\_runtime\\HMS_GUI_RECOVERY_ENTRY.pyw"'
+    review_assign = 'reviewGui = base & "\\_runtime\\HMS_GUI_REVIEW_ENTRY.pyw"'
     safe_assign = 'safeGui = base & "\\_runtime\\HMS_GUI_SAFE_FALLBACK.pyw"'
     legacy_assign = 'legacyGui = base & "\\_runtime\\HMS_GUI.pyw"'
-    first_fallback = 'If Not fso.FileExists(gui) Then gui = safeGui'; second_fallback = 'If Not fso.FileExists(gui) Then gui = legacyGui'
+    fallback_review = 'If Not fso.FileExists(gui) Then gui = reviewGui'
+    fallback_safe = 'If Not fso.FileExists(gui) Then gui = safeGui'
+    fallback_legacy = 'If Not fso.FileExists(gui) Then gui = legacyGui'
+
     return {
-        "principal_launcher_names_reviewer_wrapper": review_pos >= 0 and review_assign in vbs,
-        "fallback_order_review_safe_legacy": 0 <= review_pos < safe_pos < legacy_pos,
-        "fallback_is_two_stage_and_fail_closed": first_fallback in vbs and second_fallback in vbs and vbs.find(first_fallback) < vbs.find(second_fallback),
+        "principal_launcher_names_recovery_wrapper": recovery_pos >= 0 and recovery_assign in vbs,
+        "fallback_order_recovery_review_safe_legacy": 0 <= recovery_pos < review_pos < safe_pos < legacy_pos,
+        "fallback_is_three_stage_and_fail_closed": all(x in vbs for x in (fallback_review, fallback_safe, fallback_legacy))
+            and vbs.find(fallback_review) < vbs.find(fallback_safe) < vbs.find(fallback_legacy),
         "launcher_does_not_fallback_to_guarded_promotion_entry": 'guardedGui' not in vbs and 'gui = base & "\\_runtime\\HMS_GUI_ENTRY.pyw"' not in vbs,
+        "recovery_wrapper_chains_to_sealed_review_wrapper": 'REVIEW_ENTRY = RUNTIME_DIR / "HMS_GUI_REVIEW_ENTRY.pyw"' in recovery_impl
+            and "review = _load_review_entry()" in recovery_impl and "legacy = review.legacy" in recovery_impl,
+        "recovery_wrapper_bounds_retry": "_MAX_RECOVERY_RETRIES = 3" in recovery_impl and "RETRY_LIMIT_REACHED" in recovery_impl,
+        "recovery_wrapper_keeps_background_quiet": "_BACKGROUND_TOKENS" in recovery_impl and "_is_interactive_backend_action" in recovery_impl,
+        "recovery_wrapper_has_no_elevation_execution": "ShellExecute" not in recovery_impl and '"runas"' not in recovery_impl.lower(),
         "review_wrapper_loads_guarded_entry_when_principal_present": 'BASE_ENTRY = RUNTIME_DIR / "HMS_GUI_ENTRY.pyw"' in review,
         "review_wrapper_installs_confirmation": "askyesno" in review and "_confirmed_submit_promotion_review" in review,
         "review_wrapper_uses_contract": "evaluate_gui_action_contract" in review,
         "guarded_entry_click_uses_controller_recheck": "record_review_action" in guarded and "get_live_baseline" in guarded,
         "safe_fallback_loads_legacy_core_directly": 'LEGACY_GUI = RUNTIME_DIR / "HMS_GUI.pyw"' in safe,
         "safe_fallback_has_no_promotion_controller": "PromotionWorkbenchController" not in safe and "submit_promotion_review" not in safe,
-        "legacy_only_final_fallback": safe_assign in vbs and legacy_assign in vbs and vbs.count('gui = legacyGui') == 1,
+        "legacy_only_final_fallback": review_assign in vbs and safe_assign in vbs and legacy_assign in vbs and vbs.count('gui = legacyGui') == 1,
     }
 
 
