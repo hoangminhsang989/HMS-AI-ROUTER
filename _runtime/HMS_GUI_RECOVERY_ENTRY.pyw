@@ -50,6 +50,7 @@ _BACKGROUND_TOKENS = frozenset({
     "get", "list", "status", "refresh", "probe", "health", "quota", "diagnostic", "diagnostics",
     "snapshot", "telemetry", "poll", "heartbeat", "maintenance", "observe", "inspect", "read",
 })
+_UAC_BACKEND_ACTIONS = frozenset({"enable", "disable"})
 _MAX_RECOVERY_RETRIES = 3
 
 
@@ -124,8 +125,24 @@ def _failure_result_from_exception(exc: Exception) -> dict:
     }
 
 
+def _discover_supported_client_pids() -> list[int]:
+    try:
+        return one_shot_elevation.discover_supported_client_pids()
+    except Exception:
+        return []
+
+
+def _uac_allowed_for_backend_failure(action: str, detail: str) -> bool:
+    return (
+        str(action or "").strip().lower() in _UAC_BACKEND_ACTIONS
+        and recovery_contract.classify_error(detail) == recovery_contract.RECOVERY_CLIENT_CLOSE_BLOCKED
+    )
+
+
 def _backend_with_recovery(self, action, timeout=60, payload=None):
     attempt = 0
+    uac_token = secrets.token_urlsafe(24)
+    uac_consumed = False
     while True:
         try:
             data = _ORIGINAL_BACKEND(self, action, timeout, payload)
@@ -137,31 +154,60 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
             return data
 
         detail = _error_detail(data)
+        pids = _discover_supported_client_pids() if _uac_allowed_for_backend_failure(str(action), detail) else []
         plan = recovery_contract.build_recovery_plan(
             detail,
             operation=str(action).upper(),
             target_path=_target_path(data),
             background_probe=False,
-            supported_client=False,
+            supported_client=bool(pids) and not uac_consumed,
         )
         if plan.get("recoverable") is not True:
             return data
         choice = _show_dialog_threadsafe(self, plan)
-        if choice not in {recovery_contract.ACTION_RETRY, recovery_contract.ACTION_MANUAL_RETRY}:
-            if isinstance(data, dict):
-                data = dict(data)
-                data["recovery_category"] = plan.get("category")
-                data["recovery_action"] = choice
-                data["recovery_detail_sanitized"] = True
-            return data
-        attempt += 1
-        if attempt >= _MAX_RECOVERY_RETRIES:
-            if isinstance(data, dict):
-                data = dict(data)
-                data["recovery_category"] = plan.get("category")
-                data["recovery_action"] = "RETRY_LIMIT_REACHED"
-                data["recovery_detail_sanitized"] = True
-            return data
+        if choice in {recovery_contract.ACTION_RETRY, recovery_contract.ACTION_MANUAL_RETRY}:
+            attempt += 1
+            if attempt >= _MAX_RECOVERY_RETRIES:
+                if isinstance(data, dict):
+                    data = dict(data)
+                    data["recovery_category"] = plan.get("category")
+                    data["recovery_action"] = "RETRY_LIMIT_REACHED"
+                    data["recovery_detail_sanitized"] = True
+                return data
+            continue
+        if choice == recovery_contract.ACTION_REQUEST_UAC_ONCE:
+            gate = recovery_contract.evaluate_uac_once(plan, operation_token=uac_token, already_consumed=uac_consumed)
+            if gate.get("allowed") is not True:
+                if isinstance(data, dict):
+                    data = dict(data)
+                    data["recovery_category"] = plan.get("category")
+                    data["recovery_action"] = "UAC_ONE_SHOT_BLOCKED"
+                    data["recovery_detail_sanitized"] = True
+                return data
+            # Consume before helper/UAC. Cancel and failure remain one-shot for this backend operation epoch.
+            uac_consumed = True
+            try:
+                one_shot_elevation.elevated_close_supported_processes(pids, operation_token=uac_token)
+            except Exception as exc:
+                if isinstance(data, dict):
+                    data = dict(data)
+                    data["error"] = recovery_contract.sanitize_detail(exc)
+                    data["recovery_category"] = plan.get("category")
+                    data["recovery_action"] = "UAC_ONE_SHOT_FAILED"
+                    data["recovery_detail_sanitized"] = True
+                return data
+            # The close barrier has been resolved; retry the same original transaction once through its normal verifier.
+            attempt += 1
+            if attempt >= _MAX_RECOVERY_RETRIES:
+                return data
+            continue
+
+        if isinstance(data, dict):
+            data = dict(data)
+            data["recovery_category"] = plan.get("category")
+            data["recovery_action"] = choice
+            data["recovery_detail_sanitized"] = True
+        return data
 
 
 def _official_switch_with_recovery_tracking(self, email):
@@ -169,13 +215,6 @@ def _official_switch_with_recovery_tracking(self, email):
     self._hms_recovery_uac_operation_token = secrets.token_urlsafe(24)
     self._hms_recovery_uac_consumed = False
     return _ORIGINAL_OFFICIAL_SWITCH(self, email)
-
-
-def _discover_switch_client_pids() -> list[int]:
-    try:
-        return one_shot_elevation.discover_supported_client_pids()
-    except Exception:
-        return []
 
 
 def _retry_official_switch(self):
@@ -190,7 +229,8 @@ def _finish_official_switch_with_recovery(self, data):
         return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
 
     detail = _error_detail(data)
-    pids = _discover_switch_client_pids()
+    category = recovery_contract.classify_error(detail)
+    pids = _discover_supported_client_pids() if category == recovery_contract.RECOVERY_CLIENT_CLOSE_BLOCKED else []
     uac_consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
     plan = recovery_contract.build_recovery_plan(
         detail,
@@ -216,7 +256,6 @@ def _finish_official_switch_with_recovery(self, data):
             blocked["error"] = "Windows one-shot authorization bị chặn: " + ",".join(gate.get("reasons") or [])
             return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, blocked)
 
-        # Mark consumed before the UAC helper. Cancellation/failure is still one-shot for this switch epoch.
         self._hms_recovery_uac_consumed = True
         try:
             elevated = one_shot_elevation.elevated_close_supported_processes(pids, operation_token=token)
@@ -240,9 +279,12 @@ legacy.HmsApp._finish_official_auth_switch = _finish_official_switch_with_recove
 
 
 def extension_proof():
-    access = recovery_contract.build_recovery_plan(
-        "Access denied (os error 5)", operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
-        supported_client=True,
+    close_blocked = recovery_contract.build_recovery_plan(
+        "CODEX_RESTART_REQUIRED: client remains running",
+        operation="ENABLE", supported_client=True,
+    )
+    unrelated_access = recovery_contract.build_recovery_plan(
+        "Access denied (os error 5)", operation="BACKUP_EXPORT", supported_client=True,
     )
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
@@ -259,10 +301,12 @@ def extension_proof():
         "direct_open_codex_is_interactive": _is_interactive_backend_action("open_codex"),
         "threadsafe_ui_bridge": "root.after" in impl_src and "threading.Event" in impl_src,
         "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
-        "official_switch_recovery_supported": "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE" in impl_src,
-        "uac_only_offered_after_supported_pid_discovery": access["uac_eligible"] is True and "discover_supported_client_pids" in impl_src and "supported_client=bool(pids) and not uac_consumed" in impl_src,
-        "uac_epoch_token_is_generated_per_user_switch": "secrets.token_urlsafe(24)" in impl_src and "_hms_recovery_uac_consumed = False" in impl_src,
-        "uac_consumed_before_helper": impl_src.find("self._hms_recovery_uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
+        "pre_mutation_close_barrier_is_uac_eligible": close_blocked["uac_eligible"] is True and _uac_allowed_for_backend_failure("enable", "CODEX_RESTART_REQUIRED: x"),
+        "unrelated_access_denied_cannot_elevate": unrelated_access["uac_eligible"] is False and not _uac_allowed_for_backend_failure("backup_export", "Access denied os error 5"),
+        "uac_only_after_supported_pid_discovery": "discover_supported_client_pids" in impl_src and "supported_client=bool(pids) and not uac_consumed" in impl_src,
+        "uac_epoch_token_is_generated_per_operation": "secrets.token_urlsafe(24)" in impl_src,
+        "uac_consumed_before_helper": impl_src.find("uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
+        "uac_retries_original_transaction": "continue" in impl_src and "close barrier has been resolved" in impl_src,
         "uac_helper_has_no_caller_executable": "executable_path" not in impl_src and "taskkill.exe" not in impl_src,
         "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
         "no_production_authority": "production_score_mutation" not in impl_src and "windows_runtime_certified = True" not in impl_src,
