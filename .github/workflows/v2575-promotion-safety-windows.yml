@@ -28,6 +28,7 @@ on:
       - '_runtime/HMS_Codex_WindowsPromotionE2EFixtures.py'
       - '_runtime/HMS_GUI_ENTRY.pyw'
       - '_runtime/HMS_GUI_REVIEW_ENTRY.pyw'
+      - '_runtime/HMS_GUI_SAFE_FALLBACK.pyw'
       - 'HMS_AI_ROUTER.vbs'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
   workflow_dispatch:
@@ -83,7 +84,8 @@ jobs:
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
             _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw `
-            _runtime/HMS_GUI_REVIEW_ENTRY.pyw
+            _runtime/HMS_GUI_REVIEW_ENTRY.pyw `
+            _runtime/HMS_GUI_SAFE_FALLBACK.pyw
       - name: Canonical seven-case contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsRuntimeCaseContract.py
@@ -147,3 +149,6 @@ jobs:
       - name: Reviewer policy GUI wrapper proof
         shell: pwsh
         run: python _runtime/HMS_GUI_REVIEW_ENTRY.pyw --proof
+      - name: Promotion-disabled safe fallback proof
+        shell: pwsh
+        run: python _runtime/HMS_GUI_SAFE_FALLBACK.pyw --proof
