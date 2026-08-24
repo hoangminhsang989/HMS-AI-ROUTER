@@ -5,7 +5,7 @@ import argparse, hashlib, json, os
 from pathlib import Path
 
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, VERSION
-from HMS_Codex_WindowsPromotionWorkbenchController import PromotionWorkbenchController
+from HMS_Codex_WindowsPromotionWorkbenchController import PromotionWorkbenchController, REPORT_SEAL_PURPOSE
 import HMS_Codex_ReviewerReleaseAuthority as release_authority
 
 PRODUCT = "HMS-AI-ROUTER"
@@ -27,7 +27,7 @@ def _verify_release_authority(*, ctl: PromotionWorkbenchController, authority_pa
         key_path=ctl.integrity_key_path,
         freshness_hours=freshness_hours,
     )
-    if authority.get("valid") is not True:
+    if authority.get("valid") is not True or authority.get("local_integrity_seal_valid") is not True:
         raise ValueError("SEALED_REVIEWER_RELEASE_AUTHORITY_INVALID:" + ",".join(authority.get("reasons") or []))
     if authority.get("packet_derived") is not False:
         raise ValueError("RELEASE_AUTHORITY_PACKET_DERIVED")
@@ -46,6 +46,20 @@ def _verify_release_authority(*, ctl: PromotionWorkbenchController, authority_pa
         "authority": authority,
         "package_zip_sha256": package_sha,
         "release_manifest_sha256": manifest_sha,
+    }
+
+
+def _release_authority_summary(authority: dict) -> dict:
+    return {
+        "valid": authority.get("valid") is True,
+        "authority_sha256": str(authority.get("authority_sha256") or "").lower(),
+        "package_zip_sha256": str(authority.get("package_zip_sha256") or "").lower(),
+        "release_manifest_sha256": str(authority.get("release_manifest_sha256") or "").lower(),
+        "source_commit_sha": str(authority.get("source_commit_sha") or "").lower(),
+        "source_tree_sha": str(authority.get("source_tree_sha") or "").lower(),
+        "local_integrity_seal_valid": authority.get("local_integrity_seal_valid") is True,
+        "packet_derived": authority.get("packet_derived") is True,
+        "local_artifact_hashed_at_capture": authority.get("local_artifact_hashed_at_capture") is True,
     }
 
 
@@ -93,6 +107,14 @@ def import_for_review(*, state_dir: Path, packet: Path, package_zip: Path, relea
     if str(provenance.get("release_manifest_sha256") or "").lower() != reviewed_release["release_manifest_sha256"]:
         raise ValueError("SEALED_PROVENANCE_RELEASE_AUTHORITY_MANIFEST_MISMATCH")
 
+    sealed["reviewer_release_authority"] = _release_authority_summary(reviewed_release)
+    ctl._write_sealed_json(ctl.report_path, ctl.report_seal_path, sealed, REPORT_SEAL_PURPOSE)
+    sealed = ctl.load_verified_report()
+    persisted_release = sealed.get("reviewer_release_authority") if isinstance(sealed.get("reviewer_release_authority"), dict) else {}
+    if persisted_release != _release_authority_summary(reviewed_release):
+        raise ValueError("SEALED_RELEASE_AUTHORITY_BINDING_PERSISTENCE_MISMATCH")
+
+    provenance = sealed.get("provenance") if isinstance(sealed.get("provenance"), dict) else {}
     trust = sealed.get("reviewer_trust_authority") or {}
     return {
         "product": PRODUCT,
@@ -104,11 +126,12 @@ def import_for_review(*, state_dir: Path, packet: Path, package_zip: Path, relea
         "release_manifest_sha256": provenance.get("release_manifest_sha256", ""),
         "trust_snapshot_sha256": provenance.get("trust_snapshot_sha256", ""),
         "reviewer_trust_authority_sha256": trust.get("authority_sha256", ""),
-        "reviewer_release_authority_sha256": reviewed_release.get("authority_sha256", ""),
-        "release_authority_source_commit_sha": reviewed_release.get("source_commit_sha", ""),
-        "release_authority_source_tree_sha": reviewed_release.get("source_tree_sha", ""),
-        "release_authority_packet_derived": reviewed_release.get("packet_derived") is True,
-        "release_authority_local_artifact_hashed_at_capture": reviewed_release.get("local_artifact_hashed_at_capture") is True,
+        "reviewer_release_authority_sha256": persisted_release.get("authority_sha256", ""),
+        "release_authority_source_commit_sha": persisted_release.get("source_commit_sha", ""),
+        "release_authority_source_tree_sha": persisted_release.get("source_tree_sha", ""),
+        "release_authority_packet_derived": persisted_release.get("packet_derived") is True,
+        "release_authority_local_artifact_hashed_at_capture": persisted_release.get("local_artifact_hashed_at_capture") is True,
+        "release_authority_binding_persisted_in_sealed_report": True,
         "report_local_integrity_seal_present": ctl.report_seal_path.is_file(),
         "replay_registry_local_integrity_seal_present": ctl.replay_seal_path.is_file(),
         "raw_packet_copied_into_state_dir": False,
@@ -129,6 +152,7 @@ def source_proof() -> dict:
         "release_authority_module_required": "import HMS_Codex_ReviewerReleaseAuthority as release_authority" in src,
         "release_authority_verified_with_reviewer_dpapi_key": "key_path=ctl.integrity_key_path" in src,
         "release_authority_verified_before_controller_ingest": "load_and_verify_authority" in pre_ingest,
+        "release_authority_local_seal_required": 'authority.get("local_integrity_seal_valid") is not True' in pre_ingest,
         "packet_derived_release_authority_rejected": "RELEASE_AUTHORITY_PACKET_DERIVED" in pre_ingest,
         "self_hashed_release_authority_rejected": "RELEASE_AUTHORITY_SELF_HASHED_LOCAL_ARTIFACT" in pre_ingest,
         "local_package_compared_to_explicit_authority": "RELEASE_AUTHORITY_PACKAGE_SHA256_MISMATCH" in pre_ingest,
@@ -136,6 +160,8 @@ def source_proof() -> dict:
         "controller_uses_authority_package_digest": 'expected_package_sha256=reviewed_release["package_zip_sha256"]' in src,
         "controller_uses_authority_manifest_digest": 'expected_manifest_sha256=reviewed_release["release_manifest_sha256"]' in src,
         "sealed_provenance_rechecked_against_release_authority": "SEALED_PROVENANCE_RELEASE_AUTHORITY_PACKAGE_MISMATCH" in post_ingest and "SEALED_PROVENANCE_RELEASE_AUTHORITY_MANIFEST_MISMATCH" in post_ingest,
+        "release_authority_binding_persisted_into_sealed_report": 'sealed["reviewer_release_authority"]' in post_ingest and "REPORT_SEAL_PURPOSE" in src,
+        "release_authority_binding_reloaded_after_seal": "SEALED_RELEASE_AUTHORITY_BINDING_PERSISTENCE_MISMATCH" in post_ingest,
         "trust_authority_path_required": "trust_authority_path=trust_authority" in src,
         "sealed_report_reloaded": "ctl.load_verified_report" in src,
         "report_seal_required": "report_seal_path.is_file" in src,
