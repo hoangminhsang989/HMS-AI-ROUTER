@@ -16,6 +16,7 @@ on:
       - '_runtime/HMS_Codex_ReviewerLocalIntegritySeal.py'
       - '_runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py'
       - '_runtime/HMS_Codex_ReviewerPacketImport.py'
+      - '_runtime/HMS_Codex_WindowsEvidenceOrchestrator.py'
       - '_runtime/HMS_Sign_Digest_With_Certificate.ps1'
       - '_runtime/HMS_Inspect_Evidence_Certificate.ps1'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
@@ -75,6 +76,7 @@ jobs:
             _runtime/HMS_Codex_ReviewerLocalIntegritySeal.py `
             _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py `
             _runtime/HMS_Codex_ReviewerPacketImport.py `
+            _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
@@ -107,6 +109,9 @@ jobs:
       - name: Reviewer packet import source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ReviewerPacketImport.py --proof
+      - name: Bounded Windows evidence orchestrator proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py proof
       - name: External signer trust cryptographic contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py
@@ -137,7 +142,7 @@ jobs:
       - name: Review workbench proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py proof
-      - name: Controller sealed-state and live-baseline proof
+      - name: Controller sealed-state replay-concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
       - name: Promotion E2E negative fixtures
