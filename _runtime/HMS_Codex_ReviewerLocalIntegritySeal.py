@@ -107,6 +107,7 @@ def synthetic_proof() -> dict[str, Any]:
     wrong_purpose = _verify_with_key(payload, seal, "OTHER_PURPOSE", key, key_ref)
     wrong_key = _verify_with_key(payload, seal, "TEST_REVIEWER_SEAL", secrets.token_bytes(32), key_ref)
     src = Path(__file__).read_text("utf-8")
+    impl_src = src[:src.find("def synthetic_proof")]
     checks = {
         "roundtrip_valid": good["valid"],
         "payload_tamper_rejected": not tampered["valid"] and "LOCAL_SEAL_PAYLOAD_DIGEST_MISMATCH" in tampered["reasons"],
@@ -114,10 +115,10 @@ def synthetic_proof() -> dict[str, Any]:
         "wrong_key_rejected": not wrong_key["valid"] and "LOCAL_SEAL_SIGNATURE_INVALID" in wrong_key["reasons"],
         "production_api_windows_only": os.name == "nt" or _nonwindows_rejected(),
         "private_material_not_exported": seal["private_material_exported"] is False and "key" not in seal,
-        "user_scope_dpapi_explicit": "machine_scope=False" in src,
-        "machine_scope_not_used_for_reviewer_key": "machine_scope=True" not in src,
+        "user_scope_dpapi_explicit": "machine_scope=False" in impl_src,
+        "machine_scope_not_used_for_reviewer_key": "machine_scope=True" not in impl_src,
         "seal_class_user_scoped": seal["seal_class"] == SEAL_CLASS and seal["algorithm"] == ALGORITHM,
-        "exclusive_key_creation": "os.O_EXCL" in src,
+        "exclusive_key_creation": "os.O_EXCL" in impl_src,
     }
     tests = [{"name": k, "status": "PASS" if v else "FAIL"} for k, v in checks.items()]
     passed = sum(t["status"] == "PASS" for t in tests)
