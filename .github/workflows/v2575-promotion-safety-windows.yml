@@ -18,6 +18,7 @@ on:
       - '_runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py'
       - '_runtime/HMS_Codex_ReviewerLocalIntegritySeal.py'
       - '_runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py'
+      - '_runtime/HMS_Codex_ReviewerReleaseAuthority.py'
       - '_runtime/HMS_Codex_ReviewerPacketImport.py'
       - '_runtime/HMS_Codex_WindowsEvidenceOrchestrator.py'
       - '_runtime/HMS_Codex_WindowsRecoveryContract.py'
@@ -91,6 +92,7 @@ jobs:
             _runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py `
             _runtime/HMS_Codex_ReviewerLocalIntegritySeal.py `
             _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py `
+            _runtime/HMS_Codex_ReviewerReleaseAuthority.py `
             _runtime/HMS_Codex_ReviewerPacketImport.py `
             _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py `
             _runtime/HMS_Codex_WindowsRecoveryContract.py `
@@ -131,6 +133,9 @@ jobs:
       - name: Reviewer trust authority snapshot proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py --proof
+      - name: Reviewer release identity authority proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ReviewerReleaseAuthority.py --proof
       - name: Reviewer packet import source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ReviewerPacketImport.py --proof
