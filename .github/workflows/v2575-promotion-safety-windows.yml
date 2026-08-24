@@ -168,7 +168,7 @@ jobs:
         run: python _runtime/HMS_Codex_PromotionLauncherRaceProof.py
       - name: Review workbench proof
         shell: pwsh
-        run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py proof
+        run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py --proof
       - name: Controller sealed-state replay-concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
