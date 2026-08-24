@@ -17,13 +17,16 @@ def _sha(raw:bytes)->str:return hashlib.sha256(raw).hexdigest()
 def export_reports(source:Path,output_dir:Path)->dict:
     raw=source.read_bytes(); obj=json.loads(raw.decode("utf-8-sig")); reasons=[]
     stages=obj.get("stages") if isinstance(obj.get("stages"),dict) else {}
+    summary=obj.get("summary") if isinstance(obj.get("summary"),dict) else {}
     matrix=validate_case_ids(stages.keys())
     if obj.get("product")!="HMS-AI-ROUTER": reasons.append("SOURCE_PRODUCT_INVALID")
     if obj.get("suite")!="TARGET_MACHINE_CERTIFICATION": reasons.append("SOURCE_SUITE_INVALID")
     if obj.get("verdict")!=SOURCE_VERDICT: reasons.append("SOURCE_NOT_FULLY_CERTIFIED")
     if obj.get("production_certification")!=SOURCE_CERTIFICATION: reasons.append("SOURCE_PRODUCTION_CERTIFICATION_MISSING")
     if not matrix["valid"]: reasons.append("SOURCE_STAGE_MATRIX_NOT_EXACT_SEVEN")
-    if int((obj.get("summary") or {}).get("stages_pass") or 0)!=7: reasons.append("SOURCE_STAGE_PASS_COUNT_NOT_7")
+    if int(summary.get("stages_pass") or 0)!=7: reasons.append("SOURCE_STAGE_PASS_COUNT_NOT_7")
+    if int(summary.get("stages_total") or 0)!=len(REQUIRED_RUNTIME_CASE_IDS): reasons.append("SOURCE_STAGE_TOTAL_NOT_7")
+    if summary.get("production_certified") is not True: reasons.append("SOURCE_PRODUCTION_CERTIFIED_FLAG_NOT_TRUE")
     for cid in REQUIRED_RUNTIME_CASE_IDS:
         if not isinstance(stages.get(cid),dict) or stages[cid].get("pass") is not True: reasons.append("SOURCE_STAGE_NOT_PASS:"+cid)
     if reasons: raise ValueError(",".join(reasons))
@@ -48,9 +51,24 @@ def synthetic_proof()->dict:
     good={"product":PRODUCT,"suite":"TARGET_MACHINE_CERTIFICATION","verdict":SOURCE_VERDICT,
           "production_certification":SOURCE_CERTIFICATION,"generated_utc":datetime.now(timezone.utc).isoformat(),
           "summary":{"stages_pass":7,"stages_total":7,"production_certified":True},"stages":stages}
+    partial=dict(good,verdict="TARGET_MACHINE_PARTIAL_EVIDENCE")
+    bad_total=json.loads(json.dumps(good)); bad_total["summary"]["stages_total"]=8
+    bad_flag=json.loads(json.dumps(good)); bad_flag["summary"]["production_certified"]=False
+    def source_reasons(obj):
+        reasons=[]; stage_map=obj.get("stages") if isinstance(obj.get("stages"),dict) else {}; summary=obj.get("summary") if isinstance(obj.get("summary"),dict) else {}
+        matrix=validate_case_ids(stage_map.keys())
+        if obj.get("verdict")!=SOURCE_VERDICT: reasons.append("SOURCE_NOT_FULLY_CERTIFIED")
+        if obj.get("production_certification")!=SOURCE_CERTIFICATION: reasons.append("SOURCE_PRODUCTION_CERTIFICATION_MISSING")
+        if not matrix["valid"]: reasons.append("SOURCE_STAGE_MATRIX_NOT_EXACT_SEVEN")
+        if int(summary.get("stages_pass") or 0)!=7: reasons.append("SOURCE_STAGE_PASS_COUNT_NOT_7")
+        if int(summary.get("stages_total") or 0)!=len(REQUIRED_RUNTIME_CASE_IDS): reasons.append("SOURCE_STAGE_TOTAL_NOT_7")
+        if summary.get("production_certified") is not True: reasons.append("SOURCE_PRODUCTION_CERTIFIED_FLAG_NOT_TRUE")
+        return reasons
     checks={"exact_stage_contract":validate_case_ids(stages.keys())["valid"],
-            "partial_not_eligible":not (dict(good,verdict="TARGET_MACHINE_PARTIAL_EVIDENCE").get("verdict")==SOURCE_VERDICT),
+            "partial_not_eligible":"SOURCE_NOT_FULLY_CERTIFIED" in source_reasons(partial),
             "canonical_ids_exact":tuple(stages.keys())==tuple(REQUIRED_RUNTIME_CASE_IDS),
+            "contradictory_stage_total_rejected":"SOURCE_STAGE_TOTAL_NOT_7" in source_reasons(bad_total),
+            "contradictory_production_flag_rejected":"SOURCE_PRODUCTION_CERTIFIED_FLAG_NOT_TRUE" in source_reasons(bad_flag),
             "no_auto_authority":True}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(t["status"]=="PASS" for t in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"EXTERNAL_WINDOWS_CASE_REPORT_EXPORTER_PROOF",
