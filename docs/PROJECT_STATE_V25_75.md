@@ -60,18 +60,33 @@ The source-side Windows recovery tranche aligned to Cockpit Tools v1.3.28 now in
 - one-shot token consumption before UAC so cancellation/failure cannot replay the same prompt epoch;
 - UAC eligibility only at the stable pre-mutation `CODEX_RESTART_REQUIRED` close barrier for backend `enable` / `disable` operations;
 - retry of the original backend transaction after successful elevated close so existing mutation/verifier logic remains authoritative;
+- structured official-auth client lifecycle recovery derived from `CodexLaunchAfterAuthSwitch`, `RestartCodexOnSwitch` and before/after supported-client PID identity;
+- read-only `get_settings` fallback when the GUI Settings page has not yet been loaded;
+- official-auth UAC eligibility only when restart is requested/enabled and one or more original supported-client PIDs survive the successful auth transaction;
+- exact surviving-original-PID targeting so newly launched replacement client PIDs are not killed merely because they are running;
+- preservation of successful auth semantics when a post-commit UAC attempt is cancelled or fails;
 - Windows CI compile/proof coverage for recovery contract, dialog, elevation helper, wrapper and launcher chain.
 
 Detailed P1 checkpoints:
 
 - `docs/V25.75_P1_WINDOWS_RECOVERY_CHECKPOINT.md`
 - `docs/V25.75_P1_UAC_RECOVERY_CHECKPOINT.md`
+- `docs/V25.75_P1_OFFICIAL_AUTH_LIFECYCLE_CHECKPOINT.md`
 
-### Remaining P1 parity gap
+### Remaining P1 operational gate
 
-The current official-auth switch can commit credentials successfully and then return a manual client-restart guidance string when the post-switch client close/relaunch does not complete. That success-with-guidance path does not yet expose structured close-failure metadata such as a stable recovery code plus validated PID set.
+The source-side one-shot recovery paths are now present for pre-mutation router close barriers and structured post-commit official-auth client lifecycle recovery.
 
-HMS therefore does not infer elevation eligibility from arbitrary success/error text or merely from the presence of a Codex process. The next source change must make that post-switch lifecycle outcome structured before one-shot UAC can be offered there safely.
+What remains is **real Windows validation**, not another source-only parity claim:
+
+- UAC Cancel must leave the operation fail-closed and consume the one-shot prompt epoch;
+- one successful supported-client elevated close/retry must be observed;
+- token replay must be rejected;
+- restart-disabled and not-requested policies must never offer UAC;
+- unrelated processes must remain non-elevatable;
+- official-auth post-commit UAC failure must preserve the fact that auth already committed.
+
+These bounded recovery checks remain separate from the canonical seven-case production certification.
 
 ## Reviewer authority operational rules
 
@@ -86,6 +101,7 @@ HMS therefore does not infer elevation eligibility from arbitrary success/error 
 - Source/synthetic proof infrastructure is not real Windows/current-Codex production evidence.
 - Recovery forbidden-operation checks are scoped to implementation source so their proof expressions cannot self-match forbidden literals.
 - The one-shot elevation source proof validates the Codex/ChatGPT allowlist, generic-process rejection, fixed system taskkill resolution, numeric PID-only argument construction, token replay block, UAC cancel/timeout codes and absence of generic shell elevation.
+- The GUI recovery proof now also validates structured official-auth policy authority, backend read-only settings fallback, original-PID survival detection, new-PID success detection, restart-disabled/not-requested fail-closed behavior and preservation of committed-auth semantics after UAC failure.
 - The Windows Actions graph includes recovery/UAC compilation and proofs, but a run must be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
 - No recovery/UAC source proof authorizes Windows certification, external target-evidence import or production-score mutation.
 
@@ -101,9 +117,9 @@ HMS therefore does not infer elevation eligibility from arbitrary success/error 
 
 ## Immediate next action
 
-1. Integrate the one-shot UAC recovery tranche to `main` by fast-forward only if branch ancestry remains linear.
-2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes a run for the integrated graph.
-3. Add structured post-switch client-lifecycle recovery metadata to official auth switching before extending UAC to that path.
-4. Perform bounded real-Windows validation of UAC cancel, one successful supported-client close, token replay rejection and unrelated-process rejection; do not confuse this with production certification.
+1. Integrate the structured official-auth lifecycle recovery tranche to `main` by fast-forward only if branch ancestry remains linear.
+2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes the integrated push run.
+3. Perform bounded real-Windows recovery validation for UAC Cancel, successful supported-client close/retry, token replay rejection, restart-disabled/not-requested behavior, unrelated-process rejection and official-auth post-commit semantics.
+4. Keep that recovery validation separate from the canonical seven-case production certification.
 5. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
 6. Import the resulting certificate-signed packet through sealed reviewer authority, complete dual human review and baseline reconciliation, then and only then evaluate any human-authorized production-evidence promotion proposal.
