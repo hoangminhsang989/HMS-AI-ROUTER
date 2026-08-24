@@ -66,13 +66,13 @@ $certificateAuthority = $false
 foreach ($ext in $cert.Extensions) {
     if ($ext.Oid.Value -eq '2.5.29.15') {
         $keyUsagePresent = $true
-        $ku = New-Object System.Security.Cryptography.X509Certificates.X509KeyUsageExtension($ext, $ext.Critical)
+        $ku = New-Object System.Security.Cryptography.X509Certificates.X509KeyUsageExtension -ArgumentList $ext, $ext.Critical
         $digitalSignatureAllowed = (($ku.KeyUsages -band [System.Security.Cryptography.X509Certificates.X509KeyUsageFlags]::DigitalSignature) -ne 0)
         if (-not $digitalSignatureAllowed) { $reasons.Add('CERTIFICATE_DIGITAL_SIGNATURE_USAGE_REQUIRED') }
     }
     if ($ext.Oid.Value -eq '2.5.29.19') {
         $caExtensionPresent = $true
-        $bc = New-Object System.Security.Cryptography.X509Certificates.X509BasicConstraintsExtension($ext, $ext.Critical)
+        $bc = New-Object System.Security.Cryptography.X509Certificates.X509BasicConstraintsExtension -ArgumentList $ext, $ext.Critical
         $certificateAuthority = [bool]$bc.CertificateAuthority
         if ($certificateAuthority) { $reasons.Add('CA_CERTIFICATE_NOT_ALLOWED_FOR_EVIDENCE_SIGNING') }
     }
