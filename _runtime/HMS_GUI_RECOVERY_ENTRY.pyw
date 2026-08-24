@@ -479,7 +479,12 @@ def extension_proof():
         "uac_consumed_before_helper": impl_src.find("uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
         "uac_helper_has_no_caller_executable": "executable_path" not in impl_src and "taskkill.exe" not in impl_src,
         "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
-        "no_production_authority": "production_score_mutation" not in impl_src and "windows_runtime_certified = True" not in impl_src,
+        "no_production_authority": (
+            '"production_score_mutation_authorized": True' not in impl_src
+            and '"windows_runtime_certified": True' not in impl_src
+            and '"production_score_mutation_authorized": False' in impl_src
+            and '"windows_runtime_certified": False' in impl_src
+        ),
     }
     tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
