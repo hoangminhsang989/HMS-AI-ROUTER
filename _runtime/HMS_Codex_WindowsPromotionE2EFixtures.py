@@ -27,6 +27,12 @@ def _verify(packet:dict,now:datetime,*,seen=None,expected_anchor=None):
     return verify_packet(packet,raw_packet_sha256=EV,expected_package_sha256=PKG,expected_manifest_sha256=MAN,
                          expected_trust_snapshot_sha256=anchor,current_cockpit_baseline=COCKPIT_BASELINE,seen=seen or {},now=now)
 
+def _with_reviewer_authority(report:dict)->dict:
+    out=json.loads(json.dumps(report)); trust=str((out.get("provenance") or {}).get("expected_trust_snapshot_sha256") or "")
+    out["reviewer_trust_authority"]={"valid":True,"authority_sha256":"9"*64,"trust_snapshot_sha256":trust,
+        "active_pin_count":1,"local_integrity_seal_valid":True,"packet_derived":False}
+    return out
+
 def _approval_set(*,one_reviewer=False):
     records=[]; a=reviewer_ref("fixture-reviewer-a","fixture-salt-00000001"); b=reviewer_ref("fixture-reviewer-b","fixture-salt-00000001")
     reviewers=(a,) if one_reviewer else (a,b)
@@ -38,6 +44,7 @@ def _approval_set(*,one_reviewer=False):
 
 def synthetic_e2e_fixtures():
     now=datetime.now(timezone.utc); packet=_packet(now); approved_anchor=packet["trust_snapshot"]["trust_snapshot_sha256"]; good=_verify(packet,now,expected_anchor=approved_anchor)
+    reviewed_good=_with_reviewer_authority(good)
     synthetic_packet=json.loads(json.dumps(packet)); synthetic_packet["synthetic"]=True; quarantine=_verify(synthetic_packet,now,expected_anchor=approved_anchor)
     signer_packet=json.loads(json.dumps(packet)); signer_packet["signer"]["signature_b64"]="not-base64"; signer_fail=_verify(signer_packet,now,expected_anchor=approved_anchor)
     trust_packet=json.loads(json.dumps(packet)); trust_packet["trust_snapshot"]["generation"]+=1; trust_fail=_verify(trust_packet,now,expected_anchor=approved_anchor)
@@ -55,8 +62,12 @@ def synthetic_e2e_fixtures():
         evidence_sha256=EV,manifest_sha256=MAN,package_version=VERSION,cockpit_baseline="1.3.29",lane="PROJECT_RESUME",reason_codes=["BASELINE_DRIFT_LIVE_RECHECK"]))
     invalidated=evaluate(invalidated_records,evidence_sha256=EV,manifest_sha256=MAN,package_version=VERSION)
     optional_gpu=evaluate(approved_records,evidence_sha256=EV,manifest_sha256=MAN,package_version=VERSION,optional_gpu_required=True)
-    workbench_drift=build_state(ingest_report=good,ledger_records=approved_records,package_version=VERSION,manifest_sha256=MAN,
+    workbench_match=build_state(ingest_report=reviewed_good,ledger_records=approved_records,package_version=VERSION,manifest_sha256=MAN,
+        baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review=COCKPIT_BASELINE,optional_gpu_required=False)
+    workbench_drift=build_state(ingest_report=reviewed_good,ledger_records=approved_records,package_version=VERSION,manifest_sha256=MAN,
         baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review="1.3.29",optional_gpu_required=False)
+    no_authority=build_state(ingest_report=good,ledger_records=approved_records,package_version=VERSION,manifest_sha256=MAN,
+        baseline_at_open=COCKPIT_BASELINE,baseline_before_final_review=COCKPIT_BASELINE,optional_gpu_required=False)
 
     checks={
         "positive_crypto_packet_verifies":good["real_packet_verified"] is True and good["trust_anchor_match"] is True,
@@ -73,8 +84,10 @@ def synthetic_e2e_fixtures():
         "reject_freezes_promotion":not rejected["promotion_eligible"] and "CURRENT_EPOCH_REJECTED" in rejected["reasons"],
         "invalidate_freezes_promotion":not invalidated["promotion_eligible"] and "CURRENT_EPOCH_INVALIDATED" in invalidated["reasons"],
         "optional_gpu_required_blocks_without_gpu_reviews":not optional_gpu["promotion_eligible"] and "DUAL_REVIEW_INCOMPLETE:OPTIONAL_GPU" in optional_gpu["reasons"],
+        "sealed_authority_positive_workbench_control":workbench_match["production_score_promotion_eligible"] is True and workbench_match["gates"]["reviewer_trust_authority"] is True,
+        "missing_reviewer_authority_blocks_workbench":not no_authority["production_score_promotion_eligible"] and no_authority["gates"]["reviewer_trust_authority"] is False,
         "workbench_live_baseline_drift_freezes":workbench_drift["status"]=="FROZEN_BASELINE_DRIFT" and not workbench_drift["production_score_promotion_eligible"],
-        "workbench_signature_trust_gates":good["signer_trust"]["valid"] and good["trust_anchor_match"],
+        "workbench_signature_trust_gates":workbench_match["gates"]["signature"] and workbench_match["gates"]["trust"],
         "no_fixture_grants_automatic_authority":all(v is False for v in (good["automatic_production_certification"],positive_review["automatic_production_certification"],
             positive_review["production_score_mutation_authorized"],workbench_drift["automatic_production_certification"],workbench_drift["production_score_mutation_authorized"]))}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(t["status"]=="PASS" for t in tests)
