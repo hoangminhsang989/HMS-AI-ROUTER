@@ -8,18 +8,21 @@ import os
 import re
 import threading
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 PRODUCT = "HMS-AI-ROUTER"
 VERSION = "25.75"
 SUPPORTED_CLIENT_NAMES = frozenset({"codex.exe", "chatgpt.exe"})
 MAX_TARGET_PIDS = 32
 UAC_CANCELLED_ERROR = 1223
+ERROR_INVALID_PARAMETER = 87
 WAIT_OBJECT_0 = 0
 WAIT_TIMEOUT = 258
 SEE_MASK_NOCLOSEPROCESS = 0x00000040
 SW_HIDE = 0
 TH32CS_SNAPPROCESS = 0x00000002
+PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+SYNCHRONIZE = 0x00100000
 INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
 _TOKEN_RE = re.compile(r"^[A-Za-z0-9_-]{16,128}$")
 _CONSUMED_TOKENS: set[str] = set()
@@ -73,7 +76,7 @@ def _consume_operation_token(operation_token: str) -> None:
     with _TOKEN_LOCK:
         if token in _CONSUMED_TOKENS:
             raise RuntimeError("WINDOWS_ELEVATION_OPERATION_TOKEN_ALREADY_CONSUMED")
-        # Consume before any UAC prompt. Cancellation/failure must not permit prompt replay.
+        # Consume before any target acquisition/UAC prompt. Cancellation/failure cannot replay the prompt.
         _CONSUMED_TOKENS.add(token)
 
 
@@ -85,12 +88,12 @@ def _normalize_pids(pids: Iterable[int]) -> list[int]:
 
 
 def _validate_target_map(pids: Iterable[int], process_map: dict[int, str]) -> list[int]:
+    """Legacy pure name allowlist proof helper; runtime elevation additionally requires identity binding."""
     targets = _normalize_pids(pids)
     running: list[int] = []
     for pid in targets:
         name = str(process_map.get(pid) or "").strip().lower()
         if not name:
-            # Process may have exited after the failed close attempt; treat that PID as already resolved.
             continue
         if name not in SUPPORTED_CLIENT_NAMES:
             raise ValueError(f"WINDOWS_ELEVATION_TARGET_NOT_ALLOWED: pid={pid}, process={name}")
@@ -126,16 +129,175 @@ def _enumerate_process_map_windows() -> dict[int, str]:
     return out
 
 
-def discover_supported_client_pids() -> list[int]:
+def _filetime_u64(value: wintypes.FILETIME) -> int:
+    return (int(value.dwHighDateTime) << 32) | int(value.dwLowDateTime)
+
+
+def _identity_from_handle_windows(pid: int, handle) -> dict[str, Any]:
+    _windows_required()
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.GetProcessTimes.argtypes = [
+        wintypes.HANDLE,
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+        ctypes.POINTER(wintypes.FILETIME),
+    ]
+    kernel32.GetProcessTimes.restype = wintypes.BOOL
+    kernel32.QueryFullProcessImageNameW.argtypes = [wintypes.HANDLE, wintypes.DWORD, wintypes.LPWSTR, ctypes.POINTER(wintypes.DWORD)]
+    kernel32.QueryFullProcessImageNameW.restype = wintypes.BOOL
+
+    created = wintypes.FILETIME(); exited = wintypes.FILETIME(); kernel = wintypes.FILETIME(); user = wintypes.FILETIME()
+    if not kernel32.GetProcessTimes(handle, ctypes.byref(created), ctypes.byref(exited), ctypes.byref(kernel), ctypes.byref(user)):
+        raise OSError(ctypes.get_last_error(), "WINDOWS_PROCESS_CREATION_TIME_UNAVAILABLE")
+
+    buffer = ctypes.create_unicode_buffer(32768)
+    size = wintypes.DWORD(len(buffer))
+    if not kernel32.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(size)):
+        raise OSError(ctypes.get_last_error(), "WINDOWS_PROCESS_IMAGE_UNAVAILABLE")
+    image = str(buffer.value or "")
+    name = image.replace("/", "\\").rsplit("\\", 1)[-1].strip().lower()
+    creation = _filetime_u64(created)
+    if not name or creation <= 0:
+        raise RuntimeError("WINDOWS_PROCESS_IDENTITY_INVALID")
+    return {"pid": int(pid), "name": name, "creation_time_100ns": creation}
+
+
+def _open_identity_handle_windows(pid: int):
+    _windows_required()
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel32.OpenProcess.restype = wintypes.HANDLE
+    access = PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE
+    handle = kernel32.OpenProcess(access, False, int(pid))
+    if not handle:
+        err = ctypes.get_last_error()
+        if err == ERROR_INVALID_PARAMETER:
+            raise ProcessLookupError(pid)
+        raise OSError(err, f"WINDOWS_PROCESS_IDENTITY_OPEN_FAILED: pid={pid}")
+    try:
+        identity = _identity_from_handle_windows(int(pid), handle)
+    except Exception:
+        kernel32.CloseHandle(handle)
+        raise
+    return handle, identity
+
+
+def _close_handle_windows(handle) -> None:
+    if not handle:
+        return
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    kernel32.CloseHandle(handle)
+
+
+def _normalize_expected_identities(expected: Mapping[int, Mapping[str, Any]] | None) -> dict[int, dict[str, Any]]:
+    if not isinstance(expected, Mapping) or not expected:
+        raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_REQUIRED")
+    out: dict[int, dict[str, Any]] = {}
+    for raw_pid, row in expected.items():
+        if not isinstance(row, Mapping):
+            raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_INVALID")
+        pid = int(raw_pid)
+        row_pid = int(row.get("pid") or 0)
+        name = str(row.get("name") or "").strip().lower()
+        creation = int(row.get("creation_time_100ns") or 0)
+        if pid <= 0 or pid != row_pid or name not in SUPPORTED_CLIENT_NAMES or creation <= 0:
+            raise ValueError("WINDOWS_ELEVATION_IDENTITY_BINDING_INVALID")
+        out[pid] = {"pid": pid, "name": name, "creation_time_100ns": creation}
+    return out
+
+
+def _identity_matches(expected: Mapping[str, Any], observed: Mapping[str, Any]) -> bool:
+    try:
+        return (
+            int(expected.get("pid") or 0) == int(observed.get("pid") or 0)
+            and str(expected.get("name") or "").strip().lower() == str(observed.get("name") or "").strip().lower()
+            and int(expected.get("creation_time_100ns") or 0) == int(observed.get("creation_time_100ns") or 0)
+        )
+    except Exception:
+        return False
+
+
+def discover_supported_client_identities() -> dict[int, dict[str, Any]]:
     process_map = _enumerate_process_map_windows()
-    return sorted(
+    candidate_pids = sorted(
         pid for pid, name in process_map.items()
         if pid > 0 and pid != os.getpid() and str(name).strip().lower() in SUPPORTED_CLIENT_NAMES
     )
+    identities: dict[int, dict[str, Any]] = {}
+    for pid in candidate_pids:
+        try:
+            handle, identity = _open_identity_handle_windows(pid)
+        except ProcessLookupError:
+            continue
+        try:
+            # Re-query from the opened process object; the Toolhelp name is only a candidate filter.
+            if identity["name"] in SUPPORTED_CLIENT_NAMES:
+                identities[pid] = identity
+        finally:
+            _close_handle_windows(handle)
+    return identities
 
 
-def validate_elevation_targets(pids: Iterable[int]) -> list[int]:
-    return _validate_target_map(pids, _enumerate_process_map_windows())
+def discover_supported_client_pids() -> list[int]:
+    return sorted(discover_supported_client_identities())
+
+
+def _lease_validated_targets(
+    pids: Iterable[int], expected_identities: Mapping[int, Mapping[str, Any]] | None,
+) -> list[dict[str, Any]]:
+    targets = _normalize_pids(pids)
+    expected = _normalize_expected_identities(expected_identities)
+    if set(targets) != set(expected):
+        raise ValueError("WINDOWS_ELEVATION_IDENTITY_SET_MISMATCH")
+
+    leases: list[dict[str, Any]] = []
+    try:
+        for pid in targets:
+            try:
+                handle, observed = _open_identity_handle_windows(pid)
+            except ProcessLookupError:
+                # The exact original PID is gone before the lease is acquired; no UAC target remains.
+                continue
+            if not _identity_matches(expected[pid], observed):
+                _close_handle_windows(handle)
+                raise ValueError(f"WINDOWS_ELEVATION_TARGET_IDENTITY_CHANGED: pid={pid}")
+
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+            kernel32.WaitForSingleObject.restype = wintypes.DWORD
+            state = kernel32.WaitForSingleObject(handle, 0)
+            if state == WAIT_OBJECT_0:
+                _close_handle_windows(handle)
+                continue
+            if state != WAIT_TIMEOUT:
+                _close_handle_windows(handle)
+                raise OSError(int(state), f"WINDOWS_PROCESS_IDENTITY_WAIT_FAILED: pid={pid}")
+            # Keep this handle open through the UAC prompt and taskkill. Windows cannot reuse this PID
+            # until the process object is freed, which cannot happen while this handle remains open.
+            leases.append({"pid": pid, "handle": handle, "identity": observed})
+    except Exception:
+        for lease in leases:
+            _close_handle_windows(lease.get("handle"))
+        raise
+    return leases
+
+
+def _close_leases(leases: Iterable[Mapping[str, Any]]) -> None:
+    for lease in leases:
+        _close_handle_windows(lease.get("handle"))
+
+
+def validate_elevation_targets(
+    pids: Iterable[int], *, expected_identities: Mapping[int, Mapping[str, Any]] | None,
+) -> list[int]:
+    leases = _lease_validated_targets(pids, expected_identities)
+    try:
+        return [int(row["pid"]) for row in leases]
+    finally:
+        _close_leases(leases)
 
 
 def _system_taskkill_path() -> Path:
@@ -158,8 +320,9 @@ def _taskkill_arguments(pids: Iterable[int]) -> str:
     return " ".join([*(f"/PID {pid}" for pid in targets), "/T", "/F"])
 
 
-def _run_elevated_taskkill(pids: list[int], timeout_ms: int = 120_000) -> dict[str, Any]:
+def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_000) -> dict[str, Any]:
     _windows_required()
+    pids = [int(row["pid"]) for row in leases]
     taskkill = _system_taskkill_path()
     parameters = _taskkill_arguments(pids)
     shell32 = ctypes.WinDLL("shell32", use_last_error=True)
@@ -201,37 +364,52 @@ def _run_elevated_taskkill(pids: list[int], timeout_ms: int = 120_000) -> dict[s
     finally:
         kernel32.CloseHandle(info.hProcess)
 
-    remaining_map = _enumerate_process_map_windows()
-    remaining = [pid for pid in pids if str(remaining_map.get(pid) or "").strip().lower() in SUPPORTED_CLIENT_NAMES]
+    remaining: list[int] = []
+    for lease in leases:
+        state = kernel32.WaitForSingleObject(lease["handle"], 0)
+        if state == WAIT_TIMEOUT:
+            remaining.append(int(lease["pid"]))
+        elif state != WAIT_OBJECT_0:
+            raise OSError(int(state), f"WINDOWS_ELEVATION_TARGET_WAIT_FAILED: pid={lease['pid']}")
     if remaining:
         raise RuntimeError("WINDOWS_ELEVATION_TARGET_STILL_RUNNING:" + ",".join(map(str, remaining)))
     return {
         "ok": True,
-        "closed_pid_count": len(pids),
+        "closed_pid_count": len(leases),
         "taskkill_exit_code": int(exit_code.value),
+        "identity_bound": True,
+        "pid_reuse_blocked_by_open_handles": True,
         "fixed_system_binary": True,
         "arbitrary_executable_allowed": False,
         "arbitrary_arguments_allowed": False,
     }
 
 
-def elevated_close_supported_processes(pids: Iterable[int], *, operation_token: str) -> dict[str, Any]:
+def elevated_close_supported_processes(
+    pids: Iterable[int], *, operation_token: str,
+    expected_identities: Mapping[int, Mapping[str, Any]] | None,
+) -> dict[str, Any]:
     _windows_required()
     _consume_operation_token(operation_token)
-    targets = validate_elevation_targets(pids)
-    if not targets:
+    leases = _lease_validated_targets(pids, expected_identities)
+    if not leases:
         return {
             "ok": True,
             "closed_pid_count": 0,
             "already_closed": True,
             "operation_token_consumed": True,
             "uac_prompt_started": False,
+            "identity_bound": True,
+            "pid_reuse_blocked_by_open_handles": True,
             "arbitrary_executable_allowed": False,
             "production_effect_authorized": False,
             "windows_runtime_certified": False,
             "production_score_mutation_authorized": False,
         }
-    result = _run_elevated_taskkill(targets)
+    try:
+        result = _run_elevated_taskkill(leases)
+    finally:
+        _close_leases(leases)
     result.update({
         "operation_token_consumed": True,
         "uac_prompt_started": True,
@@ -243,20 +421,28 @@ def elevated_close_supported_processes(pids: Iterable[int], *, operation_token: 
 
 
 def synthetic_proof() -> dict[str, Any]:
-    process_map = {101: "Codex.exe", 102: "ChatGPT.exe", 103: "notepad.exe", 104: "explorer.exe"}
-    allowed = _validate_target_map([101, 102], process_map)
+    base = max(100_000, os.getpid() + 1_000)
+    p1, p2, p3, p4 = base, base + 1, base + 2, base + 3
+    process_map = {p1: "Codex.exe", p2: "ChatGPT.exe", p3: "notepad.exe", p4: "explorer.exe"}
+    allowed = _validate_target_map([p1, p2], process_map)
     unsupported_rejected = False
     try:
-        _validate_target_map([103], process_map)
+        _validate_target_map([p3], process_map)
     except ValueError as exc:
         unsupported_rejected = "TARGET_NOT_ALLOWED" in str(exc)
     explorer_rejected = False
     try:
-        _validate_target_map([104], process_map)
+        _validate_target_map([p4], process_map)
     except ValueError as exc:
         explorer_rejected = "TARGET_NOT_ALLOWED" in str(exc)
 
-    token = "proof-token-1234567890"
+    expected = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111}
+    same = {"pid": p1, "name": "Codex.exe", "creation_time_100ns": 111}
+    reused_same_name = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 222}
+    replaced_name = {"pid": p1, "name": "notepad.exe", "creation_time_100ns": 111}
+    normalized_identity = _normalize_expected_identities({p1: expected})
+
+    token = "proof-token-identity-123456"
     _consume_operation_token(token)
     replay_rejected = False
     try:
@@ -264,21 +450,31 @@ def synthetic_proof() -> dict[str, Any]:
     except RuntimeError as exc:
         replay_rejected = "ALREADY_CONSUMED" in str(exc)
 
-    args = _taskkill_arguments([102, 101])
+    args = _taskkill_arguments([p2, p1])
+    expected_args = f"/PID {p1} /PID {p2} /T /F"
     src = Path(__file__).read_text("utf-8")
     impl_src = src[:src.find("def synthetic_proof")]
     checks = {
         "codex_chatgpt_only_allowlist": SUPPORTED_CLIENT_NAMES == frozenset({"codex.exe", "chatgpt.exe"}),
-        "allowed_targets_validate": allowed == [101, 102],
+        "allowed_targets_validate": allowed == [p1, p2],
         "generic_process_rejected": unsupported_rejected,
         "explorer_rejected": explorer_rejected,
         "pid_bound_is_bounded": MAX_TARGET_PIDS == 32,
-        "taskkill_args_numeric_only": args == "/PID 101 /PID 102 /T /F",
+        "taskkill_args_numeric_only": args == expected_args,
+        "identity_binding_requires_supported_exact_shape": normalized_identity[p1] == expected,
+        "same_process_incarnation_matches": _identity_matches(expected, same),
+        "same_name_pid_reuse_rejected": not _identity_matches(expected, reused_same_name),
+        "different_image_rejected_by_identity": not _identity_matches(expected, replaced_name),
+        "identity_uses_creation_time": "GetProcessTimes" in impl_src and "creation_time_100ns" in impl_src,
+        "identity_uses_opened_image": "QueryFullProcessImageNameW" in impl_src,
+        "identity_lease_uses_query_and_synchronize": "PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE" in impl_src,
+        "identity_handles_held_across_uac": "_run_elevated_taskkill(leases)" in impl_src and "_close_leases(leases)" in impl_src,
+        "pid_reuse_claim_is_handle_scoped": '"pid_reuse_blocked_by_open_handles": True' in impl_src,
         "taskkill_resolved_from_system_directory": "GetSystemDirectoryW" in impl_src and '"taskkill.exe"' in impl_src,
         "uac_uses_runas_only_on_fixed_taskkill": "ShellExecuteExW" in impl_src and 'info.lpVerb = "runas"' in impl_src and "info.lpFile = str(taskkill)" in impl_src,
         "no_generic_shell_runner": "powershell.exe" not in impl_src.lower() and "cmd.exe" not in impl_src.lower() and "subprocess" not in impl_src,
         "no_caller_executable_parameter": "executable_path" not in impl_src and "lpFile = str(taskkill)" in impl_src,
-        "one_shot_token_consumed_before_uac": impl_src.find("_consume_operation_token(operation_token)") < impl_src.find("validate_elevation_targets(pids)"),
+        "one_shot_token_consumed_before_identity_lease": impl_src.find("_consume_operation_token(operation_token)") < impl_src.find("_lease_validated_targets(pids, expected_identities)"),
         "token_replay_rejected": replay_rejected,
         "uac_cancel_is_explicit": "WINDOWS_ELEVATION_CANCELLED" in impl_src and "UAC_CANCELLED_ERROR = 1223" in impl_src,
         "wait_is_bounded": "120_000" in impl_src and "WINDOWS_ELEVATION_TIMEOUT" in impl_src,
