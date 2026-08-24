@@ -8,11 +8,15 @@ on:
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateSigner.py'
+      - '_runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py'
       - '_runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py'
       - '_runtime/HMS_Codex_ExternalWindowsSignerTrustFixtures.py'
       - '_runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py'
+      - '_runtime/HMS_Codex_ReviewerLocalIntegritySeal.py'
+      - '_runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py'
       - '_runtime/HMS_Sign_Digest_With_Certificate.ps1'
+      - '_runtime/HMS_Inspect_Evidence_Certificate.ps1'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_PromotionGUIActionContract.py'
@@ -44,13 +48,15 @@ jobs:
       - name: Install crypto verifier dependency
         shell: pwsh
         run: python -m pip install --disable-pip-version-check cryptography
-      - name: Parse certificate signing PowerShell helper
+      - name: Parse certificate PowerShell helpers
         shell: pwsh
         run: |
-          $tokens = $null
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path '_runtime/HMS_Sign_Digest_With_Certificate.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
-          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+          foreach ($path in @('_runtime/HMS_Sign_Digest_With_Certificate.ps1','_runtime/HMS_Inspect_Evidence_Certificate.ps1')) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path), [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+          }
       - name: Compile promotion modules and GUI entries
         shell: pwsh
         run: |
@@ -59,10 +65,13 @@ jobs:
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py `
+            _runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py `
             _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py `
             _runtime/HMS_Codex_ExternalWindowsSignerTrustFixtures.py `
             _runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py `
+            _runtime/HMS_Codex_ReviewerLocalIntegritySeal.py `
+            _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
@@ -79,9 +88,18 @@ jobs:
       - name: External certificate signer source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py
+      - name: Certificate read-only preflight source contract
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py --proof
       - name: Certificate enrollment source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py --proof
+      - name: Reviewer local integrity seal proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ReviewerLocalIntegritySeal.py --proof
+      - name: Reviewer trust authority snapshot proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py --proof
       - name: External signer trust cryptographic contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py
@@ -112,7 +130,7 @@ jobs:
       - name: Review workbench proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py proof
-      - name: Controller live-baseline proof
+      - name: Controller sealed-state and live-baseline proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
       - name: Promotion E2E negative fixtures
