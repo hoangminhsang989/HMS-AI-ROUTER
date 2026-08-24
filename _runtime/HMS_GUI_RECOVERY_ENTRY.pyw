@@ -203,7 +203,7 @@ def extension_proof():
         supported_client=False,
     )
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
-    interactive_names = ["enable", "disable", "restart_router", "set_request_log", "repair_profile", "backup_export"]
+    interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
     src = Path(__file__).read_text("utf-8")
     impl_src = src[:src.find("def extension_proof")]
     checks = {
@@ -214,6 +214,7 @@ def extension_proof():
         "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
         "background_actions_remain_quiet": all(not _is_interactive_backend_action(name) for name in quiet_names),
         "interactive_actions_surface_recovery": all(_is_interactive_backend_action(name) for name in interactive_names),
+        "direct_open_codex_is_interactive": _is_interactive_backend_action("open_codex"),
         "threadsafe_ui_bridge": "root.after" in impl_src and "threading.Event" in impl_src,
         "retry_is_bounded": _MAX_RECOVERY_RETRIES == 3 and "RETRY_LIMIT_REACHED" in impl_src,
         "official_switch_recovery_supported": "CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE" in impl_src,
