@@ -1,13 +1,13 @@
 # HMS-AI-ROUTER — Project State v25.75
 
 Date: 2026-08-24
-Status: ACTIVE DEVELOPMENT — REAL WINDOWS/CURRENT-CODEX EVIDENCE GATE
+Status: ACTIVE DEVELOPMENT — WINDOWS RECOVERY P1 + REAL WINDOWS/CURRENT-CODEX EVIDENCE GATE
 Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 
 ## Baseline
 
 - Migration baseline: v25.74
-- Frozen Cockpit Tools parity authority for current v25.75 P0: v1.3.28
+- Frozen Cockpit Tools parity authority for current v25.75: v1.3.28
 - Product scope: Codex-only
 - Product branding: HMS-AI-ROUTER
 - Historical v25.74 evidence is immutable and may retain former product branding where it is part of frozen evidence.
@@ -25,9 +25,9 @@ Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 
 These values MUST NOT be promoted without new real Windows/current-Codex evidence plus the required review gates.
 
-## Current v25.75 P0 state
+## Current v25.75 P0 evidence-safety state
 
-The source-side external Windows evidence path now includes:
+The source-side external Windows evidence path includes:
 
 1. Exact canonical seven-case contract: `host`, `codex`, `quota`, `failover`, `lan`, `soak_6h`, `soak_24h`.
 2. Certificate-only packet signing and real certificate preflight/enrollment binding.
@@ -40,9 +40,33 @@ The source-side external Windows evidence path now includes:
 9. Bounded Windows evidence orchestrator for read-only operator preflight and reviewer import.
 10. Read-only `reviewer-authority-status` freshness/integrity diagnostics with `FRESH`, `RENEW_SOON` and fail-closed stale/invalid states.
 
-Latest detailed authority checkpoint:
+Detailed P0 authority checkpoint:
 
 `docs/V25.75_P0_AUTHORITY_DIAGNOSTICS_CHECKPOINT.md`
+
+## Current v25.75 P1 Windows recovery state
+
+A partial source-parity tranche for Cockpit Tools v1.3.28 Windows recovery behavior is now implemented:
+
+- unified classification for Access Denied / error 5 and WSAEACCES 10013, file-in-use / error 32, program-missing / error 2, and other errors;
+- retry and operator-handled-then-retry paths;
+- open-location and copy-sanitized-error actions;
+- sensitive-detail redaction before recovery display/copy;
+- quiet background probe/health/quota/refresh behavior;
+- bounded interactive backend recovery, including the normal `open_codex` backend path;
+- official account-switch completion recovery;
+- recovery-first fail-closed launcher path that still preserves the sealed reviewer wrapper and promotion-disabled safe fallback;
+- Windows CI compile/proof coverage for the recovery contract, dialog, wrapper and launcher chain.
+
+Detailed P1 checkpoint:
+
+`docs/V25.75_P1_WINDOWS_RECOVERY_CHECKPOINT.md`
+
+### Remaining P1 parity gap
+
+UAC/elevation is **not yet executed by the recovery layer**. The contract contains only a narrow supported-client operation allowlist and one-shot eligibility gate. No current GUI caller marks itself as an elevation-capable supported client.
+
+The next implementation must use a dedicated one-shot Windows elevation launcher for a resolved, allowlisted supported-client executable after explicit user selection. It must not become an arbitrary elevated command runner.
 
 ## Reviewer authority operational rules
 
@@ -55,8 +79,9 @@ Latest detailed authority checkpoint:
 ## Verification boundary
 
 - Source/synthetic proof infrastructure is not real Windows/current-Codex production evidence.
-- The orchestrator source contract is now function-scoped to avoid its previous self-matching false negative.
-- The current GitHub connector still exposes no combined status entries or workflow runs for the latest push; an unobserved Windows Actions run is therefore not claimed PASS.
+- Recovery forbidden-operation checks are scoped to implementation source so their proof expressions cannot self-match the forbidden literals.
+- The Windows Actions graph includes recovery compilation/proofs, but a run must be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
+- No recovery source proof authorizes Windows certification, external target-evidence import or production-score mutation.
 
 ## Change policy
 
@@ -70,8 +95,9 @@ Latest detailed authority checkpoint:
 
 ## Immediate next action
 
-1. Observe/remediate the Windows promotion-safety workflow when GitHub exposes a run for the current main graph.
-2. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
-3. Import the resulting certificate-signed packet through sealed reviewer authority.
-4. Complete required dual human review and baseline reconciliation.
-5. Only then evaluate a human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
+1. Complete the remaining Windows recovery parity gap with narrowly allowlisted, one-shot, explicit-user-action UAC execution; preserve cancellation/replay fail-closed behavior and prohibit arbitrary elevated commands.
+2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes a run for the current main graph.
+3. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
+4. Import the resulting certificate-signed packet through sealed reviewer authority.
+5. Complete required dual human review and baseline reconciliation.
+6. Only then evaluate a human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
