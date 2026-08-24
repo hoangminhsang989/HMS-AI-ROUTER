@@ -51,13 +51,14 @@ legacy.HmsApp._build_shell = _safe_build_shell
 
 def source_proof():
     src = Path(__file__).read_text("utf-8")
+    impl_src = src[:src.find("def source_proof")]
     checks = {
-        "loads_legacy_core_directly": 'LEGACY_GUI = RUNTIME_DIR / "HMS_GUI.pyw"' in src,
-        "does_not_load_guarded_promotion_entry": "HMS_GUI_ENTRY.pyw" not in src,
-        "does_not_load_reviewer_wrapper": "HMS_GUI_REVIEW_ENTRY.pyw" not in src,
-        "promotion_controller_absent": "PromotionWorkbenchController" not in src,
-        "promotion_review_extension_absent": 'pages["promotion"]' not in src and "submit_promotion_review" not in src,
-        "router_branding_patch": 'widget.configure(text="AI ROUTER")' in src,
+        "loads_legacy_core_directly": 'LEGACY_GUI = RUNTIME_DIR / "HMS_GUI.pyw"' in impl_src,
+        "does_not_load_guarded_promotion_entry": "HMS_GUI_ENTRY.pyw" not in impl_src,
+        "does_not_load_reviewer_wrapper": "HMS_GUI_REVIEW_ENTRY.pyw" not in impl_src,
+        "promotion_controller_absent": "PromotionWorkbenchController" not in impl_src,
+        "promotion_review_extension_absent": 'pages["promotion"]' not in impl_src and "submit_promotion_review" not in impl_src,
+        "router_branding_patch": 'widget.configure(text="AI ROUTER")' in impl_src,
     }
     tests = [{"name": k, "status": "PASS" if v else "FAIL"} for k, v in checks.items()]
     passed = sum(t["status"] == "PASS" for t in tests)
