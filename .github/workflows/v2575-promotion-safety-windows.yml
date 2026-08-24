@@ -20,6 +20,7 @@ on:
       - '_runtime/HMS_Codex_WindowsRecoveryContract.py'
       - '_runtime/HMS_Codex_WindowsRecoveryDialog.py'
       - '_runtime/HMS_Codex_WindowsOneShotElevation.py'
+      - '_runtime/HMS_Codex_WindowsUACRecoveryValidation.py'
       - '_runtime/HMS_Sign_Digest_With_Certificate.ps1'
       - '_runtime/HMS_Inspect_Evidence_Certificate.ps1'
       - '_runtime/HMS_Codex_CockpitLiveBaselineProvider.py'
@@ -84,6 +85,7 @@ jobs:
             _runtime/HMS_Codex_WindowsRecoveryContract.py `
             _runtime/HMS_Codex_WindowsRecoveryDialog.py `
             _runtime/HMS_Codex_WindowsOneShotElevation.py `
+            _runtime/HMS_Codex_WindowsUACRecoveryValidation.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
@@ -129,6 +131,9 @@ jobs:
       - name: Codex one-shot UAC source proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsOneShotElevation.py
+      - name: Bounded UAC runtime validation harness proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsUACRecoveryValidation.py proof
       - name: Recovery-first GUI wrapper proof
         shell: pwsh
         run: python _runtime/HMS_GUI_RECOVERY_ENTRY.pyw --proof
