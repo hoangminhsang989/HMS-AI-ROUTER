@@ -37,6 +37,8 @@ on:
       - '_runtime/HMS_GUI_SAFE_FALLBACK.pyw'
       - 'HMS_AI_ROUTER.vbs'
       - '.github/workflows/v2575-promotion-safety-windows.yml'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
