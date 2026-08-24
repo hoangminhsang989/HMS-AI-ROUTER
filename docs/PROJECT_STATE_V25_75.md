@@ -1,7 +1,7 @@
 # HMS-AI-ROUTER — Project State v25.75
 
 Date: 2026-08-24
-Status: ACTIVE DEVELOPMENT — WINDOWS RECOVERY P1 + REAL WINDOWS/CURRENT-CODEX EVIDENCE GATE
+Status: ACTIVE DEVELOPMENT — WINDOWS RECOVERY/UAC P1 + REAL WINDOWS/CURRENT-CODEX EVIDENCE GATE
 Authority: `main` on `hoangminhsang989/HMS-AI-ROUTER`
 
 ## Baseline
@@ -46,27 +46,32 @@ Detailed P0 authority checkpoint:
 
 ## Current v25.75 P1 Windows recovery state
 
-A partial source-parity tranche for Cockpit Tools v1.3.28 Windows recovery behavior is now implemented:
+The source-side Windows recovery tranche aligned to Cockpit Tools v1.3.28 now includes:
 
-- unified classification for Access Denied / error 5 and WSAEACCES 10013, file-in-use / error 32, program-missing / error 2, and other errors;
+- classification for Access Denied / error 5 and WSAEACCES 10013, file-in-use / error 32, program-missing / error 2, `CODEX_RESTART_REQUIRED` client-close barrier, and other failures;
 - retry and operator-handled-then-retry paths;
 - open-location and copy-sanitized-error actions;
 - sensitive-detail redaction before recovery display/copy;
 - quiet background probe/health/quota/refresh behavior;
 - bounded interactive backend recovery, including the normal `open_codex` backend path;
-- official account-switch completion recovery;
-- recovery-first fail-closed launcher path that still preserves the sealed reviewer wrapper and promotion-disabled safe fallback;
-- Windows CI compile/proof coverage for the recovery contract, dialog, wrapper and launcher chain.
+- recovery-first fail-closed launcher path preserving the sealed reviewer wrapper and promotion-disabled safe fallback;
+- Codex-only one-shot UAC helper restricted to validated `Codex.exe` / `ChatGPT.exe` PIDs;
+- fixed `%SystemRoot%\System32\taskkill.exe` elevation with numeric PID arguments only;
+- one-shot token consumption before UAC so cancellation/failure cannot replay the same prompt epoch;
+- UAC eligibility only at the stable pre-mutation `CODEX_RESTART_REQUIRED` close barrier for backend `enable` / `disable` operations;
+- retry of the original backend transaction after successful elevated close so existing mutation/verifier logic remains authoritative;
+- Windows CI compile/proof coverage for recovery contract, dialog, elevation helper, wrapper and launcher chain.
 
-Detailed P1 checkpoint:
+Detailed P1 checkpoints:
 
-`docs/V25.75_P1_WINDOWS_RECOVERY_CHECKPOINT.md`
+- `docs/V25.75_P1_WINDOWS_RECOVERY_CHECKPOINT.md`
+- `docs/V25.75_P1_UAC_RECOVERY_CHECKPOINT.md`
 
 ### Remaining P1 parity gap
 
-UAC/elevation is **not yet executed by the recovery layer**. The contract contains only a narrow supported-client operation allowlist and one-shot eligibility gate. No current GUI caller marks itself as an elevation-capable supported client.
+The current official-auth switch can commit credentials successfully and then return a manual client-restart guidance string when the post-switch client close/relaunch does not complete. That success-with-guidance path does not yet expose structured close-failure metadata such as a stable recovery code plus validated PID set.
 
-The next implementation must use a dedicated one-shot Windows elevation launcher for a resolved, allowlisted supported-client executable after explicit user selection. It must not become an arbitrary elevated command runner.
+HMS therefore does not infer elevation eligibility from arbitrary success/error text or merely from the presence of a Codex process. The next source change must make that post-switch lifecycle outcome structured before one-shot UAC can be offered there safely.
 
 ## Reviewer authority operational rules
 
@@ -79,9 +84,10 @@ The next implementation must use a dedicated one-shot Windows elevation launcher
 ## Verification boundary
 
 - Source/synthetic proof infrastructure is not real Windows/current-Codex production evidence.
-- Recovery forbidden-operation checks are scoped to implementation source so their proof expressions cannot self-match the forbidden literals.
-- The Windows Actions graph includes recovery compilation/proofs, but a run must be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
-- No recovery source proof authorizes Windows certification, external target-evidence import or production-score mutation.
+- Recovery forbidden-operation checks are scoped to implementation source so their proof expressions cannot self-match forbidden literals.
+- The one-shot elevation source proof validates the Codex/ChatGPT allowlist, generic-process rejection, fixed system taskkill resolution, numeric PID-only argument construction, token replay block, UAC cancel/timeout codes and absence of generic shell elevation.
+- The Windows Actions graph includes recovery/UAC compilation and proofs, but a run must be observed independently after integration; an unavailable status record is not claimed PASS or FAIL.
+- No recovery/UAC source proof authorizes Windows certification, external target-evidence import or production-score mutation.
 
 ## Change policy
 
@@ -95,9 +101,9 @@ The next implementation must use a dedicated one-shot Windows elevation launcher
 
 ## Immediate next action
 
-1. Complete the remaining Windows recovery parity gap with narrowly allowlisted, one-shot, explicit-user-action UAC execution; preserve cancellation/replay fail-closed behavior and prohibit arbitrary elevated commands.
-2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes a run for the current main graph.
-3. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
-4. Import the resulting certificate-signed packet through sealed reviewer authority.
-5. Complete required dual human review and baseline reconciliation.
-6. Only then evaluate a human-authorized production-evidence promotion proposal; do not mutate the current `55.2%` production evidence score automatically.
+1. Integrate the one-shot UAC recovery tranche to `main` by fast-forward only if branch ancestry remains linear.
+2. Observe/remediate the Windows promotion-safety workflow when GitHub exposes a run for the integrated graph.
+3. Add structured post-switch client-lifecycle recovery metadata to official auth switching before extending UAC to that path.
+4. Perform bounded real-Windows validation of UAC cancel, one successful supported-client close, token replay rejection and unrelated-process rejection; do not confuse this with production certification.
+5. Execute the actual authorized Windows/current-Codex seven-case target evidence only on the target Windows machine.
+6. Import the resulting certificate-signed packet through sealed reviewer authority, complete dual human review and baseline reconciliation, then and only then evaluate any human-authorized production-evidence promotion proposal.
