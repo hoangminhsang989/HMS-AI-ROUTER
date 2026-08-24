@@ -123,8 +123,19 @@ def synthetic_proof():
             "synthetic_rejected":"SYNTHETIC_EVIDENCE_REJECTED" in syn["reasons"],
             "baseline_drift_rejected":"COCKPIT_BASELINE_CHANGED_OR_STALE" in drift["reasons"],"replay_rejected":"DUPLICATE_PACKET_DIGEST" in replay["reasons"]}
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; n=sum(x["status"]=="PASS" for x in tests)
+
+    # Extended negative fixtures execute only in proof mode. Production verify_packet semantics remain unchanged.
+    from HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures import synthetic_proof as adversarial_fixture_proof
+    adversarial=adversarial_fixture_proof()
+    child_summary=adversarial.get("summary") if isinstance(adversarial.get("summary"),dict) else {}
+    child_pass=int(child_summary.get("pass") or 0); child_fail=int(child_summary.get("fail") or 0); child_total=int(child_summary.get("total") or 0)
+    child_ok=adversarial.get("verdict")=="PASS" and child_fail==0 and child_total>0
+    core_fail=len(tests)-n
     return {"product":"HMS-AI-ROUTER","version":VERSION,"suite":"EXTERNAL_WINDOWS_REVIEW_PACKET_INGEST_PROOF",
-            "verdict":"PASS" if n==len(tests) else "FAIL","summary":{"pass":n,"fail":len(tests)-n,"total":len(tests)},
+            "verdict":"PASS" if core_fail==0 and child_ok else "FAIL",
+            "summary":{"pass":n+child_pass,"fail":core_fail+child_fail+(0 if child_total>0 else 1),"total":len(tests)+child_total+(0 if child_total>0 else 1)},
+            "core_summary":{"pass":n,"fail":core_fail,"total":len(tests)},
+            "adversarial_fixture_summary":child_summary,"adversarial_fixture_groups":adversarial.get("groups") or {},
             "required_case_ids":list(REQUIRED_RUNTIME_CASE_IDS),"tests":tests,"synthetic_fixture_only":True,
             "windows_runtime_certified":False,"production_score_promotion_eligible":False}
 
