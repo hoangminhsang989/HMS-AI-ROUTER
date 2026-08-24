@@ -15,8 +15,12 @@ from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, SOURCE
 
 VERSION = "25.75"
 THUMBPRINT = re.compile(r"^[0-9A-Fa-f]{20,128}$")
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
 DEFAULT_SIGN_SCRIPT = Path(__file__).resolve().with_name("HMS_Sign_Digest_With_Certificate.ps1")
 DEFAULT_INSPECT_SCRIPT = Path(__file__).resolve().with_name("HMS_Inspect_Evidence_Certificate.ps1")
+CASE_SOURCE_SUITE = "TARGET_MACHINE_CERTIFICATION"
+CASE_SOURCE_VERDICT = "PASS_TARGET_MACHINE_PRODUCTION_CERTIFIED"
+CASE_SOURCE_CERTIFICATION = "TARGET_MACHINE_WINDOWS_CODEX_LAN_SOAK"
 
 REASON_VI = {
     "WINDOWS_TARGET_REQUIRED": "Phải chạy trên máy Windows đích.",
@@ -53,6 +57,16 @@ def _sha_file(path: Path) -> str:
 
 def _stable_bytes(obj) -> bytes:
     return (json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+
+
+def _utc_text(value) -> str:
+    try:
+        dt = datetime.fromisoformat(str(value or "").replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            return ""
+        return dt.astimezone(timezone.utc).isoformat()
+    except (TypeError, ValueError):
+        return ""
 
 
 def _codex_probe(codex: str = ""):
@@ -168,6 +182,11 @@ def preflight(args):
 
 def _validate_case_report(cid, path):
     raw = path.read_bytes(); obj = json.loads(raw.decode("utf-8-sig")); reasons = []
+    capture_utc = _utc_text(obj.get("capture_utc")); source_sha = str(obj.get("source_report_sha256") or "").lower()
+    if obj.get("product") != "HMS-AI-ROUTER":
+        reasons.append("CASE_PRODUCT_INVALID")
+    if obj.get("suite") != "EXTERNAL_WINDOWS_RUNTIME_CASE_REPORT":
+        reasons.append("CASE_SUITE_INVALID")
     if obj.get("case_id") != cid:
         reasons.append("CASE_ID_MISMATCH")
     if obj.get("status") != "PASS":
@@ -180,8 +199,19 @@ def _validate_case_report(cid, path):
         reasons.append("CASE_WINDOWS_TARGET_REQUIRED")
     if obj.get("codex_target") is not True:
         reasons.append("CASE_CODEX_TARGET_REQUIRED")
+    if not capture_utc:
+        reasons.append("CASE_CAPTURE_UTC_INVALID")
+    if obj.get("source_suite") != CASE_SOURCE_SUITE:
+        reasons.append("CASE_SOURCE_SUITE_INVALID")
+    if obj.get("source_verdict") != CASE_SOURCE_VERDICT:
+        reasons.append("CASE_SOURCE_VERDICT_INVALID")
+    if obj.get("source_production_certification") != CASE_SOURCE_CERTIFICATION:
+        reasons.append("CASE_SOURCE_CERTIFICATION_INVALID")
+    if not HEX64.fullmatch(source_sha):
+        reasons.append("CASE_SOURCE_REPORT_SHA256_INVALID")
     return {"case_id": cid, "status": "PASS" if not reasons else "REJECT",
-            "report_sha256": hashlib.sha256(raw).hexdigest(), "reasons": reasons}
+            "report_sha256": hashlib.sha256(raw).hexdigest(), "capture_utc": capture_utc,
+            "source_report_sha256": source_sha, "reasons": reasons}
 
 
 def build_packet(args):
@@ -196,6 +226,14 @@ def build_packet(args):
     if bad:
         raise ValueError("case reports rejected: " + ",".join(bad))
 
+    capture_values = {x["capture_utc"] for x in case_results}
+    source_values = {x["source_report_sha256"] for x in case_results}
+    if len(capture_values) != 1:
+        raise ValueError("CASE_CAPTURE_UTC_MISMATCH")
+    if len(source_values) != 1:
+        raise ValueError("CASE_SOURCE_REPORT_SHA256_MISMATCH")
+    source_capture_utc = next(iter(capture_values)); source_report_sha256 = next(iter(source_values))
+
     store = trust_store.load_store(Path(args.trust_store)); snapshot = trust_store.trust_snapshot(store)
     if snapshot.get("trust_snapshot_sha256") != pf.get("trust_snapshot_sha256"):
         raise RuntimeError("TRUST_STORE_CHANGED_AFTER_PREFLIGHT")
@@ -208,10 +246,12 @@ def build_packet(args):
         "package_zip_sha256": _sha_file(Path(args.package_zip)),
         "release_manifest_sha256": _sha_file(Path(args.release_manifest)),
         "cockpit_baseline": args.cockpit_baseline,
-        "capture_utc": datetime.now(timezone.utc).isoformat(),
+        "capture_utc": source_capture_utc,
+        "source_certification_report_sha256": source_report_sha256,
         "nonce": "nonce-" + secrets.token_hex(16), "run_id": "run-" + secrets.token_hex(16),
         "report_id": "report-" + secrets.token_hex(16), "trust_snapshot": snapshot,
-        "case_results": [{"case_id": x["case_id"], "status": "PASS", "report_sha256": x["report_sha256"]}
+        "case_results": [{"case_id": x["case_id"], "status": "PASS", "report_sha256": x["report_sha256"],
+                          "source_report_sha256": x["source_report_sha256"]}
                          for x in case_results],
     }
     sign_script = Path(args.certificate_sign_script) if args.certificate_sign_script else DEFAULT_SIGN_SCRIPT
@@ -235,6 +275,7 @@ def build_packet(args):
         "verdict": "PACKET_READY_FOR_HUMAN_REVIEW", "packet_path": str(out),
         "packet_sha256": hashlib.sha256(raw).hexdigest(), "package_zip_sha256": packet["package_zip_sha256"],
         "release_manifest_sha256": packet["release_manifest_sha256"],
+        "source_certification_report_sha256": source_report_sha256, "source_capture_utc": source_capture_utc,
         "certificate_sha256": check["provenance"].get("certificate_sha256", ""),
         "trust_snapshot_sha256": check["provenance"].get("trust_snapshot_sha256", ""),
         "required_case_ids": list(REQUIRED_RUNTIME_CASE_IDS), "certificate_preflight": "PASS",
