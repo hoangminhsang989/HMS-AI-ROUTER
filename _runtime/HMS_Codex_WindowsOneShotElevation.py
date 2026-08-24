@@ -155,14 +155,16 @@ def _close_handle_windows(handle) -> None:
     if not handle:
         return
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]; kernel32.CloseHandle.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
     kernel32.CloseHandle(handle)
 
 
 def _open_identity_handle_windows(pid: int):
     _windows_required()
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]; kernel32.OpenProcess.restype = wintypes.HANDLE
+    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel32.OpenProcess.restype = wintypes.HANDLE
     handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE, False, int(pid))
     if not handle:
         err = ctypes.get_last_error()
@@ -239,13 +241,15 @@ def _lease_validated_targets(pids: Iterable[int], expected_identities: Mapping[i
                 _close_handle_windows(handle)
                 raise ValueError(f"WINDOWS_ELEVATION_TARGET_IDENTITY_CHANGED: pid={pid}")
             kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-            kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]; kernel32.WaitForSingleObject.restype = wintypes.DWORD
+            kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+            kernel32.WaitForSingleObject.restype = wintypes.DWORD
             state = kernel32.WaitForSingleObject(handle, 0)
             if state == WAIT_OBJECT_0:
                 _close_handle_windows(handle); continue
             if state != WAIT_TIMEOUT:
-                _close_handle_windows(handle); raise OSError(int(state), f"WINDOWS_PROCESS_IDENTITY_WAIT_FAILED: pid={pid}")
-            # Open process handles keep each process object alive across UAC/taskkill, preventing PID reuse until release.
+                _close_handle_windows(handle)
+                raise OSError(int(state), f"WINDOWS_PROCESS_IDENTITY_WAIT_FAILED: pid={pid}")
+            # Keeping this process handle open preserves the process object, so its PID cannot be reused until release.
             leases.append({"pid": pid, "handle": handle, "identity": observed})
     except Exception:
         for lease in leases:
@@ -268,8 +272,10 @@ def validate_elevation_targets(pids: Iterable[int], *, expected_identities: Mapp
 
 
 def _system_taskkill_path() -> Path:
-    _windows_required(); kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel32.GetSystemDirectoryW.argtypes = [wintypes.LPWSTR, wintypes.UINT]; kernel32.GetSystemDirectoryW.restype = wintypes.UINT
+    _windows_required()
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.GetSystemDirectoryW.argtypes = [wintypes.LPWSTR, wintypes.UINT]
+    kernel32.GetSystemDirectoryW.restype = wintypes.UINT
     buffer = ctypes.create_unicode_buffer(32768); length = kernel32.GetSystemDirectoryW(buffer, len(buffer))
     if length == 0 or length >= len(buffer):
         raise OSError(ctypes.get_last_error(), "WINDOWS_SYSTEM_DIRECTORY_UNAVAILABLE")
@@ -285,13 +291,18 @@ def _taskkill_arguments(pids: Iterable[int]) -> str:
 
 
 def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_000) -> dict[str, Any]:
-    _windows_required(); pids = [int(row["pid"]) for row in leases]
+    _windows_required()
+    pids = [int(row["pid"]) for row in leases]
     taskkill = _system_taskkill_path(); parameters = _taskkill_arguments(pids)
     shell32 = ctypes.WinDLL("shell32", use_last_error=True); kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    shell32.ShellExecuteExW.argtypes = [ctypes.POINTER(SHELLEXECUTEINFOW)]; shell32.ShellExecuteExW.restype = wintypes.BOOL
-    kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]; kernel32.WaitForSingleObject.restype = wintypes.DWORD
-    kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]; kernel32.GetExitCodeProcess.restype = wintypes.BOOL
-    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]; kernel32.CloseHandle.restype = wintypes.BOOL
+    shell32.ShellExecuteExW.argtypes = [ctypes.POINTER(SHELLEXECUTEINFOW)]
+    shell32.ShellExecuteExW.restype = wintypes.BOOL
+    kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+    kernel32.WaitForSingleObject.restype = wintypes.DWORD
+    kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+    kernel32.GetExitCodeProcess.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
     info = SHELLEXECUTEINFOW(); info.cbSize = ctypes.sizeof(SHELLEXECUTEINFOW); info.fMask = SEE_MASK_NOCLOSEPROCESS
     info.lpVerb = "runas"; info.lpFile = str(taskkill); info.lpParameters = parameters; info.nShow = SW_HIDE
     if not shell32.ShellExecuteExW(ctypes.byref(info)):
@@ -303,23 +314,39 @@ def _run_elevated_taskkill(leases: list[dict[str, Any]], timeout_ms: int = 120_0
         raise RuntimeError("WINDOWS_ELEVATION_PROCESS_HANDLE_MISSING")
     try:
         wait = kernel32.WaitForSingleObject(info.hProcess, max(1, int(timeout_ms)))
-        if wait == WAIT_TIMEOUT: raise TimeoutError("WINDOWS_ELEVATION_TIMEOUT")
-        if wait != WAIT_OBJECT_0: raise OSError(int(wait), "WINDOWS_ELEVATION_WAIT_FAILED")
+        if wait == WAIT_TIMEOUT:
+            raise TimeoutError("WINDOWS_ELEVATION_TIMEOUT")
+        if wait != WAIT_OBJECT_0:
+            raise OSError(int(wait), "WINDOWS_ELEVATION_WAIT_FAILED")
         exit_code = wintypes.DWORD(0)
         if not kernel32.GetExitCodeProcess(info.hProcess, ctypes.byref(exit_code)):
             raise OSError(ctypes.get_last_error(), "WINDOWS_ELEVATION_EXIT_READ_FAILED")
+        taskkill_exit_code = int(exit_code.value)
     finally:
         kernel32.CloseHandle(info.hProcess)
+
     remaining: list[int] = []
     for lease in leases:
         state = kernel32.WaitForSingleObject(lease["handle"], 0)
-        if state == WAIT_TIMEOUT: remaining.append(int(lease["pid"]))
-        elif state != WAIT_OBJECT_0: raise OSError(int(state), f"WINDOWS_ELEVATION_TARGET_WAIT_FAILED: pid={lease['pid']}")
+        if state == WAIT_TIMEOUT:
+            remaining.append(int(lease["pid"]))
+        elif state != WAIT_OBJECT_0:
+            raise OSError(int(state), f"WINDOWS_ELEVATION_TARGET_WAIT_FAILED: pid={lease['pid']}")
     if remaining:
         raise RuntimeError("WINDOWS_ELEVATION_TARGET_STILL_RUNNING:" + ",".join(map(str, remaining)))
-    return {"ok": True, "closed_pid_count": len(leases), "taskkill_exit_code": int(exit_code.value),
-            "identity_bound": True, "pid_reuse_blocked_by_open_handles": True, "fixed_system_binary": True,
-            "arbitrary_executable_allowed": False, "arbitrary_arguments_allowed": False}
+    if taskkill_exit_code != 0:
+        raise RuntimeError(f"WINDOWS_ELEVATION_TASKKILL_EXIT_NONZERO:{taskkill_exit_code}")
+    return {
+        "ok": True,
+        "closed_pid_count": len(leases),
+        "taskkill_exit_code": taskkill_exit_code,
+        "taskkill_exit_code_zero": True,
+        "identity_bound": True,
+        "pid_reuse_blocked_by_open_handles": True,
+        "fixed_system_binary": True,
+        "arbitrary_executable_allowed": False,
+        "arbitrary_arguments_allowed": False,
+    }
 
 
 def elevated_close_supported_processes(
@@ -329,16 +356,20 @@ def elevated_close_supported_processes(
     _windows_required(); _consume_operation_token(operation_token)
     leases = _lease_validated_targets(pids, expected_identities)
     if not leases:
-        return {"ok": True, "closed_pid_count": 0, "already_closed": True, "operation_token_consumed": True,
-                "uac_prompt_started": False, "identity_bound": True, "pid_reuse_blocked_by_open_handles": True,
-                "arbitrary_executable_allowed": False, "production_effect_authorized": False,
-                "windows_runtime_certified": False, "production_score_mutation_authorized": False}
+        return {
+            "ok": True, "closed_pid_count": 0, "already_closed": True, "operation_token_consumed": True,
+            "uac_prompt_started": False, "identity_bound": True, "pid_reuse_blocked_by_open_handles": True,
+            "arbitrary_executable_allowed": False, "production_effect_authorized": False,
+            "windows_runtime_certified": False, "production_score_mutation_authorized": False,
+        }
     try:
         result = _run_elevated_taskkill(leases)
     finally:
         _close_leases(leases)
-    result.update({"operation_token_consumed": True, "uac_prompt_started": True, "production_effect_authorized": False,
-                   "windows_runtime_certified": False, "production_score_mutation_authorized": False})
+    result.update({
+        "operation_token_consumed": True, "uac_prompt_started": True, "production_effect_authorized": False,
+        "windows_runtime_certified": False, "production_score_mutation_authorized": False,
+    })
     return result
 
 
@@ -346,27 +377,35 @@ def synthetic_proof() -> dict[str, Any]:
     base = max(100_000, os.getpid() + 1_000); p1, p2, p3, p4 = base, base + 1, base + 2, base + 3
     process_map = {p1: "Codex.exe", p2: "ChatGPT.exe", p3: "notepad.exe", p4: "explorer.exe"}
     allowed = _validate_target_map([p1, p2], process_map)
-    unsupported_rejected = _expect = False
-    try: _validate_target_map([p3], process_map)
-    except ValueError as exc: unsupported_rejected = "TARGET_NOT_ALLOWED" in str(exc)
+    unsupported_rejected = False
+    try:
+        _validate_target_map([p3], process_map)
+    except ValueError as exc:
+        unsupported_rejected = "TARGET_NOT_ALLOWED" in str(exc)
     explorer_rejected = False
-    try: _validate_target_map([p4], process_map)
-    except ValueError as exc: explorer_rejected = "TARGET_NOT_ALLOWED" in str(exc)
+    try:
+        _validate_target_map([p4], process_map)
+    except ValueError as exc:
+        explorer_rejected = "TARGET_NOT_ALLOWED" in str(exc)
     expected = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 111}
     same = {"pid": p1, "name": "Codex.exe", "creation_time_100ns": 111}
     reused_same_name = {"pid": p1, "name": "codex.exe", "creation_time_100ns": 222}
     replaced_name = {"pid": p1, "name": "notepad.exe", "creation_time_100ns": 111}
     normalized_identity = _normalize_expected_identities({p1: expected})
     token = "proof-token-identity-123456"; _consume_operation_token(token); replay_rejected = False
-    try: _consume_operation_token(token)
-    except RuntimeError as exc: replay_rejected = "ALREADY_CONSUMED" in str(exc)
+    try:
+        _consume_operation_token(token)
+    except RuntimeError as exc:
+        replay_rejected = "ALREADY_CONSUMED" in str(exc)
     args = _taskkill_arguments([p2, p1]); expected_args = f"/PID {p1} /PID {p2} /T /F"
     src = Path(__file__).read_text("utf-8"); impl_src = src[:src.find("def synthetic_proof")]
     elevated_src = impl_src[impl_src.find("def elevated_close_supported_processes"):]
     checks = {
         "codex_chatgpt_only_allowlist": SUPPORTED_CLIENT_NAMES == frozenset({"codex.exe", "chatgpt.exe"}),
-        "allowed_targets_validate": allowed == [p1, p2], "generic_process_rejected": unsupported_rejected,
-        "explorer_rejected": explorer_rejected, "pid_bound_is_bounded": MAX_TARGET_PIDS == 32,
+        "allowed_targets_validate": allowed == [p1, p2],
+        "generic_process_rejected": unsupported_rejected,
+        "explorer_rejected": explorer_rejected,
+        "pid_bound_is_bounded": MAX_TARGET_PIDS == 32,
         "taskkill_args_numeric_only": args == expected_args,
         "identity_binding_requires_supported_exact_shape": normalized_identity[p1] == expected,
         "same_process_incarnation_matches": _identity_matches(expected, same),
@@ -379,6 +418,7 @@ def synthetic_proof() -> dict[str, Any]:
         "pid_reuse_claim_is_handle_scoped": '"pid_reuse_blocked_by_open_handles": True' in elevated_src,
         "taskkill_resolved_from_system_directory": "GetSystemDirectoryW" in impl_src and '"taskkill.exe"' in impl_src,
         "uac_uses_runas_only_on_fixed_taskkill": "ShellExecuteExW" in impl_src and 'info.lpVerb = "runas"' in impl_src and "info.lpFile = str(taskkill)" in impl_src,
+        "taskkill_nonzero_is_fail_closed": "WINDOWS_ELEVATION_TASKKILL_EXIT_NONZERO" in impl_src and '"taskkill_exit_code_zero": True' in impl_src,
         "no_generic_shell_runner": "powershell.exe" not in impl_src.lower() and "cmd.exe" not in impl_src.lower() and "subprocess" not in impl_src,
         "no_caller_executable_parameter": "executable_path" not in impl_src and "lpFile = str(taskkill)" in impl_src,
         "one_shot_token_consumed_before_identity_lease": elevated_src.find("_consume_operation_token(operation_token)") < elevated_src.find("_lease_validated_targets(pids, expected_identities)"),
@@ -389,11 +429,13 @@ def synthetic_proof() -> dict[str, Any]:
     }
     tests = [{"name": name, "status": "PASS" if ok else "FAIL"} for name, ok in checks.items()]
     passed = sum(test["status"] == "PASS" for test in tests)
-    return {"product": PRODUCT, "version": VERSION, "suite": "WINDOWS_ONE_SHOT_ELEVATION_SOURCE_PROOF",
-            "verdict": "PASS" if passed == len(tests) else "FAIL",
-            "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)}, "tests": tests,
-            "real_uac_prompt_executed": False, "real_client_process_closed": False,
-            "windows_runtime_certified": False, "production_score_promotion_eligible": False}
+    return {
+        "product": PRODUCT, "version": VERSION, "suite": "WINDOWS_ONE_SHOT_ELEVATION_SOURCE_PROOF",
+        "verdict": "PASS" if passed == len(tests) else "FAIL",
+        "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)}, "tests": tests,
+        "real_uac_prompt_executed": False, "real_client_process_closed": False,
+        "windows_runtime_certified": False, "production_score_promotion_eligible": False,
+    }
 
 
 def main() -> int:
