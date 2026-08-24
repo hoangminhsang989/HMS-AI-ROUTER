@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse, json, os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -51,6 +52,88 @@ def _operator_preflight(args) -> dict:
         "windows_runtime_certified": False,
         "production_score_promotion_eligible": False,
         "automatic_production_certification": False,
+    }
+
+
+def _parse_utc(value: str | None):
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return dt.astimezone(timezone.utc) if dt.tzinfo else None
+    except Exception:
+        return None
+
+
+def _reviewer_authority_status(args) -> dict:
+    _windows_required()
+    state_dir = Path(args.state_dir).resolve()
+    authority_path = state_dir / (args.authority_name or DEFAULT_AUTHORITY_NAME)
+    integrity_key_path = state_dir / DEFAULT_INTEGRITY_KEY_NAME
+    freshness_hours = max(1, int(args.authority_freshness_hours))
+    warning_hours = max(0, min(freshness_hours, int(args.renewal_warning_hours)))
+
+    verified = trust_authority.load_and_verify_authority(
+        authority_path,
+        key_path=integrity_key_path,
+        freshness_hours=freshness_hours,
+    )
+    reasons = list(verified.get("reasons") or [])
+    body = {}
+    if authority_path.is_file():
+        try:
+            document = json.loads(authority_path.read_text("utf-8"))
+            body = document.get("authority") if isinstance(document.get("authority"), dict) else {}
+        except Exception:
+            if "TRUST_AUTHORITY_JSON_INVALID" not in reasons:
+                reasons.append("TRUST_AUTHORITY_JSON_INVALID")
+
+    now = datetime.now(timezone.utc)
+    created = _parse_utc(body.get("created_utc")) if body else None
+    expires = created + timedelta(hours=freshness_hours) if created else None
+    remaining_seconds = int((expires - now).total_seconds()) if expires else None
+
+    valid = verified.get("valid") is True and not reasons
+    stale = "TRUST_AUTHORITY_STALE" in reasons or (remaining_seconds is not None and remaining_seconds <= 0)
+    renew_soon = valid and remaining_seconds is not None and remaining_seconds <= warning_hours * 3600
+    if not valid:
+        verdict = "BLOCKED_FAIL_CLOSED"
+        freshness_state = "STALE" if stale else "INVALID"
+    elif renew_soon:
+        verdict = "AUTHORITY_RENEW_SOON"
+        freshness_state = "RENEW_SOON"
+    else:
+        verdict = "AUTHORITY_FRESH"
+        freshness_state = "FRESH"
+
+    return {
+        "product": PRODUCT, "version": VERSION, "suite": "WINDOWS_EVIDENCE_ORCHESTRATOR_REVIEWER_AUTHORITY_STATUS",
+        "verdict": verdict,
+        "valid": valid,
+        "freshness_state": freshness_state,
+        "reasons": sorted(set(reasons)),
+        "authority_path": str(authority_path),
+        "authority_sha256": verified.get("authority_sha256", ""),
+        "trust_snapshot_sha256": verified.get("trust_snapshot_sha256", ""),
+        "trust_store_generation": body.get("trust_store_generation") if body else None,
+        "active_pin_count": verified.get("active_pin_count", 0),
+        "local_integrity_seal_valid": verified.get("local_integrity_seal_valid") is True,
+        "created_utc": created.isoformat() if created else "",
+        "expires_utc": expires.isoformat() if expires else "",
+        "remaining_seconds": remaining_seconds,
+        "freshness_hours": freshness_hours,
+        "renewal_warning_hours": warning_hours,
+        "renewal_recommended": renew_soon or stale,
+        "renewal_required": stale,
+        "authority_recaptured": False,
+        "packet_imported": False,
+        "reviewer_trust_store_mutated": False,
+        "raw_packet_copied_into_state_dir": False,
+        "production_packet_signed": False,
+        "real_codex_request_executed": False,
+        "windows_runtime_certified": False,
+        "external_windows_target_evidence_imported": False,
+        "production_score_promotion_eligible": False,
+        "automatic_production_certification": False,
+        "production_score_mutation_authorized": False,
     }
 
 
@@ -110,6 +193,8 @@ def source_proof() -> dict:
         "operator_never_executes_live_codex": '"real_codex_request_executed": False' in src,
         "operator_never_signs_packet": '"production_packet_signed": False' in src,
         "reviewer_authority_captured_before_import": src.find("trust_authority.capture_authority") < src.find("reviewer_import.import_for_review"),
+        "reviewer_authority_status_is_verify_only": "trust_authority.load_and_verify_authority" in src and '"authority_recaptured": False' in src,
+        "reviewer_authority_status_has_freshness_diagnostics": '"freshness_state"' in src and '"renewal_recommended"' in src and '"expires_utc"' in src,
         "reviewer_uses_high_level_import": "reviewer_import.import_for_review" in src,
         "reviewer_trust_store_not_mutated": '"reviewer_trust_store_mutated": False' in src,
         "raw_packet_not_copied": '"raw_packet_copied_into_state_dir": False' in src,
@@ -147,6 +232,12 @@ def main() -> int:
     op = sub.add_parser("operator-preflight", help="Read-only prerequisites; no live Codex request and no packet signing")
     _add_common_certificate_args(op)
 
+    st = sub.add_parser("reviewer-authority-status", help="Read-only sealed authority freshness/integrity diagnostics")
+    st.add_argument("--state-dir", required=True)
+    st.add_argument("--authority-name", default=DEFAULT_AUTHORITY_NAME)
+    st.add_argument("--authority-freshness-hours", type=int, default=24)
+    st.add_argument("--renewal-warning-hours", type=int, default=4)
+
     rv = sub.add_parser("reviewer-import", help="Capture sealed reviewer authority then import packet into sealed local state")
     rv.add_argument("--state-dir", required=True)
     rv.add_argument("--reviewer-trust-store", required=True)
@@ -163,7 +254,14 @@ def main() -> int:
         out = source_proof(); code = 0 if out["verdict"] == "PASS" else 2
     else:
         try:
-            out = _operator_preflight(args) if command == "operator-preflight" else _reviewer_import(args)
+            if command == "operator-preflight":
+                out = _operator_preflight(args)
+            elif command == "reviewer-authority-status":
+                out = _reviewer_authority_status(args)
+            elif command == "reviewer-import":
+                out = _reviewer_import(args)
+            else:
+                raise ValueError("UNKNOWN_COMMAND")
             code = 0 if out.get("ready", True) and not str(out.get("verdict", "")).startswith("BLOCKED") else 2
         except Exception as exc:
             out = {"product": PRODUCT, "version": VERSION, "suite": "WINDOWS_EVIDENCE_ORCHESTRATOR",
