@@ -92,6 +92,15 @@ def _discover_identity_bound_targets() -> dict[int, dict[str, Any]]:
     return elevation.discover_supported_client_identities()
 
 
+def _session_binding_ready(identities: dict[int, dict[str, Any]]) -> bool:
+    if not identities:
+        return False
+    try:
+        return all(int(row["session_id"]) >= 0 for row in identities.values())
+    except Exception:
+        return False
+
+
 def preflight_report() -> dict[str, Any]:
     out = _base_report("PREFLIGHT_READ_ONLY")
     if os.name != "nt":
@@ -110,6 +119,7 @@ def preflight_report() -> dict[str, Any]:
         })
         return out
 
+    session_ready = _session_binding_ready(identities)
     try:
         taskkill_path = str(elevation._system_taskkill_path())
         taskkill_available = True
@@ -121,18 +131,19 @@ def preflight_report() -> dict[str, Any]:
         taskkill_error = ""
 
     out.update({
-        "verdict": "READY" if taskkill_available else "BLOCKED",
+        "verdict": "READY" if taskkill_available and session_ready else "BLOCKED",
         "supported_client_pids": pids,
         "supported_client_count": len(pids),
         "identity_binding_ready": bool(pids),
-        "interactive_prerequisite_met": bool(pids) and taskkill_available,
+        "session_binding_ready": session_ready,
+        "interactive_prerequisite_met": bool(pids) and taskkill_available and session_ready,
         "fixed_taskkill_available": taskkill_available,
         "fixed_taskkill_path": taskkill_path,
         "fixed_taskkill_error": taskkill_error,
         "policy": _read_policy_via_backend(),
         "effects_executed": False,
         "uac_prompt_executed": False,
-        "operator_note": "Interactive validation requires explicit acknowledgement and may close identity-bound Codex/ChatGPT processes if UAC is accepted.",
+        "operator_note": "Interactive validation requires explicit acknowledgement and may close only current-session identity-bound Codex/ChatGPT processes if UAC is accepted.",
     })
     return out
 
@@ -143,6 +154,8 @@ def _classify_interactive_exception(exc: Exception) -> str:
         return "UAC_CANCELLED"
     if "WINDOWS_ELEVATION_TIMEOUT" in text:
         return "UAC_TIMEOUT"
+    if "WINDOWS_ELEVATION_TARGET_SESSION_" in text:
+        return "SESSION_CHANGED"
     if "WINDOWS_ELEVATION_TARGET_IDENTITY_CHANGED" in text:
         return "IDENTITY_CHANGED"
     return "FAILED"
@@ -177,6 +190,14 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
             "uac_prompt_executed": False,
         })
         return out
+    if not _session_binding_ready(identities):
+        out.update({
+            "verdict": "BLOCKED",
+            "reason": "CURRENT_WINDOWS_SESSION_BINDING_REQUIRED",
+            "effects_executed": False,
+            "uac_prompt_executed": False,
+        })
+        return out
 
     token = secrets.token_urlsafe(24)
     first_outcome = ""
@@ -184,6 +205,7 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
     uac_prompt_executed = False
     closed_pid_count = 0
     identity_bound = False
+    session_bound = False
     pid_reuse_blocked = False
     try:
         first = elevation.elevated_close_supported_processes(
@@ -192,10 +214,11 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
         uac_prompt_executed = bool(first.get("uac_prompt_started"))
         closed_pid_count = int(first.get("closed_pid_count") or 0)
         identity_bound = first.get("identity_bound") is True
+        session_bound = first.get("session_bound") is True
         pid_reuse_blocked = first.get("pid_reuse_blocked_by_open_handles") is True
-        if first.get("ok") and uac_prompt_executed and closed_pid_count > 0 and identity_bound and pid_reuse_blocked:
+        if first.get("ok") and uac_prompt_executed and closed_pid_count > 0 and identity_bound and session_bound and pid_reuse_blocked:
             first_outcome = "SUPPORTED_CLIENTS_CLOSED"
-        elif first.get("ok") and first.get("already_closed") and identity_bound:
+        elif first.get("ok") and first.get("already_closed") and identity_bound and session_bound:
             first_outcome = "ALREADY_CLOSED_BEFORE_UAC"
         else:
             first_outcome = "FAILED"
@@ -219,12 +242,14 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
     except Exception:
         remaining = []
 
-    if first_outcome == "SUPPORTED_CLIENTS_CLOSED" and replay_blocked and uac_prompt_executed and closed_pid_count > 0 and identity_bound and pid_reuse_blocked:
+    if first_outcome == "SUPPORTED_CLIENTS_CLOSED" and replay_blocked and uac_prompt_executed and closed_pid_count > 0 and identity_bound and session_bound and pid_reuse_blocked:
         verdict = "PASS_CLOSE_AND_REPLAY_BLOCK"
     elif first_outcome == "UAC_CANCELLED" and replay_blocked and uac_prompt_executed:
         verdict = "PASS_CANCEL_AND_REPLAY_BLOCK"
     elif first_outcome == "IDENTITY_CHANGED" and replay_blocked:
         verdict = "PASS_IDENTITY_CHANGE_AND_REPLAY_BLOCK"
+    elif first_outcome == "SESSION_CHANGED" and replay_blocked:
+        verdict = "PASS_SESSION_CHANGE_AND_REPLAY_BLOCK"
     elif replay_blocked:
         verdict = "PARTIAL_REPLAY_BLOCKED"
     else:
@@ -235,6 +260,8 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
         "verdict": verdict,
         "initial_supported_client_pids": pids,
         "identity_binding_used": True,
+        "session_binding_used": True,
+        "session_bound": session_bound,
         "pid_reuse_blocked_by_open_handles": pid_reuse_blocked,
         "first_outcome": first_outcome,
         "first_detail_type": first_detail,
@@ -244,7 +271,7 @@ def interactive_report(acknowledgement: str) -> dict[str, Any]:
         "replay_reason_code": "WINDOWS_ELEVATION_OPERATION_TOKEN_ALREADY_CONSUMED" if replay_blocked else "UNCONFIRMED",
         "remaining_supported_client_pids": remaining,
         "effects_executed": effects_executed,
-        "operator_note": "This report validates bounded identity-bound recovery mechanics only and cannot certify the canonical seven-case production gate.",
+        "operator_note": "This report validates bounded current-session identity-bound recovery mechanics only and cannot certify the canonical seven-case production gate.",
     })
     return out
 
@@ -277,13 +304,16 @@ def synthetic_proof() -> dict[str, Any]:
         "preflight_never_calls_elevated_helper": "elevated_close_supported_processes" not in preflight_src,
         "preflight_only_uses_readonly_settings_action": '"-BackendAction", "get_settings"' in policy_src,
         "policy_report_whitelists_only_required_booleans": "CodexLaunchAfterAuthSwitch" in policy_src and "RestartCodexOnSwitch" in policy_src and '"settings": settings' not in policy_src,
+        "preflight_requires_current_session_binding": "session_binding_ready" in preflight_src and "interactive_prerequisite_met" in preflight_src,
         "interactive_discovers_identity_bound_targets_before_uac": interactive_src.find("_discover_identity_bound_targets()") < interactive_src.find("elevation.elevated_close_supported_processes"),
         "interactive_passes_expected_identities": interactive_src.count("expected_identities=identities") >= 2,
         "interactive_uses_random_one_shot_token": "secrets.token_urlsafe(24)" in interactive_src,
         "interactive_replays_same_token_for_block_proof": interactive_src.count("operation_token=token") >= 2,
         "cancel_is_distinguished": "UAC_CANCELLED" in interactive_src and "PASS_CANCEL_AND_REPLAY_BLOCK" in interactive_src,
         "identity_change_is_distinguished": "IDENTITY_CHANGED" in interactive_src and "PASS_IDENTITY_CHANGE_AND_REPLAY_BLOCK" in interactive_src,
-        "successful_close_requires_identity_and_pid_reuse_guard": "identity_bound and pid_reuse_blocked" in interactive_src and "PASS_CLOSE_AND_REPLAY_BLOCK" in interactive_src,
+        "session_change_is_distinguished": "SESSION_CHANGED" in interactive_src and "PASS_SESSION_CHANGE_AND_REPLAY_BLOCK" in interactive_src,
+        "successful_close_requires_identity_session_and_pid_reuse_guard": "identity_bound and session_bound and pid_reuse_blocked" in interactive_src and "PASS_CLOSE_AND_REPLAY_BLOCK" in interactive_src,
+        "report_surfaces_session_binding": '"session_binding_used": True' in interactive_src and '"session_bound": session_bound' in interactive_src,
         "already_closed_is_not_successful_close": "ALREADY_CLOSED_BEFORE_UAC" in interactive_src and 'first_outcome = "SUPPORTED_CLIENTS_CLOSED" if first.get("ok")' not in interactive_src,
         "output_is_optional": 'if not target:' in writer_src and "return" in writer_src,
         "report_never_claims_production_certification": '"windows_runtime_certified": False' in impl_src and '"canonical_seven_case_certification": False' in impl_src,
@@ -327,7 +357,7 @@ def main() -> int:
     sub.add_parser("proof", help="Run source/synthetic proof only; no Windows effects.")
     pre = sub.add_parser("preflight", help="Read-only Windows preflight; no UAC and no client close.")
     pre.add_argument("--output", default="", help="Optional JSON report path.")
-    inter = sub.add_parser("interactive", help="Interactive one-shot UAC validation; may close identity-bound Codex/ChatGPT clients.")
+    inter = sub.add_parser("interactive", help="Interactive one-shot UAC validation; may close current-session identity-bound Codex/ChatGPT clients.")
     inter.add_argument("--acknowledge", default="", help=f"Must equal: {ACKNOWLEDGEMENT}")
     inter.add_argument("--output", default="", help="Optional JSON report path.")
     args = parser.parse_args()
