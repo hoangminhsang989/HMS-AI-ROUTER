@@ -121,6 +121,7 @@ def _pid_and_identity_cases() -> list[dict[str, Any]]:
     p = _pid_space(40)
     p1, p2, p3, p4 = p[:4]
     process_map = {p1: "Codex.exe", p2: "ChatGPT.exe", p3: "notepad.exe", p4: "explorer.exe"}
+    taskkill_args = elevation._taskkill_arguments([p2, p1])
     tests.extend([
         _case("supported_pid_pair_validates", elevation._validate_target_map([p2, p1], process_map) == [p1, p2], group="pid-identity"),
         _case("pid_substitution_to_notepad_rejected", _expect_raises(ValueError, lambda: elevation._validate_target_map([p1], {p1: "notepad.exe"}), "TARGET_NOT_ALLOWED"), group="pid-identity"),
@@ -134,7 +135,8 @@ def _pid_and_identity_cases() -> list[dict[str, Any]]:
         _case("current_process_only_fails_closed", _expect_raises(ValueError, lambda: elevation._normalize_pids([os.getpid()]), "TARGET_INVALID"), group="pid-identity"),
         _case("pid_bound_32_is_accepted", len(elevation._normalize_pids(p[:32])) == 32, group="pid-identity"),
         _case("pid_bound_33_is_rejected", _expect_raises(ValueError, lambda: elevation._normalize_pids(p[:33]), "TARGET_INVALID"), group="pid-identity"),
-        _case("taskkill_arguments_are_sorted_numeric_only", elevation._taskkill_arguments([p2, p1]) == f"/PID {p1} /PID {p2} /T /F", group="pid-identity"),
+        _case("taskkill_arguments_are_sorted_numeric_only", taskkill_args == f"/PID {p1} /PID {p2} /F", group="pid-identity"),
+        _case("taskkill_never_expands_to_child_tree", "/T" not in taskkill_args, group="pid-identity"),
     ])
 
     old = _identity(p1, "codex.exe", 1001)
