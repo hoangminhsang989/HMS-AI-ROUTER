@@ -12,6 +12,7 @@ on:
       - '_runtime/HMS_Codex_CockpitV1329P0ParityProof.py'
       - '_runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py'
       - '_runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py'
+      - '_runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionDecision.json'
       - '_runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py'
       - '_runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py'
       - '_runtime/HMS_Codex_CockpitBaselineReconciliationContract.py'
