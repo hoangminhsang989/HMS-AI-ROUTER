@@ -1,0 +1,34 @@
+name: v25.75 Runner Materialization Canary (Diagnostic Only)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu-runner-canary:
+    name: ubuntu-runner-canary
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Runner materialized
+        shell: bash
+        run: |
+          printf 'runner_materialized=true\n'
+          printf 'runner_os=ubuntu\n'
+          printf 'github_sha=%s\n' "$GITHUB_SHA"
+
+  windows-runner-canary:
+    name: windows-runner-canary
+    runs-on: windows-latest
+    timeout-minutes: 2
+    steps:
+      - name: Runner materialized
+        shell: pwsh
+        run: |
+          Write-Output 'runner_materialized=true'
+          Write-Output 'runner_os=windows'
+          Write-Output "github_sha=$env:GITHUB_SHA"
