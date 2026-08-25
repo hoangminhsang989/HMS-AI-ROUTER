@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
 PRODUCT = "HMS-AI-ROUTER"
@@ -12,6 +14,7 @@ TARGET_RELEASE = "1.3.29"
 TARGET_COMMIT = "83ce2d192cc954cc910ce89edf2d1f710c218798"
 SCOPE = "CODEX_ONLY"
 DEVICE_CAPABILITY = "DEVICE_CODE_OAUTH"
+DECISION_RECORD_NAME = "HMS_Codex_CockpitV1329DeviceAuthAdoptionDecision.json"
 
 DECISION_OPEN = "OPEN"
 DECISION_REQUIRE_PARITY = "REQUIRE_PARITY"
@@ -22,7 +25,7 @@ ALLOWED_DECISIONS = {
     DECISION_ACCEPT_GAP,
 }
 
-CURRENT_DECISION_RECORD: dict[str, Any] = {
+DECISION_RECORD_TEMPLATE: dict[str, Any] = {
     "schema_version": 1,
     "product": PRODUCT,
     "version": VERSION,
@@ -44,9 +47,38 @@ def _text(value: Any) -> str:
 
 
 def _record_with(**updates: Any) -> dict[str, Any]:
-    record = deepcopy(CURRENT_DECISION_RECORD)
+    record = deepcopy(DECISION_RECORD_TEMPLATE)
     record.update(updates)
     return record
+
+
+def _load_current_decision_authority() -> tuple[dict[str, Any], dict[str, Any]]:
+    path = Path(__file__).resolve().with_name(DECISION_RECORD_NAME)
+    authority: dict[str, Any] = {
+        "file": DECISION_RECORD_NAME,
+        "loaded": False,
+        "sha256": "",
+        "error": "",
+    }
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        authority["error"] = f"DEVICE_AUTH_DECISION_FILE_UNREADABLE:{exc}"
+        return {}, authority
+
+    authority["sha256"] = hashlib.sha256(raw).hexdigest()
+    try:
+        parsed = json.loads(raw.decode("utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        authority["error"] = f"DEVICE_AUTH_DECISION_FILE_INVALID_JSON:{exc}"
+        return {}, authority
+
+    if not isinstance(parsed, dict):
+        authority["error"] = "DEVICE_AUTH_DECISION_FILE_SHAPE_INVALID"
+        return {}, authority
+
+    authority["loaded"] = True
+    return parsed, authority
 
 
 def validate_decision_record(
@@ -146,11 +178,23 @@ def validate_decision_record(
 
 
 def current_contract() -> dict[str, Any]:
-    return validate_decision_record(CURRENT_DECISION_RECORD, parity_proof_ready=False)
+    record, authority = _load_current_decision_authority()
+    result = validate_decision_record(record, parity_proof_ready=False)
+    if not authority["loaded"]:
+        result["valid_record"] = False
+        result["reconciliation_state"] = "DEVICE_AUTH_DECISION_RECORD_INVALID"
+        result["resolved_for_baseline"] = False
+        result["reasons"] = sorted(
+            set(result.get("reasons", []))
+            | {str(authority.get("error") or "DEVICE_AUTH_DECISION_FILE_LOAD_FAILED")}
+        )
+    result["decision_record_authority"] = authority
+    return result
 
 
 def synthetic_proof() -> dict[str, Any]:
     current = current_contract()
+    authority = current.get("decision_record_authority", {})
     forged_gap = validate_decision_record(
         _record_with(decision=DECISION_ACCEPT_GAP),
         parity_proof_ready=False,
@@ -195,6 +239,12 @@ def synthetic_proof() -> dict[str, Any]:
     )
 
     checks = {
+        "current_device_auth_decision_authority_file_loaded": (
+            authority.get("loaded") is True
+            and authority.get("file") == DECISION_RECORD_NAME
+            and len(str(authority.get("sha256") or "")) == 64
+            and not authority.get("error")
+        ),
         "current_device_auth_decision_record_valid": current["valid_record"],
         "current_device_auth_decision_remains_open": current["decision"] == DECISION_OPEN,
         "current_device_auth_state_is_unresolved": (
@@ -251,6 +301,7 @@ def synthetic_proof() -> dict[str, Any]:
         "current_contract": current,
         "device_auth_adoption_decision": current["decision"],
         "device_auth_reconciliation_state": current["reconciliation_state"],
+        "decision_record_authority": authority,
         "source_contract_only": True,
         "real_windows_runtime_executed": False,
         "windows_runtime_certified": False,
