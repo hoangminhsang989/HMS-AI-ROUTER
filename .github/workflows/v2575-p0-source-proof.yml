@@ -1,0 +1,95 @@
+name: v25.75 P0 Source Proof (Non-Windows)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p0-source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile source-proof harnesses
+        run: |
+          python -m py_compile \
+            _runtime/HMS_Codex_CockpitV1329P0ParityProof.py \
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py \
+            _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py
+
+      - name: Execute Cockpit v1.3.29 P0 exact-source proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329P0ParityProof.py > "$RUNNER_TEMP/p0-source-proof.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p0-source-proof.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("source_certification_only") is True, result
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "production_score_promotion_eligible": result.get("production_score_promotion_eligible"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute canonical source-binding P0 gate
+        run: |
+          python _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py > "$RUNNER_TEMP/source-binding-proof.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "source-binding-proof.json").read_text("utf-8"))
+          tests = {
+              item.get("name"): item.get("status")
+              for item in result.get("tests", [])
+              if isinstance(item, dict)
+          }
+          assert result.get("verdict") == "PASS", result
+          assert result.get("p0_ownership_assertions_required") == 7, result
+          assert result.get("quota_refresh_helper_trap_executed") is True, result
+          assert tests.get("quota_valid_access_fail_if_refresh_helper_called") == "PASS", tests
+          assert tests.get("quota_refresh_helper_trap_positive_control") == "PASS", tests
+          ownership = [
+              name for name, status in tests.items()
+              if name.startswith("cockpit_v1329_p0_ownership_assertion::") and status == "PASS"
+          ]
+          assert len(ownership) == 7, ownership
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "p0_ownership_assertions_pass": len(ownership),
+              "quota_valid_access_fail_if_refresh_helper_called": tests.get("quota_valid_access_fail_if_refresh_helper_called"),
+              "quota_refresh_helper_trap_positive_control": tests.get("quota_refresh_helper_trap_positive_control"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "production_score_promotion_eligible": result.get("production_score_promotion_eligible"),
+          }, indent=2))
+          PY
