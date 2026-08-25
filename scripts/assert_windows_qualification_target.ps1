@@ -8,7 +8,9 @@ param(
 
     [Parameter(Mandatory = $true)]
     [ValidatePattern('^[0-9a-fA-F]{40}$')]
-    [string]$ExpectedWorkflowBlob
+    [string]$ExpectedWorkflowBlob,
+
+    [string]$RepositoryRoot = ''
 )
 
 Set-StrictMode -Version Latest
@@ -25,13 +27,30 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Fail 'git is required'
 }
 
-$root = (& git rev-parse --show-toplevel 2>$null)
-if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($root)) {
-    Fail 'current directory is not inside a Git working tree'
+if ([string]::IsNullOrWhiteSpace($RepositoryRoot)) {
+    $root = (& git rev-parse --show-toplevel 2>$null)
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($root)) {
+        Fail 'current directory is not inside a Git working tree'
+    }
+    $root = [System.IO.Path]::GetFullPath($root.Trim())
+} else {
+    $root = [System.IO.Path]::GetFullPath($RepositoryRoot)
+    if (-not (Test-Path -LiteralPath $root -PathType Container)) {
+        Fail "RepositoryRoot does not exist or is not a directory: $root"
+    }
 }
-$root = [System.IO.Path]::GetFullPath($root.Trim())
+
 Push-Location $root
 try {
+    $resolvedRoot = (& git rev-parse --show-toplevel 2>$null)
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($resolvedRoot)) {
+        Fail 'RepositoryRoot is not a Git working tree'
+    }
+    $resolvedRoot = [System.IO.Path]::GetFullPath($resolvedRoot.Trim())
+    if ($resolvedRoot.TrimEnd('\') -ine $root.TrimEnd('\')) {
+        Fail "RepositoryRoot resolves to a different Git root: $resolvedRoot"
+    }
+
     $head = (& git rev-parse HEAD).Trim().ToLowerInvariant()
     if ($LASTEXITCODE -ne 0 -or $head -notmatch '^[0-9a-f]{40}$') {
         Fail 'unable to resolve canonical HEAD commit'
@@ -78,6 +97,7 @@ try {
     [pscustomobject]@{
         target_verified = $true
         repository = $RepositoryFullName
+        repository_root = $resolvedRoot
         commit = $head
         workflow_path = $WorkflowPath
         workflow_blob = $workingBlob
