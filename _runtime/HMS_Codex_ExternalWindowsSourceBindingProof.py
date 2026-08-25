@@ -13,6 +13,15 @@ import HMS_Codex_ExternalWindowsEvidenceRunner as runner
 from HMS_Codex_WindowsRuntimeCaseContract import REQUIRED_RUNTIME_CASE_IDS
 
 PRODUCT="HMS-AI-ROUTER"; VERSION="25.75"; MANIFEST_SHA="a"*64; PACKAGE_SHA="b"*64
+P0_OWNERSHIP_ASSERTIONS=(
+    "combined_projection_records_distinct_credential_owner",
+    "combined_writer_keeps_oauth_auth_and_api_key_provider",
+    "combined_refresh_uses_bound_oauth_owner",
+    "combined_upstream_owner_projection_test_present",
+    "combined_upstream_rotation_test_present",
+    "combined_upstream_rotation_without_last_refresh_test_present",
+    "generation_guard_upstream_test_present",
+)
 
 def _sha(raw:bytes)->str:return hashlib.sha256(raw).hexdigest()
 
@@ -23,6 +32,47 @@ def _source(now:datetime)->dict[str,Any]:
             "stages":{cid:{"pass":True,"detail":{"fixture":True,"case_id":cid}} for cid in REQUIRED_RUNTIME_CASE_IDS},
             "artifact_binding":{"pass":True,"binding_schema":"HMS_V25_75_TARGET_ARTIFACT_BINDING_V1","release_manifest_sha256":MANIFEST_SHA,
                                 "package_zip_sha256":PACKAGE_SHA,"critical_files_required":8,"critical_files_verified":8},"blockers":[]}
+
+def _execute_quota_probe_with_refresh_helper(state:Any,refresh_helper)->dict[str,Any]:
+    transition=cockpit_v1329_p0._quota_transition(state)
+    if transition.get("refresh_called") is True:
+        refresh_helper()
+    return transition
+
+def _quota_refresh_helper_trap_proof()->dict[str,bool]:
+    checks={}
+    def forbidden_refresh()->None:
+        raise AssertionError("refresh helper called while access token is valid")
+    try:
+        valid=_execute_quota_probe_with_refresh_helper(
+            cockpit_v1329_p0.QuotaProbeState(access_token_expired=False,official_runtime_owns_refresh=False),
+            forbidden_refresh,
+        )
+        checks["quota_valid_access_fail_if_refresh_helper_called"]=(
+            valid.get("result")=="USE_VALID_ACCESS_TOKEN"
+            and valid.get("refresh_called") is False
+            and valid.get("refresh_token_rotated") is False
+            and valid.get("credential_write") is False
+        )
+    except Exception:
+        checks["quota_valid_access_fail_if_refresh_helper_called"]=False
+
+    refresh_calls=[]
+    def counted_refresh()->None:
+        refresh_calls.append("refresh")
+    try:
+        expired=_execute_quota_probe_with_refresh_helper(
+            cockpit_v1329_p0.QuotaProbeState(access_token_expired=True,official_runtime_owns_refresh=False),
+            counted_refresh,
+        )
+        checks["quota_refresh_helper_trap_positive_control"]=(
+            expired.get("result")=="REFRESH_REQUIRED"
+            and expired.get("refresh_called") is True
+            and refresh_calls==["refresh"]
+        )
+    except Exception:
+        checks["quota_refresh_helper_trap_positive_control"]=False
+    return checks
 
 def synthetic_proof()->dict[str,Any]:
     now=datetime(2026,8,24,13,0,tzinfo=timezone.utc); checks={}
@@ -75,6 +125,15 @@ def synthetic_proof()->dict[str,Any]:
         device_result=cockpit_v1329_device.source_proof()
     except Exception:
         device_result={"verdict":"FAIL"}
+
+    parity_tests={
+        test.get("name"):test.get("status")
+        for test in parity_result.get("tests",[])
+        if isinstance(test,dict)
+    }
+    for assertion in P0_OWNERSHIP_ASSERTIONS:
+        checks[f"cockpit_v1329_p0_ownership_assertion::{assertion}"]=parity_tests.get(assertion)=="PASS"
+    checks.update(_quota_refresh_helper_trap_proof())
     checks.update({
         "cockpit_v1329_p0_parity_source_gate_passes":parity_result.get("verdict")=="PASS",
         "cockpit_v1329_p0_parity_cannot_certify_windows":parity_result.get("windows_runtime_certified") is False,
@@ -89,7 +148,8 @@ def synthetic_proof()->dict[str,Any]:
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(x["status"]=="PASS" for x in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"EXTERNAL_WINDOWS_SOURCE_BINDING_PROOF","verdict":"PASS" if passed==len(tests) else "FAIL",
             "summary":{"pass":passed,"fail":len(tests)-passed,"total":len(tests)},"tests":tests,"synthetic_fixture_only":True,
-            "upstream_source_certification_executed":True,"device_auth_adoption_decision":"OPEN","real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
+            "upstream_source_certification_executed":True,"p0_ownership_assertions_required":len(P0_OWNERSHIP_ASSERTIONS),"quota_refresh_helper_trap_executed":True,
+            "device_auth_adoption_decision":"OPEN","real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
             "external_windows_target_evidence_imported":False,"production_score_promotion_eligible":False,"production_score_mutation_authorized":False}
 
 def main()->int:
