@@ -33,7 +33,6 @@ def _current_device_auth_state(
         observed.get("verdict") == "PASS"
         and observed.get("target_commit") == RECONCILIATION_TARGET_COMMIT
         and observed.get("source_characterization_only") is True
-        and observed.get("device_auth_adoption_decision") == "OPEN"
         and observed.get("windows_runtime_certified") is False
         and observed.get("production_score_promotion_eligible") is False
         and observed.get("baseline_adoption_authorized") is False
@@ -289,6 +288,9 @@ def synthetic_proof() -> dict[str, Any]:
         states=fully_resolved_states,
     )
 
+    forged_source_decision = dict(device_result)
+    forged_source_decision["device_auth_adoption_decision"] = "FORGED_SOURCE_METADATA"
+
     checks = {
         "current_frozen_epoch_contract_valid": contract["valid"],
         "current_frozen_baseline_is_v1328": contract["frozen_baseline"] == "1.3.28",
@@ -298,7 +300,11 @@ def synthetic_proof() -> dict[str, Any]:
         "device_auth_source_characterization_is_bound_to_v1329_target": (
             device_result.get("target_commit") == RECONCILIATION_TARGET_COMMIT
             and device_result.get("source_characterization_only") is True
-            and device_result.get("device_auth_adoption_decision") == "OPEN"
+        ),
+        "device_auth_source_metadata_cannot_override_decision_authority": (
+            _current_device_auth_state(forged_source_decision)
+            == device_contract.get("reconciliation_state")
+            == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
         ),
         "device_auth_decision_authority_record_valid": device_contract.get("valid_record") is True,
         "device_auth_decision_authority_remains_open": device_contract.get("decision") == "OPEN",
