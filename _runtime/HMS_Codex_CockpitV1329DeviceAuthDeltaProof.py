@@ -159,10 +159,14 @@ def _start_transition(state: DeviceFlowState, new_login_id: str) -> dict:
 
 def _cancel_transition(state: DeviceFlowState, requested_login_id: str | None) -> dict:
     if state.active_login_id is None:
-        return {"cleared": False, "active_login_id": None}
+        return {"cleared": False, "active_login_id": None, "error": None}
     if requested_login_id is not None and requested_login_id != state.active_login_id:
-        return {"cleared": False, "active_login_id": state.active_login_id}
-    return {"cleared": True, "active_login_id": None}
+        return {
+            "cleared": False,
+            "active_login_id": state.active_login_id,
+            "error": "LOGIN_ID_MISMATCH",
+        }
+    return {"cleared": True, "active_login_id": None, "error": None}
 
 
 def _restart_transition(state: DeviceFlowState) -> dict:
@@ -276,9 +280,9 @@ def source_proof(fetcher: Callable[[str, str], str] = _fetch_source) -> dict:
             and "exchange_code_for_token_internal" in complete
             and "DEVICE_EXCHANGE_REDIRECT_URI" in target_tauri
         ),
-        "cancellation_is_login_id_scoped": (
+        "cancellation_is_login_id_scoped_and_mismatch_fails_closed": (
             "if current.login_id != login_id" in cancel
-            and "return Ok(())" in cancel
+            and 'return Err("OAuth loginId 不匹配".to_string())' in cancel
         ),
         "tauri_command_reaches_device_auth_module": (
             "codex_oauth::start_device_auth(app_handle).await" in command
@@ -306,11 +310,15 @@ def source_proof(fetcher: Callable[[str, str], str] = _fetch_source) -> dict:
         ),
         "adversarial_mismatched_cancel_cannot_clear_active_flow": (
             _cancel_transition(active, "login-b")
-            == {"cleared": False, "active_login_id": "login-a"}
+            == {
+                "cleared": False,
+                "active_login_id": "login-a",
+                "error": "LOGIN_ID_MISMATCH",
+            }
         ),
         "adversarial_matching_cancel_clears_flow": (
             _cancel_transition(active, "login-a")
-            == {"cleared": True, "active_login_id": None}
+            == {"cleared": True, "active_login_id": None, "error": None}
         ),
         "adversarial_restart_does_not_revive_device_flow": (
             _restart_transition(restart_device)["restored_device_flow"] is False
