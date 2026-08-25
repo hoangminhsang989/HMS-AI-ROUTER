@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "product": "HMS-AI-ROUTER",
+  "version": "25.75",
+  "upstream_repository": "jlcodes99/cockpit-tools",
+  "target_release": "1.3.29",
+  "target_commit": "83ce2d192cc954cc910ce89edf2d1f710c218798",
+  "scope": "CODEX_ONLY",
+  "capability": "DEVICE_CODE_OAUTH",
+  "decision": "OPEN",
+  "accepted_by": "",
+  "rationale": "",
+  "risk_acknowledged": false,
+  "parity_proof_ref": ""
+}
