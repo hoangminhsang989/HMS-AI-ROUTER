@@ -92,6 +92,18 @@ def _click_time_race_checks():
             lane="TERMINAL_PTY",package_version=VERSION,live_baseline_provider=click_time_provider,
             note_vi="page opened at frozen baseline; upstream drifted before click")
         ledger=read_ledger(ctl.ledger_path)
+        provenance=(report.get("provenance") or {})
+        trust_authority=(report.get("reviewer_trust_authority") or {})
+        release_authority=(report.get("reviewer_release_authority") or {})
+        full_provenance_bound=(
+            len(ledger)==1
+            and ledger[0].get("evidence_sha256")==provenance.get("raw_packet_sha256")
+            and ledger[0].get("manifest_sha256")==provenance.get("release_manifest_sha256")
+            and ledger[0].get("package_sha256")==provenance.get("package_zip_sha256")
+            and ledger[0].get("source_certification_report_sha256")==provenance.get("source_certification_report_sha256")
+            and ledger[0].get("reviewer_trust_authority_sha256")==trust_authority.get("authority_sha256")
+            and ledger[0].get("reviewer_release_authority_sha256")==release_authority.get("authority_sha256")
+        )
         forged_ctl=PromotionWorkbenchController(Path(d)/"forged"); forged_ctl._atomic_json(forged_ctl.report_path,{"real_packet_verified":True})
         forged_blocked=False
         try:
@@ -115,6 +127,8 @@ def _click_time_race_checks():
             "click_time_drift_flagged":result["action_blocked_by_baseline_drift"] is True and result["baseline_recheck_passed"] is False,
             "observed_new_baseline_persisted":result["observed_cockpit_baseline"]=="1.3.29",
             "ledger_contains_only_invalidation":len(ledger)==1 and ledger[0]["decision"]=="INVALIDATE" and ledger[0]["cockpit_baseline"]=="1.3.29",
+            "click_time_invalidation_binds_full_provenance":full_provenance_bound,
+            "result_surfaces_bound_source_certification":result.get("decision_provenance",{}).get("source_certification_report_sha256")==provenance.get("source_certification_report_sha256"),
             "forged_minimal_ingest_metadata_blocked":forged_blocked and not forged_ctl.ledger_path.exists(),
             "missing_release_authority_blocks_direct_review":no_release_blocked and not no_release_ctl.ledger_path.exists(),
             "no_auto_authority":result["automatic_production_certification"] is False and result["production_score_mutation_authorized"] is False,
