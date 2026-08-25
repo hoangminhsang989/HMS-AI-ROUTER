@@ -24,6 +24,8 @@ on:
       - '_runtime/HMS_Codex_WindowsRecoveryContract.py'
       - '_runtime/HMS_Codex_WindowsRecoveryDialog.py'
       - '_runtime/HMS_Codex_WindowsOneShotElevation.py'
+      - '_runtime/HMS_Codex_WindowsElevationCallerAudit.py'
+      - '_runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py'
       - '_runtime/HMS_Codex_WindowsUACRecoveryValidation.py'
       - '_runtime/HMS_Codex_WindowsUACValidationBundle.py'
       - '_runtime/HMS_Run_UAC_Validation.ps1'
@@ -98,6 +100,8 @@ jobs:
             _runtime/HMS_Codex_WindowsRecoveryContract.py `
             _runtime/HMS_Codex_WindowsRecoveryDialog.py `
             _runtime/HMS_Codex_WindowsOneShotElevation.py `
+            _runtime/HMS_Codex_WindowsElevationCallerAudit.py `
+            _runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py `
             _runtime/HMS_Codex_WindowsUACRecoveryValidation.py `
             _runtime/HMS_Codex_WindowsUACValidationBundle.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
@@ -151,6 +155,12 @@ jobs:
       - name: Codex one-shot UAC source proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsOneShotElevation.py
+      - name: Windows elevation caller identity audit
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsElevationCallerAudit.py
+      - name: Windows recovery adversarial simulator proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py
       - name: Bounded UAC runtime validation harness proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsUACRecoveryValidation.py proof
