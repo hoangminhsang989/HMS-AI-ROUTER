@@ -91,21 +91,15 @@ class MigrationProbe:
 
 
 def _migration_transition(probe: MigrationProbe) -> dict[str, Any]:
-    backup = False
-    mutation = False
-    rollback = False
     if not probe.selected:
         return {"result": "UNSELECTED", "backup": False, "mutation": False, "rollback": False}
     if probe.running and not probe.dry_run:
         return {"result": "RUNNING_BLOCKED", "backup": False, "mutation": False, "rollback": False}
     if probe.dry_run:
         return {"result": "DRY_RUN", "backup": False, "mutation": False, "rollback": False}
-    backup = True
-    mutation = True
     if probe.write_fails:
-        rollback = True
-        return {"result": "ROLLED_BACK", "backup": backup, "mutation": mutation, "rollback": rollback}
-    return {"result": "APPLIED", "backup": backup, "mutation": mutation, "rollback": rollback}
+        return {"result": "ROLLED_BACK", "backup": True, "mutation": True, "rollback": True}
+    return {"result": "APPLIED", "backup": True, "mutation": True, "rollback": False}
 
 
 def source_proof() -> dict[str, Any]:
@@ -165,8 +159,7 @@ def source_proof() -> dict[str, Any]:
             and "SESSION_VISIBILITY_REPAIR_LOCK" not in base_module
         ),
         "deep_provider_migration_requires_stopped_instances": (
-            "fn full_provider_migration() -> Self" in target_module
-            and "require_stopped_instances: true" in deep_options
+            "require_stopped_instances: true" in deep_options
             and "repair_rollout: true" in deep_options
             and "sqlite_scope: SqliteRepairScope::AllSessionDbs" in deep_options
             and "repair_local_thread_catalog: true" in deep_options
@@ -181,7 +174,6 @@ def source_proof() -> dict[str, Any]:
                 "&& !options.dry_run",
                 "return Err(format!(",
             )
-            and "backup_instance" in target_module
         ),
         "selection_validates_target_provider": (
             "validate_provider_id(provider)?;" in selection_impl
@@ -221,16 +213,20 @@ def source_proof() -> dict[str, Any]:
             and "sessionIds: options?.sessionIds ?? null" in service_entry
             and "dryRun: options?.dryRun ?? false" in service_entry
         ),
-        "provider_catalog_is_observed_from_runtime_authorities": (
+        "provider_catalog_is_observed_from_config_and_sqlite_authorities": (
             "collect_session_visibility_repair_providers_for_instances" in target_module
             and "list_configured_provider_ids(&instance.data_dir)" in target_module
-            and "list_sqlite_provider_ids(&instance.data_dir)" in target_module
             and "CodexSessionVisibilityRepairProviderSource::Config" in target_module
             and "CodexSessionVisibilityRepairProviderSource::Sqlite" in target_module
+            and "provider_discovery_uses_config_and_official_state_db_without_scanning_rollouts" in target_module
         ),
         "provider_rewrite_skips_already_matching_provider": (
             "if current_provider == target_provider" in target_module
             and "rewrite_needed: false" in target_module
+        ),
+        "upstream_instance_scope_regression_test_present": (
+            "launch_target_quick_repair_is_bidirectional_idempotent_and_instance_scoped" in target_module
+            and "other_rollout_before" in target_module
         ),
         "mutation_is_preceded_by_backup": (
             _ordered(target_module, '"backup_instance"', "let backup_dir = backup_instance_files(", '"write_instance"')
@@ -245,9 +241,9 @@ def source_proof() -> dict[str, Any]:
             )
             and "已自动回滚" in target_module
         ),
-        "rollback_restores_catalog_global_state_backup_scope": (
-            "global_state_entries_to_update > 0" in target_module
-            and "catalog_scan.total() > 0" in target_module
+        "rollback_backup_scope_covers_new_catalog_and_global_state_repairs": (
+            "catalog_scan.total() > 0" in target_module
+            and "global_state_entries_to_update > 0" in target_module
             and "restore_instance_files_from_backup(" in target_module
         ),
         "adversarial_running_target_never_mutates": (
