@@ -24,7 +24,9 @@ jobs:
     env:
       HMS_TARGET_SHA: ${{ inputs.target_sha }}
       HMS_EXPECTED_WORKFLOW_BLOB: ${{ inputs.expected_workflow_blob }}
-      HMS_CANDIDATE_PATH: ${{ runner.temp }}\hms-v2575-self-hosted-activation-candidate.yml
+      HMS_TARGET_DIR: activation-target-${{ github.run_id }}-${{ github.run_attempt }}
+      HMS_TOOLING_DIR: activation-tools-${{ github.run_id }}-${{ github.run_attempt }}
+      HMS_CANDIDATE_PATH: ${{ runner.temp }}\hms-v2575-self-hosted-activation-${{ github.run_id }}-${{ github.run_attempt }}.yml
     steps:
       - name: Runner materialized
         shell: powershell
@@ -34,19 +36,21 @@ jobs:
           if ($env:RUNNER_ARCH -ne 'X64') { throw "Expected X64 runner, got '$env:RUNNER_ARCH'" }
           Write-Host 'SELF_HOSTED_WINDOWS_RUNNER_MATERIALIZED'
 
-      - name: Refuse stale candidate residue
+      - name: Refuse current-run workspace collision
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          if (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH) {
-            throw "Refusing stale activation candidate residue at '$env:HMS_CANDIDATE_PATH'"
+          foreach ($path in @($env:HMS_TARGET_DIR, $env:HMS_TOOLING_DIR, $env:HMS_CANDIDATE_PATH)) {
+            if (Test-Path -LiteralPath $path) {
+              throw "Refusing pre-existing current-run path '$path'"
+            }
           }
 
       - name: Checkout exact target
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ inputs.target_sha }}
-          path: target
+          path: activation-target-${{ github.run_id }}-${{ github.run_attempt }}
           clean: true
           persist-credentials: false
           fetch-depth: 1
@@ -55,7 +59,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
-          path: fallback-tools
+          path: activation-tools-${{ github.run_id }}-${{ github.run_attempt }}
           clean: true
           persist-credentials: false
           fetch-depth: 1
@@ -64,8 +68,10 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          & '.\fallback-tools\scripts\generate_self_hosted_windows_activation_candidate.ps1' `
-            -RepositoryRoot (Resolve-Path '.\target') `
+          $tool = Join-Path $env:HMS_TOOLING_DIR 'scripts\generate_self_hosted_windows_activation_candidate.ps1'
+          $target = Resolve-Path $env:HMS_TARGET_DIR
+          & $tool `
+            -RepositoryRoot $target `
             -ExpectedCommit $env:HMS_TARGET_SHA `
             -ExpectedWorkflowBlob $env:HMS_EXPECTED_WORKFLOW_BLOB `
             -OutputPath $env:HMS_CANDIDATE_PATH
@@ -74,7 +80,7 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          $source = '.\target\.github\workflows\v2575-promotion-safety-windows.yml'
+          $source = Join-Path $env:HMS_TARGET_DIR '.github\workflows\v2575-promotion-safety-windows.yml'
           if (-not (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH -PathType Leaf)) {
             throw 'Generated activation candidate is missing'
           }
@@ -98,6 +104,8 @@ jobs:
           }
           [pscustomobject]@{
             selector_diff_verified = $true
+            tooling_revision = $env:GITHUB_SHA
+            isolated_workspace = $true
             removed_hosted_selector = $removed.Count
             added_self_hosted_selector = $added.Count
             other_payload_changes = $otherPayload.Count
