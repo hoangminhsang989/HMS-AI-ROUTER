@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import HMS_Codex_CockpitV1329DeviceAuthDeltaProof as cockpit_v1329_device
 import HMS_Codex_CockpitV1329P0ParityProof as cockpit_v1329_p0
 import HMS_Codex_ExternalWindowsCaseReportExporter as exporter
 import HMS_Codex_ExternalWindowsEvidenceRunner as runner
@@ -70,16 +71,25 @@ def synthetic_proof()->dict[str,Any]:
         parity_result=cockpit_v1329_p0.source_proof()
     except Exception:
         parity_result={"verdict":"FAIL"}
+    try:
+        device_result=cockpit_v1329_device.source_proof()
+    except Exception:
+        device_result={"verdict":"FAIL"}
     checks.update({
         "cockpit_v1329_p0_parity_source_gate_passes":parity_result.get("verdict")=="PASS",
         "cockpit_v1329_p0_parity_cannot_certify_windows":parity_result.get("windows_runtime_certified") is False,
         "cockpit_v1329_p0_parity_cannot_promote_score":parity_result.get("production_score_promotion_eligible") is False,
         "cockpit_v1329_p0_parity_cannot_adopt_baseline":parity_result.get("baseline_adoption_authorized") is False,
+        "cockpit_v1329_device_source_characterization_passes":device_result.get("verdict")=="PASS",
+        "cockpit_v1329_device_decision_remains_open":device_result.get("device_auth_adoption_decision")=="OPEN",
+        "cockpit_v1329_device_cannot_certify_windows":device_result.get("windows_runtime_certified") is False,
+        "cockpit_v1329_device_cannot_promote_score":device_result.get("production_score_promotion_eligible") is False,
+        "cockpit_v1329_device_cannot_adopt_baseline":device_result.get("baseline_adoption_authorized") is False,
     })
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(x["status"]=="PASS" for x in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"EXTERNAL_WINDOWS_SOURCE_BINDING_PROOF","verdict":"PASS" if passed==len(tests) else "FAIL",
             "summary":{"pass":passed,"fail":len(tests)-passed,"total":len(tests)},"tests":tests,"synthetic_fixture_only":True,
-            "upstream_source_certification_executed":True,"real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
+            "upstream_source_certification_executed":True,"device_auth_adoption_decision":"OPEN","real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
             "external_windows_target_evidence_imported":False,"production_score_promotion_eligible":False,"production_score_mutation_authorized":False}
 
 def main()->int:
