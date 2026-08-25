@@ -6,7 +6,7 @@ on:
       target_sha:
         description: Exact HMS-AI-ROUTER commit to bind before qualification
         required: true
-        default: d42c33a6de2a4b08fbbedc410f84ba497e8a4040
+        default: f46dc5b82f576147ace28810979cc5b3775d69bf
         type: string
       expected_workflow_blob:
         description: Reviewed git blob SHA of canonical Windows Promotion Safety workflow
