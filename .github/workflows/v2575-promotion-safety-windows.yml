@@ -5,8 +5,18 @@ on:
     branches: [main]
     paths:
       - '_runtime/HMS_Codex_WindowsRuntimeCaseContract.py'
+      - '_runtime/HMS_Codex_TargetMachineCertificationV2575.py'
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py'
+      - '_runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py'
+      - '_runtime/HMS_Codex_CockpitV1329P0ParityProof.py'
+      - '_runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py'
+      - '_runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py'
+      - '_runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionDecision.json'
+      - '_runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py'
+      - '_runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py'
+      - '_runtime/HMS_Codex_CockpitBaselineReconciliationContract.py'
+      - '_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateSigner.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py'
@@ -15,11 +25,15 @@ on:
       - '_runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py'
       - '_runtime/HMS_Codex_ReviewerLocalIntegritySeal.py'
       - '_runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py'
+      - '_runtime/HMS_Codex_ReviewerReleaseAuthority.py'
       - '_runtime/HMS_Codex_ReviewerPacketImport.py'
       - '_runtime/HMS_Codex_WindowsEvidenceOrchestrator.py'
       - '_runtime/HMS_Codex_WindowsRecoveryContract.py'
       - '_runtime/HMS_Codex_WindowsRecoveryDialog.py'
       - '_runtime/HMS_Codex_WindowsOneShotElevation.py'
+      - '_runtime/HMS_Codex_WindowsElevationCallerAudit.py'
+      - '_runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py'
+      - '_runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py'
       - '_runtime/HMS_Codex_WindowsUACRecoveryValidation.py'
       - '_runtime/HMS_Codex_WindowsUACValidationBundle.py'
       - '_runtime/HMS_Run_UAC_Validation.ps1'
@@ -29,9 +43,11 @@ on:
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_PromotionGUIActionContract.py'
       - '_runtime/HMS_Codex_PromotionLauncherRaceProof.py'
+      - '_runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py'
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
+      - '_runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py'
       - '_runtime/HMS_Codex_WindowsPromotionE2EFixtures.py'
       - '_runtime/HMS_GUI_ENTRY.pyw'
       - '_runtime/HMS_GUI_REVIEW_ENTRY.pyw'
@@ -52,15 +68,30 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 12
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout exact workflow head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify exact workflow head
+        shell: pwsh
+        run: |
+          $actual = (& git rev-parse HEAD).Trim().ToLowerInvariant()
+          $expected = '${{ github.event.pull_request.head.sha || github.sha }}'.Trim().ToLowerInvariant()
+          if ($actual -notmatch '^[0-9a-f]{40}$') { throw "Invalid checked-out HEAD: '$actual'" }
+          if ($expected -notmatch '^[0-9a-f]{40}$') { throw "Invalid expected workflow head: '$expected'" }
+          if ($actual -ne $expected) { throw "Checked-out HEAD '$actual' does not equal exact workflow head '$expected'" }
+          Write-Host "EXACT_WORKFLOW_HEAD_VERIFIED=$actual"
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
-      - name: Install crypto verifier dependency
+      - name: Install pinned crypto verifier dependency
         shell: pwsh
-        run: python -m pip install --disable-pip-version-check cryptography
+        run: |
+          python -m pip install --disable-pip-version-check "cryptography==50.0.0"
+          python -c "import cryptography; assert cryptography.__version__ == '50.0.0', cryptography.__version__; print('CRYPTOGRAPHY_VERSION_VERIFIED=50.0.0')"
       - name: Parse certificate and operator PowerShell helpers
         shell: pwsh
         run: |
@@ -75,8 +106,17 @@ jobs:
         run: |
           python -m py_compile `
             _runtime/HMS_Codex_WindowsRuntimeCaseContract.py `
+            _runtime/HMS_Codex_TargetMachineCertificationV2575.py `
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py `
+            _runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py `
+            _runtime/HMS_Codex_CockpitV1329P0ParityProof.py `
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py `
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py `
+            _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py `
+            _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py `
+            _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py `
+            _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py `
             _runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateEnrollment.py `
@@ -85,20 +125,26 @@ jobs:
             _runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py `
             _runtime/HMS_Codex_ReviewerLocalIntegritySeal.py `
             _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py `
+            _runtime/HMS_Codex_ReviewerReleaseAuthority.py `
             _runtime/HMS_Codex_ReviewerPacketImport.py `
             _runtime/HMS_Codex_WindowsEvidenceOrchestrator.py `
             _runtime/HMS_Codex_WindowsRecoveryContract.py `
             _runtime/HMS_Codex_WindowsRecoveryDialog.py `
             _runtime/HMS_Codex_WindowsOneShotElevation.py `
+            _runtime/HMS_Codex_WindowsElevationCallerAudit.py `
+            _runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py `
+            _runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py `
             _runtime/HMS_Codex_WindowsUACRecoveryValidation.py `
             _runtime/HMS_Codex_WindowsUACValidationBundle.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
             _runtime/HMS_Codex_PromotionLauncherRaceProof.py `
+            _runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py `
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
+            _runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py `
             _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw `
             _runtime/HMS_GUI_REVIEW_ENTRY.pyw `
@@ -107,6 +153,9 @@ jobs:
       - name: Canonical seven-case contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsRuntimeCaseContract.py
+      - name: Target-machine v25.75 artifact binding proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_TargetMachineCertificationV2575.py --proof
       - name: External certificate signer source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py
@@ -122,6 +171,9 @@ jobs:
       - name: Reviewer trust authority snapshot proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ReviewerTrustAuthoritySnapshot.py --proof
+      - name: Reviewer release identity authority proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ReviewerReleaseAuthority.py --proof
       - name: Reviewer packet import source contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ReviewerPacketImport.py --proof
@@ -137,6 +189,12 @@ jobs:
       - name: Codex one-shot UAC source proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsOneShotElevation.py
+      - name: Windows elevation caller identity audit
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsElevationCallerAudit.py
+      - name: Windows recovery adversarial simulator proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py
       - name: Bounded UAC runtime validation harness proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsUACRecoveryValidation.py proof
@@ -149,6 +207,9 @@ jobs:
       - name: Recovery-first GUI wrapper proof
         shell: pwsh
         run: python _runtime/HMS_GUI_RECOVERY_ENTRY.pyw --proof
+      - name: Integrated Windows wrapper chain proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py
       - name: External signer trust cryptographic contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py
@@ -158,6 +219,24 @@ jobs:
       - name: Seven-case exporter proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsCaseReportExporter.py --proof
+      - name: Seven-case source binding proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py
+      - name: Device-auth adoption decision contract
+        shell: pwsh
+        run: python _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py
+      - name: Launch confirmation exact-source proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py
+      - name: Session/provider migration exact-source proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py
+      - name: Cockpit v1.3.29 baseline reconciliation contract
+        shell: pwsh
+        run: python _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py
+      - name: Seven-case adversarial evidence fixtures
+        shell: pwsh
+        run: python _runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py
       - name: External Windows packet exact-matrix crypto-anchor proof
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py --proof
@@ -170,6 +249,9 @@ jobs:
       - name: Promotion GUI action contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_PromotionGUIActionContract.py
+      - name: Decision provenance caller audit
+        shell: pwsh
+        run: python _runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py
       - name: Decision ledger concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
@@ -182,6 +264,9 @@ jobs:
       - name: Controller sealed-state replay-concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+      - name: Controller adversarial sealed-state proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py
       - name: Promotion E2E negative fixtures
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py

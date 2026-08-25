@@ -39,8 +39,6 @@ _ORIGINAL_BACKEND = legacy.HmsApp.backend
 _ORIGINAL_OFFICIAL_SWITCH = legacy.HmsApp.official_auth_switch_async
 _ORIGINAL_FINISH_OFFICIAL_SWITCH = legacy.HmsApp._finish_official_auth_switch
 
-# Only operations that look user-triggered/destructive or service-lifecycle related may surface a dialog.
-# Periodic Get/List/Status/Refresh/Probe/Health/Quota/Diagnostics paths stay silent.
 _INTERACTIVE_TOKENS = frozenset({
     "enable", "disable", "start", "stop", "restart", "switch", "set", "add", "remove",
     "delete", "backup", "export", "import", "repair", "cleanup", "kill", "launch", "open",
@@ -125,11 +123,26 @@ def _failure_result_from_exception(exc: Exception) -> dict:
     }
 
 
-def _discover_supported_client_pids() -> list[int]:
+def _discover_supported_client_identities():
     try:
-        return one_shot_elevation.discover_supported_client_pids()
+        return one_shot_elevation.discover_supported_client_identities()
     except Exception:
-        return []
+        return None
+
+
+def _discover_supported_client_pids() -> list[int]:
+    identities = _discover_supported_client_identities()
+    return sorted(identities) if isinstance(identities, dict) else []
+
+
+def _identity_survivors(initial: dict, current: dict) -> dict:
+    survivors = {}
+    for raw_pid, expected in (initial or {}).items():
+        pid = int(raw_pid)
+        observed = (current or {}).get(pid)
+        if observed and one_shot_elevation._identity_matches(expected, observed):
+            survivors[pid] = dict(expected)
+    return survivors
 
 
 def _uac_allowed_for_backend_failure(action: str, detail: str) -> bool:
@@ -154,13 +167,15 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
             return data
 
         detail = _error_detail(data)
-        pids = _discover_supported_client_pids() if _uac_allowed_for_backend_failure(str(action), detail) else []
+        targets = _discover_supported_client_identities() if _uac_allowed_for_backend_failure(str(action), detail) else {}
+        targets = targets if isinstance(targets, dict) else {}
+        pids = sorted(targets)
         plan = recovery_contract.build_recovery_plan(
             detail,
             operation=str(action).upper(),
             target_path=_target_path(data),
             background_probe=False,
-            supported_client=bool(pids) and not uac_consumed,
+            supported_client=bool(targets) and not uac_consumed,
         )
         if plan.get("recoverable") is not True:
             return data
@@ -184,10 +199,11 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
                     data["recovery_action"] = "UAC_ONE_SHOT_BLOCKED"
                     data["recovery_detail_sanitized"] = True
                 return data
-            # Consume before helper/UAC. Cancel and failure remain one-shot for this backend operation epoch.
             uac_consumed = True
             try:
-                one_shot_elevation.elevated_close_supported_processes(pids, operation_token=uac_token)
+                one_shot_elevation.elevated_close_supported_processes(
+                    pids, operation_token=uac_token, expected_identities=targets,
+                )
             except Exception as exc:
                 if isinstance(data, dict):
                     data = dict(data)
@@ -196,7 +212,6 @@ def _backend_with_recovery(self, action, timeout=60, payload=None):
                     data["recovery_action"] = "UAC_ONE_SHOT_FAILED"
                     data["recovery_detail_sanitized"] = True
                 return data
-            # The close barrier has been resolved; retry the same original transaction once through its normal verifier.
             attempt += 1
             if attempt >= _MAX_RECOVERY_RETRIES:
                 return data
@@ -233,7 +248,6 @@ def _official_switch_policy_snapshot(self) -> dict:
         if local.get("known") is True:
             return local
 
-    # Settings page is lazy-loaded. Read the canonical backend settings before the switch if the GUI cache is absent.
     try:
         data = _ORIGINAL_BACKEND(self, "get_settings", 30, None)
         if isinstance(data, dict) and data.get("ok"):
@@ -247,6 +261,7 @@ def _official_switch_policy_snapshot(self) -> dict:
 
 def _derive_official_client_lifecycle(
     initial_pids: list[int], current_pids: list[int], policy: dict, *, uac_consumed: bool,
+    identity_discovery_ok: bool = True,
 ) -> dict:
     initial = sorted({int(pid) for pid in initial_pids if int(pid) > 0})
     current = sorted({int(pid) for pid in current_pids if int(pid) > 0})
@@ -257,25 +272,17 @@ def _derive_official_client_lifecycle(
     restart = policy.get("restart_codex_on_switch") is True
 
     if not known:
-        code = "POLICY_UNKNOWN"
-        complete = False
-        can_elevate = False
+        code = "POLICY_UNKNOWN"; complete = False; can_elevate = False
     elif not launch:
-        code = "NOT_REQUESTED"
-        complete = True
-        can_elevate = False
+        code = "NOT_REQUESTED"; complete = True; can_elevate = False
     elif not restart:
-        code = "RESTART_DISABLED"
-        complete = False
-        can_elevate = False
+        code = "RESTART_DISABLED"; complete = False; can_elevate = False
+    elif not identity_discovery_ok:
+        code = "IDENTITY_DISCOVERY_FAILED"; complete = False; can_elevate = False
     elif remaining:
-        code = "CODEX_RESTART_REQUIRED"
-        complete = False
-        can_elevate = not uac_consumed
+        code = "CODEX_RESTART_REQUIRED"; complete = False; can_elevate = not uac_consumed
     else:
-        code = "OK"
-        complete = True
-        can_elevate = False
+        code = "OK"; complete = True; can_elevate = False
 
     return {
         "schema_version": 1,
@@ -289,7 +296,8 @@ def _derive_official_client_lifecycle(
         "close_lifecycle_complete": complete,
         "can_elevate": can_elevate,
         "uac_consumed": bool(uac_consumed),
-        "derived_from_structured_settings_and_pid_identity": True,
+        "identity_discovery_ok": bool(identity_discovery_ok),
+        "derived_from_structured_settings_and_process_incarnation": True,
         "human_message_parsed": False,
         "production_effect_authorized": False,
         "windows_runtime_certified": False,
@@ -299,11 +307,19 @@ def _derive_official_client_lifecycle(
 
 def _decorate_official_switch_lifecycle(self, data: dict) -> dict:
     decorated = dict(data)
-    initial = list(getattr(self, "_hms_recovery_official_initial_pids", []) or [])
+    initial_targets = getattr(self, "_hms_recovery_official_initial_targets", None)
+    current_targets = _discover_supported_client_identities()
+    identity_ok = isinstance(initial_targets, dict) and isinstance(current_targets, dict)
+    initial_targets = initial_targets if isinstance(initial_targets, dict) else {}
+    current_targets = current_targets if isinstance(current_targets, dict) else {}
+    remaining_targets = _identity_survivors(initial_targets, current_targets) if identity_ok else {}
+    self._hms_recovery_official_remaining_targets = remaining_targets
     policy = dict(getattr(self, "_hms_recovery_official_policy", {}) or {})
-    current = _discover_supported_client_pids()
     consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
-    lifecycle = _derive_official_client_lifecycle(initial, current, policy, uac_consumed=consumed)
+    lifecycle = _derive_official_client_lifecycle(
+        sorted(initial_targets), sorted(remaining_targets), policy,
+        uac_consumed=consumed, identity_discovery_ok=identity_ok,
+    )
     decorated["client_lifecycle"] = lifecycle
     return decorated
 
@@ -313,7 +329,8 @@ def _official_switch_with_recovery_tracking(self, email):
     self._hms_recovery_uac_operation_token = secrets.token_urlsafe(24)
     self._hms_recovery_uac_consumed = False
     self._hms_recovery_official_retry_count = 0
-    self._hms_recovery_official_initial_pids = _discover_supported_client_pids()
+    self._hms_recovery_official_initial_targets = _discover_supported_client_identities()
+    self._hms_recovery_official_remaining_targets = {}
     self._hms_recovery_official_policy = _official_switch_policy_snapshot(self)
     return _ORIGINAL_OFFICIAL_SWITCH(self, email)
 
@@ -336,14 +353,15 @@ def _finish_official_switch_with_recovery(self, data):
         if lifecycle.get("code") != "CODEX_RESTART_REQUIRED":
             return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
 
-        remaining = list(lifecycle.get("remaining_original_pids") or [])
+        remaining_targets = dict(getattr(self, "_hms_recovery_official_remaining_targets", {}) or {})
+        remaining = sorted(remaining_targets)
         uac_consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
         detail = "CODEX_RESTART_REQUIRED: official auth đã chuyển nhưng client cũ vẫn còn chạy."
         plan = recovery_contract.build_recovery_plan(
             detail,
             operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
             background_probe=False,
-            supported_client=bool(remaining) and lifecycle.get("can_elevate") is True and not uac_consumed,
+            supported_client=bool(remaining_targets) and lifecycle.get("can_elevate") is True and not uac_consumed,
         )
 
         self.busy = False
@@ -362,10 +380,11 @@ def _finish_official_switch_with_recovery(self, data):
                 decorated["message"] = str(decorated.get("message") or "") + " · UAC one-shot bị chặn; auth đã chuyển nhưng cần đóng/mở Codex thủ công."
                 return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, decorated)
 
-            # Consume before the helper/UAC. Auth has already committed; cancellation must not be reported as auth rollback.
             self._hms_recovery_uac_consumed = True
             try:
-                elevated = one_shot_elevation.elevated_close_supported_processes(remaining, operation_token=token)
+                elevated = one_shot_elevation.elevated_close_supported_processes(
+                    remaining, operation_token=token, expected_identities=remaining_targets,
+                )
             except Exception as exc:
                 decorated["client_lifecycle"] = dict(lifecycle)
                 decorated["client_lifecycle"]["recovery_action"] = "UAC_ONE_SHOT_FAILED"
@@ -382,14 +401,16 @@ def _finish_official_switch_with_recovery(self, data):
 
     detail = _error_detail(data)
     category = recovery_contract.classify_error(detail)
-    pids = _discover_supported_client_pids() if category == recovery_contract.RECOVERY_CLIENT_CLOSE_BLOCKED else []
+    targets = _discover_supported_client_identities() if category == recovery_contract.RECOVERY_CLIENT_CLOSE_BLOCKED else {}
+    targets = targets if isinstance(targets, dict) else {}
+    pids = sorted(targets)
     uac_consumed = bool(getattr(self, "_hms_recovery_uac_consumed", False))
     plan = recovery_contract.build_recovery_plan(
         detail,
         operation="CODEX_ACCOUNT_SWITCH_CLIENT_LIFECYCLE",
         target_path=_target_path(data),
         background_probe=False,
-        supported_client=bool(pids) and not uac_consumed,
+        supported_client=bool(targets) and not uac_consumed,
     )
     if plan.get("recoverable") is not True:
         return _ORIGINAL_FINISH_OFFICIAL_SWITCH(self, data)
@@ -410,7 +431,9 @@ def _finish_official_switch_with_recovery(self, data):
 
         self._hms_recovery_uac_consumed = True
         try:
-            elevated = one_shot_elevation.elevated_close_supported_processes(pids, operation_token=token)
+            elevated = one_shot_elevation.elevated_close_supported_processes(
+                pids, operation_token=token, expected_identities=targets,
+            )
         except Exception as exc:
             blocked = dict(data) if isinstance(data, dict) else {"ok": False}
             blocked["error"] = recovery_contract.sanitize_detail(exc)
@@ -432,8 +455,7 @@ legacy.HmsApp._finish_official_auth_switch = _finish_official_switch_with_recove
 
 def extension_proof():
     close_blocked = recovery_contract.build_recovery_plan(
-        "CODEX_RESTART_REQUIRED: client remains running",
-        operation="ENABLE", supported_client=True,
+        "CODEX_RESTART_REQUIRED: client remains running", operation="ENABLE", supported_client=True,
     )
     unrelated_access = recovery_contract.build_recovery_plan(
         "Access denied (os error 5)", operation="BACKUP_EXPORT", supported_client=True,
@@ -442,11 +464,19 @@ def extension_proof():
     policy_disabled = {"known": True, "launch_after_auth_switch": True, "restart_codex_on_switch": False, "source": "TEST"}
     policy_not_requested = {"known": True, "launch_after_auth_switch": False, "restart_codex_on_switch": True, "source": "TEST"}
     policy_unknown = {"known": False, "launch_after_auth_switch": False, "restart_codex_on_switch": False, "source": "TEST"}
-    life_blocked = _derive_official_client_lifecycle([101, 102], [102, 201], policy_on, uac_consumed=False)
-    life_restarted = _derive_official_client_lifecycle([101, 102], [201, 202], policy_on, uac_consumed=False)
+    life_blocked = _derive_official_client_lifecycle([101, 102], [102], policy_on, uac_consumed=False)
+    life_restarted = _derive_official_client_lifecycle([101, 102], [], policy_on, uac_consumed=False)
     life_disabled = _derive_official_client_lifecycle([101], [101], policy_disabled, uac_consumed=False)
     life_not_requested = _derive_official_client_lifecycle([101], [101], policy_not_requested, uac_consumed=False)
     life_unknown = _derive_official_client_lifecycle([101], [101], policy_unknown, uac_consumed=False)
+    life_identity_fail = _derive_official_client_lifecycle([101], [], policy_on, uac_consumed=False, identity_discovery_ok=False)
+    id_old = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 7}}
+    id_same = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 7}}
+    id_reused = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 222, "session_id": 7}}
+    id_cross_session = {101: {"pid": 101, "name": "codex.exe", "creation_time_100ns": 111, "session_id": 8}}
+    same_survivor = _identity_survivors(id_old, id_same)
+    reused_survivor = _identity_survivors(id_old, id_reused)
+    cross_session_survivor = _identity_survivors(id_old, id_cross_session)
     quiet_names = ["get_status", "refresh_quota", "health_probe", "list_accounts", "telemetry_snapshot"]
     interactive_names = ["enable", "disable", "restart_router", "open_codex", "set_request_log", "repair_profile", "backup_export"]
     src = Path(__file__).read_text("utf-8")
@@ -456,7 +486,7 @@ def extension_proof():
         "sealed_review_wrapper_preserved": getattr(review, "legacy", None) is legacy,
         "backend_recovery_patch_installed": legacy.HmsApp.backend is _backend_with_recovery,
         "official_switch_tracking_patch_installed": legacy.HmsApp.official_auth_switch_async is _official_switch_with_recovery_tracking,
-        "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
+        "official_switch_finish_patch_installed": legacy.HmsApp._finish_official_switch_with_recovery if False else legacy.HmsApp._finish_official_auth_switch is _finish_official_switch_with_recovery,
         "background_actions_remain_quiet": all(not _is_interactive_backend_action(name) for name in quiet_names),
         "interactive_actions_surface_recovery": all(_is_interactive_backend_action(name) for name in interactive_names),
         "direct_open_codex_is_interactive": _is_interactive_backend_action("open_codex"),
@@ -467,16 +497,21 @@ def extension_proof():
         "official_lifecycle_uses_structured_settings": "CodexLaunchAfterAuthSwitch" in impl_src and "RestartCodexOnSwitch" in impl_src,
         "official_policy_has_readonly_backend_fallback": '_ORIGINAL_BACKEND(self, "get_settings", 30, None)' in impl_src and "BACKEND_GET_SETTINGS" in impl_src,
         "official_lifecycle_does_not_parse_human_message": life_blocked["human_message_parsed"] is False and "restart_message" not in impl_src,
-        "official_old_pid_survival_blocks": life_blocked["code"] == "CODEX_RESTART_REQUIRED" and life_blocked["remaining_original_pids"] == [102] and life_blocked["can_elevate"] is True,
-        "official_new_pid_after_restart_is_ok": life_restarted["code"] == "OK" and life_restarted["close_lifecycle_complete"] is True,
+        "official_old_process_incarnation_survival_blocks": life_blocked["code"] == "CODEX_RESTART_REQUIRED" and life_blocked["remaining_original_pids"] == [102] and life_blocked["can_elevate"] is True,
+        "official_new_process_after_restart_is_ok": life_restarted["code"] == "OK" and life_restarted["close_lifecycle_complete"] is True,
+        "same_incarnation_survives": sorted(same_survivor) == [101],
+        "same_name_pid_reuse_is_not_old_client": reused_survivor == {},
+        "cross_session_pid_is_not_old_client": cross_session_survivor == {},
+        "identity_discovery_failure_fails_closed": life_identity_fail["code"] == "IDENTITY_DISCOVERY_FAILED" and life_identity_fail["can_elevate"] is False,
         "official_restart_disabled_respects_user_policy": life_disabled["code"] == "RESTART_DISABLED" and life_disabled["can_elevate"] is False,
         "official_launch_not_requested_is_non_elevatable": life_not_requested["code"] == "NOT_REQUESTED" and life_not_requested["can_elevate"] is False,
         "official_unknown_policy_fails_closed": life_unknown["code"] == "POLICY_UNKNOWN" and life_unknown["can_elevate"] is False,
-        "official_uac_targets_only_remaining_original_pids": "remaining_original_pids" in impl_src and "elevated_close_supported_processes(remaining" in impl_src,
+        "official_uac_targets_identity_bound_remaining_originals": "_hms_recovery_official_remaining_targets" in impl_src and "expected_identities=remaining_targets" in impl_src,
         "official_auth_success_never_rewritten_as_failure_on_uac_error": "Auth đã chuyển; UAC đóng client không hoàn tất" in impl_src and "decorated[\"ok\"] = False" not in impl_src,
-        "uac_only_after_supported_pid_discovery": "discover_supported_client_pids" in impl_src and "supported_client=bool(pids) and not uac_consumed" in impl_src,
+        "uac_only_after_identity_discovery": "discover_supported_client_identities" in impl_src and "supported_client=bool(targets) and not uac_consumed" in impl_src,
         "uac_epoch_token_is_generated_per_operation": "secrets.token_urlsafe(24)" in impl_src,
         "uac_consumed_before_helper": impl_src.find("uac_consumed = True") < impl_src.find("one_shot_elevation.elevated_close_supported_processes"),
+        "uac_helper_receives_expected_identities": impl_src.count("expected_identities=") >= 3,
         "uac_helper_has_no_caller_executable": "executable_path" not in impl_src and "taskkill.exe" not in impl_src,
         "no_raw_error_persistence": "recovery_detail_sanitized" in impl_src and "raw_error" not in impl_src,
         "no_production_authority": (

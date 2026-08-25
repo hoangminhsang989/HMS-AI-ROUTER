@@ -1,0 +1,292 @@
+name: v25.75 P0 Source Proof (Non-Windows)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p0-source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact workflow head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Verify exact workflow head
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD | tr '[:upper:]' '[:lower:]')"
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          expected="$(printf '%s' "$expected" | tr '[:upper:]' '[:lower:]')"
+          [[ "$actual" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$expected" =~ ^[0-9a-f]{40}$ ]]
+          test "$actual" = "$expected"
+          echo "EXACT_WORKFLOW_HEAD_VERIFIED=$actual"
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Compile source-proof harnesses
+        run: |
+          python -m py_compile \
+            _runtime/HMS_Codex_CockpitV1329P0ParityProof.py \
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py \
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py \
+            _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py \
+            _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py \
+            _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py \
+            _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py
+
+      - name: Execute Cockpit v1.3.29 P0 exact-source proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329P0ParityProof.py > "$RUNNER_TEMP/p0-source-proof.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p0-source-proof.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("source_certification_only") is True, result
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "production_score_promotion_eligible": result.get("production_score_promotion_eligible"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute canonical source-binding P0 gate
+        run: |
+          python _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py > "$RUNNER_TEMP/source-binding-proof.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "source-binding-proof.json").read_text("utf-8"))
+          tests = {
+              item.get("name"): item.get("status")
+              for item in result.get("tests", [])
+              if isinstance(item, dict)
+          }
+          assert result.get("verdict") == "PASS", result
+          assert result.get("p0_ownership_assertions_required") == 7, result
+          assert result.get("quota_refresh_helper_trap_executed") is True, result
+          assert tests.get("quota_valid_access_fail_if_refresh_helper_called") == "PASS", tests
+          assert tests.get("quota_refresh_helper_trap_positive_control") == "PASS", tests
+          assert tests.get("cockpit_v1329_device_source_characterization_passes") == "PASS", tests
+          assert tests.get("cockpit_v1329_device_decision_authority_record_valid") == "PASS", tests
+          assert tests.get("cockpit_v1329_device_decision_authority_remains_open") == "PASS", tests
+          assert result.get("device_auth_decision_authority") == "ADOPTION_CONTRACT", result
+          ownership = [
+              name for name, status in tests.items()
+              if name.startswith("cockpit_v1329_p0_ownership_assertion::") and status == "PASS"
+          ]
+          assert len(ownership) == 7, ownership
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "p0_ownership_assertions_pass": len(ownership),
+              "quota_valid_access_fail_if_refresh_helper_called": tests.get("quota_valid_access_fail_if_refresh_helper_called"),
+              "quota_refresh_helper_trap_positive_control": tests.get("quota_refresh_helper_trap_positive_control"),
+              "device_auth_decision_authority": result.get("device_auth_decision_authority"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "production_score_promotion_eligible": result.get("production_score_promotion_eligible"),
+          }, indent=2))
+          PY
+
+      - name: Execute device-auth exact-source characterization proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py > "$RUNNER_TEMP/device-auth-delta.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "device-auth-delta.json").read_text("utf-8"))
+          runtime_delta = result.get("runtime_delta", {})
+          assert result.get("verdict") == "PASS", result
+          assert result.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", result
+          assert result.get("source_characterization_only") is True, result
+          assert runtime_delta.get("device_auth") == "NEW_IN_V1_3_29", runtime_delta
+          assert runtime_delta.get("connector_scopes") == "ALREADY_PRESENT_IN_V1_3_28_TAURI_RUNTIME", runtime_delta
+          assert runtime_delta.get("id_token_refresh_lead") == "ALREADY_10_MINUTES_IN_V1_3_28_TAURI_RUNTIME", runtime_delta
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "target_commit": result.get("target_commit"),
+              "runtime_delta": runtime_delta,
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute device-auth adoption decision contract
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py > "$RUNNER_TEMP/device-auth-adoption.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "device-auth-adoption.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("device_auth_adoption_decision") == "OPEN", result
+          assert result.get("device_auth_reconciliation_state") == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN", result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "device_auth_adoption_decision": result.get("device_auth_adoption_decision"),
+              "device_auth_reconciliation_state": result.get("device_auth_reconciliation_state"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute launch confirmation exact-source proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py > "$RUNNER_TEMP/launch-confirmation.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "launch-confirmation.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("target_release") == "1.3.29", result
+          assert result.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", result
+          assert result.get("launch_mutation_boundary") == "USER_CONFIRMATION_CALLBACK_ONLY", result
+          assert result.get("source_reconciliation_state") == "SOURCE_RECONCILED_PROOF_WIRED", result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "source_reconciliation_state": result.get("source_reconciliation_state"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute session/provider migration exact-source proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py > "$RUNNER_TEMP/session-provider-migration.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "session-provider-migration.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("target_release") == "1.3.29", result
+          assert result.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", result
+          assert result.get("source_reconciliation_state") == "SOURCE_RECONCILED_PROOF_WIRED", result
+          assert result.get("safety_invariants") == [
+              "ROLLBACK_ON_FAILED_MUTATION",
+              "SELECTED_SCOPE_ONLY",
+              "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
+              "PROVIDER_BOUND_FILTERING",
+              "QUICK_REPAIR_OFFICIAL_SIDEBAR_ONLY",
+          ], result
+          assert result.get("source_certification_only") is True, result
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "source_reconciliation_state": result.get("source_reconciliation_state"),
+              "safety_invariants": result.get("safety_invariants"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
+      - name: Execute baseline reconciliation contract
+        run: |
+          python _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py > "$RUNNER_TEMP/baseline-reconciliation.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "baseline-reconciliation.json").read_text("utf-8"))
+          contract = result.get("contract", {})
+          device_source = result.get("device_auth_source_proof", {})
+          device = result.get("device_auth_decision_contract", {})
+          launch = result.get("launch_confirmation_source_proof", {})
+          migration = result.get("session_provider_migration_source_proof", {})
+          states = contract.get("reconciliation_states", {})
+          assert result.get("verdict") == "PASS", result
+          assert contract.get("frozen_baseline") == "1.3.28", contract
+          assert contract.get("target_baseline_adoption_authorized") is False, contract
+          assert device_source.get("verdict") == "PASS", device_source
+          assert device_source.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", device_source
+          assert device_source.get("source_characterization_only") is True, device_source
+          assert device.get("decision") == "OPEN", device
+          assert device.get("resolved_for_baseline") is False, device
+          assert launch.get("verdict") == "PASS", launch
+          assert migration.get("verdict") == "PASS", migration
+          assert migration.get("safety_invariants") == [
+              "ROLLBACK_ON_FAILED_MUTATION",
+              "SELECTED_SCOPE_ONLY",
+              "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
+              "PROVIDER_BOUND_FILTERING",
+              "QUICK_REPAIR_OFFICIAL_SIDEBAR_ONLY",
+          ], migration
+          assert states.get("device_auth") == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN", states
+          assert states.get("launch_confirmation_before_mutation") == "SOURCE_RECONCILED_PROOF_WIRED", states
+          assert states.get("session_provider_migration_safety") == "SOURCE_RECONCILED_PROOF_WIRED", states
+          assert contract.get("adoption_blockers") == [
+              "device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
+          ], contract
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "frozen_baseline": contract.get("frozen_baseline"),
+              "device_auth_source_verdict": device_source.get("verdict"),
+              "device_auth_decision": device.get("decision"),
+              "device_auth_state": states.get("device_auth"),
+              "launch_confirmation_state": states.get("launch_confirmation_before_mutation"),
+              "session_provider_migration_state": states.get("session_provider_migration_safety"),
+              "adoption_blockers": contract.get("adoption_blockers"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY

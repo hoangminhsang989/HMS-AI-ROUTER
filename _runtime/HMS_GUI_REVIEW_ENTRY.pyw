@@ -53,6 +53,8 @@ def _crypto_refresh_promotion_gate_matrix(self):
     report = getattr(self, "_promotion_report", {}) or {}
     signer_trust = report.get("signer_trust") if isinstance(report.get("signer_trust"), dict) else {}
     authority = report.get("reviewer_trust_authority") if isinstance(report.get("reviewer_trust_authority"), dict) else {}
+    release = report.get("reviewer_release_authority") if isinstance(report.get("reviewer_release_authority"), dict) else {}
+    provenance = report.get("provenance") if isinstance(report.get("provenance"), dict) else {}
     crypto_ok = report.get("real_packet_verified") is True and signer_trust.get("valid") is True
     authority_ok = (
         crypto_ok
@@ -61,8 +63,17 @@ def _crypto_refresh_promotion_gate_matrix(self):
         and authority.get("local_integrity_seal_valid") is True
         and authority.get("packet_derived") is False
     )
+    release_ok = (
+        release.get("valid") is True
+        and release.get("local_integrity_seal_valid") is True
+        and release.get("packet_derived") is False
+        and release.get("local_artifact_hashed_at_capture") is False
+        and str(release.get("package_zip_sha256") or "").lower() == str(provenance.get("package_zip_sha256") or "").lower()
+        and str(release.get("release_manifest_sha256") or "").lower() == str(provenance.get("release_manifest_sha256") or "").lower()
+    )
     self._set_promotion_gate("signature", crypto_ok, "CRYPTO PASS" if crypto_ok else "CRYPTO BLOCK")
-    self._set_promotion_gate("trust", authority_ok, "AUTHORITY SEALED" if authority_ok else "AUTHORITY BLOCK")
+    self._set_promotion_gate("trust", authority_ok and release_ok,
+                             "TRUST + RELEASE SEALED" if authority_ok and release_ok else "AUTHORITY BLOCK")
 
 
 def _sealed_refresh_promotion_review(self):
@@ -86,11 +97,11 @@ def _sealed_refresh_promotion_review(self):
     verified = report.get("real_packet_verified") is True
     self.promotion_baseline_label.configure(text=f"Frozen parity authority: Cockpit Tools {base.COCKPIT_BASELINE}")
     if integrity_error:
-        self.promotion_packet_label.configure(text="External Windows packet: BLOCKED · local metadata seal invalid",
+        self.promotion_packet_label.configure(text="External Windows packet: BLOCKED · local metadata/authority seal invalid",
                                               fg=C["danger"])
     else:
         self.promotion_packet_label.configure(
-            text=("External Windows packet: VERIFIED + SEALED" if verified else "External Windows packet: chưa có verified packet"),
+            text=("External Windows packet: VERIFIED + TRUST/RELEASE SEALED" if verified else "External Windows packet: chưa có verified packet"),
             fg=C["success"] if verified else C["text2"])
     self.promotion_ledger_label.configure(
         text=f"Decision ledger: {len(ledger)} record(s) · raw reviewer identity/salt không được lưu")
@@ -157,9 +168,14 @@ legacy.HmsApp._apply_promotion_live_result = _policy_apply_promotion_live_result
 def extension_proof():
     authority = {"valid": True, "local_integrity_seal_valid": True, "packet_derived": False,
                  "authority_sha256": "d" * 64, "trust_snapshot_sha256": "c" * 64}
+    release = {"valid": True, "local_integrity_seal_valid": True, "packet_derived": False,
+               "local_artifact_hashed_at_capture": False, "authority_sha256": "e" * 64,
+               "package_zip_sha256": "f" * 64, "release_manifest_sha256": "b" * 64,
+               "source_commit_sha": "1" * 40, "source_tree_sha": "2" * 40}
     report = {"real_packet_verified": True, "reasons": [], "signer_trust": {"valid": True},
-        "trust_anchor_match": True, "reviewer_trust_authority": authority,
-        "provenance": {"raw_packet_sha256": "a" * 64, "release_manifest_sha256": "b" * 64,
+        "trust_anchor_match": True, "reviewer_trust_authority": authority, "reviewer_release_authority": release,
+        "provenance": {"raw_packet_sha256": "a" * 64, "package_zip_sha256": "f" * 64,
+                       "release_manifest_sha256": "b" * 64, "source_certification_report_sha256": "7" * 64,
                        "trust_snapshot_sha256": "c" * 64, "expected_trust_snapshot_sha256": "c" * 64}}
     match = {"source": "GITHUB_RELEASES_LATEST", "upstream_repository": "jlcodes99/cockpit-tools", "release_id": 1328,
         "checked_utc": "2026-08-23T00:00:00+00:00", "baseline": "1.3.28"}
@@ -171,6 +187,9 @@ def extension_proof():
     no_crypto = evaluate_gui_action_contract(dict(report, signer_trust={"valid": False}), match, **form)
     no_anchor = evaluate_gui_action_contract(dict(report, trust_anchor_match=False), match, **form)
     no_authority = evaluate_gui_action_contract(dict(report, reviewer_trust_authority={}), match, **form)
+    no_release = evaluate_gui_action_contract(dict(report, reviewer_release_authority={}), match, **form)
+    no_source_report = json.loads(json.dumps(report)); no_source_report["provenance"].pop("source_certification_report_sha256", None)
+    no_source = evaluate_gui_action_contract(no_source_report, match, **form)
     gate_consts = set(_crypto_refresh_promotion_gate_matrix.__code__.co_consts)
     checks = {
         "base_entry_loaded": getattr(base, "APP_VERSION", None) == APP_VERSION,
@@ -179,15 +198,19 @@ def extension_proof():
         "visual_crypto_gate_override_installed": legacy.HmsApp._refresh_promotion_gate_matrix is _crypto_refresh_promotion_gate_matrix,
         "visual_gate_reads_crypto_result": "signer_trust" in gate_consts,
         "visual_gate_reads_reviewer_authority": "reviewer_trust_authority" in gate_consts,
+        "visual_gate_reads_release_authority": "reviewer_release_authority" in gate_consts,
         "policy_is_button_authority": legacy.HmsApp._update_promotion_action_buttons is _policy_update_promotion_action_buttons,
         "confirmation_wrapper_installed": legacy.HmsApp.submit_promotion_review is _confirmed_submit_promotion_review,
         "match_contract": all(good["buttons"].values()),
+        "decision_provenance_policy_gate": good["policy"]["gates"]["decision_provenance"] is True,
         "drift_contract": drift["buttons"] == {"APPROVE": False, "REJECT": False, "INVALIDATE": True},
         "provider_error_contract": not any(provider_error["buttons"].values()),
         "salt_invalid_contract": not any(bad_salt["buttons"].values()),
         "crypto_failure_contract": not any(no_crypto["buttons"].values()),
         "trust_anchor_failure_contract": not any(no_anchor["buttons"].values()),
         "reviewer_authority_failure_contract": not any(no_authority["buttons"].values()),
+        "release_authority_failure_contract": not any(no_release["buttons"].values()),
+        "source_certification_failure_contract": not any(no_source["buttons"].values()) and no_source["policy"]["gates"]["decision_provenance"] is False,
         "confirmation_required": good["confirmation_required"] is True,
         "salt_clear_required": good["salt_clear_required_after_attempt"] is True and "promotion_reviewer_salt" in _confirmed_submit_promotion_review.__code__.co_names,
         "no_auto_authority": not good["automatic_production_certification"] and not good["production_score_mutation_authorized"],

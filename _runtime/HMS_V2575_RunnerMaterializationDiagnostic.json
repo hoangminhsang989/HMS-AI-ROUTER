@@ -1,0 +1,105 @@
+{
+  "schema": "hms.v25.75.runner-materialization-diagnostic.v1",
+  "product": "HMS-AI-ROUTER",
+  "version": "25.75",
+  "recorded_at": "2026-08-25T15:51:00+07:00",
+  "diagnostic_only": true,
+  "executable_evidence": false,
+  "source_head": "f81ce953c32ef4a7d335d76283939d43c09a59ec",
+  "branch": "v25.75-integrated-windows-safety",
+  "pull_request": 7,
+  "canary": {
+    "workflow_path": ".github/workflows/v2575-runner-materialization-canary.yml",
+    "workflow_blob": "90b78474008b5a2c79dd8b9e1d6d70a0ab1ae0ea",
+    "run_id": 32828182312,
+    "run_number": 1,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-08-25T08:44:24Z",
+    "updated_at": "2026-08-25T08:44:29Z",
+    "jobs": {
+      "ubuntu": {
+        "job_id": 97740740817,
+        "runner_label": "ubuntu-latest",
+        "status": "completed",
+        "conclusion": "failure",
+        "steps": [],
+        "log_blob_present": false,
+        "log_lookup_result": "404 BlobNotFound",
+        "artifacts_present": false
+      },
+      "windows": {
+        "job_id": 97740740446,
+        "runner_label": "windows-latest",
+        "status": "completed",
+        "conclusion": "failure",
+        "steps": [],
+        "log_blob_present": false,
+        "log_lookup_result": "404 BlobNotFound",
+        "artifacts_present": false
+      }
+    }
+  },
+  "same_head_control_runs": {
+    "p0_source": {
+      "run_id": 32828182155,
+      "run_number": 29,
+      "job_id": 97740740149,
+      "steps": [],
+      "artifacts_present": false
+    },
+    "p2_source": {
+      "run_id": 32828182189,
+      "run_number": 10,
+      "job_id": 97740740232,
+      "steps": [],
+      "artifacts_present": false
+    },
+    "windows_promotion_safety": {
+      "run_id": 32828182210,
+      "run_number": 193,
+      "job_id": 97740740461,
+      "steps": [],
+      "artifacts_present": false
+    }
+  },
+  "rerun_control": {
+    "source_run_id": 32826148363,
+    "rerun_job_id": 97740532769,
+    "status": "completed",
+    "conclusion": "failure",
+    "steps": [],
+    "log_blob_present": false,
+    "log_lookup_result": "404 BlobNotFound"
+  },
+  "classification": "PRE_RUNNER_HOSTED_RUNNER_MATERIALIZATION_FAILURE",
+  "direct_causes_ruled_out_by_canary": [
+    "actions/checkout",
+    "actions/setup-python",
+    "HMS Python proof code",
+    "Windows-specific workflow logic",
+    "Ubuntu-specific workflow logic"
+  ],
+  "narrow_administrative_cause_established": false,
+  "unverified_possible_causes_do_not_claim": [
+    "Actions billing or spending limit",
+    "hosted-runner entitlement or quota",
+    "repository Actions policy",
+    "account payment state",
+    "organization or enterprise Actions policy"
+  ],
+  "authority": {
+    "windows_runtime_certified": false,
+    "external_windows_target_evidence_imported": false,
+    "production_score_promotion_eligible": false,
+    "production_score_mutation_authorized": false,
+    "baseline_adoption_authorized": false,
+    "merge_authorized": false
+  },
+  "frozen_scores": {
+    "feature_completion_percent": 93.0,
+    "production_readiness_percent": 55.2
+  },
+  "note": "This record preserves diagnostic observations only. It is not executable proof and cannot substitute for a materialized Windows promotion-safety run or real Windows/current-Codex target evidence."
+}
