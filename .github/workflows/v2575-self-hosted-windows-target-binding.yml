@@ -17,6 +17,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: v2575-self-hosted-windows-fallback
+  cancel-in-progress: false
+
 jobs:
   target-binding:
     runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
@@ -81,6 +85,7 @@ jobs:
             target_binding_completed = $true
             tooling_revision = $env:GITHUB_SHA
             isolated_workspace = $true
+            serialized_fallback = $true
             windows_graph_executed = $false
             windows_runtime_certified = $false
             authority = 'TARGET_BINDING_ONLY_NOT_WINDOWS_PROOF'
