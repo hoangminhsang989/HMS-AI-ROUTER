@@ -1,0 +1,61 @@
+name: v25.75 P2 Source Characterization (Non-Blocking)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p2-source-characterization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile P2 source-characterization harness
+        run: python -m py_compile _runtime/HMS_Codex_CockpitV1329ApiServiceRealtimeDeltaProof.py
+
+      - name: Execute Cockpit v1.3.29 API Service Realtime delta proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329ApiServiceRealtimeDeltaProof.py > "$RUNNER_TEMP/p2-realtime-source-proof.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p2-realtime-source-proof.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("target_release") == "1.3.29", result
+          assert result.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", result
+          assert result.get("delta_classification") == "P2_SOURCE_CHARACTERIZED_PROOF_WIRED", result
+          assert result.get("new_realtime_route_count") == 16, result
+          assert result.get("responses_websocket_preexisting_in_v1328") is True, result
+          assert result.get("baseline_blocking") is False, result
+          assert result.get("hms_parity_implemented") is False, result
+          assert result.get("source_characterization_only") is True, result
+          assert result.get("real_realtime_runtime_executed") is False, result
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "new_realtime_route_count": result.get("new_realtime_route_count"),
+              "responses_websocket_preexisting_in_v1328": result.get("responses_websocket_preexisting_in_v1328"),
+              "baseline_blocking": result.get("baseline_blocking"),
+              "hms_parity_implemented": result.get("hms_parity_implemented"),
+          }, indent=2))
+          PY
