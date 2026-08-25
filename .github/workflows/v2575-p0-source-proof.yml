@@ -28,6 +28,7 @@ jobs:
             _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py \
             _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py \
             _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py \
+            _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py \
             _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py \
             _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py
 
@@ -148,6 +149,42 @@ jobs:
           }, indent=2))
           PY
 
+      - name: Execute session/provider migration exact-source proof
+        run: |
+          python _runtime/HMS_Codex_CockpitV1329SessionProviderMigrationProof.py > "$RUNNER_TEMP/session-provider-migration.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          result = json.loads((Path(os.environ["RUNNER_TEMP"]) / "session-provider-migration.json").read_text("utf-8"))
+          assert result.get("verdict") == "PASS", result
+          assert result.get("target_release") == "1.3.29", result
+          assert result.get("target_commit") == "83ce2d192cc954cc910ce89edf2d1f710c218798", result
+          assert result.get("source_reconciliation_state") == "SOURCE_RECONCILED_PROOF_WIRED", result
+          assert result.get("safety_invariants") == [
+              "ROLLBACK_ON_FAILED_MUTATION",
+              "SELECTED_SCOPE_ONLY",
+              "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
+              "PROVIDER_BOUND_FILTERING",
+          ], result
+          assert result.get("source_certification_only") is True, result
+          assert result.get("real_windows_runtime_executed") is False, result
+          assert result.get("windows_runtime_certified") is False, result
+          assert result.get("external_windows_target_evidence_imported") is False, result
+          assert result.get("production_score_promotion_eligible") is False, result
+          assert result.get("production_score_mutation_authorized") is False, result
+          assert result.get("baseline_adoption_authorized") is False, result
+          print(json.dumps({
+              "suite": result.get("suite"),
+              "verdict": result.get("verdict"),
+              "summary": result.get("summary"),
+              "source_reconciliation_state": result.get("source_reconciliation_state"),
+              "safety_invariants": result.get("safety_invariants"),
+              "windows_runtime_certified": result.get("windows_runtime_certified"),
+              "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
+          }, indent=2))
+          PY
+
       - name: Execute baseline reconciliation contract
         run: |
           python _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py > "$RUNNER_TEMP/baseline-reconciliation.json"
@@ -159,6 +196,7 @@ jobs:
           contract = result.get("contract", {})
           device = result.get("device_auth_decision_contract", {})
           launch = result.get("launch_confirmation_source_proof", {})
+          migration = result.get("session_provider_migration_source_proof", {})
           states = contract.get("reconciliation_states", {})
           assert result.get("verdict") == "PASS", result
           assert contract.get("frozen_baseline") == "1.3.28", contract
@@ -166,10 +204,12 @@ jobs:
           assert device.get("decision") == "OPEN", device
           assert device.get("resolved_for_baseline") is False, device
           assert launch.get("verdict") == "PASS", launch
+          assert migration.get("verdict") == "PASS", migration
           assert states.get("launch_confirmation_before_mutation") == "SOURCE_RECONCILED_PROOF_WIRED", states
-          assert states.get("session_provider_migration_safety") == "OPEN", states
-          assert any(str(item).startswith("device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN") for item in contract.get("adoption_blockers", [])), contract
-          assert any(str(item).startswith("session_provider_migration_safety:OPEN") for item in contract.get("adoption_blockers", [])), contract
+          assert states.get("session_provider_migration_safety") == "SOURCE_RECONCILED_PROOF_WIRED", states
+          assert contract.get("adoption_blockers") == [
+              "device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
+          ], contract
           assert result.get("windows_runtime_certified") is False, result
           assert result.get("production_score_promotion_eligible") is False, result
           assert result.get("baseline_adoption_authorized") is False, result
@@ -179,6 +219,7 @@ jobs:
               "frozen_baseline": contract.get("frozen_baseline"),
               "device_auth_decision": device.get("decision"),
               "launch_confirmation_state": states.get("launch_confirmation_before_mutation"),
+              "session_provider_migration_state": states.get("session_provider_migration_safety"),
               "adoption_blockers": contract.get("adoption_blockers"),
               "baseline_adoption_authorized": result.get("baseline_adoption_authorized"),
           }, indent=2))
