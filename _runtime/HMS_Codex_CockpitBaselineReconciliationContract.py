@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import HMS_Codex_CockpitV1329DeviceAuthAdoptionContract as device_auth_adoption
+
 PRODUCT = "HMS-AI-ROUTER"
 VERSION = "25.75"
 UPSTREAM_REPOSITORY = "jlcodes99/cockpit-tools"
@@ -19,10 +21,18 @@ RECONCILIATION_TARGET_COMMIT = "83ce2d192cc954cc910ce89edf2d1f710c218798"
 # It must stay false while any adoption-blocking decision remains OPEN.
 TARGET_BASELINE_ADOPTION_AUTHORIZED = False
 
+
+def _current_device_auth_state() -> str:
+    contract = device_auth_adoption.current_contract()
+    if not contract.get("valid_record"):
+        return "DEVICE_AUTH_DECISION_RECORD_INVALID"
+    return str(contract.get("reconciliation_state") or "DEVICE_AUTH_DECISION_RECORD_INVALID")
+
+
 V1329_RECONCILIATION = {
     "quota_refresh_token_ownership": "SOURCE_CLOSED_PROOF_WIRED",
     "combined_oauth_api_key_credential_ownership": "SOURCE_CLOSED_PROOF_WIRED",
-    "device_auth": "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN",
+    "device_auth": _current_device_auth_state(),
     "launch_confirmation_before_mutation": "OPEN",
     "session_provider_migration_safety": "OPEN",
     "api_service_realtime_breadth": "DEFERRED_P2_NOT_BASELINE_BLOCKING",
@@ -59,7 +69,7 @@ class BaselineReconciliationError(RuntimeError):
 
 
 def target_adoption_blockers(states: dict[str, str] | None = None) -> list[str]:
-    values = states or V1329_RECONCILIATION
+    values = V1329_RECONCILIATION if states is None else states
     blockers = []
     for key in ADOPTION_BLOCKING_KEYS:
         state = str(values.get(key) or "MISSING")
@@ -172,6 +182,7 @@ def audit_runtime_baseline_authorities(runtime_dir: Path | None = None) -> dict[
 
 
 def synthetic_proof() -> dict[str, Any]:
+    device_contract = device_auth_adoption.current_contract()
     contract = validate_baseline_contract()
     source_audit = audit_runtime_baseline_authorities()
     bare_target_flip = validate_baseline_contract(
@@ -182,9 +193,21 @@ def synthetic_proof() -> dict[str, Any]:
         frozen_baseline=RECONCILIATION_TARGET,
         target_adoption_authorized=True,
     )
+
+    # Future resolution examples are synthetic only. They prove that device-auth
+    # cannot disappear from the blocker set via a baseline constant change: a
+    # valid explicit decision contract must first yield a resolved state.
+    future_gap_record = {
+        **device_auth_adoption.CURRENT_DECISION_RECORD,
+        "decision": device_auth_adoption.DECISION_ACCEPT_GAP,
+        "accepted_by": "future-human-operator",
+        "rationale": "Explicit future capability-gap decision for contract proof only.",
+        "risk_acknowledged": True,
+    }
+    future_gap_contract = device_auth_adoption.validate_decision_record(future_gap_record)
     fully_resolved_states = {
         **V1329_RECONCILIATION,
-        "device_auth": "ACCEPTED_CAPABILITY_GAP_RECORDED",
+        "device_auth": str(future_gap_contract.get("reconciliation_state") or "INVALID"),
         "launch_confirmation_before_mutation": "SOURCE_RECONCILED_PROOF_WIRED",
         "session_provider_migration_safety": "SOURCE_RECONCILED_PROOF_WIRED",
     }
@@ -200,6 +223,18 @@ def synthetic_proof() -> dict[str, Any]:
         "v1329_target_commit_pinned": contract["reconciliation_target_commit"] == RECONCILIATION_TARGET_COMMIT,
         "v1329_adoption_currently_not_authorized": contract["target_baseline_adoption_authorized"] is False,
         "v1329_open_blockers_are_explicit": len(contract["adoption_blockers"]) >= 3,
+        "device_auth_decision_authority_record_valid": device_contract.get("valid_record") is True,
+        "device_auth_decision_authority_remains_open": device_contract.get("decision") == "OPEN",
+        "device_auth_reconciliation_state_comes_from_decision_authority": (
+            V1329_RECONCILIATION["device_auth"]
+            == device_contract.get("reconciliation_state")
+            == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
+        ),
+        "device_auth_open_decision_is_an_adoption_blocker": any(
+            blocker.startswith("device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN")
+            for blocker in contract["adoption_blockers"]
+        ),
+        "device_auth_contract_cannot_authorize_baseline": device_contract.get("baseline_adoption_authorized") is False,
         "runtime_baseline_literal_authorities_exact": source_audit["valid"],
         "bare_baseline_flip_to_v1329_fails_closed": (
             bare_target_flip["valid"] is False
@@ -209,6 +244,11 @@ def synthetic_proof() -> dict[str, Any]:
         "forged_adoption_authority_with_open_blockers_fails_closed": (
             forged_authority["valid"] is False
             and "ADOPTION_AUTHORITY_WITH_OPEN_BLOCKERS" in forged_authority["reasons"]
+        ),
+        "future_device_gap_requires_valid_explicit_decision_record": (
+            future_gap_contract.get("valid_record") is True
+            and future_gap_contract.get("reconciliation_state") == "ACCEPTED_CAPABILITY_GAP_RECORDED"
+            and future_gap_contract.get("baseline_adoption_authorized") is False
         ),
         "future_adoption_requires_explicit_resolved_states": explicit_future_adoption["valid"],
     }
@@ -225,6 +265,7 @@ def synthetic_proof() -> dict[str, Any]:
         "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
         "tests": tests,
         "contract": contract,
+        "device_auth_decision_contract": device_contract,
         "runtime_baseline_authority_audit": source_audit,
         "source_contract_only": True,
         "real_windows_runtime_executed": False,
