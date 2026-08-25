@@ -10,13 +10,15 @@ from pathlib import Path
 import HMS_Codex_ReviewerReleaseAuthority as release_authority
 import HMS_Codex_ReviewerTrustAuthoritySnapshot as trust_authority
 from HMS_Codex_ExternalWindowsReviewPacketIngest import COCKPIT_BASELINE, VERSION
-from HMS_Codex_WindowsPromotionWorkbenchController import (
-    PromotionWorkbenchController,
-    _exclusive_ingest_lock,
-    _proof_packet,
-)
+from HMS_Codex_WindowsPromotionWorkbenchController import PromotionWorkbenchController, _exclusive_ingest_lock, _proof_packet
 
 PRODUCT = "HMS-AI-ROUTER"
+
+
+def _controller_with_reviewer_key(root: Path, key_path: Path) -> PromotionWorkbenchController:
+    ctl = PromotionWorkbenchController(root)
+    ctl.integrity_key_path = key_path
+    return ctl
 
 
 def synthetic_proof():
@@ -44,34 +46,22 @@ def synthetic_proof():
             output_path=release_path,
             key_path=ctl.integrity_key_path,
         )
-        first = ctl.ingest(
-            packet_path,
-            expected_package_sha256="a" * 64,
-            expected_manifest_sha256="b" * 64,
-            trust_authority_path=trust_path,
-            release_authority_path=release_path,
-        )
+        first = ctl.ingest(packet_path, expected_package_sha256="a" * 64, expected_manifest_sha256="b" * 64,
+            trust_authority_path=trust_path, release_authority_path=release_path)
 
         replay_bytes = ctl.replay_path.read_bytes()
-        replay_obj = json.loads(replay_bytes.decode("utf-8"))
-        replay_obj["packet_digests"] = []
+        replay_obj = json.loads(replay_bytes.decode("utf-8")); replay_obj["packet_digests"] = []
         ctl.replay_path.write_text(json.dumps(replay_obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         replay_tamper_blocked = False
         try:
-            ctl.ingest(
-                packet_path,
-                expected_package_sha256="a" * 64,
-                expected_manifest_sha256="b" * 64,
-                trust_authority_path=trust_path,
-                release_authority_path=release_path,
-            )
+            ctl.ingest(packet_path, expected_package_sha256="a" * 64, expected_manifest_sha256="b" * 64,
+                trust_authority_path=trust_path, release_authority_path=release_path)
         except ValueError:
             replay_tamper_blocked = True
         ctl.replay_path.write_bytes(replay_bytes)
 
         report_bytes = ctl.report_path.read_bytes()
-        report_obj = json.loads(report_bytes.decode("utf-8"))
-        report_obj["reviewer_release_authority"]["authority_sha256"] = "0" * 64
+        report_obj = json.loads(report_bytes.decode("utf-8")); report_obj["reviewer_release_authority"]["authority_sha256"] = "0" * 64
         ctl.report_path.write_text(json.dumps(report_obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         report_release_tamper_blocked = False
         try:
@@ -80,35 +70,25 @@ def synthetic_proof():
             report_release_tamper_blocked = True
         ctl.report_path.write_bytes(report_bytes)
 
-        rogue_trust_obj = json.loads(trust_path.read_text("utf-8"))
-        rogue_trust_obj["authority"]["trust_snapshot_sha256"] = "c" * 64
+        rogue_trust_obj = json.loads(trust_path.read_text("utf-8")); rogue_trust_obj["authority"]["trust_snapshot_sha256"] = "c" * 64
         rogue_trust_path = root / "rogue-trust.json"
         rogue_trust_path.write_text(json.dumps(rogue_trust_obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        rogue_trust_ctl = _controller_with_reviewer_key(root / "rogue-trust-state", ctl.integrity_key_path)
         rogue_trust_blocked = False
         try:
-            PromotionWorkbenchController(root / "rogue-trust-state").ingest(
-                packet_path,
-                expected_package_sha256="a" * 64,
-                expected_manifest_sha256="b" * 64,
-                trust_authority_path=rogue_trust_path,
-                release_authority_path=release_path,
-            )
+            rogue_trust_ctl.ingest(packet_path, expected_package_sha256="a" * 64, expected_manifest_sha256="b" * 64,
+                trust_authority_path=rogue_trust_path, release_authority_path=release_path)
         except ValueError:
             rogue_trust_blocked = True
 
-        rogue_release_obj = json.loads(release_path.read_text("utf-8"))
-        rogue_release_obj["authority"]["package_zip_sha256"] = "9" * 64
+        rogue_release_obj = json.loads(release_path.read_text("utf-8")); rogue_release_obj["authority"]["package_zip_sha256"] = "9" * 64
         rogue_release_path = root / "rogue-release.json"
         rogue_release_path.write_text(json.dumps(rogue_release_obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        rogue_release_ctl = _controller_with_reviewer_key(root / "rogue-release-state", ctl.integrity_key_path)
         rogue_release_blocked = False
         try:
-            PromotionWorkbenchController(root / "rogue-release-state").ingest(
-                packet_path,
-                expected_package_sha256="a" * 64,
-                expected_manifest_sha256="b" * 64,
-                trust_authority_path=trust_path,
-                release_authority_path=rogue_release_path,
-            )
+            rogue_release_ctl.ingest(packet_path, expected_package_sha256="a" * 64, expected_manifest_sha256="b" * 64,
+                trust_authority_path=trust_path, release_authority_path=rogue_release_path)
         except ValueError:
             rogue_release_blocked = True
 
@@ -116,14 +96,9 @@ def synthetic_proof():
         forged_ctl._atomic_json(forged_ctl.report_path, {"real_packet_verified": True})
         forged_blocked = False
         try:
-            forged_ctl.record_review_action(
-                decision="APPROVE",
-                reviewer_identity="reviewer-z",
-                reviewer_salt="controller-adversarial-salt-01",
-                lane="TERMINAL_PTY",
-                package_version=VERSION,
-                live_baseline_provider=lambda: COCKPIT_BASELINE,
-            )
+            forged_ctl.record_review_action(decision="APPROVE", reviewer_identity="reviewer-z",
+                reviewer_salt="controller-adversarial-salt-01", lane="TERMINAL_PTY", package_version=VERSION,
+                live_baseline_provider=lambda: COCKPIT_BASELINE)
         except ValueError:
             forged_blocked = True
 
@@ -144,28 +119,20 @@ def synthetic_proof():
             "positive_control_verified_before_adversarial_cases": first.get("real_packet_verified") is True,
             "replay_registry_tamper_rejected_by_local_seal": replay_tamper_blocked,
             "sealed_report_release_authority_tamper_rejected": report_release_tamper_blocked,
-            "tampered_reviewer_trust_authority_rejected": rogue_trust_blocked,
-            "tampered_reviewer_release_authority_rejected": rogue_release_blocked,
+            "tampered_reviewer_trust_authority_rejected_with_same_reviewer_key": rogue_trust_blocked,
+            "tampered_reviewer_release_authority_rejected_with_same_reviewer_key": rogue_release_blocked,
             "forged_unsealed_metadata_cannot_write_ledger": forged_blocked and not forged_ctl.ledger_path.exists(),
             "stale_ingest_lock_never_auto_stolen": stale_lock_blocked,
             "adversarial_proof_grants_no_production_authority": True,
         }
         tests = [{"name": key, "status": "PASS" if value else "FAIL"} for key, value in checks.items()]
         passed = sum(test["status"] == "PASS" for test in tests)
-        return {
-            "product": PRODUCT,
-            "version": VERSION,
-            "suite": "WINDOWS_PROMOTION_CONTROLLER_ADVERSARIAL_PROOF",
+        return {"product": PRODUCT, "version": VERSION, "suite": "WINDOWS_PROMOTION_CONTROLLER_ADVERSARIAL_PROOF",
             "verdict": "PASS" if passed == len(tests) else "FAIL",
-            "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
-            "tests": tests,
-            "synthetic_fixture_only": True,
-            "real_windows_target_evidence_used": False,
-            "windows_runtime_certified": False,
-            "production_score_promotion_eligible": False,
-            "automatic_production_certification": False,
-            "production_score_mutation_authorized": False,
-        }
+            "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)}, "tests": tests,
+            "synthetic_fixture_only": True, "real_windows_target_evidence_used": False,
+            "windows_runtime_certified": False, "production_score_promotion_eligible": False,
+            "automatic_production_certification": False, "production_score_mutation_authorized": False}
 
 
 def main() -> int:
