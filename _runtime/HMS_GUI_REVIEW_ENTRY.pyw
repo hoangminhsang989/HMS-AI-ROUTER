@@ -175,8 +175,8 @@ def extension_proof():
     report = {"real_packet_verified": True, "reasons": [], "signer_trust": {"valid": True},
         "trust_anchor_match": True, "reviewer_trust_authority": authority, "reviewer_release_authority": release,
         "provenance": {"raw_packet_sha256": "a" * 64, "package_zip_sha256": "f" * 64,
-                       "release_manifest_sha256": "b" * 64, "trust_snapshot_sha256": "c" * 64,
-                       "expected_trust_snapshot_sha256": "c" * 64}}
+                       "release_manifest_sha256": "b" * 64, "source_certification_report_sha256": "7" * 64,
+                       "trust_snapshot_sha256": "c" * 64, "expected_trust_snapshot_sha256": "c" * 64}}
     match = {"source": "GITHUB_RELEASES_LATEST", "upstream_repository": "jlcodes99/cockpit-tools", "release_id": 1328,
         "checked_utc": "2026-08-23T00:00:00+00:00", "baseline": "1.3.28"}
     form = dict(reviewer_identity="reviewer-a", reviewer_salt="0123456789abcdef", lane="TERMINAL_PTY")
@@ -188,6 +188,8 @@ def extension_proof():
     no_anchor = evaluate_gui_action_contract(dict(report, trust_anchor_match=False), match, **form)
     no_authority = evaluate_gui_action_contract(dict(report, reviewer_trust_authority={}), match, **form)
     no_release = evaluate_gui_action_contract(dict(report, reviewer_release_authority={}), match, **form)
+    no_source_report = json.loads(json.dumps(report)); no_source_report["provenance"].pop("source_certification_report_sha256", None)
+    no_source = evaluate_gui_action_contract(no_source_report, match, **form)
     gate_consts = set(_crypto_refresh_promotion_gate_matrix.__code__.co_consts)
     checks = {
         "base_entry_loaded": getattr(base, "APP_VERSION", None) == APP_VERSION,
@@ -200,6 +202,7 @@ def extension_proof():
         "policy_is_button_authority": legacy.HmsApp._update_promotion_action_buttons is _policy_update_promotion_action_buttons,
         "confirmation_wrapper_installed": legacy.HmsApp.submit_promotion_review is _confirmed_submit_promotion_review,
         "match_contract": all(good["buttons"].values()),
+        "decision_provenance_policy_gate": good["policy"]["gates"]["decision_provenance"] is True,
         "drift_contract": drift["buttons"] == {"APPROVE": False, "REJECT": False, "INVALIDATE": True},
         "provider_error_contract": not any(provider_error["buttons"].values()),
         "salt_invalid_contract": not any(bad_salt["buttons"].values()),
@@ -207,6 +210,7 @@ def extension_proof():
         "trust_anchor_failure_contract": not any(no_anchor["buttons"].values()),
         "reviewer_authority_failure_contract": not any(no_authority["buttons"].values()),
         "release_authority_failure_contract": not any(no_release["buttons"].values()),
+        "source_certification_failure_contract": not any(no_source["buttons"].values()) and no_source["policy"]["gates"]["decision_provenance"] is False,
         "confirmation_required": good["confirmation_required"] is True,
         "salt_clear_required": good["salt_clear_required_after_attempt"] is True and "promotion_reviewer_salt" in _confirmed_submit_promotion_review.__code__.co_names,
         "no_auto_authority": not good["automatic_production_certification"] and not good["production_score_mutation_authorized"],
