@@ -6,12 +6,12 @@ on:
       target_sha:
         description: Exact HMS-AI-ROUTER commit whose canonical Windows graph may be routed later
         required: true
-        default: f520c3b2addc4f4375e59da3dfe961177cf1196d
+        default: bfe77c5264db818eff8e04c243833999c1437e85
         type: string
       expected_workflow_blob:
         description: Reviewed git blob SHA of canonical Windows Promotion Safety workflow
         required: true
-        default: afa27ce43cc2f5103eecae478e5a8a13f2fc1ef8
+        default: 4798c8fbca4f56485fbef3bbd9e8016b6e039745
         type: string
 
 permissions:
