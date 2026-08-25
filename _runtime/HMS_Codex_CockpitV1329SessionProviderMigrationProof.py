@@ -92,14 +92,39 @@ class MigrationProbe:
 
 def _migration_transition(probe: MigrationProbe) -> dict[str, Any]:
     if not probe.selected:
-        return {"result": "UNSELECTED", "backup": False, "mutation": False, "rollback": False}
+        return {
+            "result": "UNSELECTED",
+            "backup": False,
+            "mutation": False,
+            "rollback": False,
+        }
     if probe.running and not probe.dry_run:
-        return {"result": "RUNNING_BLOCKED", "backup": False, "mutation": False, "rollback": False}
+        return {
+            "result": "RUNNING_BLOCKED",
+            "backup": False,
+            "mutation": False,
+            "rollback": False,
+        }
     if probe.dry_run:
-        return {"result": "DRY_RUN", "backup": False, "mutation": False, "rollback": False}
+        return {
+            "result": "DRY_RUN",
+            "backup": False,
+            "mutation": False,
+            "rollback": False,
+        }
     if probe.write_fails:
-        return {"result": "ROLLED_BACK", "backup": True, "mutation": True, "rollback": True}
-    return {"result": "APPLIED", "backup": True, "mutation": True, "rollback": False}
+        return {
+            "result": "ROLLED_BACK",
+            "backup": True,
+            "mutation": True,
+            "rollback": True,
+        }
+    return {
+        "result": "APPLIED",
+        "backup": True,
+        "mutation": True,
+        "rollback": False,
+    }
 
 
 def source_proof() -> dict[str, Any]:
@@ -109,6 +134,11 @@ def source_proof() -> dict[str, Any]:
     target_modal = sources[f"{TARGET_COMMIT}:{MODAL_PATH}"]
     target_service = sources[f"{TARGET_COMMIT}:{SERVICE_PATH}"]
 
+    quick_options = _segment(
+        target_module,
+        "fn official_state_db_only(mode: CodexSessionVisibilityRepairMode) -> Self {",
+        "fn full_provider_migration() -> Self {",
+    )
     deep_options = _segment(
         target_module,
         "fn full_provider_migration() -> Self {",
@@ -123,6 +153,16 @@ def source_proof() -> dict[str, Any]:
         target_module,
         "pub fn repair_session_visibility_across_instances_with_target(",
         "fn repair_session_visibility_across_instances_with_options(",
+    )
+    threads_where_clause = _segment(
+        target_module,
+        "fn build_threads_repair_where_clause(",
+        "fn build_threads_repair_set_clause(",
+    )
+    referenced_rollout_query = _segment(
+        target_module,
+        "fn collect_referenced_rollout_paths_for_db(",
+        "fn collect_rollout_provider_changes(",
     )
     modal_options = _segment(
         target_modal,
@@ -143,20 +183,86 @@ def source_proof() -> dict[str, Any]:
     positive_probe = _migration_transition(MigrationProbe(selected=True, running=False))
 
     checks = {
-        "v1328_module_exact_blob_pinned": observed[f"{BASE_COMMIT}:{MODULE_PATH}"] == EXPECTED_BLOBS[(BASE_COMMIT, MODULE_PATH)],
-        "v1329_module_exact_blob_pinned": observed[f"{TARGET_COMMIT}:{MODULE_PATH}"] == EXPECTED_BLOBS[(TARGET_COMMIT, MODULE_PATH)],
-        "v1329_modal_exact_blob_pinned": observed[f"{TARGET_COMMIT}:{MODAL_PATH}"] == EXPECTED_BLOBS[(TARGET_COMMIT, MODAL_PATH)],
-        "v1329_service_exact_blob_pinned": observed[f"{TARGET_COMMIT}:{SERVICE_PATH}"] == EXPECTED_BLOBS[(TARGET_COMMIT, SERVICE_PATH)],
+        "v1328_module_exact_blob_pinned": (
+            observed[f"{BASE_COMMIT}:{MODULE_PATH}"]
+            == EXPECTED_BLOBS[(BASE_COMMIT, MODULE_PATH)]
+        ),
+        "v1329_module_exact_blob_pinned": (
+            observed[f"{TARGET_COMMIT}:{MODULE_PATH}"]
+            == EXPECTED_BLOBS[(TARGET_COMMIT, MODULE_PATH)]
+        ),
+        "v1329_modal_exact_blob_pinned": (
+            observed[f"{TARGET_COMMIT}:{MODAL_PATH}"]
+            == EXPECTED_BLOBS[(TARGET_COMMIT, MODAL_PATH)]
+        ),
+        "v1329_service_exact_blob_pinned": (
+            observed[f"{TARGET_COMMIT}:{SERVICE_PATH}"]
+            == EXPECTED_BLOBS[(TARGET_COMMIT, SERVICE_PATH)]
+        ),
         "v1329_adds_global_state_catalog_repair_surface": (
             'const GLOBAL_STATE_FILE: &str = ".codex-global-state.json";' in target_module
             and "repair_local_thread_catalog: bool" in target_module
             and "normalize_global_state: bool" in target_module
-            and 'const GLOBAL_STATE_FILE: &str = ".codex-global-state.json";' not in base_module
+            and 'const GLOBAL_STATE_FILE: &str = ".codex-global-state.json";'
+            not in base_module
         ),
         "v1329_adds_single_repair_task_lock": (
-            "static SESSION_VISIBILITY_REPAIR_LOCK: Mutex<()> = Mutex::new(());" in target_module
+            "static SESSION_VISIBILITY_REPAIR_LOCK: Mutex<()> = Mutex::new(());"
+            in target_module
             and "fn acquire_session_visibility_repair_lock()" in target_module
             and "SESSION_VISIBILITY_REPAIR_LOCK" not in base_module
+        ),
+        "v1329_adds_sidebar_visible_quick_scope": (
+            "sidebar_visible_only: bool" in target_module
+            and "sidebar_visible_only: bool" not in base_module
+            and "sidebar_visible_only: true" in quick_options
+            and "sidebar_visible_only: false" in deep_options
+        ),
+        "quick_mode_is_official_state_and_referenced_rollout_bounded": (
+            "repair_rollout: false" in quick_options
+            and "repair_referenced_rollouts: true" in quick_options
+            and "sqlite_scope: SqliteRepairScope::OfficialStateDbs" in quick_options
+            and "repair_local_thread_catalog: false" in quick_options
+            and "normalize_global_state: false" in quick_options
+            and "require_stopped_instances: false" in quick_options
+            and "sidebar_visible_only: true" in quick_options
+        ),
+        "quick_sidebar_filter_excludes_hidden_history_classes": (
+            'visibility.push("COALESCE(archived, 0) = 0")' in threads_where_clause
+            and "(COALESCE(preview, '') <> '' OR COALESCE(first_user_message, '') <> '')"
+            in threads_where_clause
+            and 'visibility.push("COALESCE(rollout_path, \'\') <> \'\'")'
+            in threads_where_clause
+            and "LOWER(COALESCE(source, '')) NOT LIKE '%subagent%'"
+            in threads_where_clause
+            and "LOWER(COALESCE(source, '')) NOT LIKE '%internal%'"
+            in threads_where_clause
+            and "COALESCE(thread_source, '') <> 'ambient_suggestions'"
+            in threads_where_clause
+        ),
+        "quick_referenced_rollout_query_uses_same_sidebar_boundary": (
+            'predicates.push("COALESCE(archived, 0) = 0")' in referenced_rollout_query
+            and "(COALESCE(preview, '') <> '' OR COALESCE(first_user_message, '') <> '')"
+            in referenced_rollout_query
+            and "LOWER(COALESCE(source, '')) NOT LIKE '%subagent%'"
+            in referenced_rollout_query
+            and "LOWER(COALESCE(source, '')) NOT LIKE '%internal%'"
+            in referenced_rollout_query
+            and "COALESCE(thread_source, '') <> 'ambient_suggestions'"
+            in referenced_rollout_query
+        ),
+        "upstream_sidebar_visibility_regression_test_present": (
+            "quick_sqlite_repair_targets_official_sidebar_rows_only" in target_module
+            and '"archived-old"' in target_module
+            and '"missing-rollout"' in target_module
+            and '"subagent-old"' in target_module
+        ),
+        "upstream_quick_official_state_and_reference_scope_tests_present": (
+            "quick_repair_uses_official_state_dbs_without_touching_rollouts"
+            in target_module
+            and "quick_repair_updates_rollouts_referenced_by_official_state_dbs"
+            in target_module
+            and "unreferenced_rollout" in target_module
         ),
         "deep_provider_migration_requires_stopped_instances": (
             "require_stopped_instances: true" in deep_options
@@ -165,15 +271,13 @@ def source_proof() -> dict[str, Any]:
             and "repair_local_thread_catalog: true" in deep_options
             and "normalize_global_state: true" in deep_options
         ),
-        "running_deep_target_is_rejected_before_write": (
-            _ordered(
-                target_module,
-                "if instance_has_planned_changes",
-                "&& running",
-                "&& options.require_stopped_instances",
-                "&& !options.dry_run",
-                "return Err(format!(",
-            )
+        "running_deep_target_is_rejected_before_write": _ordered(
+            target_module,
+            "if instance_has_planned_changes",
+            "&& running",
+            "&& options.require_stopped_instances",
+            "&& !options.dry_run",
+            "return Err(format!(",
         ),
         "selection_validates_target_provider": (
             "validate_provider_id(provider)?;" in selection_impl
@@ -186,17 +290,21 @@ def source_proof() -> dict[str, Any]:
         ),
         "selection_filters_instance_ids_before_repair": (
             "fn includes_instance_id(&self, instance_id: &str) -> bool" in selection_impl
-            and ".filter(|instance| selection.includes_instance_id(&instance.id))" in target_module
+            and ".filter(|instance| selection.includes_instance_id(&instance.id))"
+            in target_module
         ),
         "backend_entry_preserves_selected_scope": (
             "target_provider: Option<String>" in cross_instance_entry
             and "session_ids: Option<Vec<String>>" in cross_instance_entry
             and "instance_ids: Option<Vec<String>>" in cross_instance_entry
-            and "RepairTargetSelection::from_inputs(target_provider, session_ids, instance_ids)?" in cross_instance_entry
+            and "RepairTargetSelection::from_inputs(target_provider, session_ids, instance_ids)?"
+            in cross_instance_entry
         ),
         "frontend_selected_scope_builds_session_and_instance_filters": (
-            'effectiveScope === "selected" ? uniqueSelectedSessionIds : null' in modal_options
-            and 'selectedInstanceScope === "target" ? [selectedInstanceId] : null' in modal_options
+            'effectiveScope === "selected" ? uniqueSelectedSessionIds : null'
+            in modal_options
+            and 'selectedInstanceScope === "target" ? [selectedInstanceId] : null'
+            in modal_options
             and "targetProvider: selectedProvider" in modal_options
             and "repairInstanceIds" in modal_options
             and "sessionIds" in modal_options
@@ -204,7 +312,8 @@ def source_proof() -> dict[str, Any]:
         "frontend_blocks_running_deep_target": (
             'if (selectedMode !== "deep") return false;' in target_modal
             and "repairInstances.some((instance) => instance.running)" in target_modal
-            and "const repairDisabled = startDisabled || hasRunningRepairTarget;" in target_modal
+            and "const repairDisabled = startDisabled || hasRunningRepairTarget;"
+            in target_modal
         ),
         "service_forwards_provider_instance_session_scope_to_tauri": (
             'invoke("codex_repair_session_visibility_across_instances"' in service_entry
@@ -218,18 +327,23 @@ def source_proof() -> dict[str, Any]:
             and "list_configured_provider_ids(&instance.data_dir)" in target_module
             and "CodexSessionVisibilityRepairProviderSource::Config" in target_module
             and "CodexSessionVisibilityRepairProviderSource::Sqlite" in target_module
-            and "provider_discovery_uses_config_and_official_state_db_without_scanning_rollouts" in target_module
+            and "provider_discovery_uses_config_and_official_state_db_without_scanning_rollouts"
+            in target_module
         ),
         "provider_rewrite_skips_already_matching_provider": (
             "if current_provider == target_provider" in target_module
             and "rewrite_needed: false" in target_module
         ),
         "upstream_instance_scope_regression_test_present": (
-            "launch_target_quick_repair_is_bidirectional_idempotent_and_instance_scoped" in target_module
+            "launch_target_quick_repair_is_bidirectional_idempotent_and_instance_scoped"
+            in target_module
             and "other_rollout_before" in target_module
         ),
-        "mutation_is_preceded_by_backup": (
-            _ordered(target_module, '"backup_instance"', "let backup_dir = backup_instance_files(", '"write_instance"')
+        "mutation_is_preceded_by_backup": _ordered(
+            target_module,
+            '"backup_instance"',
+            "let backup_dir = backup_instance_files(",
+            '"write_instance"',
         ),
         "failed_mutation_restores_backup_fail_closed": (
             _ordered(
@@ -293,6 +407,7 @@ def source_proof() -> dict[str, Any]:
             "SELECTED_SCOPE_ONLY",
             "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
             "PROVIDER_BOUND_FILTERING",
+            "QUICK_REPAIR_OFFICIAL_SIDEBAR_ONLY",
         ],
         "source_reconciliation_state": (
             "SOURCE_RECONCILED_PROOF_WIRED" if verdict == "PASS" else "SOURCE_PROOF_FAILED"
