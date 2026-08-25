@@ -8,6 +8,7 @@ from typing import Any
 
 import HMS_Codex_CockpitV1329DeviceAuthAdoptionContract as device_auth_adoption
 import HMS_Codex_CockpitV1329LaunchConfirmationProof as launch_confirmation
+import HMS_Codex_CockpitV1329SessionProviderMigrationProof as session_provider_migration
 
 PRODUCT = "HMS-AI-ROUTER"
 VERSION = "25.75"
@@ -33,7 +34,11 @@ def _current_device_auth_state() -> str:
     )
 
 
-def _launch_confirmation_state(result: dict[str, Any]) -> str:
+def _source_proof_state(
+    result: dict[str, Any],
+    *,
+    failure_state: str,
+) -> str:
     if (
         result.get("verdict") == "PASS"
         and result.get("target_release") == RECONCILIATION_TARGET
@@ -45,25 +50,35 @@ def _launch_confirmation_state(result: dict[str, Any]) -> str:
         and result.get("baseline_adoption_authorized") is False
     ):
         return "SOURCE_RECONCILED_PROOF_WIRED"
-    return "LAUNCH_CONFIRMATION_SOURCE_PROOF_FAILED"
+    return failure_state
 
 
 def current_reconciliation_states(
     launch_result: dict[str, Any] | None = None,
+    session_result: dict[str, Any] | None = None,
 ) -> dict[str, str]:
     observed_launch = (
         launch_confirmation.source_proof()
         if launch_result is None
         else launch_result
     )
+    observed_session = (
+        session_provider_migration.source_proof()
+        if session_result is None
+        else session_result
+    )
     return {
         "quota_refresh_token_ownership": "SOURCE_CLOSED_PROOF_WIRED",
         "combined_oauth_api_key_credential_ownership": "SOURCE_CLOSED_PROOF_WIRED",
         "device_auth": _current_device_auth_state(),
-        "launch_confirmation_before_mutation": _launch_confirmation_state(
-            observed_launch
+        "launch_confirmation_before_mutation": _source_proof_state(
+            observed_launch,
+            failure_state="LAUNCH_CONFIRMATION_SOURCE_PROOF_FAILED",
         ),
-        "session_provider_migration_safety": "OPEN",
+        "session_provider_migration_safety": _source_proof_state(
+            observed_session,
+            failure_state="SESSION_PROVIDER_MIGRATION_SOURCE_PROOF_FAILED",
+        ),
         "api_service_realtime_breadth": "DEFERRED_P2_NOT_BASELINE_BLOCKING",
     }
 
@@ -83,10 +98,6 @@ RESOLVED_STATES = {
     "SOURCE_RECONCILED_PROOF_WIRED",
 }
 
-# These are the only runtime modules currently allowed to own a literal
-# COCKPIT_BASELINE assignment. The contract audits them rather than silently
-# replacing them, avoiding a risky refactor of evidence/ledger code while still
-# making a one-file baseline flip fail closed in the canonical source proof.
 EXPECTED_LITERAL_AUTHORITIES = {
     "HMS_Codex_ExternalWindowsReviewPacketIngest.py",
     "HMS_Codex_PromotionReviewerActionPolicy.py",
@@ -120,8 +131,6 @@ def validate_baseline_contract(
     reasons: list[str] = []
 
     if baseline == FROZEN_BASELINE:
-        # Existing v1.3.28 evidence epoch remains structurally valid; live
-        # baseline drift is enforced independently at reviewer-action time.
         pass
     elif baseline == RECONCILIATION_TARGET:
         if not target_adoption_authorized:
@@ -140,9 +149,7 @@ def validate_baseline_contract(
         "frozen_release_commit": FROZEN_RELEASE_COMMIT,
         "reconciliation_target": RECONCILIATION_TARGET,
         "reconciliation_target_commit": RECONCILIATION_TARGET_COMMIT,
-        "target_baseline_adoption_authorized": bool(
-            target_adoption_authorized
-        ),
+        "target_baseline_adoption_authorized": bool(target_adoption_authorized),
         "reconciliation_states": values,
         "adoption_blockers": blockers,
         "reasons": sorted(set(reasons)),
@@ -171,9 +178,7 @@ def _literal_baseline_assignments(path: Path) -> list[str]:
         ):
             continue
         value = node.value
-        if not isinstance(value, ast.Constant) or not isinstance(
-            value.value, str
-        ):
+        if not isinstance(value, ast.Constant) or not isinstance(value.value, str):
             raise BaselineReconciliationError(
                 f"COCKPIT_BASELINE must be a literal string in {path.name}"
             )
@@ -200,9 +205,7 @@ def audit_runtime_baseline_authorities(
         for value in values
         if value != FROZEN_BASELINE
     )
-    duplicate = sorted(
-        name for name, values in definitions.items() if len(values) != 1
-    )
+    duplicate = sorted(name for name, values in definitions.items() if len(values) != 1)
 
     reasons = []
     if missing:
@@ -228,7 +231,8 @@ def audit_runtime_baseline_authorities(
 
 def synthetic_proof() -> dict[str, Any]:
     launch_result = launch_confirmation.source_proof()
-    states = current_reconciliation_states(launch_result)
+    session_result = session_provider_migration.source_proof()
+    states = current_reconciliation_states(launch_result, session_result)
     device_contract = device_auth_adoption.current_contract()
     contract = validate_baseline_contract(states=states)
     source_audit = audit_runtime_baseline_authorities()
@@ -243,27 +247,19 @@ def synthetic_proof() -> dict[str, Any]:
         states=states,
     )
 
-    # Future resolution examples are synthetic only. They prove that device-auth
-    # cannot disappear from the blocker set via a baseline constant change: a
-    # valid explicit decision contract must first yield a resolved state.
     future_gap_record = {
         **device_auth_adoption.CURRENT_DECISION_RECORD,
         "decision": device_auth_adoption.DECISION_ACCEPT_GAP,
         "accepted_by": "future-human-operator",
-        "rationale": (
-            "Explicit future capability-gap decision for contract proof only."
-        ),
+        "rationale": "Explicit future capability-gap decision for contract proof only.",
         "risk_acknowledged": True,
     }
-    future_gap_contract = device_auth_adoption.validate_decision_record(
-        future_gap_record
-    )
+    future_gap_contract = device_auth_adoption.validate_decision_record(future_gap_record)
     fully_resolved_states = {
         **states,
         "device_auth": str(
             future_gap_contract.get("reconciliation_state") or "INVALID"
         ),
-        "session_provider_migration_safety": "SOURCE_RECONCILED_PROOF_WIRED",
     }
     explicit_future_adoption = validate_baseline_contract(
         frozen_baseline=RECONCILIATION_TARGET,
@@ -273,90 +269,56 @@ def synthetic_proof() -> dict[str, Any]:
 
     checks = {
         "current_frozen_epoch_contract_valid": contract["valid"],
-        "current_frozen_baseline_is_v1328": (
-            contract["frozen_baseline"] == "1.3.28"
-        ),
-        "v1329_target_commit_pinned": (
-            contract["reconciliation_target_commit"]
-            == RECONCILIATION_TARGET_COMMIT
-        ),
-        "v1329_adoption_currently_not_authorized": (
-            contract["target_baseline_adoption_authorized"] is False
-        ),
-        "device_auth_decision_authority_record_valid": (
-            device_contract.get("valid_record") is True
-        ),
-        "device_auth_decision_authority_remains_open": (
-            device_contract.get("decision") == "OPEN"
-        ),
+        "current_frozen_baseline_is_v1328": contract["frozen_baseline"] == "1.3.28",
+        "v1329_target_commit_pinned": contract["reconciliation_target_commit"] == RECONCILIATION_TARGET_COMMIT,
+        "v1329_adoption_currently_not_authorized": contract["target_baseline_adoption_authorized"] is False,
+        "device_auth_decision_authority_record_valid": device_contract.get("valid_record") is True,
+        "device_auth_decision_authority_remains_open": device_contract.get("decision") == "OPEN",
         "device_auth_reconciliation_state_comes_from_decision_authority": (
             states["device_auth"]
             == device_contract.get("reconciliation_state")
             == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
         ),
-        "device_auth_open_decision_is_an_adoption_blocker": any(
-            blocker.startswith(
-                "device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
-            )
-            for blocker in contract["adoption_blockers"]
+        "device_auth_open_decision_is_only_current_adoption_blocker": (
+            contract["adoption_blockers"]
+            == ["device_auth:SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"]
         ),
-        "device_auth_contract_cannot_authorize_baseline": (
-            device_contract.get("baseline_adoption_authorized") is False
-        ),
-        "launch_confirmation_exact_source_proof_passes": (
-            launch_result.get("verdict") == "PASS"
-        ),
-        "launch_confirmation_proof_is_bound_to_v1329_target": (
-            launch_result.get("target_commit")
-            == RECONCILIATION_TARGET_COMMIT
-        ),
-        "launch_confirmation_state_is_derived_from_proof": (
-            states["launch_confirmation_before_mutation"]
-            == "SOURCE_RECONCILED_PROOF_WIRED"
-        ),
-        "launch_confirmation_proof_cannot_authorize_windows_or_promotion": (
+        "device_auth_contract_cannot_authorize_baseline": device_contract.get("baseline_adoption_authorized") is False,
+        "launch_confirmation_exact_source_proof_passes": launch_result.get("verdict") == "PASS",
+        "launch_confirmation_state_is_derived_from_proof": states["launch_confirmation_before_mutation"] == "SOURCE_RECONCILED_PROOF_WIRED",
+        "session_provider_migration_exact_source_proof_passes": session_result.get("verdict") == "PASS",
+        "session_provider_migration_proof_is_bound_to_v1329_target": session_result.get("target_commit") == RECONCILIATION_TARGET_COMMIT,
+        "session_provider_migration_state_is_derived_from_proof": states["session_provider_migration_safety"] == "SOURCE_RECONCILED_PROOF_WIRED",
+        "session_provider_migration_has_four_required_invariants": session_result.get("safety_invariants") == [
+            "ROLLBACK_ON_FAILED_MUTATION",
+            "SELECTED_SCOPE_ONLY",
+            "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
+            "PROVIDER_BOUND_FILTERING",
+        ],
+        "source_proofs_cannot_authorize_windows_or_promotion": (
             launch_result.get("windows_runtime_certified") is False
-            and launch_result.get("production_score_promotion_eligible")
-            is False
+            and launch_result.get("production_score_promotion_eligible") is False
             and launch_result.get("baseline_adoption_authorized") is False
-        ),
-        "session_provider_migration_remains_open": (
-            states["session_provider_migration_safety"] == "OPEN"
-        ),
-        "current_v1329_blockers_remain_explicit": (
-            len(contract["adoption_blockers"]) >= 2
-            and any(
-                blocker.startswith("device_auth:")
-                for blocker in contract["adoption_blockers"]
-            )
-            and any(
-                blocker.startswith("session_provider_migration_safety:")
-                for blocker in contract["adoption_blockers"]
-            )
+            and session_result.get("windows_runtime_certified") is False
+            and session_result.get("production_score_promotion_eligible") is False
+            and session_result.get("baseline_adoption_authorized") is False
         ),
         "runtime_baseline_literal_authorities_exact": source_audit["valid"],
         "bare_baseline_flip_to_v1329_fails_closed": (
             bare_target_flip["valid"] is False
-            and "TARGET_BASELINE_ADOPTION_NOT_AUTHORIZED"
-            in bare_target_flip["reasons"]
-            and "TARGET_BASELINE_RECONCILIATION_INCOMPLETE"
-            in bare_target_flip["reasons"]
+            and "TARGET_BASELINE_ADOPTION_NOT_AUTHORIZED" in bare_target_flip["reasons"]
+            and "TARGET_BASELINE_RECONCILIATION_INCOMPLETE" in bare_target_flip["reasons"]
         ),
-        "forged_adoption_authority_with_open_blockers_fails_closed": (
+        "forged_adoption_authority_with_open_device_decision_fails_closed": (
             forged_authority["valid"] is False
-            and "ADOPTION_AUTHORITY_WITH_OPEN_BLOCKERS"
-            in forged_authority["reasons"]
+            and "ADOPTION_AUTHORITY_WITH_OPEN_BLOCKERS" in forged_authority["reasons"]
         ),
         "future_device_gap_requires_valid_explicit_decision_record": (
             future_gap_contract.get("valid_record") is True
-            and future_gap_contract.get("reconciliation_state")
-            == "ACCEPTED_CAPABILITY_GAP_RECORDED"
-            and future_gap_contract.get("baseline_adoption_authorized")
-            is False
+            and future_gap_contract.get("reconciliation_state") == "ACCEPTED_CAPABILITY_GAP_RECORDED"
+            and future_gap_contract.get("baseline_adoption_authorized") is False
         ),
-        "future_adoption_requires_explicit_resolved_states": (
-            explicit_future_adoption["valid"]
-        ),
+        "future_adoption_requires_explicit_device_resolution_and_separate_authority": explicit_future_adoption["valid"],
     }
     tests = [
         {"name": name, "status": "PASS" if passed else "FAIL"}
@@ -368,15 +330,12 @@ def synthetic_proof() -> dict[str, Any]:
         "version": VERSION,
         "suite": "COCKPIT_BASELINE_RECONCILIATION_CONTRACT",
         "verdict": "PASS" if passed == len(tests) else "FAIL",
-        "summary": {
-            "pass": passed,
-            "fail": len(tests) - passed,
-            "total": len(tests),
-        },
+        "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
         "tests": tests,
         "contract": contract,
         "device_auth_decision_contract": device_contract,
         "launch_confirmation_source_proof": launch_result,
+        "session_provider_migration_source_proof": session_result,
         "runtime_baseline_authority_audit": source_audit,
         "source_contract_only": True,
         "real_windows_runtime_executed": False,
@@ -399,6 +358,7 @@ def main() -> int:
             "verdict": "FAIL",
             "error": str(exc),
             "source_contract_only": True,
+            "real_windows_runtime_executed": False,
             "windows_runtime_certified": False,
             "external_windows_target_evidence_imported": False,
             "production_score_promotion_eligible": False,
