@@ -14,6 +14,13 @@ $InstallRoot = "C:\ProgramData\HMS-AI-ROUTER\GitHubRunner"
 $CustomLabel = "hms-ai-router-windows"
 $ReparsePoint = [System.IO.FileAttributes]::ReparsePoint
 
+# Reviewed runner authority. Do not silently follow releases/latest on a privileged host.
+$RunnerVersion = "2.336.0"
+$RunnerAssetName = "actions-runner-win-x64-2.336.0.zip"
+$RunnerAssetSize = [int64]103253740
+$RunnerAssetSha256 = "d59123a43003e357b0805b5d0f611d0bd2f65ab67d51bd070dd4e7a0f685c162"
+$RunnerDownloadUrl = "https://github.com/actions/runner/releases/download/v2.336.0/actions-runner-win-x64-2.336.0.zip"
+
 function Fail([string]$Message) {
     throw "HMS-AI-ROUTER self-hosted runner setup failed: $Message"
 }
@@ -40,6 +47,12 @@ if ($env:OS -ne "Windows_NT") {
 }
 if ($RunnerName -notmatch '^[A-Za-z0-9._-]{1,80}$') {
     Fail "RunnerName must contain only letters, digits, dot, underscore or hyphen and be at most 80 characters"
+}
+if ($RunnerAssetSha256 -notmatch '^[0-9a-f]{64}$') {
+    Fail "reviewed runner SHA-256 authority is malformed"
+}
+if ($RunnerAssetSize -le 0) {
+    Fail "reviewed runner byte-size authority is invalid"
 }
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -78,52 +91,23 @@ if (Test-Path -LiteralPath $root) {
 }
 Assert-NoReparsePath $root "runner install"
 
-$headers = @{
-    Accept = "application/vnd.github+json"
-    "User-Agent" = "HMS-AI-ROUTER-self-hosted-runner-bootstrap"
-    "X-GitHub-Api-Version" = "2022-11-28"
-}
-$release = Invoke-RestMethod -UseBasicParsing -Headers $headers -Uri "https://api.github.com/repos/actions/runner/releases/latest"
-if (-not ($release.tag_name -is [string]) -or $release.tag_name -notmatch '^v([0-9]+\.[0-9]+\.[0-9]+)$') {
-    Fail "latest actions/runner release tag is malformed"
-}
-$version = $Matches[1]
-$expectedAssetName = "actions-runner-win-x64-$version.zip"
-$assets = @($release.assets | Where-Object { $_.name -eq $expectedAssetName })
-if ($assets.Count -ne 1) {
-    Fail "latest actions/runner release must expose exactly one expected Windows x64 ZIP asset"
-}
-$asset = $assets[0]
-if (-not ($asset.size -is [int64]) -and -not ($asset.size -is [int])) {
-    Fail "runner release asset size is not an integer"
-}
-if ([int64]$asset.size -le 0) {
-    Fail "runner release asset size must be positive"
-}
-if (-not ($asset.digest -is [string]) -or -not $asset.digest.StartsWith("sha256:", [System.StringComparison]::OrdinalIgnoreCase)) {
-    Fail "runner release asset does not expose a SHA-256 digest; refusing unverified download"
-}
-$expectedSha256 = $asset.digest.Substring(7).ToLowerInvariant()
-if ($expectedSha256 -notmatch '^[0-9a-f]{64}$') {
-    Fail "runner release SHA-256 digest is malformed"
-}
-$expectedDownloadPrefix = "https://github.com/actions/runner/releases/download/$($release.tag_name)/"
-if (-not ($asset.browser_download_url -is [string]) -or -not $asset.browser_download_url.StartsWith($expectedDownloadPrefix, [System.StringComparison]::Ordinal)) {
-    Fail "runner release download URL is outside the exact approved actions/runner release"
-}
-if (-not $asset.browser_download_url.EndsWith("/$expectedAssetName", [System.StringComparison]::Ordinal)) {
-    Fail "runner release download URL asset name mismatch"
+$expectedDownloadUrl = "https://github.com/actions/runner/releases/download/v$RunnerVersion/$RunnerAssetName"
+if ($RunnerDownloadUrl -cne $expectedDownloadUrl) {
+    Fail "reviewed runner download URL does not match reviewed version/asset authority"
 }
 
-$archive = Join-Path $root "actions-runner.zip"
-Invoke-WebRequest -UseBasicParsing -Headers $headers -Uri $asset.browser_download_url -OutFile $archive
+$headers = @{
+    "User-Agent" = "HMS-AI-ROUTER-self-hosted-runner-bootstrap"
+}
+$archive = Join-Path $root $RunnerAssetName
+Invoke-WebRequest -UseBasicParsing -Headers $headers -Uri $RunnerDownloadUrl -OutFile $archive
 Assert-NoReparsePath $archive "downloaded runner archive"
 $archiveItem = Get-Item -LiteralPath $archive -Force -ErrorAction Stop
-if ($archiveItem.PSIsContainer -or [int64]$archiveItem.Length -ne [int64]$asset.size) {
+if ($archiveItem.PSIsContainer -or [int64]$archiveItem.Length -ne $RunnerAssetSize) {
     Fail "downloaded runner archive size mismatch"
 }
 $actualSha256 = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
-if ($actualSha256 -ne $expectedSha256) {
+if ($actualSha256 -ne $RunnerAssetSha256) {
     Fail "downloaded runner archive SHA-256 mismatch"
 }
 
@@ -181,7 +165,11 @@ if (Test-Path -LiteralPath (Join-Path $root ".service")) {
     custom_label = $CustomLabel
     foreground_required = $true
     run_command = (Join-Path $root "run.cmd")
+    reviewed_runner_version = $RunnerVersion
+    reviewed_runner_asset = $RunnerAssetName
+    reviewed_runner_size = $RunnerAssetSize
+    reviewed_runner_sha256 = $RunnerAssetSha256
     automatic_updates_disabled = $true
-    update_deadline_policy = "manually refresh the runner within 30 days of each new actions/runner release"
+    update_policy = "do not change runner version without a new reviewed version/size/SHA-256 authority commit"
     trust_boundary = "keep runner offline except during one frozen exact-head Windows qualification window"
 }
