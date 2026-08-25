@@ -1,0 +1,117 @@
+name: v25.75 Self-Hosted Windows Activation Candidate Audit (Fallback Only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact HMS-AI-ROUTER commit whose canonical Windows graph may be routed later
+        required: true
+        default: d42c33a6de2a4b08fbbedc410f84ba497e8a4040
+        type: string
+      expected_workflow_blob:
+        description: Reviewed git blob SHA of canonical Windows Promotion Safety workflow
+        required: true
+        default: afa27ce43cc2f5103eecae478e5a8a13f2fc1ef8
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  activation-candidate-audit:
+    runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
+    timeout-minutes: 5
+    env:
+      HMS_TARGET_SHA: ${{ inputs.target_sha }}
+      HMS_EXPECTED_WORKFLOW_BLOB: ${{ inputs.expected_workflow_blob }}
+      HMS_CANDIDATE_PATH: ${{ runner.temp }}\hms-v2575-self-hosted-activation-candidate.yml
+    steps:
+      - name: Runner materialized
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_OS -ne 'Windows') { throw "Expected Windows runner, got '$env:RUNNER_OS'" }
+          if ($env:RUNNER_ARCH -ne 'X64') { throw "Expected X64 runner, got '$env:RUNNER_ARCH'" }
+          Write-Host 'SELF_HOSTED_WINDOWS_RUNNER_MATERIALIZED'
+
+      - name: Refuse stale candidate residue
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH) {
+            throw "Refusing stale activation candidate residue at '$env:HMS_CANDIDATE_PATH'"
+          }
+
+      - name: Checkout exact target
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.target_sha }}
+          path: target
+          clean: true
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Checkout exact workflow tooling revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          path: fallback-tools
+          clean: true
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Generate and validate one-line activation candidate
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & '.\fallback-tools\scripts\generate_self_hosted_windows_activation_candidate.ps1' `
+            -RepositoryRoot (Resolve-Path '.\target') `
+            -ExpectedCommit $env:HMS_TARGET_SHA `
+            -ExpectedWorkflowBlob $env:HMS_EXPECTED_WORKFLOW_BLOB `
+            -OutputPath $env:HMS_CANDIDATE_PATH
+
+      - name: Independently require exactly one selector diff
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = '.\target\.github\workflows\v2575-promotion-safety-windows.yml'
+          if (-not (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH -PathType Leaf)) {
+            throw 'Generated activation candidate is missing'
+          }
+          $diff = @(& git diff --no-index --unified=0 -- $source $env:HMS_CANDIDATE_PATH 2>&1)
+          $exit = $LASTEXITCODE
+          if ($exit -ne 1) {
+            throw "Expected git diff --no-index exit 1 for one intentional change, got $exit"
+          }
+          $removed = @($diff | Where-Object { $_ -ceq '-    runs-on: windows-latest' })
+          $added = @($diff | Where-Object { $_ -ceq '+    runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]' })
+          $otherPayload = @($diff | Where-Object {
+            ($_ -match '^[+-]') -and
+            ($_ -notmatch '^--- ') -and
+            ($_ -notmatch '^\+\+\+ ') -and
+            ($_ -cne '-    runs-on: windows-latest') -and
+            ($_ -cne '+    runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]')
+          })
+          if ($removed.Count -ne 1 -or $added.Count -ne 1 -or $otherPayload.Count -ne 0) {
+            $diff | ForEach-Object { Write-Host $_ }
+            throw 'Activation candidate diff contains changes outside the single reviewed runner selector substitution'
+          }
+          [pscustomobject]@{
+            selector_diff_verified = $true
+            removed_hosted_selector = $removed.Count
+            added_self_hosted_selector = $added.Count
+            other_payload_changes = $otherPayload.Count
+            candidate_committed = $false
+            candidate_executed = $false
+            windows_graph_executed = $false
+            windows_runtime_certified = $false
+            authority = 'ACTIVATION_PATCH_ONLY_NOT_WINDOWS_PROOF'
+          } | ConvertTo-Json -Compress
+
+      - name: Remove activation candidate
+        if: always()
+        shell: powershell
+        run: |
+          if (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH) {
+            Remove-Item -LiteralPath $env:HMS_CANDIDATE_PATH -Force
+          }
