@@ -9,6 +9,8 @@ on:
       - '_runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py'
       - '_runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py'
       - '_runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py'
+      - '_runtime/HMS_Codex_CockpitV1329P0ParityProof.py'
+      - '_runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py'
       - '_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateSigner.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py'
@@ -88,6 +90,8 @@ jobs:
             _runtime/HMS_Codex_ExternalWindowsReviewPacketIngest.py `
             _runtime/HMS_Codex_ExternalWindowsEvidenceRunner.py `
             _runtime/HMS_Codex_ExternalWindowsEvidenceAdversarialFixtures.py `
+            _runtime/HMS_Codex_CockpitV1329P0ParityProof.py `
+            _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py `
             _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py `
             _runtime/HMS_Codex_ExternalWindowsCertificatePreflight.py `
