@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import HMS_Codex_CockpitV1329DeviceAuthAdoptionContract as cockpit_v1329_device_adoption
 import HMS_Codex_CockpitV1329DeviceAuthDeltaProof as cockpit_v1329_device
 import HMS_Codex_CockpitV1329P0ParityProof as cockpit_v1329_p0
 import HMS_Codex_ExternalWindowsCaseReportExporter as exporter
@@ -125,6 +126,10 @@ def synthetic_proof()->dict[str,Any]:
         device_result=cockpit_v1329_device.source_proof()
     except Exception:
         device_result={"verdict":"FAIL"}
+    try:
+        device_contract=cockpit_v1329_device_adoption.current_contract()
+    except Exception:
+        device_contract={"valid_record":False,"decision":"","reconciliation_state":"DEVICE_AUTH_DECISION_RECORD_INVALID"}
 
     parity_tests={
         test.get("name"):test.get("status")
@@ -140,16 +145,26 @@ def synthetic_proof()->dict[str,Any]:
         "cockpit_v1329_p0_parity_cannot_promote_score":parity_result.get("production_score_promotion_eligible") is False,
         "cockpit_v1329_p0_parity_cannot_adopt_baseline":parity_result.get("baseline_adoption_authorized") is False,
         "cockpit_v1329_device_source_characterization_passes":device_result.get("verdict")=="PASS",
-        "cockpit_v1329_device_decision_remains_open":device_result.get("device_auth_adoption_decision")=="OPEN",
+        "cockpit_v1329_device_source_bound_to_target":(
+            device_result.get("target_commit")==cockpit_v1329_device.TARGET_COMMIT
+            and device_result.get("source_characterization_only") is True
+        ),
+        "cockpit_v1329_device_decision_authority_record_valid":device_contract.get("valid_record") is True,
+        "cockpit_v1329_device_decision_authority_remains_open":(
+            device_contract.get("decision")=="OPEN"
+            and device_contract.get("reconciliation_state")=="SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
+        ),
         "cockpit_v1329_device_cannot_certify_windows":device_result.get("windows_runtime_certified") is False,
         "cockpit_v1329_device_cannot_promote_score":device_result.get("production_score_promotion_eligible") is False,
         "cockpit_v1329_device_cannot_adopt_baseline":device_result.get("baseline_adoption_authorized") is False,
+        "cockpit_v1329_device_decision_contract_cannot_adopt_baseline":device_contract.get("baseline_adoption_authorized") is False,
     })
     tests=[{"name":k,"status":"PASS" if v else "FAIL"} for k,v in checks.items()]; passed=sum(x["status"]=="PASS" for x in tests)
     return {"product":PRODUCT,"version":VERSION,"suite":"EXTERNAL_WINDOWS_SOURCE_BINDING_PROOF","verdict":"PASS" if passed==len(tests) else "FAIL",
             "summary":{"pass":passed,"fail":len(tests)-passed,"total":len(tests)},"tests":tests,"synthetic_fixture_only":True,
             "upstream_source_certification_executed":True,"p0_ownership_assertions_required":len(P0_OWNERSHIP_ASSERTIONS),"quota_refresh_helper_trap_executed":True,
-            "device_auth_adoption_decision":"OPEN","real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
+            "device_auth_adoption_decision":device_contract.get("decision"),"device_auth_decision_authority":"ADOPTION_CONTRACT",
+            "real_windows_evidence_read":False,"real_windows_runtime_executed":False,"windows_runtime_certified":False,
             "external_windows_target_evidence_imported":False,"production_score_promotion_eligible":False,"production_score_mutation_authorized":False}
 
 def main()->int:
