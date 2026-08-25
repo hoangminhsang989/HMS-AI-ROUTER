@@ -36,9 +36,11 @@ on:
       - '_runtime/HMS_Codex_PromotionReviewerActionPolicy.py'
       - '_runtime/HMS_Codex_PromotionGUIActionContract.py'
       - '_runtime/HMS_Codex_PromotionLauncherRaceProof.py'
+      - '_runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py'
       - '_runtime/HMS_Codex_WindowsPromotionDecisionLedger.py'
       - '_runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py'
       - '_runtime/HMS_Codex_WindowsPromotionWorkbenchController.py'
+      - '_runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py'
       - '_runtime/HMS_Codex_WindowsPromotionE2EFixtures.py'
       - '_runtime/HMS_GUI_ENTRY.pyw'
       - '_runtime/HMS_GUI_REVIEW_ENTRY.pyw'
@@ -110,9 +112,11 @@ jobs:
             _runtime/HMS_Codex_PromotionReviewerActionPolicy.py `
             _runtime/HMS_Codex_PromotionGUIActionContract.py `
             _runtime/HMS_Codex_PromotionLauncherRaceProof.py `
+            _runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py `
             _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py `
             _runtime/HMS_Codex_WindowsPromotionReviewWorkbench.py `
             _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py `
+            _runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py `
             _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py `
             _runtime/HMS_GUI_ENTRY.pyw `
             _runtime/HMS_GUI_REVIEW_ENTRY.pyw `
@@ -205,6 +209,9 @@ jobs:
       - name: Promotion GUI action contract proof
         shell: pwsh
         run: python _runtime/HMS_Codex_PromotionGUIActionContract.py
+      - name: Decision provenance caller audit
+        shell: pwsh
+        run: python _runtime/HMS_Codex_PromotionDecisionProvenanceCallerAudit.py
       - name: Decision ledger concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionDecisionLedger.py proof
@@ -217,6 +224,9 @@ jobs:
       - name: Controller sealed-state replay-concurrency proof
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionWorkbenchController.py
+      - name: Controller adversarial sealed-state proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_WindowsPromotionControllerAdversarialProof.py
       - name: Promotion E2E negative fixtures
         shell: pwsh
         run: python _runtime/HMS_Codex_WindowsPromotionE2EFixtures.py
