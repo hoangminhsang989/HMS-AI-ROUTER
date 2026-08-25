@@ -41,13 +41,12 @@ try {
         Fail "HEAD '$head' does not equal expected qualification commit '$expectedCommitLower'"
     }
 
-    & git diff --quiet --no-ext-diff
+    $statusLines = @(& git status --porcelain=v1 --untracked-files=all)
     if ($LASTEXITCODE -ne 0) {
-        Fail 'tracked working tree contains unstaged changes'
+        Fail 'unable to inspect worktree cleanliness'
     }
-    & git diff --cached --quiet --no-ext-diff
-    if ($LASTEXITCODE -ne 0) {
-        Fail 'index contains staged changes'
+    if ($statusLines.Count -ne 0) {
+        Fail 'worktree is not clean; tracked, staged, or untracked residue is present'
     }
 
     if (-not (Test-Path -LiteralPath $WorkflowPath -PathType Leaf)) {
@@ -82,8 +81,7 @@ try {
         commit = $head
         workflow_path = $WorkflowPath
         workflow_blob = $workingBlob
-        tracked_worktree_clean = $true
-        index_clean = $true
+        worktree_clean_including_untracked = $true
         authority = 'TARGET_BINDING_ONLY_NOT_WINDOWS_PROOF'
     } | ConvertTo-Json -Compress
 } finally {
