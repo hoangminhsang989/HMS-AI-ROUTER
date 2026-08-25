@@ -1,0 +1,71 @@
+name: v25.75 Self-Hosted Windows Target Binding (Fallback Only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact HMS-AI-ROUTER commit to bind before qualification
+        required: true
+        default: d42c33a6de2a4b08fbbedc410f84ba497e8a4040
+        type: string
+      expected_workflow_blob:
+        description: Reviewed git blob SHA of canonical Windows Promotion Safety workflow
+        required: true
+        default: afa27ce43cc2f5103eecae478e5a8a13f2fc1ef8
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  target-binding:
+    runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
+    timeout-minutes: 5
+    env:
+      HMS_TARGET_SHA: ${{ inputs.target_sha }}
+      HMS_EXPECTED_WORKFLOW_BLOB: ${{ inputs.expected_workflow_blob }}
+    steps:
+      - name: Runner materialized
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_OS -ne 'Windows') { throw "Expected Windows runner, got '$env:RUNNER_OS'" }
+          if ($env:RUNNER_ARCH -ne 'X64') { throw "Expected X64 runner, got '$env:RUNNER_ARCH'" }
+          Write-Host 'SELF_HOSTED_WINDOWS_RUNNER_MATERIALIZED'
+
+      - name: Checkout exact target
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          path: target
+          clean: true
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Checkout reviewed fallback tooling
+        uses: actions/checkout@v4
+        with:
+          ref: v2575-self-hosted-windows-runner-fallback
+          path: fallback-tools
+          clean: true
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Bind exact qualification target
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & '.\fallback-tools\scripts\assert_windows_qualification_target.ps1' `
+            -ExpectedCommit $env:HMS_TARGET_SHA `
+            -ExpectedWorkflowBlob $env:HMS_EXPECTED_WORKFLOW_BLOB `
+            -RepositoryRoot (Resolve-Path '.\target')
+
+      - name: Declare non-proof boundary
+        shell: powershell
+        run: |
+          [pscustomobject]@{
+            target_binding_completed = $true
+            windows_graph_executed = $false
+            windows_runtime_certified = $false
+            authority = 'TARGET_BINDING_ONLY_NOT_WINDOWS_PROOF'
+          } | ConvertTo-Json -Compress
