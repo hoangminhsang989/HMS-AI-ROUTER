@@ -34,7 +34,7 @@ jobs:
           Write-Host 'SELF_HOSTED_WINDOWS_RUNNER_MATERIALIZED'
 
       - name: Checkout exact target
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ inputs.target_sha }}
           path: target
@@ -42,10 +42,10 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
 
-      - name: Checkout reviewed fallback tooling
-        uses: actions/checkout@v4
+      - name: Checkout exact workflow tooling revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: v2575-self-hosted-windows-runner-fallback
+          ref: ${{ github.sha }}
           path: fallback-tools
           clean: true
           persist-credentials: false
@@ -65,6 +65,7 @@ jobs:
         run: |
           [pscustomobject]@{
             target_binding_completed = $true
+            tooling_revision = $env:GITHUB_SHA
             windows_graph_executed = $false
             windows_runtime_certified = $false
             authority = 'TARGET_BINDING_ONLY_NOT_WINDOWS_PROOF'
