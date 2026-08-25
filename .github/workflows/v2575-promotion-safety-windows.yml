@@ -26,6 +26,7 @@ on:
       - '_runtime/HMS_Codex_WindowsOneShotElevation.py'
       - '_runtime/HMS_Codex_WindowsElevationCallerAudit.py'
       - '_runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py'
+      - '_runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py'
       - '_runtime/HMS_Codex_WindowsUACRecoveryValidation.py'
       - '_runtime/HMS_Codex_WindowsUACValidationBundle.py'
       - '_runtime/HMS_Run_UAC_Validation.ps1'
@@ -102,6 +103,7 @@ jobs:
             _runtime/HMS_Codex_WindowsOneShotElevation.py `
             _runtime/HMS_Codex_WindowsElevationCallerAudit.py `
             _runtime/HMS_Codex_WindowsRecoveryAdversarialSimulator.py `
+            _runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py `
             _runtime/HMS_Codex_WindowsUACRecoveryValidation.py `
             _runtime/HMS_Codex_WindowsUACValidationBundle.py `
             _runtime/HMS_Codex_CockpitLiveBaselineProvider.py `
@@ -173,6 +175,9 @@ jobs:
       - name: Recovery-first GUI wrapper proof
         shell: pwsh
         run: python _runtime/HMS_GUI_RECOVERY_ENTRY.pyw --proof
+      - name: Integrated Windows wrapper chain proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_IntegratedWindowsWrapperChainProof.py
       - name: External signer trust cryptographic contract
         shell: pwsh
         run: python _runtime/HMS_Codex_ExternalWindowsSignerTrustContract.py
