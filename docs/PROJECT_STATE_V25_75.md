@@ -54,6 +54,9 @@ The source-side external Windows evidence/review path now includes:
 14. Reviewer action policy and GUI buttons require the same decision-provenance contract as the final ledger.
 15. AST caller audit rejects production direct ledger callers that omit full explicit provenance.
 16. Controller adversarial proof covers replay-registry seal tamper, sealed report authority tamper, same-reviewer-key rogue authorities, forged unsealed metadata and stale locks.
+17. Exact-source Cockpit v1.3.29 P0 proof pins release blobs and fail-closes quota refresh-token ownership plus combined OAuth/API-Key credential ownership/stale-token-revival invariants.
+18. Exact-source device-auth delta proof distinguishes Tauri-runtime deltas from `cockpit-core` synchronization and keeps device-auth adoption authority explicitly open.
+19. Both v1.3.29 proofs are transitively required by the canonical external-Windows source-binding proof and are included in workflow path triggers and Python compilation.
 
 Integrated candidate checkpoint:
 
@@ -80,30 +83,64 @@ The source-side Windows recovery tranche aligned to the frozen v1.3.28 evidence 
 - bounded UAC validation harness, session-bound Cancel→Close pair verifier and guided PowerShell 5.1 operator runner;
 - no launcher `runas`, no `ExecutionPolicy Bypass`, no keyboard automation or generic arbitrary-elevation CLI.
 
-The integrated wrapper-chain proof now additionally locks launcher → recovery wrapper → reviewer wrapper → guarded promotion entry → legacy core ordering and requires recovery/reviewer method patch sets to remain disjoint.
+The integrated wrapper-chain proof additionally locks launcher → recovery wrapper → reviewer wrapper → guarded promotion entry → legacy core ordering and requires recovery/reviewer method patch sets to remain disjoint.
 
 ## Cockpit Tools v1.3.29 parity drift
 
-Upstream v1.3.29 introduces material Codex deltas. Confirmed from upstream changelog/source:
+### Credential-safety P0 status
 
-- device-code authorization in addition to browser callback OAuth;
-- OAuth scopes add `api.connectors.read` and `api.connectors.invoke`;
-- ID-token refresh lead changes from 15 to 10 minutes;
-- quota refresh may use a valid access token without rotating an official-client-owned refresh token; previous quota is retained while waiting for a newer access token instead of converting the condition into account failure;
-- combined OAuth/API-Key profiles retain actual OAuth credential ownership and latest official-client-rotated tokens to avoid stale `refresh_token_reused` behavior;
-- unified launch preview with explicit confirmation before client state change;
-- expanded session repair/provider migration/catalog repair;
-- expanded Codex API Service including Live/Realtime and additional request transports/features.
+The two adoption-critical credential-safety deltas are now **SOURCE-CLOSED / PROOF-WIRED / CI EXECUTION PENDING**:
 
-Priority before a new production evidence epoch:
+1. quota/background refresh uses a valid access token without rotating an official-client-owned refresh-token chain, with source-proven caller flow through `prepare_account_for_quota_query` and post-authority-sync access-token recheck;
+2. combined OAuth/API-Key profiles separate runtime/provider owner from actual OAuth credential owner and use generation-aware authority so a stale refresh token cannot be revived after official-client rotation/unbind/legacy upgrade transitions.
 
-1. quota/refresh-token ownership semantics;
-2. combined-profile OAuth credential ownership and stale-token reuse prevention;
-3. device-auth/OAuth-scope contract;
-4. launch confirmation-before-mutation invariant;
-5. remaining session/API-service parity work in dedicated tranches.
+HMS source authority:
 
-Do not simply change `COCKPIT_BASELINE` from `1.3.28` to `1.3.29`. Baseline adoption requires explicit delta reconciliation and a new proof/review epoch.
+- `_runtime/HMS_Codex_CockpitV1329P0ParityProof.py`;
+- fail-closed transitively through `_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py`.
+
+These source proofs do not authorize Windows runtime certification, target-evidence import, production score mutation, or v1.3.29 baseline adoption.
+
+### OAuth scopes / refresh lead correction
+
+Exact release comparison shows that v1.3.28 **Tauri runtime** already used connector scopes `api.connectors.read` / `api.connectors.invoke` and a 10-minute ID-token refresh lead. Therefore those values are not newly introduced Tauri behavior in v1.3.29.
+
+The actual release delta is that `crates/cockpit-core/src/modules/codex_oauth.rs` synchronizes from base scopes + 15-minute lead in v1.3.28 to the already-present Tauri connector scopes + 10-minute lead in v1.3.29.
+
+This distinction is now source-proofed and must remain explicit; core-library source synchronization must not be mislabeled as a new canonical Tauri runtime behavior.
+
+### Device-code OAuth status
+
+Device-code authorization is a real new v1.3.29 Tauri runtime capability. Source-proven behavior includes official device endpoints/exchange redirect, 15-minute bounded lifetime, single-active OAuth state, login/device identity-bound polling, timeout clearing, restart non-revival and login-ID-scoped cancellation.
+
+Runtime reachability is proven across frontend service → Tauri invoke → command → OAuth module, and the command is registered in the Tauri invoke handler.
+
+HMS proof authority:
+
+- `_runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py`;
+- fail-closed through `_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py`;
+- workflow path-trigger and `py_compile` coverage included.
+
+Current classification: **SOURCE-CHARACTERIZED / PROOF-WIRED / ADOPTION DECISION OPEN**.
+
+HMS must make an explicit source/reconciliation decision before baseline adoption: either device auth is required parity and must be implemented with the proven lifecycle invariants, or it is an explicitly accepted/documented capability gap. A bare `COCKPIT_BASELINE` constant edit is not sufficient authority for that decision.
+
+### Remaining v1.3.29 work
+
+P1:
+
+- device-auth parity decision;
+- launch confirmation-before-mutation invariant;
+- session repair/provider discovery;
+- provider migration rollback/stopped-target safety.
+
+P2:
+
+- unified launch-preview feature breadth;
+- full session migration/catalog-repair breadth;
+- expanded API Service Live/Realtime/transports/features.
+
+Do not simply change `COCKPIT_BASELINE` from `1.3.28` to `1.3.29`. Baseline adoption still requires explicit delta reconciliation, a materialized proof graph and a new proof/review epoch.
 
 ## Observed Windows CI proof graph
 
@@ -118,16 +155,18 @@ Historical complete source/synthetic walking-gate PASS remains valid only for th
 
 It does not certify the current PR #7 source or any real target.
 
-Current integrated candidate PR #7 has repeatedly failed **before Checkout**. Latest known final-head checkpoint run:
+Current PR #7 continues to hit the runner-start blocker before Checkout. A representative proof-only trigger after the v1.3.29 proof path-filter hardening is:
 
-- Run #149
-- Run ID `32799771196`
-- Job ID `97658208798`
-- Tested head `d5dfcb39c9105502474705005ec7df05cb4698df`
+- Run #159
+- Run ID `32812084285`
+- Job ID `97693216475`
+- Tested head `098e3e4384891e3ecbb972ce860582e438d3eb16`
 - `steps = []`
 - no Checkout/Setup/compile/proof step materialized.
 
-Correct classification: **repository/account runner-start unavailable; exact cause unproven with available tooling**. This is neither a code PASS nor a code/test FAIL.
+The proof-only commit did enqueue the canonical workflow, confirming the new proof file is under workflow trigger authority. It does not constitute compile/proof execution.
+
+Correct failure classification: **repository/account runner-start unavailable; exact cause unproven with available tooling**. This is neither a code PASS nor a code/test FAIL.
 
 PR #7 must remain unmerged until an exact-final-head Windows Promotion Safety run materializes and passes its complete graph.
 
@@ -143,7 +182,7 @@ Source/synthetic or GitHub-hosted Windows proof never means:
 - Windows runtime certified;
 - production score may be promoted.
 
-The historical v1.3.28 source proof also does not establish v1.3.29 parity.
+The historical v1.3.28 source proof also does not establish v1.3.29 parity, and the new v1.3.29 source proofs remain non-production-authoritative until their canonical graph actually executes.
 
 ## Real-Windows operational gate
 
@@ -172,7 +211,7 @@ These checks remain separate from canonical seven-case production certification 
 
 - Source/synthetic proof infrastructure is not real Windows/current-Codex production evidence.
 - Raw runtime evidence remains immutable, digest-bound and append-only.
-- Final human decision records now retain source/package/reviewer-authority provenance through the append-only hash chain.
+- Final human decision records retain source/package/reviewer-authority provenance through the append-only hash chain.
 - Live Cockpit baseline reconciliation remains a click-time authority; current upstream v1.3.29 therefore invalidates the old v1.3.28 review epoch rather than silently upgrading it.
 - No recovery/UAC proof, parity audit, GitHub-hosted CI proof or upstream release discovery authorizes Windows production certification, target-evidence import or score mutation.
 
@@ -190,9 +229,9 @@ These checks remain separate from canonical seven-case production certification 
 
 1. Keep PR #7 open/unmerged until a materialized exact-head Windows proof graph passes.
 2. Treat Cockpit v1.3.29 as active upstream drift and keep the v1.3.28 production review epoch invalidated for new promotion decisions.
-3. Reconcile the P0 v1.3.29 quota/refresh-token-ownership and combined OAuth/API-Key credential-ownership deltas in source/proofs.
-4. Define the HMS device-code OAuth + connector-scope contract and add proof coverage before baseline adoption.
-5. Reconcile launch/session/API-service deltas in dedicated tranches rather than mixing them into production evidence claims.
+3. Require the P0 parity proof and device-auth source-characterization proof to execute successfully in the canonical graph; current runner-start failures are not proof results.
+4. Make and record the explicit device-auth parity/capability-gap decision before baseline adoption.
+5. Reconcile launch confirmation-before-mutation and session/migration safety in dedicated P1 tranches; keep larger API-service breadth in P2.
 6. Only after a new frozen baseline is explicitly adopted should the authorized Windows/current-Codex canonical seven-case evidence be captured for a new review epoch.
 7. Complete certificate-signed packet import, sealed reviewer authorities, dual human review and live baseline reconciliation on that new epoch.
 8. Only then consider a human-authorized production evidence promotion; do not automatically mutate the current `55.2%` score.
