@@ -12,6 +12,7 @@ on:
       - '_runtime/HMS_Codex_CockpitV1329P0ParityProof.py'
       - '_runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py'
       - '_runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py'
+      - '_runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py'
       - '_runtime/HMS_Codex_CockpitBaselineReconciliationContract.py'
       - '_runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py'
       - '_runtime/HMS_Codex_ExternalWindowsCertificateSigner.py'
@@ -95,6 +96,7 @@ jobs:
             _runtime/HMS_Codex_CockpitV1329P0ParityProof.py `
             _runtime/HMS_Codex_CockpitV1329DeviceAuthDeltaProof.py `
             _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py `
+            _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py `
             _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py `
             _runtime/HMS_Codex_ExternalWindowsSourceBindingProof.py `
             _runtime/HMS_Codex_ExternalWindowsCertificateSigner.py `
@@ -205,6 +207,9 @@ jobs:
       - name: Device-auth adoption decision contract
         shell: pwsh
         run: python _runtime/HMS_Codex_CockpitV1329DeviceAuthAdoptionContract.py
+      - name: Launch confirmation exact-source proof
+        shell: pwsh
+        run: python _runtime/HMS_Codex_CockpitV1329LaunchConfirmationProof.py
       - name: Cockpit v1.3.29 baseline reconciliation contract
         shell: pwsh
         run: python _runtime/HMS_Codex_CockpitBaselineReconciliationContract.py
