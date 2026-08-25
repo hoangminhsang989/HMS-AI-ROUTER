@@ -17,6 +17,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: v2575-self-hosted-windows-fallback
+  cancel-in-progress: false
+
 jobs:
   activation-candidate-audit:
     runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
@@ -26,7 +30,7 @@ jobs:
       HMS_EXPECTED_WORKFLOW_BLOB: ${{ inputs.expected_workflow_blob }}
       HMS_TARGET_DIR: activation-target-${{ github.run_id }}-${{ github.run_attempt }}
       HMS_TOOLING_DIR: activation-tools-${{ github.run_id }}-${{ github.run_attempt }}
-      HMS_CANDIDATE_PATH: ${{ runner.temp }}\hms-v2575-self-hosted-activation-${{ github.run_id }}-${{ github.run_attempt }}.yml
+      HMS_CANDIDATE_NAME: hms-v2575-self-hosted-activation-${{ github.run_id }}-${{ github.run_attempt }}.yml
     steps:
       - name: Runner materialized
         shell: powershell
@@ -40,7 +44,8 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($path in @($env:HMS_TARGET_DIR, $env:HMS_TOOLING_DIR, $env:HMS_CANDIDATE_PATH)) {
+          $candidate = Join-Path $env:RUNNER_TEMP $env:HMS_CANDIDATE_NAME
+          foreach ($path in @($env:HMS_TARGET_DIR, $env:HMS_TOOLING_DIR, $candidate)) {
             if (Test-Path -LiteralPath $path) {
               throw "Refusing pre-existing current-run path '$path'"
             }
@@ -70,21 +75,23 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $tool = Join-Path $env:HMS_TOOLING_DIR 'scripts\generate_self_hosted_windows_activation_candidate.ps1'
           $target = Resolve-Path $env:HMS_TARGET_DIR
+          $candidate = Join-Path $env:RUNNER_TEMP $env:HMS_CANDIDATE_NAME
           & $tool `
             -RepositoryRoot $target `
             -ExpectedCommit $env:HMS_TARGET_SHA `
             -ExpectedWorkflowBlob $env:HMS_EXPECTED_WORKFLOW_BLOB `
-            -OutputPath $env:HMS_CANDIDATE_PATH
+            -OutputPath $candidate
 
       - name: Independently require exactly one selector diff
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           $source = Join-Path $env:HMS_TARGET_DIR '.github\workflows\v2575-promotion-safety-windows.yml'
-          if (-not (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH -PathType Leaf)) {
+          $candidate = Join-Path $env:RUNNER_TEMP $env:HMS_CANDIDATE_NAME
+          if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
             throw 'Generated activation candidate is missing'
           }
-          $diff = @(& git diff --no-index --unified=0 -- $source $env:HMS_CANDIDATE_PATH 2>&1)
+          $diff = @(& git diff --no-index --unified=0 -- $source $candidate 2>&1)
           $exit = $LASTEXITCODE
           if ($exit -ne 1) {
             throw "Expected git diff --no-index exit 1 for one intentional change, got $exit"
@@ -106,6 +113,7 @@ jobs:
             selector_diff_verified = $true
             tooling_revision = $env:GITHUB_SHA
             isolated_workspace = $true
+            serialized_fallback = $true
             removed_hosted_selector = $removed.Count
             added_self_hosted_selector = $added.Count
             other_payload_changes = $otherPayload.Count
@@ -120,6 +128,7 @@ jobs:
         if: always()
         shell: powershell
         run: |
-          if (Test-Path -LiteralPath $env:HMS_CANDIDATE_PATH) {
-            Remove-Item -LiteralPath $env:HMS_CANDIDATE_PATH -Force
+          $candidate = Join-Path $env:RUNNER_TEMP $env:HMS_CANDIDATE_NAME
+          if (Test-Path -LiteralPath $candidate) {
+            Remove-Item -LiteralPath $candidate -Force
           }
