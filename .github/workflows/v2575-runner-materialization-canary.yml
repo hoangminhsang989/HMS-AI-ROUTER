@@ -1,8 +1,6 @@
 name: v25.75 Runner Materialization Canary (Diagnostic Only)
 
 on:
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
