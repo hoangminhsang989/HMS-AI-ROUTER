@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import HMS_Codex_CockpitV1329DeviceAuthAdoptionContract as device_auth_adoption
+import HMS_Codex_CockpitV1329DeviceAuthDeltaProof as device_auth_delta
 import HMS_Codex_CockpitV1329LaunchConfirmationProof as launch_confirmation
 import HMS_Codex_CockpitV1329SessionProviderMigrationProof as session_provider_migration
 
@@ -24,7 +25,21 @@ RECONCILIATION_TARGET_COMMIT = "83ce2d192cc954cc910ce89edf2d1f710c218798"
 TARGET_BASELINE_ADOPTION_AUTHORIZED = False
 
 
-def _current_device_auth_state() -> str:
+def _current_device_auth_state(
+    source_result: dict[str, Any] | None = None,
+) -> str:
+    observed = device_auth_delta.source_proof() if source_result is None else source_result
+    if not (
+        observed.get("verdict") == "PASS"
+        and observed.get("target_commit") == RECONCILIATION_TARGET_COMMIT
+        and observed.get("source_characterization_only") is True
+        and observed.get("device_auth_adoption_decision") == "OPEN"
+        and observed.get("windows_runtime_certified") is False
+        and observed.get("production_score_promotion_eligible") is False
+        and observed.get("baseline_adoption_authorized") is False
+    ):
+        return "DEVICE_AUTH_SOURCE_PROOF_FAILED"
+
     contract = device_auth_adoption.current_contract()
     if not contract.get("valid_record"):
         return "DEVICE_AUTH_DECISION_RECORD_INVALID"
@@ -54,9 +69,15 @@ def _source_proof_state(
 
 
 def current_reconciliation_states(
+    device_result: dict[str, Any] | None = None,
     launch_result: dict[str, Any] | None = None,
     session_result: dict[str, Any] | None = None,
 ) -> dict[str, str]:
+    observed_device = (
+        device_auth_delta.source_proof()
+        if device_result is None
+        else device_result
+    )
     observed_launch = (
         launch_confirmation.source_proof()
         if launch_result is None
@@ -70,7 +91,7 @@ def current_reconciliation_states(
     return {
         "quota_refresh_token_ownership": "SOURCE_CLOSED_PROOF_WIRED",
         "combined_oauth_api_key_credential_ownership": "SOURCE_CLOSED_PROOF_WIRED",
-        "device_auth": _current_device_auth_state(),
+        "device_auth": _current_device_auth_state(observed_device),
         "launch_confirmation_before_mutation": _source_proof_state(
             observed_launch,
             failure_state="LAUNCH_CONFIRMATION_SOURCE_PROOF_FAILED",
@@ -230,9 +251,10 @@ def audit_runtime_baseline_authorities(
 
 
 def synthetic_proof() -> dict[str, Any]:
+    device_result = device_auth_delta.source_proof()
     launch_result = launch_confirmation.source_proof()
     session_result = session_provider_migration.source_proof()
-    states = current_reconciliation_states(launch_result, session_result)
+    states = current_reconciliation_states(device_result, launch_result, session_result)
     device_contract = device_auth_adoption.current_contract()
     contract = validate_baseline_contract(states=states)
     source_audit = audit_runtime_baseline_authorities()
@@ -248,7 +270,7 @@ def synthetic_proof() -> dict[str, Any]:
     )
 
     future_gap_record = {
-        **device_auth_adoption.CURRENT_DECISION_RECORD,
+        **device_auth_adoption.DECISION_RECORD_TEMPLATE,
         "decision": device_auth_adoption.DECISION_ACCEPT_GAP,
         "accepted_by": "future-human-operator",
         "rationale": "Explicit future capability-gap decision for contract proof only.",
@@ -272,9 +294,15 @@ def synthetic_proof() -> dict[str, Any]:
         "current_frozen_baseline_is_v1328": contract["frozen_baseline"] == "1.3.28",
         "v1329_target_commit_pinned": contract["reconciliation_target_commit"] == RECONCILIATION_TARGET_COMMIT,
         "v1329_adoption_currently_not_authorized": contract["target_baseline_adoption_authorized"] is False,
+        "device_auth_exact_source_proof_passes": device_result.get("verdict") == "PASS",
+        "device_auth_source_characterization_is_bound_to_v1329_target": (
+            device_result.get("target_commit") == RECONCILIATION_TARGET_COMMIT
+            and device_result.get("source_characterization_only") is True
+            and device_result.get("device_auth_adoption_decision") == "OPEN"
+        ),
         "device_auth_decision_authority_record_valid": device_contract.get("valid_record") is True,
         "device_auth_decision_authority_remains_open": device_contract.get("decision") == "OPEN",
-        "device_auth_reconciliation_state_comes_from_decision_authority": (
+        "device_auth_reconciliation_state_requires_source_proof_and_decision_authority": (
             states["device_auth"]
             == device_contract.get("reconciliation_state")
             == "SOURCE_CHARACTERIZED_PROOF_WIRED_DECISION_OPEN"
@@ -289,14 +317,18 @@ def synthetic_proof() -> dict[str, Any]:
         "session_provider_migration_exact_source_proof_passes": session_result.get("verdict") == "PASS",
         "session_provider_migration_proof_is_bound_to_v1329_target": session_result.get("target_commit") == RECONCILIATION_TARGET_COMMIT,
         "session_provider_migration_state_is_derived_from_proof": states["session_provider_migration_safety"] == "SOURCE_RECONCILED_PROOF_WIRED",
-        "session_provider_migration_has_four_required_invariants": session_result.get("safety_invariants") == [
+        "session_provider_migration_has_five_required_invariants": session_result.get("safety_invariants") == [
             "ROLLBACK_ON_FAILED_MUTATION",
             "SELECTED_SCOPE_ONLY",
             "DEEP_MIGRATION_REQUIRES_STOPPED_TARGET",
             "PROVIDER_BOUND_FILTERING",
+            "QUICK_REPAIR_OFFICIAL_SIDEBAR_ONLY",
         ],
         "source_proofs_cannot_authorize_windows_or_promotion": (
-            launch_result.get("windows_runtime_certified") is False
+            device_result.get("windows_runtime_certified") is False
+            and device_result.get("production_score_promotion_eligible") is False
+            and device_result.get("baseline_adoption_authorized") is False
+            and launch_result.get("windows_runtime_certified") is False
             and launch_result.get("production_score_promotion_eligible") is False
             and launch_result.get("baseline_adoption_authorized") is False
             and session_result.get("windows_runtime_certified") is False
@@ -333,6 +365,7 @@ def synthetic_proof() -> dict[str, Any]:
         "summary": {"pass": passed, "fail": len(tests) - passed, "total": len(tests)},
         "tests": tests,
         "contract": contract,
+        "device_auth_source_proof": device_result,
         "device_auth_decision_contract": device_contract,
         "launch_confirmation_source_proof": launch_result,
         "session_provider_migration_source_proof": session_result,
