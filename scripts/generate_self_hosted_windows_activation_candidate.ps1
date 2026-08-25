@@ -58,7 +58,7 @@ $sourceBytes = [System.IO.File]::ReadAllBytes($sourcePath)
 if ($sourceBytes.Length -ge 3 -and $sourceBytes[0] -eq 0xEF -and $sourceBytes[1] -eq 0xBB -and $sourceBytes[2] -eq 0xBF) {
     Fail 'canonical workflow unexpectedly contains a UTF-8 BOM; refusing a byte-normalizing transformation'
 }
-$utf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$utf8 = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList $false, $true
 try {
     $sourceText = $utf8.GetString($sourceBytes)
 } catch {
@@ -85,7 +85,7 @@ if ($sourceText.Contains($SelfHostedLine)) {
 $candidateText = [regex]::Replace(
     $sourceText,
     '(?m)^    runs-on: windows-latest(?=\r?$)',
-    [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $SelfHostedLine }
+    $SelfHostedLine
 )
 if ($candidateText -ceq $sourceText) {
     Fail 'runner selector transformation produced no change'
@@ -97,7 +97,7 @@ if ([regex]::Matches($candidateText, '(?m)^    runs-on: \[self-hosted, Windows, 
     Fail 'candidate does not contain exactly one reviewed self-hosted runner selector'
 }
 
-# Reverse the one allowed line substitution and require byte-for-byte text identity.
+# Reverse the one allowed line substitution and require exact text identity.
 $reversedText = $candidateText.Replace($SelfHostedLine, $HostedLine)
 if ($reversedText -cne $sourceText) {
     Fail 'candidate differs from canonical workflow outside the single allowed runs-on substitution'
