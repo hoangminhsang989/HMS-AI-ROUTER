@@ -6,6 +6,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: v2575-self-hosted-windows-fallback
+  cancel-in-progress: false
+
 jobs:
   self-hosted-windows-canary:
     runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
@@ -17,13 +21,16 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if ($env:RUNNER_OS -ne 'Windows') { throw "Expected Windows runner, got '$env:RUNNER_OS'" }
           if ($env:RUNNER_ARCH -ne 'X64') { throw "Expected X64 runner, got '$env:RUNNER_ARCH'" }
+          if ($env:GITHUB_REPOSITORY -ne 'hoangminhsang989/HMS-AI-ROUTER') { throw "Unexpected repository '$env:GITHUB_REPOSITORY'" }
           [pscustomobject]@{
             runner_materialized = $true
             runner_os = $env:RUNNER_OS
             runner_arch = $env:RUNNER_ARCH
+            runner_name = $env:RUNNER_NAME
             repository = $env:GITHUB_REPOSITORY
             workflow = $env:GITHUB_WORKFLOW
             ref = $env:GITHUB_REF
             sha = $env:GITHUB_SHA
+            serialized_fallback = $true
             authority = 'CONNECTIVITY_ONLY_NOT_WINDOWS_PROOF'
           } | ConvertTo-Json -Compress
