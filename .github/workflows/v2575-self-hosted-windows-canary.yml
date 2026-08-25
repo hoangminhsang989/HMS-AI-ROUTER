@@ -1,0 +1,29 @@
+name: v25.75 Self-Hosted Windows Runner Canary (Fallback Only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-hosted-windows-canary:
+    runs-on: [self-hosted, Windows, X64, hms-ai-router-windows]
+    timeout-minutes: 3
+    steps:
+      - name: Runner materialized
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RUNNER_OS -ne 'Windows') { throw "Expected Windows runner, got '$env:RUNNER_OS'" }
+          if ($env:RUNNER_ARCH -ne 'X64') { throw "Expected X64 runner, got '$env:RUNNER_ARCH'" }
+          [pscustomobject]@{
+            runner_materialized = $true
+            runner_os = $env:RUNNER_OS
+            runner_arch = $env:RUNNER_ARCH
+            repository = $env:GITHUB_REPOSITORY
+            workflow = $env:GITHUB_WORKFLOW
+            ref = $env:GITHUB_REF
+            sha = $env:GITHUB_SHA
+            authority = 'CONNECTIVITY_ONLY_NOT_WINDOWS_PROOF'
+          } | ConvertTo-Json -Compress
